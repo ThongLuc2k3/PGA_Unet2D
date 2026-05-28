@@ -1,1 +1,0 @@
-from .grid_attention_layer import *
