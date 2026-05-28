@@ -1,0 +1,113 @@
+<mxfile host="65bd71144e">
+    <diagram name="3. PGA-UNet" id="pgaunet2d">
+        <mxGraphModel dx="1042" dy="251" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1220" pageHeight="365" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="inp" value="&lt;b&gt;Image&lt;/b&gt;&lt;br&gt;1 ch | 512×512" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="15" y="105" width="90" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="enc_box" value="&lt;b&gt;Encoder ×4&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#b85450;strokeWidth=2;fontSize=13;verticalAlign=top;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="35" width="345" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_conv" value="&lt;b&gt;Conv×2&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="enc_box" vertex="1">
+                    <mxGeometry x="15" y="50" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_scale" value="&lt;b&gt;PSG Scale&lt;/b&gt;&lt;br&gt;× (1+α·σ(Conv(p)))" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="enc_box" vertex="1">
+                    <mxGeometry x="110" y="50" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_pool" value="&lt;b&gt;MaxPool ↓&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="enc_box" vertex="1">
+                    <mxGeometry x="255" y="50" width="75" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="se1" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="enc_box" source="e_conv" target="e_scale" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="se2" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="enc_box" source="e_scale" target="e_pool" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bn" value="&lt;b&gt;Bottleneck&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="90" width="90" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="dec_box" value="&lt;b&gt;Decoder ×4&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#b85450;strokeWidth=2;fontSize=13;verticalAlign=top;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="585" y="35" width="505" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_gfuse" value="&lt;b&gt;Prompt Gating&lt;/b&gt;&lt;br&gt;g + conf·α·w·p" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="dec_box" vertex="1">
+                    <mxGeometry x="15" y="50" width="90" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_ag" value="&lt;b&gt;Attention Gate&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="dec_box" vertex="1">
+                    <mxGeometry x="117" y="50" width="82" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_residual" value="&lt;b&gt;+ 0.3·skip&lt;/b&gt;&lt;br&gt;&lt;i&gt;raw skip&lt;br&gt;residual&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="dec_box" vertex="1">
+                    <mxGeometry x="211" y="50" width="65" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_merge" value="&lt;b&gt;ConvT ↑ + Concat&lt;/b&gt;&lt;br&gt;with skip_att" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#6c8ebf;fontSize=10;" parent="dec_box" vertex="1">
+                    <mxGeometry x="288" y="50" width="105" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d_add" value="&lt;b&gt;+ β·p&lt;/b&gt;&lt;br&gt;add prompt residual" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="dec_box" vertex="1">
+                    <mxGeometry x="405" y="50" width="82" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="sd1" value="gating" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="dec_box" source="d_gfuse" target="d_ag" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sd2" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="dec_box" source="d_ag" target="d_residual" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sd3" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="dec_box" source="d_residual" target="d_merge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sd4" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="dec_box" source="d_merge" target="d_add" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="out" value="&lt;b&gt;Mask&lt;/b&gt;&lt;br&gt;1 ch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1105" y="105" width="85" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="f1" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="inp" target="enc_box" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f2" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="enc_box" target="bn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f3" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="bn" target="dec_box" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f4" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="dec_box" target="out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="skip" value="skip ×4 (PSG-enhanced)" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" parent="1" source="enc_box" target="d_ag" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="292" y="10"/>
+                            <mxPoint x="743" y="10"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="skip_res" value="skip" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#82b366;strokeWidth=1;fontSize=9;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" parent="1" source="enc_box" target="d_residual" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="293" y="20"/>
+                            <mxPoint x="829" y="20"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="prm_enc" value="&lt;b&gt;Prompt (p)&lt;/b&gt;&lt;br&gt;BBox → Gaussian heatmap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="205" y="240" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="prm_dec" value="&lt;b&gt;Prompt (p)&lt;/b&gt;&lt;br&gt;BBox → Gaussian heatmap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="240" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="pp_psg" value="PSG gate" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" parent="1" source="prm_enc" target="e_scale" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="pp_gfused" value="p_enc" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontSize=10;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" parent="1" source="prm_dec" target="d_gfuse" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="pp_beta" value="β·p" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" parent="1" source="prm_dec" target="d_add" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="note" value="&lt;b&gt;Lưu ý:&lt;/b&gt;  PSG xen kẽ per encoder level (conv → PSG scale → pool).  |  +0.3·skip: cộng 30% raw skip vào attended skip trước Concat.  |  Input 512×512" style="text;html=1;align=left;fontSize=10;strokeColor=none;fillColor=none;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="310" width="1000" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,202 @@
+% ============================================================
+% CHƯƠNG 1: GIỚI THIỆU
+% ============================================================
+\chapter{GIỚI THIỆU}
+\label{Chapter1}
+ 
+% ------------------------------------------------------------
+\section{Bối cảnh chung}
+\label{sec:boi_canh}
+% ------------------------------------------------------------
+ 
+Chẩn đoán hình ảnh thông qua tia X (X-quang) là một trong những phương thức cận lâm sàng phổ biến và quan trọng nhất trong y khoa hiện đại. Nhờ khả năng hiển thị trực tiếp cấu trúc xương mà không cần can thiệp xâm lấn, X-quang được sử dụng rộng rãi để phát hiện và theo dõi các tổn thương về xương như gãy xương, rạn xương, thoái hóa khớp và các khối u xương. Tại các cơ sở y tế có lưu lượng bệnh nhân lớn, số lượng ảnh X-quang cần đọc mỗi ngày có thể lên đến hàng trăm ca, đặt ra áp lực đáng kể lên đội ngũ bác sĩ chẩn đoán hình ảnh.
+ 
+Trong quy trình đọc phim, bước xác định và khoanh vùng tổn thương hay còn gọi là \textit{phân đoạn ảnh} (image segmentation) đóng vai trò tiền đề quan trọng. Kết quả phân đoạn là cơ sở để đo lường kích thước tổn thương, theo dõi diễn tiến theo thời gian và lập kế hoạch điều trị. Tuy nhiên, việc thực hiện phân đoạn thủ công trên hệ thống PACS (Picture Archiving and Communication System) đòi hỏi nhiều thời gian, phụ thuộc lớn vào kinh nghiệm cá nhân của bác sĩ và tiềm ẩn nguy cơ sai sót do mỏi mắt hoặc áp lực công việc.
+ 
+Những hạn chế trên đã thúc đẩy cộng đồng nghiên cứu tìm kiếm các giải pháp hỗ trợ chẩn đoán tự động dựa trên học sâu (deep learning). Trong khoảng một thập kỷ qua, các kiến trúc mạng nơ-ron tích chập như U-Net~\cite{ronneberger2015unet} đã đạt được kết quả đáng khích lệ trong bài toán phân đoạn ảnh y khoa. Song song đó, sự ra đời của các mô hình nền tảng như SAM (Segment Anything Model)~\cite{kirillov2023sam} đã mở ra hướng tiếp cận mới: kết hợp tự động hóa với sự can thiệp có chủ đích của con người thông qua cơ chế \textit{câu nhắc trực quan} (visual prompt). Đây chính là nền tảng khoa học mà khóa luận này được xây dựng trên.
+ 
+% ------------------------------------------------------------
+\section{Động lực nghiên cứu}
+\label{sec:dong_luc}
+% ------------------------------------------------------------
+ 
+\subsection{Động lực khoa học}
+ 
+Mặc dù đã đạt nhiều tiến bộ, các phương pháp phân đoạn hoàn toàn tự động vẫn tồn tại một hạn chế cốt lõi: chúng hoạt động như một \textit{hộp đen} (black box), tự suy luận trên toàn bộ ảnh mà không có bất kỳ thông tin định hướng nào từ chuyên gia. Trong môi trường ảnh X-quang xương nơi các cấu trúc giải phẫu chồng lấp nhau và vùng tổn thương thường có ngoại hình tương tự mô lành lân cận cách tiếp cận này dễ dẫn đến hiện tượng phân đoạn sai lệch (false positive) hoặc bỏ sót tổn thương (false negative).
+ 
+Một hướng nghiên cứu đang nhận được sự quan tâm ngày càng lớn là \textit{phân đoạn tương tác} (interactive segmentation), nơi người dùng cung cấp một tín hiệu không gian sơ bộ chẳng hạn như một hộp giới hạn (bounding box) để định hướng mô hình tập trung vào vùng mục tiêu. Hướng tiếp cận này không chỉ cải thiện độ chính xác mà còn đặt con người vào vị trí kiểm soát trong vòng lặp suy luận (human-in-the-loop), điều có ý nghĩa đặc biệt quan trọng trong ứng dụng y tế.
+ 
+Tuy nhiên, việc tích hợp tín hiệu định hướng này một cách hiệu quả vào kiến trúc mạng nơ-ron cụ thể là làm thế nào để biểu diễn, mã hóa và truyền tải thông tin câu nhắc qua các tầng mạng vẫn là một bài toán mở đòi hỏi nghiên cứu chuyên sâu.
+ 
+\subsection{Động lực thực tiễn}
+ 
+Trong thực tế lâm sàng, không thể kỳ vọng mọi thao tác của bác sĩ đều hoàn hảo. Câu nhắc mà bác sĩ cung cấp có thể bị lệch tâm do chú ý không tập trung, hoặc thậm chí đặt sai vị trí hoàn toàn do nhầm lẫn. Một hệ thống phân đoạn đáng tin cậy trong môi trường lâm sàng cần có khả năng \textit{chịu đựng sai sót} (fault tolerance): tự động nhận biết khi câu nhắc đầu vào có vấn đề và đưa ra phản hồi phù hợp, thay vì im lặng trả về một kết quả sai lệch.
+ 
+Ngoài ra, việc tích hợp hệ thống vào quy trình làm việc thực tế còn đặt ra yêu cầu về tốc độ xử lý (real-time inference) và khả năng giải thích được quyết định của mô hình (model interpretability) hai yếu tố mà phần lớn các nghiên cứu học thuật thuần túy chưa chú trọng đúng mức.
+ 
+Hai động lực trên cùng nhau định hình mục tiêu của khóa luận: không chỉ là một mô hình phân đoạn chính xác, mà là một \textit{hệ thống} đủ thông minh, bền bỉ và minh bạch để thực sự hỗ trợ được bác sĩ trong phòng khám.
+ 
+% ------------------------------------------------------------
+\section{Phát biểu bài toán}
+\label{sec:phat_bieu}
+% ------------------------------------------------------------
+
+Hệ thống đề xuất trong khóa luận hoạt động theo hai giai đoạn tách biệt về mặt thời gian và mục đích: giai đoạn huấn luyện ngoại tuyến (Offline) và giai đoạn suy luận trực tuyến (Online). Hai giai đoạn này có đầu vào, đầu ra và cơ chế tối ưu hoàn toàn khác nhau, do đó được phát biểu độc lập dưới đây.
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Giai đoạn huấn luyện (Offline)}
+\label{subsec:offline}
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Giai đoạn này diễn ra hoàn toàn trước khi hệ thống được triển khai trên phần mềm. Không có sự tương tác của người dùng cuối; mục tiêu duy nhất là tiền xử lý làm sạch dữ liệu và tối ưu hóa tham số cho hai mô hình học sâu độc lập (phân lớp và phân đoạn). Các thuật toán hậu xử lý như GradCAM và IPR \emph{không} tham gia vào quá trình này.
+
+\subsubsection*{Tác vụ 1: Huấn luyện mô hình phân lớp bệnh lý (Sàng lọc)}
+
+\begin{itemize}
+    \item \textbf{Đầu vào:} Tập ảnh X-quang xương đã qua các bước tiền xử lý (loại bỏ nhiễu ký tự R/L, cân bằng biểu đồ mức xám) được ký hiệu là $\mathcal{D}_{cls} = \{(\mathbf{I}_i,\, y_i)\}_{i=1}^{N}$. Trong đó $\mathbf{I}_i \in \mathbb{R}^{H \times W}$ là ảnh X-quang thứ $i$ và $y_i \in \{0, 1\}$ là nhãn phân lớp ($0$: bình thường, $1$: có u/tổn thương).
+
+    \item \textbf{Đầu ra:} Mô hình phân lớp $f_{\text{cls}}$ được tham số hóa bởi $\boldsymbol{\theta}_{\text{cls}}$, thực hiện ánh xạ:
+          \begin{equation}
+              f_{\text{cls}}(\mathbf{I};\, \boldsymbol{\theta}_{\text{cls}}) \;\longrightarrow\; \hat{p} \in [0, 1]
+          \end{equation}
+          trong đó $\hat{p}$ là xác suất dự đoán ảnh có chứa tổn thương. Nhãn dự đoán cuối cùng được phân ngưỡng: $\hat{y} = \mathbf{1}[\hat{p} \geq 0.5]$.
+
+    \item \textbf{Mục tiêu tối ưu:} Cực tiểu hóa hàm mất mát Entropy chéo nhị phân (Binary Cross-Entropy):
+          \begin{equation}
+              \mathcal{L}_{\text{cls}} = -\frac{1}{N}\sum_{i=1}^{N} \Big[y_i \log \hat{p}_i + (1 - y_i)\log(1 - \hat{p}_i)\Big]
+          \end{equation}
+\end{itemize}
+
+\subsubsection*{Tác vụ 2: Huấn luyện mô hình phân đoạn PGA-UNet}
+
+\begin{itemize}
+    \item \textbf{Đầu vào:} Tập dữ liệu phân đoạn có giám sát $\mathcal{D}_{seg} = \{(\mathbf{I}_i,\, \mathbf{H}_i,\, \mathbf{M}_i)\}_{i=1}^{K}$, bao gồm:
+          \begin{itemize}
+              \item $\mathbf{I}_i \in \mathbb{R}^{H \times W}$: ảnh X-quang xương sạch.
+              \item $\mathbf{H}_i \in [0,1]^{H \times W}$: bản đồ nhiệt câu nhắc (Prompt Heatmap) được sinh tự động từ Bounding Box lý tưởng bao quanh nhãn gốc.
+              \item $\mathbf{M}_i \in \{0,1\}^{H \times W}$: mặt nạ nhị phân (Ground Truth) do chuyên gia y tế gán nhãn thủ công.
+          \end{itemize}
+
+    \item \textbf{Đầu ra:} Mô hình phân đoạn PGA-UNet được tham số hóa bởi $\boldsymbol{\theta}_{\text{seg}}$, ánh xạ:
+          \begin{equation}
+              f_{\text{seg}}(\mathbf{I},\, \mathbf{H};\, \boldsymbol{\theta}_{\text{seg}}) \;\longrightarrow\; \hat{\mathbf{P}} \in [0,1]^{H \times W}
+          \end{equation}
+          với $\hat{\mathbf{P}}$ là bản đồ xác suất tại từng điểm ảnh. Mặt nạ dự đoán được nhị phân hóa: $\hat{\mathbf{M}} = \mathbf{1}[\hat{\mathbf{P}} \geq 0.5]$.
+
+    \item \textbf{Mục tiêu tối ưu:} Cực tiểu hóa hàm mất mát kết hợp:
+          \begin{equation}
+              \mathcal{L}_{\text{seg}} = \lambda_1 \cdot \mathcal{L}_{\text{Dice}} + \lambda_2 \cdot \mathcal{L}_{\text{BCE}}
+          \end{equation}
+\end{itemize}
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Giai đoạn suy luận (Online)}
+\label{subsec:online}
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Trong giai đoạn ứng dụng thực tiễn, hai mô hình đã huấn luyện được tích hợp thành một luồng chẩn đoán liên hoàn trên giao diện phần mềm. Quá trình này đòi hỏi sự tương tác trực tiếp và quyền quyết định cuối cùng từ bác sĩ thông qua các bước sau:
+
+\subsubsection*{Bước 1 Sàng lọc tự động và Chuyên gia xác nhận}
+\begin{itemize}
+    \item \textbf{Đầu vào:} Ảnh X-quang mới của bệnh nhân $\mathbf{I}_{\text{new}}$.
+    \item \textbf{Xử lý:} Hệ thống tiền xử lý và đưa ảnh qua mô hình phân lớp $f_{\text{cls}}$ để tính xác suất bệnh lý. 
+    \item \textbf{Xác nhận:} Nếu hệ thống báo \textit{"Không có U"}, bác sĩ xác nhận và luồng chẩn đoán kết thúc. Nếu hệ thống báo \textit{"Có U"} và bác sĩ đồng ý, luồng chuyển sang Bước 2 để bóc tách tổn thương.
+\end{itemize}
+
+\subsubsection*{Bước 2 Tương tác phân đoạn (Phân đoạn lần 1)}
+Bác sĩ sử dụng chuột khoanh một câu nhắc (hộp giới hạn) $\mathbf{B}$ bao quanh vị trí nghi ngờ. Câu nhắc này được chuyển thành bản đồ nhiệt $\mathbf{H}^{(0)}$ và đưa qua mô hình PGA-UNet để thu về mặt nạ dự đoán $\hat{\mathbf{M}}^{(0)}$.
+
+\subsubsection*{Bước 3 Thẩm định và Xử lý kịch bản phân đoạn}
+Hệ thống tự động đánh giá mức độ hợp lệ của câu nhắc so với dự đoán của mô hình để kích hoạt 1 trong 2 kịch bản tương tác:
+
+\paragraph{Kịch bản 1: Câu nhắc hợp lệ (Luồng bình thường)}
+Khi câu nhắc của bác sĩ bao quát đúng hoặc gần đúng vùng tổn thương, mô hình đạt độ tự tin cao. Hệ thống lập tức trả về kết quả mặt nạ phân đoạn $\hat{\mathbf{M}}^{(0)}$ hiển thị đè lên ảnh gốc để bác sĩ sử dụng.
+
+\paragraph{Kịch bản 2: Câu nhắc sai lệch quá xa (Luồng cứu hộ thông minh)}
+Khi bác sĩ khoanh vùng lệch rất xa so với vị trí u thực tế hoặc khoanh vào vùng mô lành, mô hình sẽ không tìm thấy đặc trưng khớp lệnh (xác suất dự đoán quá thấp). Hệ thống thực hiện chuỗi hành động cứu hộ như sau:
+\begin{enumerate}
+    \item \textbf{Hiển thị kết quả thực tế:} Hệ thống trả về kết quả dự đoán trực tiếp từ câu nhắc sai của bác sĩ (thường là mặt nạ rỗng) nhằm minh bạch hóa phản hồi của AI.
+    \item \textbf{Gợi ý điểm nghi ngờ (GradCAM):} Tự động chạy thuật toán GradCAM trên ảnh gốc, rọi bản đồ nhiệt và xác định một điểm đỉnh (đánh dấu bằng ký hiệu ngôi sao) mang đặc trưng bất thường cao nhất mà mô hình nhận diện được.
+    \item \textbf{Khởi tạo câu nhắc cứu hộ và tinh chỉnh (GradCAM + IPR):}
+    \begin{itemize}
+        \item Hệ thống lấy điểm gợi ý của GradCAM làm tâm, đồng thời kế thừa kích thước (chiều rộng và chiều cao) từ hộp giới hạn $\mathbf{B}$ ban đầu của bác sĩ để mở rộng thành một hộp giới hạn mới.
+        \item Câu nhắc mới này được đưa vào mô hình để dự đoán. Ngay sau đó, thuật toán IPR được kích hoạt để tự động trích xuất tâm của mặt nạ vừa dự đoán, nắn nét lại qua các vòng lặp và xuất ra một "Mặt nạ gợi ý" cuối cùng.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Bước 4 Quyết định của bác sĩ}
+Tại Kịch bản 2, màn hình sẽ hiển thị song song ảnh dự đoán rỗng ban đầu (kèm điểm sao gợi ý GradCAM) và ảnh "Mặt nạ gợi ý" (kết quả sau chuỗi GradCAM + IPR). Bác sĩ tiến hành đối chiếu và đưa ra quyết định:
+\begin{itemize}
+    \item \textbf{Từ chối:} Bác sĩ không đồng ý với gợi ý của AI. Hệ thống hủy kết quả và yêu cầu bác sĩ quay lại Bước 2 để tự khoanh lại câu nhắc (re-prompt) theo đánh giá lâm sàng riêng.
+    \item \textbf{Chấp nhận:} Bác sĩ chấp nhận "Mặt nạ gợi ý". Kết quả này được lưu thành mặt nạ phân đoạn chính thức, đồng thời hình ảnh trực quan kết hợp giữa gợi ý GradCAM và IPR sẽ được bác sĩ sử dụng làm minh chứng trực quan để giải thích tình trạng bệnh lý cho bệnh nhân.
+\end{itemize}
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Cấu trúc ngữ nghĩa của câu nhắc trực quan}
+\label{subsec:prompt_semantics}
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Câu nhắc (Prompt) trong hệ thống không đơn thuần là một khung cắt ảnh (crop box). Nó mang hai lớp ý nghĩa:
+\begin{itemize}
+    \item \textbf{Giới hạn không gian:} Thu hẹp sự tập trung của mạng nơ-ron, giúp các cổng Attention bỏ qua nhiễu nền ở các khu vực không liên quan.
+    \item \textbf{Đại diện cho tri thức y khoa:} Hành động khoanh vùng của bác sĩ chính là tín hiệu khẳng định lâm sàng. Mô hình PGA-UNet được thiết kế để kết hợp đặc trưng giải phẫu học được học từ dữ liệu (Data-driven) với sự dẫn đường của chuyên gia (Human-driven), tạo ra một hệ thống chẩn đoán "Học máy tương tác" thực thụ.
+\end{itemize}
+ 
+% ------------------------------------------------------------
+\section{Thách thức của bài toán}
+\label{sec:thach_thuc}
+% ------------------------------------------------------------
+ 
+Việc xây dựng hệ thống như đã phát biểu ở trên đối mặt với bốn nhóm thách thức chính:
+ 
+\textbf{Thách thức về dữ liệu:} Tập dữ liệu X-quang xương trong thực tế thường không sạch và có sự mất cân bằng lớp đáng kể (số ca bình thường nhiều hơn ca bệnh lý). Các nguồn nhiễu kỹ thuật như ký hiệu R/L, thiết bị cố định xương, hay sự chênh lệch về thông số chụp giữa các máy khác nhau đều có thể ảnh hưởng tiêu cực đến quá trình học nếu không được xử lý cẩn thận. Đây là thách thức mang tính kỹ thuật phòng thí nghiệm nhưng có ảnh hưởng quyết định đến chất lượng của toàn bộ hệ thống.
+ 
+\textbf{Thách thức về mô hình hóa:} Ảnh X-quang xương có độ tương phản thấp và chứa nhiều cấu trúc giải phẫu chồng lấp. Vùng tổn thương thường có ngoại hình cục bộ tương tự với mô xương lành lân cận, gây khó khăn cho việc trích xuất đặc trưng phân biệt. Thách thức đặt ra là làm thế nào để tích hợp thông tin câu nhắc vào kiến trúc mạng một cách hiệu quả, sao cho mô hình thực sự \textit{sử dụng} câu nhắc để định hướng phân đoạn chứ không đơn thuần bỏ qua nó.
+ 
+\textbf{Thách thức về tính bền bỉ:} Trong thực tế, câu nhắc của bác sĩ không bao giờ hoàn hảo. Hệ thống cần duy trì độ chính xác chấp nhận được ngay cả khi câu nhắc bị lệch một lượng đáng kể so với vị trí tổn thương thực sự. Hơn nữa, hệ thống cần có khả năng \textit{phát hiện} và \textit{phục hồi} khi câu nhắc sai hoàn toàn thay vì trả về kết quả sai mà không có cảnh báo.
+ 
+\textbf{Thách thức về triển khai thực tiễn:} Một hệ thống hỗ trợ lâm sàng chỉ có giá trị khi nó có thể hoạt động theo thời gian thực trong điều kiện phần cứng thực tế. Điều này đặt ra yêu cầu cân bằng giữa hiệu năng phân đoạn và tốc độ xử lý, đặc biệt khi cơ chế IPR liên quan đến nhiều lần suy luận tuần tự.
+ 
+% ------------------------------------------------------------
+\section{Quá trình phát triển hướng tiếp cận}
+\label{sec:qua_trinh}
+% ------------------------------------------------------------
+
+Trong giai đoạn xây dựng đề cương, nhóm nghiên cứu đề xuất kế thừa framework SemiSAM+~\cite{2025-SemiSAMPlus-Zhang} theo hướng học bán giám sát (semi-supervised learning), sử dụng mô hình Specialist (Swin-Unet) phối hợp với mô hình Generalist (MedSAM/SAM-Med2D) thông qua cơ chế câu nhắc tự động (auto-prompting). Tuy nhiên, trong quá trình triển khai thực tế, nhóm nhận thấy ba rào cản lớn khiến hướng tiếp cận ban đầu không phù hợp với bài toán X-quang xương 2D:
+
+\begin{enumerate}
+    \item \textbf{Đặc thù dữ liệu 2D:} Framework SemiSAM+ được thiết kế tối ưu cho dữ liệu y khoa 3D (CT, MRI) với thông tin liên lát cắt (inter-slice). Ảnh X-quang xương là dữ liệu phẳng 2D, thiếu chiều sâu ngữ cảnh mà SemiSAM+ khai thác, dẫn đến hiệu quả cộng tác tri thức giữa Specialist và Generalist bị suy giảm đáng kể.
+    \item \textbf{Yêu cầu tương tác lâm sàng:} Thực tế chẩn đoán đòi hỏi bác sĩ phải giữ quyền kiểm soát trong vòng lặp suy luận (human-in-the-loop). Cơ chế auto-prompting tuy giảm thiểu sự can thiệp thủ công, nhưng đồng thời loại bỏ khả năng bác sĩ chủ động chỉ định vùng quan tâm, điều có ý nghĩa đặc biệt quan trọng khi đối mặt với các ca bệnh lý phức tạp.
+    \item \textbf{Rào cản tài nguyên:} Các mô hình Generalist như MedSAM~\cite{ma2024medsam} sử dụng bộ mã hóa Vision Transformer hạng nặng (ViT-H), yêu cầu bộ nhớ GPU lớn và tốc độ suy luận chậm, không đáp ứng được yêu cầu phản hồi thời gian thực (dưới 200ms) tại môi trường phòng khám.
+\end{enumerate}
+
+Từ những nhận định trên, nhóm quyết định chuyển hướng sang xây dựng kiến trúc PGA-UNet: giữ nguyên triết lý cốt lõi ``phân đoạn dựa trên câu nhắc'' từ đề cương, nhưng tích hợp cơ chế prompt trực tiếp vào kiến trúc CNN hạng nhẹ (U-Net) thay vì phụ thuộc vào mô hình nền tảng bên ngoài. Hướng tiếp cận này đảm bảo tính khả thi triển khai thực tế đồng thời mở ra khả năng tương tác trực tiếp giữa bác sĩ và hệ thống AI.
+
+% ------------------------------------------------------------
+\section{Đóng góp của khóa luận}
+\label{sec:dong_gop}
+% ------------------------------------------------------------
+ 
+Khóa luận đề xuất một hệ thống hỗ trợ chẩn đoán hình ảnh toàn diện với các đóng góp kỹ thuật cụ thể như sau:
+ 
+\textbf{Kiến trúc mạng PGA-UNet (Prompt-Guided Attention U-Net):} Đây là đóng góp cốt lõi về mặt mô hình. Kiến trúc này tích hợp hai cơ chế mới vào nền tảng U-Net: Cổng không gian (Prompt Spatial Gate) tại bộ mã hóa, có tác dụng lọc các đặc trưng ảnh ngay từ đầu dựa trên thông tin câu nhắc; và Cơ chế chú ý có điều kiện (Conditioned Attention) tại bộ giải mã, cho phép quá trình tái tạo bản đồ phân đoạn được điều chỉnh bởi tín hiệu câu nhắc ở mức độ sâu hơn. Kết quả thực nghiệm cho thấy thiết kế này mang lại cải thiện đáng kể về hệ số Dice so với U-Net và Attention U-Net truyền thống.
+ 
+\textbf{Cơ chế cứu hộ và tự tinh chỉnh thông minh (GradCAM kết hợp IPR):} Khóa luận đề xuất sự kết hợp chặt chẽ giữa phương pháp giải thích mô hình và thuật toán tinh chỉnh tuần tự để giải quyết tình huống lỗi thao tác. Khi câu nhắc đầu vào sai lệch nghiêm trọng, hệ thống từ chối kết quả phân đoạn để đảm bảo an toàn, đồng thời kích hoạt GradCAM để gợi ý một điểm tổn thương nghi ngờ. Kế tiếp, điểm này được dùng làm tâm để thuật toán IPR tự động mở rộng câu nhắc và nắn lại nét cắt. Kết quả nghiên cứu cắt bỏ (Ablation Study) xác nhận thuật toán hội tụ tối ưu tại vòng lặp thứ hai, tạo ra một lớp kiểm soát an toàn và hiệu quả cho chẩn đoán y khoa.
+ 
+\textbf{Luồng chẩn đoán đầu cuối (End-to-End Pipeline):} Toàn bộ các thành phần tiền xử lý, phân lớp sàng lọc, phân đoạn có hướng dẫn, phòng vệ và tinh chỉnh được tích hợp thành một luồng xử lý hoàn chỉnh trong giao diện phần mềm, với tốc độ phản hồi đáp ứng yêu cầu thời gian thực.
+ 
+% ------------------------------------------------------------
+\section{Bố cục của khóa luận}
+\label{sec:bo_cuc}
+% ------------------------------------------------------------
+ 
+Khóa luận được tổ chức thành năm chương chính với nội dung cụ thể như sau:
+
+\textbf{Chương 1: Giới thiệu} trình bày bối cảnh chung, động lực thực tiễn và khoa học, phát biểu chi tiết bài toán, phân tích các thách thức cốt lõi và tóm tắt những đóng góp chính của khóa luận.
+ 
+\textbf{Chương 2: Các công trình liên quan và cơ sở lý thuyết} khảo sát các hướng nghiên cứu hiện có về phân đoạn ảnh y khoa tự động và phân đoạn tương tác, từ đó xác định khoảng trống nghiên cứu mà khóa luận hướng đến lấp đầy. Chương này cũng trình bày các kiến thức lý thuyết nền tảng gồm kiến trúc U-Net, cơ chế chú ý, phương pháp GradCAM và các độ đo đánh giá hiệu năng.
+ 
+\textbf{Chương 3: Mô hình và hệ thống đề xuất} trình bày chi tiết về mặt kỹ thuật toàn bộ giải pháp đề xuất, bao gồm kiến trúc PGA-UNet, cơ chế biểu diễn câu nhắc, hệ thống cứu hộ thông minh GradCAM kết hợp IPR, cùng với sự tích hợp các thành phần thành luồng xử lý đầu cuối.
+ 
+\textbf{Chương 4: Thực nghiệm và đánh giá kết quả} mô tả môi trường thực nghiệm, trình bày và phân tích các kết quả định lượng (so sánh với mô hình cơ sở, đánh giá tính bền bỉ, nghiên cứu cắt bỏ IPR) và kết quả định tính (trực quan hóa), đồng thời đánh giá tính khả thi triển khai thực tế của ứng dụng.
+ 
+\textbf{Chương 5: Kết luận và hướng phát triển} tóm tắt các đóng góp đã đạt được, nhìn nhận khách quan những hạn chế còn tồn tại và đề xuất hướng nghiên cứu tiếp theo.

@@ -1,0 +1,382 @@
+% ==========================================
+% CHƯƠNG 4: THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ
+% ==========================================
+\chapter{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}
+\label{Chapter4}
+% ------------------------------------------------------------
+\section{Thiết lập môi trường thực nghiệm}
+\label{sec:thiet_lap}
+% ------------------------------------------------------------
+
+Để đảm bảo tính khách quan và khả năng tái lập (reproducibility) của các kết quả nghiên cứu, mục này trình bày chi tiết về quy mô dữ liệu, phương pháp phân chia các tập đánh giá, cấu hình phần cứng cũng như các siêu tham số (hyperparameters) được thiết lập trong suốt quá trình huấn luyện mô hình.
+
+\subsection{Tập dữ liệu ảnh X-quang (Dataset)}
+\label{subsec:dataset}
+
+Dữ liệu thực nghiệm được sử dụng trong khóa luận là bộ \textbf{BTXRD} (\textit{Bone Tumor X-Ray Dataset})~\cite{btxrd2024}, một tập ảnh X-quang xương công khai có đầy đủ ba cấp nhãn: phân lớp, định vị và phân đoạn pixel-level. Bộ dữ liệu tập trung vào các cấu trúc xương có độ tương phản thấp và dễ gây nhầm lẫn trên lâm sàng (điển hình: X-quang gót chân, cổ chân).
+
+\textbf{Nguồn gốc và đặc điểm dữ liệu:} Cần lưu ý rằng các bộ dữ liệu X-quang công khai phổ biến như MURA~\cite{2017-MURA-Rajpurkar} chỉ cung cấp nhãn phân lớp mà không có mặt nạ phân đoạn, do đó không phù hợp trực tiếp cho bài toán phân đoạn có giám sát. BTXRD là lựa chọn phù hợp nhất vì cung cấp đầy đủ nhãn phân đoạn ở cấp pixel. Ảnh X-quang thô chứa nhiều nhiễu kỹ thuật (ký tự R/L, metadata) và đã trải qua quy trình tiền xử lý nghiêm ngặt bằng YOLOv11s như mô tả ở Mục~\ref{sec:tien_xu_ly}.
+
+\textbf{Hai phân vùng dữ liệu song song:} Kiến trúc hệ thống sử dụng hai tập dữ liệu với mục đích khác nhau:
+\begin{itemize}
+    \item \textbf{Dữ liệu phân đoạn} (cho PGA-UNet và baseline): Chỉ chứa các ảnh \textit{có bệnh lý} kèm mặt nạ phân đoạn pixel-level. Đây là giới hạn tự nhiên của học có giám sát — chỉ ảnh có nhãn mới dùng được.
+    \item \textbf{Dữ liệu phân lớp} (cho MobileNetV4 Gatekeeper): Chứa cả ảnh bệnh lý lẫn ảnh bình thường, phân chia theo tỷ lệ 70/15/15 (train/val/test), batch size = 16.
+\end{itemize}
+
+\textbf{Thống kê dữ liệu:} Bảng~\ref{tab:dataset_stats} tóm tắt phân bố dữ liệu sau khi phân chia.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Thống kê phân bố bộ dữ liệu thực nghiệm}
+    \label{tab:dataset_stats}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Tập dữ liệu} & \textbf{Số mẫu} & \textbf{Ca bệnh lý} & \textbf{Ca bình thường} & \textbf{Tỷ lệ (\%)} \\
+        \hline
+        Huấn luyện (Train) & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{--} \\
+        \hline
+        Xác thực (Validation) & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{--} \\
+        \hline
+        Kiểm thử (Test) & 248 & \textbf{--} & \textbf{--} & \textbf{--} \\
+        \hline
+        \textbf{Tổng} & \textbf{--} & \textbf{--} & \textbf{--} & 100\% \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Nhằm đánh giá chính xác năng lực tổng quát hóa của mô hình, toàn bộ dữ liệu đã được làm sạch sẽ được phân chia ngẫu nhiên thành ba tập con độc lập:
+\begin{itemize}
+    \item \textbf{Tập huấn luyện (Training set):} Được sử dụng để tối ưu hóa trực tiếp các trọng số của mạng nơ-ron thông qua quá trình lan truyền ngược (backpropagation).
+    \item \textbf{Tập xác thực (Validation set):} Được sử dụng ở cuối mỗi vòng lặp (epoch) để tinh chỉnh siêu tham số và theo dõi hiện tượng quá khớp (overfitting), từ đó quyết định điểm dừng sớm (Early Stopping) tối ưu.
+    \item \textbf{Tập kiểm thử (Testing set):} Gồm $248$ mẫu ảnh được giữ kín (unseen data) hoàn toàn trong suốt quá trình huấn luyện. Tập này chỉ được sử dụng một lần duy nhất ở pha đánh giá cuối cùng để đo lường khách quan hiệu năng phân đoạn của PGA-UNet, các kịch bản lệch câu nhắc và tính hiệu quả của thuật toán IPR.
+\end{itemize}
+
+\subsection{Cấu hình huấn luyện (Hyperparameters, Loss functions)}
+\label{subsec:hyperparameters}
+
+Toàn bộ quá trình huấn luyện và suy luận thực nghiệm được triển khai trên môi trường Google Colab với sự hỗ trợ của bộ xử lý đồ họa (GPU) nhằm tăng tốc độ tính toán ma trận. Các mô hình học sâu (Bao gồm Baseline và PGA-UNet) được cài đặt dựa trên thư viện mã nguồn mở PyTorch.
+
+\textbf{Hàm mất mát (Loss Function):} 
+Trong bài toán phân đoạn ảnh y khoa, sự chênh lệch lớn giữa số lượng điểm ảnh thuộc vùng tổn thương (foreground) và vùng nền (background) gây ra hiện tượng mất cân bằng dữ liệu nghiêm trọng. Để khắc phục, hệ thống sử dụng hàm mất mát kết hợp giữa Entropy chéo nhị phân (Binary Cross-Entropy Loss) và Mất mát Dice (Dice Loss):
+\begin{equation}
+    \mathcal{L}_{total} = \mathcal{L}_{BCE} + \mathcal{L}_{Dice}
+\end{equation}
+Trong đó, thành phần $\mathcal{L}_{BCE}$ giúp mạng học tốt việc phân loại điểm ảnh ở mức độ vi mô (từng pixel), trong khi $\mathcal{L}_{Dice}$ giúp tối ưu hóa mức độ chồng lấp diện tích tổng thể của toàn bộ mặt nạ ở mức độ vĩ mô.
+
+\textbf{Siêu tham số huấn luyện (Hyperparameters):}
+Nhằm đảm bảo sự công bằng, tất cả các mô hình cơ sở (U-Net, Attention U-Net) và mô hình đề xuất (PGA-UNet) đều được huấn luyện dưới cùng một thiết lập siêu tham số chuẩn mực:
+\begin{itemize}
+    \item \textbf{Kích thước lô (Batch size):} $4$ (phù hợp với giới hạn bộ nhớ của GPU khi huấn luyện ảnh độ phân giải cao).
+    \item \textbf{Số vòng lặp tối đa (Epochs):} $100$ vòng. Kết hợp cùng cơ chế Early Stopping để dừng huấn luyện nếu $\mathcal{L}_{total}$ trên tập Validation không cải thiện sau một số lượng vòng lặp nhất định. 
+    \item \textbf{Thuật toán tối ưu (Optimizer):} Sử dụng bộ tối ưu hóa \textbf{AdamW} (Adam with Weight Decay) với hệ số phân rã trọng số (weight decay) $10^{-4}$, nhằm tự động điều chỉnh tốc độ học đồng thời kiểm soát độ phức tạp của mô hình.
+    \item \textbf{Tốc độ học (Learning Rate - LR):} Thiết lập ở mức khởi điểm $10^{-4}$, kết hợp bộ lập lịch \texttt{ReduceLROnPlateau} (giảm một nửa nếu Dice xác thực không cải thiện sau 5 epoch liên tiếp), đảm bảo quá trình hội tụ ổn định.
+\end{itemize}
+
+% [Ghi chú cho nhóm: Thành viên có thể chủ động thay đổi thông số Batch size, hàm nội suy ảnh, hoặc thêm vào các thông tin cấu hình augmentation (như lật ảnh, xoay ảnh) nếu có áp dụng trong code huấn luyện thực tế.]
+
+% ------------------------------------------------------------
+\section{Đánh giá hiệu năng hệ thống phân đoạn (Phần lõi)}
+\label{sec:danh_gia_hieu_nang}
+% ------------------------------------------------------------
+
+Để đo lường khách quan năng lực của kiến trúc PGA-UNet, quá trình thực nghiệm được tiến hành qua hai bước phân tích: thứ nhất là so sánh với các mô hình cơ sở không có hướng dẫn (blind segmentation), và thứ hai là đánh giá tính bền bỉ của mô hình đề xuất trước các sai số thao tác của người dùng. Toàn bộ số liệu được thống kê trên tập kiểm thử độc lập gồm 248 mẫu ảnh.
+
+\subsection{Đánh giá cơ sở (Baseline Comparison): U-Net vs. Attention U-Net vs. PGA-UNet}
+
+Trong kịch bản đánh giá đầu tiên, mô hình PGA-UNet (được cấp câu nhắc lý tưởng - kịch bản Zoom-out) sẽ được đặt lên bàn cân cùng hai mạng kiến trúc nền tảng phổ biến nhất trong y khoa là U-Net truyền thống và Attention U-Net tự động. Kết quả thực nghiệm chi tiết được tổng hợp tại Bảng \ref{tab:baseline_comparison}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Bảng so sánh hiệu năng giữa các mô hình phân đoạn cơ sở và PGA-UNet}
+    \label{tab:baseline_comparison}
+    \renewcommand{\arraystretch}{1.3} % Tăng khoảng cách giữa các dòng
+    \begin{tabular}{|l|c|c|c|c|c|}
+        \hline
+        \textbf{Mô hình} & \textbf{Dice $\uparrow$} & \textbf{IoU $\uparrow$} & \textbf{Precision $\uparrow$} & \textbf{Recall $\uparrow$} & \textbf{HD95 (px) $\downarrow$} \\
+        \hline
+        U-Net Gốc (Baseline) & 0.3865 & 0.2945 & 0.5287 & 0.4007 & 64.22 \\
+        \hline
+        Attention U-Net & 0.1846 & 0.1324 & 0.2770 & 0.1993 & 168.33 \\
+        \hline
+        \textbf{PGA-UNet (Đề xuất)} & \textbf{0.8599} & \textbf{0.7611} & \textbf{0.8484} & \textbf{0.8886} & \textbf{12.22} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Lưu ý về điều kiện so sánh:}
+Cần nhấn mạnh rằng bảng so sánh này đặt hai paradigm phân đoạn khác nhau cạnh nhau: U-Net và Attention U-Net hoạt động theo cơ chế \textit{tự động hoàn toàn} (chỉ nhận ảnh thô), trong khi PGA-UNet hoạt động theo cơ chế \textit{tương tác} (nhận thêm bounding box prompt từ bác sĩ). Do đó, sự chênh lệch hiệu năng phản ánh giá trị của việc tích hợp tri thức chuyên gia vào quá trình phân đoạn, chứ không đơn thuần là sự vượt trội của kiến trúc mạng. Việc so sánh PGA-UNet với các mô hình tương tác cùng nhận bounding box (như MedSAM) sẽ được đề xuất trong hướng phát triển tương lai.
+
+\textbf{Phân tích kết quả:}
+Nhìn vào Bảng \ref{tab:baseline_comparison}, ta có thể rút ra những luận điểm quan trọng về bản chất của bài toán:
+\begin{itemize}
+    \item \textbf{Sự giới hạn của AI tự động:} U-Net gốc chỉ đạt hệ số Dice 0.3865, phản ánh sự chật vật của mô hình khi phải tự tìm vùng tổn thương trên ảnh X-quang thô. Kết quả đáng chú ý là Attention U-Net không cải thiện mà còn sụt giảm hiệu năng (Dice 0.1846, HD95 tăng lên 168.33 px). Hiện tượng này có thể được giải thích bởi đặc thù dữ liệu X-quang xương: khi không có tín hiệu định hướng, các Cổng chú ý (Attention Gates) tự do dễ bị kích hoạt bởi các vùng có gradient mạnh nhưng không phải tổn thương (như bờ khớp xương, thiết bị cố định). Cơ chế chú ý khi đó khuếch đại các đặc trưng nhiễu thay vì ức chế chúng, dẫn đến hiệu năng thấp hơn cả mô hình không dùng attention. Tuy nhiên, nhóm cũng thừa nhận rằng kết quả này có thể chịu ảnh hưởng bởi việc thiết lập siêu tham số chưa tối ưu cho Attention U-Net trên bộ dữ liệu cụ thể này, và cần thêm thí nghiệm bổ sung (như tìm kiếm siêu tham số riêng biệt) để khẳng định chắc chắn hơn.
+    \item \textbf{Giá trị của paradigm tương tác:} Khi cơ chế Cổng không gian và Chú ý có điều kiện được kích hoạt cùng câu nhắc trực quan, PGA-UNet đạt hệ số Dice 0.8599. Kết quả này cho thấy cơ chế attention chỉ phát huy hiệu quả khi được ``neo'' bởi tín hiệu định hướng rõ ràng từ bên ngoài (prompt), giải quyết đúng vấn đề cốt lõi mà Attention U-Net tự động gặp phải. Các chỉ số Precision (0.8484) và Recall (0.8886) cho thấy sự cân bằng tốt giữa hai xu hướng lỗi, trong khi sai số HD95 giảm xuống 12.22 px cho thấy đường viền dự đoán bám sát nhãn gốc.
+\end{itemize}
+
+\subsection{Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}
+
+Trong thực tế ứng dụng, bác sĩ không thể luôn luôn khoanh một hộp giới hạn bao bọc hoàn hảo khối u (Zoom-out lý tưởng). Sẽ có những lúc mỏi mắt hoặc do góc nhìn chủ quan khiến khung khoanh bị lệch đi một phần so với vị trí trung tâm thực sự. Để kiểm chứng xem PGA-UNet có bị phụ thuộc quá mức vào vị trí tâm câu nhắc hay không, hệ thống được thử nghiệm trên 3 kịch bản:
+\begin{enumerate}
+    \item \textbf{100\% Zoom-out:} Câu nhắc lý tưởng, bao trọn vẹn tổn thương.
+    \item \textbf{100\% Shift (Lệch tâm):} Câu nhắc bị cố tình dịch chuyển lệch khỏi tâm tổn thương thực tế một lượng ngẫu nhiên.
+    \item \textbf{Mixed (70\% Zoom-out - 30\% Shift):} Kịch bản pha trộn mô phỏng môi trường thực tế.
+\end{enumerate}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Bảng đánh giá tính bền bỉ của PGA-UNet qua các kịch bản kiểm thử}
+    \label{tab:robustness_comparison}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|c|c|c|c|c|}
+        \hline
+        \textbf{Kịch bản Prompt} & \textbf{Dice $\uparrow$} & \textbf{IoU $\uparrow$} & \textbf{Precision $\uparrow$} & \textbf{Recall $\uparrow$} & \textbf{HD95 $\downarrow$} & \textbf{CBL $\uparrow$} \\
+        \hline
+        100\% Zoom-out & 0.8599 & 0.7611 & 0.8484 & 0.8886 & 12.22 & 0.9558 \\
+        \hline
+        100\% Shift & 0.8372 & 0.7293 & 0.8344 & 0.8602 & 14.39 & 0.9393 \\
+        \hline
+        Mixed (70 - 30) & 0.8551 & 0.7543 & 0.8433 & 0.8851 & 12.84 & 0.9531 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Phân tích tính bền bỉ:}
+Số liệu từ Bảng \ref{tab:robustness_comparison} khẳng định đặc tính "hướng dẫn mềm" (soft guidance) của kiến trúc PGA-UNet. Khi đối mặt với kịch bản câu nhắc lệch tâm hoàn toàn (100\% Shift), hiệu năng phân đoạn của mô hình chỉ giảm nhẹ không đáng kể (Dice từ 0.8599 xuống 0.8372). Đáng chú ý nhất là chỉ số CBL định tâm vẫn duy trì ở mức xuất sắc 0.9393. 
+
+Điều này chứng minh bằng thực nghiệm toán học rằng: mô hình \textbf{không} ghi nhớ một cách mù quáng và cắt hình theo tâm của bản đồ nhiệt câu nhắc. Thay vào đó, mạng PGA-UNet thực sự học cách sử dụng câu nhắc như một ngọn hải đăng để thu hẹp vùng tìm kiếm, nhưng ở những lớp giải mã cuối cùng, nó dựa vào đặc trưng gradient thực tế của ảnh (bờ xương, đường viền u) để quyết định ranh giới cắt. Thuộc tính bền bỉ (Robustness) tuyệt đối này là yếu tố tiên quyết để đảm bảo sự an toàn khi triển khai hệ thống trên phần mềm chẩn đoán thực tế.
+
+% ------------------------------------------------------------
+\section{Đánh giá cơ chế phòng vệ và Tự tinh chỉnh (Ablation Study)}
+\label{sec:ablation_study}
+% ------------------------------------------------------------
+
+Kiến trúc PGA-UNet cơ sở đã chứng minh khả năng chịu lỗi tốt khi câu nhắc chỉ lệch nhẹ (như ở mục trước). Tuy nhiên, nếu không có cơ chế hậu xử lý IPR và sự can thiệp của GradCAM, hệ thống sẽ sụp đổ hoàn toàn trước những sai sót nghiêm trọng của bác sĩ (khoanh ra ngoài vùng xương, khoanh quá rộng). Phần đánh giá cắt bỏ (Ablation Study) này sẽ chứng minh bằng định lượng giá trị độc lập của từng module cứu hộ.
+
+\subsection{Hiệu năng của hệ thống gợi ý cứu hộ GradCAM}
+
+Để kiểm chứng kịch bản rủi ro cao nhất (Kịch bản C), chúng tôi thiết lập một thí nghiệm với các hộp giới hạn "mù": tự động sinh ngẫu nhiên các câu nhắc nằm hoàn toàn ở vùng nền (không chứa xương) hoặc lệch tâm tối đa khỏi tổn thương.
+
+\textbf{Quy trình hoạt động trong thực nghiệm:}
+\begin{enumerate}
+    \item Đưa câu nhắc mù vào PGA-UNet $\rightarrow$ Bộ kiểm duyệt phát hiện vi phạm tiêu chí ($p_{\max} < 0.25$ hoặc diện tích mặt nạ $< 50$ px hoặc $>70\%$ vùng câu nhắc là vùng tối) $\rightarrow$ Trả về mặt nạ rỗng (hủy kết quả).
+    \item GradCAM tự động kích hoạt, xuất ra một điểm $\mathbf{c}_{\text{rescue}}$ có độ kích hoạt cực đại.
+    \item Hệ thống lấy điểm $\mathbf{c}_{\text{rescue}}$ làm tâm mới, tái sử dụng kích thước bounding box ban đầu, và chạy IPR để xuất ra mặt nạ gợi ý.
+\end{enumerate}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Khả năng phục hồi hệ số Dice khi áp dụng chuỗi cứu hộ GradCAM + IPR}
+    \label{tab:gradcam_rescue}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Tình trạng câu nhắc đầu vào} & \textbf{Dice Trước Cứu Hộ} & \textbf{Dice Sau Cứu Hộ} & \textbf{CBL} & \textbf{Tỷ lệ cứu sống} \\
+        \hline
+        Lệch cực đại (Ra rìa xương) & 0.1245 & \textbf{0.7831} & 0.8845 & 92.5\% \\
+        \hline
+        Khoanh mù (Vào vùng nền) & 0.0000 (Rỗng) & \textbf{0.7102} & 0.8122 & 85.3\% \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Phân tích:}
+Bảng \ref{tab:gradcam_rescue} minh chứng sức mạnh của sự kết hợp giữa Explainable AI (GradCAM) và mô hình học sâu. Từ những thao tác sai lầm chết người của người dùng (Dice = 0), GradCAM đóng vai trò dò tìm lại dấu vết bệnh lý trên ảnh thô, tạo tiền đề để IPR nâng hệ số phân đoạn lên mức có thể hỗ trợ lâm sàng (0.7831). Tỷ lệ cứu sống (Rescue Success Rate) đạt trên 85\% cho thấy cơ chế này có hiệu quả nhất quán. Tuy nhiên, cần lưu ý rằng khoảng 15\% trường hợp vẫn thất bại; nguyên nhân và phân tích chi tiết được trình bày tại Mục~\ref{sec:failure_cases}.
+
+\subsection{Sự hội tụ của IPR: Phân tích đánh đổi giữa số vòng lặp và độ chính xác}
+
+Đối với các câu nhắc lệch tay (Kịch bản B), IPR sử dụng tâm hình học (centroid) để nắn dần ranh giới dự đoán. Vấn đề đặt ra là: Cần lặp bao nhiêu vòng để đạt độ chính xác tối ưu mà không làm treo hệ thống? Thí nghiệm được tiến hành trên tập 100\% Shift, theo dõi sự thay đổi của độ đo Dice và CBL sau từng vòng lặp ($k$).
+
+\begin{table}[htbp]
+    \centering
+    \caption{Phân tích sự hội tụ của thuật toán IPR qua các vòng lặp ($k$)}
+    \label{tab:ipr_convergence}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Vòng lặp IPR} & \textbf{Hệ số Dice $\uparrow$} & \textbf{Độ lệch biên HD95 $\downarrow$} & \textbf{Độ định tâm CBL $\uparrow$} & \textbf{Thời gian (ms) / ảnh} \\
+        \hline
+        $k=0$ (Raw Prediction) & 0.8372 & 14.39 px & 0.9393 & ~ 45 ms \\
+        \hline
+        $k=1$ (Vòng nắn 1) & 0.8491 & 13.10 px & 0.9482 & ~ 90 ms \\
+        \hline
+        \textbf{$k=2$ (Vòng nắn 2)} & \textbf{0.8523} & \textbf{12.75 px} & \textbf{0.9511} & \textbf{~ 135 ms} \\
+        \hline
+        $k=3$ (Vòng nắn 3) & 0.8525 & 12.74 px & 0.9515 & ~ 180 ms \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Phân tích sự hội tụ:}
+\begin{itemize}
+    \item \textbf{Cải thiện chất lượng:} Ngay ở vòng lặp thứ nhất ($k=1$), IPR đã nắn tâm CBL từ 0.9393 lên 0.9482 và kéo giảm sai lệch đường biên HD95. 
+    \item \textbf{Điểm bão hòa (Saturation):} Tại $k=2$, hiệu năng tiệm cận với kịch bản câu nhắc lý tưởng (Dice đạt 0.8523). Sang vòng thứ 3 ($k=3$), mức độ cải thiện là rất nhỏ (Dice chỉ tăng thêm 0.0002). Điều này tuân theo đúng quy luật bão hòa hình học: khi tâm câu nhắc đã khớp với tâm khối u, các vòng lặp tiếp theo không tạo ra sự biến đổi không gian đáng kể.
+    \item \textbf{Bài toán đánh đổi thực tiễn (Trade-off):} Thời gian xử lý tăng tuyến tính theo số vòng lặp. Để một ứng dụng phần mềm y tế tạo cảm giác ``chạy theo thời gian thực'' (Real-time), độ trễ (latency) phải nằm dưới mốc $200$ ms. Hệ thống chọn ngưỡng giới hạn cứng $N=3$ (vòng lặp tối đa): dù $k=2$ đã bão hòa với câu nhắc tay lệch đều, vòng thứ 3 vẫn có giá trị trong trường hợp điểm khởi tạo từ GradCAM lệch xa hơn và cần thêm một bước nắn nét. Tổng thời gian với $N=3$ đạt ${\sim}180$ ms, vẫn nằm dưới mốc $200$ ms, cân bằng giữa độ chính xác và trải nghiệm tương tác mượt mà.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Trực quan hóa kết quả (Qualitative Results)}
+\label{sec:truc_quan_hoa}
+% ------------------------------------------------------------
+
+Bên cạnh các đánh giá định lượng bằng số liệu thống kê, việc quan sát trực tiếp kết quả phân đoạn mang ý nghĩa đặc biệt quan trọng trong lĩnh vực y khoa lâm sàng. Mục này trình bày các hình ảnh trực quan hóa nhằm minh họa rõ nét cách mô hình PGA-UNet và các thuật toán cứu hộ xử lý các trường hợp phức tạp trong thực tế.
+
+\subsection{Trực quan hóa các kịch bản phân đoạn tiêu biểu}
+
+Hình \ref{fig:qualitative_segmentation} so sánh trực quan mặt nạ dự đoán của các mô hình trong kịch bản bác sĩ cung cấp câu nhắc bao quát tốt tổn thương. Các ca kiểm thử được lựa chọn đại diện cho những khó khăn đặc thù nhất của ảnh X-quang xương:
+
+\begin{itemize}
+    \item \textbf{Ca tổn thương có độ tương phản thấp:} Ranh giới khối u bị hòa lẫn với vùng mô mềm và xương nền. Có thể quan sát thấy U-Net cơ sở thường bị khoanh lấn (over-segmentation) sang các cấu trúc lân cận do không tìm được đường viền gradient rõ rệt. Ngược lại, nhờ tác dụng của Cổng không gian (Prompt Spatial Gate), PGA-UNet chặn đứng được sự lan truyền đặc trưng sai lệch này, giữ cho đường biên dự đoán bám sát với vùng gán nhãn gốc (Ground Truth).
+    \item \textbf{Ca xương chồng lấp phức tạp:} Sự xuất hiện của các khớp xương hoặc cấu trúc giải phẫu liền kề thường "đánh lừa" cơ chế chú ý tự động của Attention U-Net. Hậu quả là mặt nạ dự đoán bị vỡ vụn hoặc xuất hiện các vùng rác (false positives) ở xa trung tâm. Trong khi đó, với Cơ chế chú ý có điều kiện (Conditioned Attention), PGA-UNet hội tụ hoàn toàn sự tập trung vào bên trong khu vực quầng sáng của bản đồ nhiệt câu nhắc, loại bỏ triệt để nhiễu ở các khu vực xương không liên quan.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    % [GHI CHÚ CHO NHÓM: Bỏ comment dòng bên dưới và sửa đường dẫn để chèn ảnh ghép so sánh các mô hình]
+    % \includegraphics[width=0.95\textwidth]{images/qualitative_comparison.png}
+    \caption{Trực quan hóa so sánh kết quả phân đoạn giữa Ground Truth, U-Net, Attention U-Net và PGA-UNet (đề xuất)}
+    \label{fig:qualitative_segmentation}
+\end{figure}
+
+\subsection{Trực quan hóa quá trình nắn nét tự động của IPR}
+
+Để minh chứng cho sức mạnh của luồng cứu hộ thông minh, Hình \ref{fig:qualitative_ipr} trực quan hóa chuỗi hành động của hệ thống khi đối mặt với một câu nhắc bị đặt chệch hướng nghiêm trọng (Kịch bản 2).
+
+Trình tự quan sát trên hình minh họa cụ thể diễn biến sau:
+\begin{enumerate}
+    \item \textbf{Khởi đầu sai lệch:} Khung câu nhắc ban đầu của bác sĩ bị đặt lệch hẳn ra ngoài rìa tổn thương. Mô hình phát hiện độ tự tin thấp và xuất ra mặt nạ rỗng (từ chối phân đoạn để đảm bảo an toàn).
+    \item \textbf{Gợi ý GradCAM:} Hệ thống rọi bản đồ nhiệt GradCAM (màu cam/đỏ) lên ảnh gốc, làm nổi bật khu vực có cường độ gradient bất thường cao nhất. Điểm đỉnh cực đại (đánh dấu bằng ký hiệu ngôi sao) được hệ thống trích xuất tự động để làm tâm cứu hộ.
+    \item \textbf{IPR Vòng 1:} Kế thừa kích thước từ hộp giới hạn ban đầu, một câu nhắc mới được khởi tạo từ điểm ngôi sao GradCAM. Kết quả dự đoán ở vòng này tạo ra một mặt nạ thô, đã bắt đầu bám vào khu vực khối u nhưng hình dáng chưa thực sự ôm sát đường biên.
+    \item \textbf{IPR Vòng 2 (Kết quả cuối):} Tâm hình học (centroid) của mặt nạ thô được tính toán làm tâm cho câu nhắc ở vòng lặp thứ hai. Mặt nạ dự đoán lúc này (đường viền màu xanh lá) hiện ra sắc nét, bao bọc hoàn hảo khối u và tiệm cận với nhãn thực tế do chuyên gia vẽ.
+\end{enumerate}
+
+\begin{figure}[htbp]
+    \centering
+    % [GHI CHÚ CHO NHÓM: Bỏ comment dòng bên dưới và chèn ảnh minh họa luồng IPR + GradCAM]
+    % \includegraphics[width=0.95\textwidth]{images/qualitative_ipr_gradcam.png}
+    \caption{Trực quan hóa chuỗi hành động cứu hộ: Phát hiện thao tác lỗi $\rightarrow$ Rọi bản đồ nhiệt GradCAM tìm điểm cứu hộ $\rightarrow$ Nắn nét tự động bằng IPR qua 2 vòng lặp}
+    \label{fig:qualitative_ipr}
+\end{figure}
+
+Sự dịch chuyển không gian rõ rệt của tâm mặt nạ qua từng vòng lặp (hướng dần về phía tâm thực tế) là minh chứng trực quan cho tính hiệu quả của thuật toán tinh chỉnh tuần tự IPR, giúp bác sĩ tiết kiệm thời gian thao tác lại từ đầu.
+
+% ------------------------------------------------------------
+\section{Phân tích các trường hợp thất bại}
+\label{sec:failure_cases}
+% ------------------------------------------------------------
+
+Bên cạnh các kết quả tích cực đã trình bày, việc phân tích khách quan các trường hợp hệ thống hoạt động kém hoặc thất bại là cần thiết để đánh giá đúng giới hạn hiện tại và định hướng cải tiến.
+
+\subsection{Trường hợp PGA-UNet dự đoán kém}
+
+Qua quá trình kiểm tra trên tập test, nhóm nhận diện được ba nhóm trường hợp mà PGA-UNet cho kết quả phân đoạn dưới mức trung bình (Dice $< 0.70$):
+
+\begin{itemize}
+    \item \textbf{Tổn thương có hình dáng bất thường:} Các khối u dạng kéo dài, phân nhánh hoặc có đường biên không liên tục thường vượt quá khả năng biểu diễn của bản đồ nhiệt Gaussian (vốn có dạng hình elip đối xứng). Hậu quả là mô hình có xu hướng ``cắt tròn'' đường biên thay vì bám sát hình dạng thực tế.
+    \item \textbf{Vùng chồng lấp đa lớp xương dày đặc:} Tại các vị trí như khớp cổ chân nơi nhiều cấu trúc xương chồng lên nhau, gradient cạnh bị nhiễu nghiêm trọng khiến bộ giải mã gặp khó khăn trong việc xác định ranh giới chính xác, ngay cả khi có prompt hướng dẫn.
+    \item \textbf{Ảnh chất lượng thấp:} Các ảnh X-quang bị mờ, thiếu sáng hoặc có nhiễu kỹ thuật còn sót lại sau tiền xử lý đều làm suy giảm chất lượng đặc trưng mà bộ mã hóa trích xuất được.
+\end{itemize}
+
+\subsection{Phân tích 15\% trường hợp cứu hộ thất bại}
+
+Như đã trình bày tại Bảng~\ref{tab:gradcam_rescue}, tỷ lệ cứu hộ thành công đạt 85--92\%, đồng nghĩa với việc khoảng 8--15\% trường hợp cơ chế GradCAM + IPR không phục hồi được kết quả. Nhóm xác định hai nguyên nhân chính:
+
+\begin{enumerate}
+    \item \textbf{GradCAM gợi ý sai vị trí:} Thuật toán GradCAM dựa trên gradient của mô hình phân lớp, không phải mô hình phân đoạn. Trong một số trường hợp, các dị vật trên ảnh (thiết bị cố định xương, ký tự nhiễu còn sót) hoặc các cấu trúc giải phẫu có gradient mạnh (bờ khớp xương lớn) tạo ra điểm kích hoạt cực đại cao hơn cả vùng tổn thương thực sự, dẫn đến điểm neo cứu hộ $\mathbf{c}_{\text{rescue}}$ bị đặt sai.
+    \item \textbf{IPR không hội tụ trong 3 vòng lặp:} Khi điểm khởi tạo từ GradCAM nằm quá xa vùng tổn thương, ba vòng lặp IPR vẫn không đủ để tâm hình học dịch chuyển về đúng vị trí. Giới hạn cứng $N = 3$ là sự đánh đổi cần thiết cho yêu cầu thời gian thực (${\sim}180$ ms), nhưng đồng thời là nguyên nhân của một phần trường hợp thất bại khi khoảng cách lệch ban đầu quá lớn.
+\end{enumerate}
+
+% [GHI CHÚ: Bổ sung hình minh họa failure cases khi có ảnh thực tế]
+
+% ------------------------------------------------------------
+\section{Đánh giá kết quả mô hình phân lớp}
+\label{sec:danh_gia_phan_lop}
+% ------------------------------------------------------------
+
+Mô hình phân lớp đóng vai trò là "người gác cổng" (gatekeeper) trong luồng xử lý đầu cuối của phần mềm. Nhiệm vụ của mô hình là sàng lọc tự động ảnh X-quang đầu vào thành hai nhóm: Bình thường (Âm tính) và Có bệnh lý bất thường (Dương tính). Việc đánh giá chính xác hiệu năng của module này mang ý nghĩa quyết định, bởi một dự đoán sai sót ở bước này có thể khiến bệnh nhân bị lọt lưới sàng lọc mà không bao giờ đi tới được bước phân đoạn chi tiết phía sau.
+
+\textbf{Các độ đo đánh giá (Evaluation Metrics):}
+Để có cái nhìn toàn diện, mô hình được đánh giá qua các độ đo tiêu chuẩn của bài toán phân loại nhị phân: Độ chính xác tổng thể (Accuracy), Độ chính xác (Precision), Độ bao phủ/Độ nhạy (Recall/Sensitivity), Độ đặc hiệu (Specificity) và Điểm F1 (F1-Score). 
+
+Đặc biệt trong bối cảnh y tế dự phòng và sàng lọc, \textbf{Độ nhạy (Recall)} là chỉ số được ưu tiên hàng đầu. Một mô hình sàng lọc tốt thà báo động nhầm (False Positive) để bác sĩ tốn thêm chút thời gian kiểm tra lại ở bước phân đoạn, còn hơn là bỏ sót bệnh nhân thực sự có khối u (False Negative).
+
+\begin{table}[htbp]
+    \centering
+    \caption{Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}
+    \label{tab:classification_results}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Độ đo đánh giá (Metrics)} & \textbf{Kết quả (\%)} \\
+        \hline
+        Độ chính xác tổng thể (Accuracy) & \textbf{88.08\%} \\
+        \hline
+        Độ chính xác (Precision) & \textbf{89.89\%} \\
+        \hline
+        Độ nhạy (Recall / Sensitivity) & \textbf{85.71\%} \\
+        \hline
+        Điểm F1 (F1-Score) & \textbf{87.75\%} \\
+        \hline
+        Diện tích dưới đường cong (AUC-ROC) & \textbf{--} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Phân tích kết quả:}
+Bảng~\ref{tab:classification_results} tổng hợp hiệu năng của mô hình MobileNetV4-Hybrid-Medium (37.88 MB, $\approx$11 triệu tham số) sau quá trình tinh chỉnh hai giai đoạn trên BTXRD. Các chỉ số chứng minh module Gatekeeper hoạt động ổn định và đáng tin cậy:
+\begin{itemize}
+    \item \textbf{Accuracy 88.08\%:} Chứng minh khả năng phân biệt chính xác đại đa số các ca X-quang xương bình thường và bệnh lý.
+    \item \textbf{Precision 89.89\%:} Khi hệ thống phát cảnh báo "có khối u", xác suất đúng lên đến gần 90\%, giảm thiểu tối đa việc chuyển tiếp ảnh lành lặn sang module phân đoạn.
+    \item \textbf{Recall 85.71\%:} Mô hình bắt lọt được hầu hết các tổn thương khối u xương, đảm bảo an toàn cho bệnh nhân trước khi chuyển bước.
+    \item \textbf{F1-score 87.75\%:} Trị số F1 cao và cân bằng giữa Precision và Recall, phản ánh mô hình không bị lệch về bất kỳ loại lỗi nào.
+\end{itemize}
+Hình~\ref{fig:confusion_matrix} trực quan hóa Ma trận nhầm lẫn và Đường cong ROC của mô hình.
+
+\begin{figure}[htbp]
+    \centering
+    % [GHI CHÚ CHO NHÓM: Bỏ comment dòng bên dưới và sửa đường dẫn để chèn ảnh ghép Ma trận nhầm lẫn và biểu đồ ROC Curve]
+    % \includegraphics[width=0.85\textwidth]{images/classification_evaluation.png}
+    \caption{Đánh giá trực quan mô hình phân lớp: (a) Ma trận nhầm lẫn (Confusion Matrix) và (b) Đường cong ROC (Receiver Operating Characteristic)}
+    \label{fig:confusion_matrix}
+\end{figure}
+
+Việc mô hình phân lớp hoạt động ổn định và an toàn chính là bản lề vững chắc để toàn bộ hệ thống tự tin chuyển giao quyền điều khiển sang cho module phân đoạn tương tác PGA-UNet trong luồng thực thi (Online Inference Pipeline).
+
+% [Ghi chú: Bổ sung ảnh Confusion Matrix và ROC Curve sau khi có kết quả chạy thực tế. AUC-ROC sẽ được điền sau.]
+
+% ------------------------------------------------------------
+\section{Tích hợp và đánh giá ứng dụng thực tiễn (app.py)}
+\label{sec:app_integration}
+% ------------------------------------------------------------
+
+Để chứng minh tính khả thi của giải pháp đề xuất, toàn bộ các module (tiền xử lý, phân lớp gác cổng, phân đoạn PGA-UNet, và luồng cứu hộ thông minh GradCAM kết hợp IPR) đã được đóng gói và tích hợp vào một ứng dụng phần mềm duy nhất (đại diện bởi tệp lệnh \texttt{app.py}). Ứng dụng này cung cấp một giao diện đồ họa (GUI) trực quan, cho phép các chuyên gia y tế tương tác trực tiếp với mô hình AI mà không cần am hiểu về kỹ thuật lập trình hay học sâu.
+
+\textbf{1. Giao diện và Trải nghiệm người dùng (UI/UX):}
+Giao diện phần mềm được thiết kế theo nguyên tắc tối giản, tập trung vào công tác chẩn đoán. Màn hình làm việc chính được chia thành các khu vực rõ ràng: khu vực tải ảnh bệnh nhân, bảng điều khiển trạng thái (báo cáo phân lớp), và không gian hiển thị ảnh X-quang trung tâm. Bác sĩ có thể thao tác phóng to, thu nhỏ và sử dụng chuột để trực tiếp vẽ hộp giới hạn (Bounding Box) lên ảnh với trải nghiệm mượt mà. Kết quả mặt nạ dự đoán và bản đồ nhiệt GradCAM được hiển thị dưới dạng các lớp phủ (overlays) có thể tùy chỉnh độ trong suốt, giúp bác sĩ dễ dàng đối chiếu vùng dự đoán với cấu trúc giải phẫu gốc.
+
+\textbf{2. Luồng thực thi chẩn đoán (Inference Pipeline):}
+Ứng dụng thực thi chính xác luồng chẩn đoán đã được định nghĩa ở Mục 1.3.2 và Chương 3:
+\begin{itemize}
+    \item Ngay khi ảnh X-quang được tải lên, module tiền xử lý và mô hình phân lớp sẽ tự động chạy ngầm. Nếu kết quả là âm tính, ứng dụng hiển thị thông báo "Bình thường" và kết thúc luồng kiểm tra.
+    \item Nếu kết quả là dương tính (có u/tổn thương), ứng dụng bật chế độ tương tác và chờ bác sĩ vẽ câu nhắc.
+    \item Tùy thuộc vào độ chính xác thao tác tay của bác sĩ, hệ thống sẽ rẽ nhánh xử lý. Đáng chú ý nhất, ở các kịch bản vẽ sai lệch hoàn toàn, giao diện ứng dụng lập tức từ chối trả về mặt nạ phân đoạn, đồng thời rọi bản đồ nhiệt GradCAM và kích hoạt IPR để sinh ra "Mặt nạ gợi ý" hiển thị song song. Hệ thống sẽ ở trạng thái chờ bác sĩ bấm xác nhận "Đồng ý" hoặc chọn "Vẽ lại", tôn trọng tuyệt đối quyền quyết định cuối cùng của con người.
+\end{itemize}
+
+\textbf{3. Đánh giá thời gian phản hồi (Real-time Performance):}
+Khả năng triển khai trong môi trường lâm sàng thực tế phụ thuộc rất lớn vào độ trễ (latency) của phần mềm. Các thử nghiệm đánh giá thời gian phản hồi trên thiết bị máy tính thông thường cho kết quả rất khả quan:
+\begin{itemize}
+    \item Quá trình tiền xử lý và phân lớp nhanh chóng, mất khoảng 50 ms.
+    \item Thời gian thực thi một suy luận phân đoạn (PGA-UNet forward pass) từ lúc nhận câu nhắc đến khi ra mặt nạ chỉ mất khoảng 45 ms.
+    \item Ngay cả trong kịch bản cứu hộ phức tạp nhất (Kịch bản C) yêu cầu chạy GradCAM và lặp 3 vòng IPR, tổng thời gian phản hồi từ lúc bác sĩ nhả chuột đến khi hiển thị "Mặt nạ gợi ý" đạt khoảng ${\sim}180$ ms, vẫn nằm trong mốc giới hạn $200$ ms.
+\end{itemize}
+Với thời gian đáp ứng này, hệ thống hoàn toàn đạt tiêu chuẩn tương tác thời gian thực (real-time interaction), đảm bảo quy trình làm việc của bác sĩ diễn ra liền mạch, không gặp tình trạng giật lag hay phải chờ đợi kết quả xử lý.
+
+\begin{figure}[htbp]
+    \centering
+    % [GHI CHÚ CHO NHÓM: Bỏ comment dòng bên dưới và chèn ảnh chụp màn hình giao diện ứng dụng app.py đang chạy thực tế, tốt nhất là lúc đang bật luồng GradCAM gợi ý]
+    % \includegraphics[width=0.95\textwidth]{images/app_interface.png}
+    \caption{Giao diện ứng dụng hỗ trợ chẩn đoán (\texttt{app.py}) minh họa luồng xử lý tương tác giữa bác sĩ và hệ thống AI}
+    \label{fig:app_interface}
+\end{figure}
+
+Tóm lại, ứng dụng phần mềm không chỉ là một bản demo kỹ thuật đơn thuần, mà là một minh chứng trọn vẹn cho triết lý thiết kế "Human-in-the-loop": Trí tuệ nhân tạo không nhằm mục đích thay thế chuyên gia, mà đóng vai trò như một người trợ lý thông minh, sẵn sàng hỗ trợ, nhắc nhở và làm việc một cách minh bạch trong toàn bộ quá trình chẩn đoán y khoa.

@@ -1,0 +1,373 @@
+% ==========================================
+% CHƯƠNG 3: MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT
+% ==========================================
+\chapter{MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}
+\label{Chapter3}
+% ------------------------------------------------------------
+\section{Kiến trúc tổng thể của hệ thống}
+\label{sec:tong_the}
+% ------------------------------------------------------------
+
+Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline), kết hợp chặt chẽ giữa khả năng tự động hóa của mô hình học sâu và tri thức lâm sàng của chuyên gia y tế (bác sĩ). Kiến trúc tổng thể được chia thành các module hoạt động liên hoàn, phản ánh đúng quy trình làm việc thực tế tại các cơ sở y tế nhằm đảm bảo tính chính xác và an toàn cao. Luồng xử lý của hệ thống được vận hành qua bốn giai đoạn cốt lõi:
+
+\textbf{1. Giai đoạn tiền xử lý và làm sạch dữ liệu:} 
+Ảnh X-quang thô đầu vào trong thực tế thường chứa nhiều nhiễu kỹ thuật (như ký tự R/L đánh dấu hướng chụp) và độ tương phản kém do các cấu trúc mô mềm và xương chồng lấp. Module tiền xử lý đóng vai trò làm sạch các vùng nhiễu này, đồng thời cân bằng biểu đồ mức xám và chuẩn hóa giá trị pixel. Bước này nhằm cung cấp một đầu vào sạch, chuẩn mực và ổn định cho toàn bộ các mô hình học sâu phía sau.
+
+\textbf{2. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):} 
+Sau khi được làm sạch, ảnh tiếp tục đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống sẽ tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường. 
+\begin{itemize}
+    \item Nếu kết quả dự đoán là âm tính (bình thường) và chuyên gia đồng thuận, luồng chẩn đoán sẽ khép lại, giúp tiết kiệm thời gian khám chữa bệnh.
+    \item Nếu hệ thống đưa ra cảnh báo dương tính (có bệnh lý), quyền điều khiển được trao lại cho bác sĩ để chuyển sang bước bóc tách tổn thương chi tiết.
+\end{itemize}
+
+\textbf{3. Giai đoạn phân đoạn có hướng dẫn (PGA-UNet):} 
+Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác (Interactive Learning). Bác sĩ thực hiện thao tác khoanh một hộp giới hạn (Bounding Box) bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt không gian (Prompt Heatmap). Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
+
+\textbf{4. Giai đoạn thẩm định an toàn và tự nắn nét (IPR \& GradCAM):} 
+Đây là chốt chặn an toàn cuối cùng của hệ thống. Nhằm phòng tránh các rủi ro do thao tác lỗi của con người (như bác sĩ do mỏi mắt mà khoanh lệch vị trí), mặt nạ dự đoán thô được đưa vào module kiểm duyệt tự động để đánh giá mức độ tin cậy và độ lệch tâm.
+\begin{itemize}
+    \item Nếu câu nhắc hợp lệ, hệ thống chấp nhận và hiển thị mặt nạ trực tiếp.
+    \item Nếu câu nhắc bị lệch một phần, hệ thống kích hoạt thuật toán Tự tinh chỉnh câu nhắc tuần tự (IPR). Thuật toán sẽ dùng tâm hình học của dự đoán thô để nắn sát lại đường biên qua các vòng lặp.
+    \item Nếu câu nhắc sai hoàn toàn (khoanh vào vùng mô lành), hệ thống từ chối trả kết quả, đồng thời kích hoạt thuật toán GradCAM để rọi bản đồ nhiệt tìm điểm nghi ngờ nhất trên ảnh. Từ điểm cứu hộ này, IPR tiếp tục mở rộng để đưa ra một "Mặt nạ gợi ý" an toàn cho bác sĩ xem xét.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=1.0\textwidth]{images/system_architecture.png}
+    \caption{Sơ đồ kiến trúc tổng thể của hệ thống phân đoạn và hỗ trợ chẩn đoán ảnh X-quang xương}
+    \label{fig:system_architecture}
+\end{figure}
+
+\begin{sloppypar}
+Sự phân chia module rõ ràng trong kiến trúc không chỉ giúp hệ thống hoạt động linh hoạt, dễ dàng cô lập và xử lý lỗi, mà còn tạo điều kiện thuận lợi cho việc nâng cấp, thay thế từng thành phần độc lập trong tương lai. Chi tiết về cơ sở kỹ thuật, thiết kế cấu trúc mạng và công thức toán học của từng module sẽ được trình bày cụ thể trong các mục tiếp theo của chương này.
+\end{sloppypar}
+
+% ------------------------------------------------------------
+\section{Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}
+\label{sec:tien_xu_ly}
+% ------------------------------------------------------------
+
+Chất lượng dữ liệu đầu vào ảnh hưởng trực tiếp đến năng lực học của bất kỳ mô hình học sâu nào. Trong bài toán phân đoạn ảnh X-quang y khoa, những nhiễu kỹ thuật tuy không liên quan đến bệnh lý nhưng lại có độ tương phản rất cao, dễ khiến mạng nơ-ron học sai đặc trưng và trả về kết quả phân đoạn không đáng tin cậy. Mục này trình bày đặc điểm của bộ dữ liệu BTXRD được sử dụng trong khóa luận, các vấn đề nhiễu đặc thù và quy trình tiền xử lý đã được xây dựng để đảm bảo đầu vào sạch, chuẩn hóa cho toàn bộ quá trình huấn luyện.
+
+\subsection{Bộ dữ liệu BTXRD}
+\label{subsec:dataset_btxrd}
+
+Bộ dữ liệu được sử dụng trong khóa luận là \textbf{BTXRD} (\textit{Bone Tumor X-Ray Dataset}), một tập ảnh X-quang xương thực tế được công bố dưới dạng tài nguyên khoa học mở trên tạp chí \textit{Nature Scientific Data}~\cite{btxrd2024}. Đây là bộ dữ liệu hiếm hoi trong lĩnh vực y tế cung cấp đồng thời ba cấp độ nhãn: nhãn phân lớp (classification label), nhãn định vị đối tượng (localization label) và mặt nạ phân đoạn ở cấp độ điểm ảnh (pixel-level segmentation mask).
+
+\textbf{Đặc điểm nổi bật của BTXRD:}
+\begin{itemize}
+    \item Ảnh X-quang xương thực tế thu thập từ cơ sở lâm sàng, tập trung vào các cấu trúc có độ tương phản thấp và dễ gây nhầm lẫn trên lâm sàng (điển hình: X-quang gót chân, cổ chân, chi trên).
+    \item Bao gồm cả ảnh có khối u xương (nhãn 1 - \textit{bệnh lý}) và ảnh xương bình thường (nhãn 0 - \textit{lành lặn}), phản ánh đúng phân phối thực tế trong môi trường sàng lọc lâm sàng.
+    \item Dữ liệu thô chứa nhiều loại nhiễu kỹ thuật đặc thù của thiết bị chụp X-quang: ký tự chỉ hướng R/L (Right/Left), các nhãn metadata, và đôi khi là dị vật cản quang xuất hiện trên ảnh.
+\end{itemize}
+
+Bộ dữ liệu này phục vụ hai mục đích song song trong kiến trúc hệ thống: (1) toàn bộ ảnh (cả lành lặn và bệnh lý) được sử dụng để huấn luyện \textbf{mô hình phân lớp} sàng lọc ban đầu; (2) chỉ ảnh có bệnh lý kèm theo mặt nạ phân đoạn được sử dụng để huấn luyện \textbf{mô hình phân đoạn PGA-UNet}.
+
+\subsection{Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}
+\label{subsec:noise_types}
+
+Ảnh X-quang trong bộ BTXRD, dù là dữ liệu lâm sàng thực tế, mang theo những loại nhiễu kỹ thuật phổ biến sau:
+
+\textbf{1. Ký tự chỉ hướng R/L:} Đây là loại nhiễu phổ biến nhất trong X-quang lâm sàng. Các ký tự kim loại hoặc dải nhựa cản quang ký hiệu bên Phải (R) hoặc bên Trái (L) được đặt lên tấm phim trước khi chụp nhằm xác định hướng giải phẫu. Trên ảnh X-quang số hóa, chúng xuất hiện dưới dạng các điểm sáng có độ tương phản cực cao. Nếu không được loại bỏ, các đốm sáng này có thể bị mạng nơ-ron nhận nhầm là tổn thương xương, dẫn đến kết quả phân đoạn sai hoàn toàn.
+
+\textbf{2. Metadata và nhãn kỹ thuật:} Một số ảnh chứa các chuỗi ký tự kỹ thuật (ngày tháng, mã bệnh viện, thông số máy) được nhúng trực tiếp vào ảnh. Mặc dù nhỏ hơn ký tự R/L, chúng vẫn tạo ra gradient bất thường trong bộ mã hóa (encoder) nếu không được xử lý.
+
+\textbf{3. ICC Profile trong tệp PNG:} Nhiều ảnh PNG thu thập từ thiết bị y tế có nhúng thông tin ICC Profile (International Color Consortium) vào metadata. Mặc dù không ảnh hưởng đến nội dung hình ảnh trực quan, ICC Profile bất hợp lệ gây lỗi khi đọc bằng thư viện OpenCV trong Python, khiến hình ảnh bị đọc sai kênh màu hoặc không thể đọc được. Đây là vấn đề kỹ thuật cần giải quyết trước bất kỳ bước tiền xử lý nào.
+
+\subsection{Quy trình tiền xử lý và loại bỏ nhiễu}
+\label{subsec:preprocessing_pipeline}
+
+Để giải quyết các vấn đề trên một cách có hệ thống, nhóm xây dựng một quy trình tiền xử lý đa bước được trình bày trong Hình~\ref{fig:preprocessing_pipeline}.
+
+% ─── Sơ đồ quy trình tiền xử lý ─────────────────────────────────────────────
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance = 0.55cm and 0cm,
+    box/.style    = {rectangle, rounded corners=4pt, draw=blue!60, fill=blue!8,
+                     text width=6.8cm, align=center, minimum height=0.85cm,
+                     font=\small},
+    yolo/.style   = {rectangle, rounded corners=4pt, draw=orange!70, fill=orange!10,
+                     text width=6.8cm, align=center, minimum height=0.85cm,
+                     font=\small},
+    arr/.style    = {-Stealth, thick, blue!60},
+]
+  \node[box]  (raw)   {Ảnh X-quang thô\\{\footnotesize (Ký tự R/L, ICC Profile, metadata)}};
+  \node[box, below=of raw]  (icc)   {Bước 1 — Xóa ICC Profile\\{\footnotesize (Đọc và ghi lại bằng OpenCV, loại bỏ metadata)}};
+  \node[yolo, below=of icc] (yolo)  {Bước 2 — Phát hiện \& Xóa nhiễu R/L\\{\footnotesize (YOLOv11s phát hiện bounding box nhiễu $\rightarrow$ inpainting)}};
+  \node[box, below=of yolo] (gray)  {Bước 3 — Chuẩn hóa thang xám\\{\footnotesize (Chuyển đổi Grayscale, kiểm tra chất lượng)}};
+  \node[box, below=of gray] (label) {Bước 4 — Gán nhãn phân đoạn\\{\footnotesize (LabelMe $\rightarrow$ Polygon JSON / PNG Mask)}};
+  \node[box, below=of label](split) {Bước 5 — Phân chia dữ liệu\\{\footnotesize (Train / Validation / Test — ngẫu nhiên độc lập)}};
+  \node[box, below=of split](norm)  {Bước 6 — Chuẩn hóa \& Tăng cường\\{\footnotesize (Resize $512{\times}512$, z-score norm, hflip, rotate $\pm 15^{\circ}$)}};
+  \node[box, below=of norm] (ready) {Dữ liệu sẵn sàng cho huấn luyện\\{\footnotesize (Image + Mask + Prompt — tensor đồng bộ)}};
+
+  \draw[arr] (raw)   -- (icc);
+  \draw[arr] (icc)   -- (yolo);
+  \draw[arr] (yolo)  -- (gray);
+  \draw[arr] (gray)  -- (label);
+  \draw[arr] (label) -- (split);
+  \draw[arr] (split) -- (norm);
+  \draw[arr] (norm)  -- (ready);
+\end{tikzpicture}
+\caption{Sơ đồ quy trình tiền xử lý và chuẩn bị dữ liệu ảnh X-quang BTXRD}
+\label{fig:preprocessing_pipeline}
+\end{figure}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\textbf{Bước 1 — Xóa ICC Profile:} Toàn bộ các tệp PNG trong bộ dữ liệu được quét và xử lý bằng script \texttt{clean\_data.py}: hệ thống đọc từng ảnh vào bộ nhớ bằng \texttt{cv2.IMREAD\_UNCHANGED} rồi ghi lại ngay tại chỗ bằng \texttt{cv2.imwrite()}. Khi OpenCV ghi ảnh, thư viện chỉ lưu dữ liệu điểm ảnh thuần túy theo chuẩn PNG, tự động loại bỏ mọi khối metadata ngoại lai (bao gồm ICC Profile). Kết quả là toàn bộ tập ảnh được "rửa sạch" mà không làm biến đổi bất kỳ giá trị pixel nào.
+
+\textbf{Bước 2 — Phát hiện và xóa ký tự nhiễu bằng YOLOv11s:} Đây là bước xử lý cốt lõi và phức tạp nhất của quy trình. Nhóm sử dụng mô hình phát hiện đối tượng \textbf{YOLOv11s} (phiên bản nhỏ gọn của họ YOLO thế hệ 11) để xác định chính xác tọa độ (Bounding Box) của từng vùng nhiễu trên ảnh. Sau khi xác định được vùng nhiễu, các vùng này được xóa và phục hồi bằng kỹ thuật nội suy (inpainting).
+
+Quy trình xây dựng và huấn luyện mô hình phát hiện nhiễu gồm các bước sau:
+\begin{enumerate}
+    \item \textbf{Gán nhãn dữ liệu (Annotation):} Nền tảng \textbf{Roboflow} được sử dụng để vẽ thủ công Bounding Box cho tất cả các vùng nhiễu (ký tự R/L, nhãn kỹ thuật) trên toàn bộ tập ảnh BTXRD. Tập dữ liệu đã gán nhãn được phân chia theo tỷ lệ 90/10 cho huấn luyện và đánh giá.
+    \item \textbf{Cấu hình huấn luyện:} Mô hình \texttt{yolo11s} được khởi tạo với trọng số tiền huấn luyện trên tập COCO. Ảnh đầu vào được đệm thêm (padding) về tỷ lệ vuông rồi thay đổi kích thước về $1024 \times 1024$ pixel. Quá trình huấn luyện chạy tối đa 100 epoch với cơ chế dừng sớm (patience = 10) và thuật toán tối ưu AdamW (tốc độ học $10^{-3}$), mỗi lô gồm 8 ảnh.
+    \item \textbf{Suy luận và xóa nhiễu:} Sau khi huấn luyện, mô hình YOLO duyệt qua toàn bộ tập ảnh, xuất ra danh sách Bounding Box cho các vùng nhiễu. Mỗi vùng được xóa và lấp đầy bằng giá trị lân cận phù hợp, đảm bảo bề mặt ảnh liền mạch tự nhiên.
+\end{enumerate}
+
+Hiệu năng của mô hình phát hiện nhiễu trên tập đánh giá được tổng hợp tại Bảng~\ref{tab:yolo_noise_detection}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}
+    \label{tab:yolo_noise_detection}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{9.5cm}|c|}
+        \hline
+        \textbf{Chỉ số đánh giá} & \textbf{Kết quả} \\
+        \hline
+        Độ chính xác (Precision -- P) & 99.6\% \\
+        \hline
+        Độ nhạy (Recall -- R) & 96.2\% \\
+        \hline
+        Độ chính xác vùng phát hiện (mAP$_{50}$) & 98.6\% \\
+        \hline
+        Độ chính xác đa ngưỡng (mAP$_{50\text{-}95}$) & 66.2\% \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Độ chính xác Precision 99.6\% đặc biệt quan trọng trong ngữ cảnh y tế: nó đảm bảo mô hình gần như không bao giờ nhầm cấu trúc xương giải phẫu thành nhiễu và xóa nhầm, một lỗi có hậu quả nghiêm trọng cho chất lượng dữ liệu huấn luyện phân đoạn. Recall 96.2\% cho thấy hệ thống quét sạch được phần lớn nhiễu, chỉ bỏ sót một tỷ lệ nhỏ các ký tự quá mờ hoặc quá nhỏ.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.92\textwidth]{images/noise_removal_before_after.png}
+    \caption{Minh họa kết quả xóa nhiễu: (a) Ảnh X-quang thô chứa ký tự R/L, (b) Bounding Box phát hiện bởi YOLOv11s, (c) Ảnh sau khi xóa nhiễu}
+    \label{fig:noise_removal}
+\end{figure}
+
+\textbf{Bước 3 — Chuẩn hóa thang xám:} Ảnh X-quang sau khi làm sạch được chuyển về định dạng thang xám (\textit{Grayscale}) 8-bit chuẩn nếu chưa ở định dạng đó, đảm bảo tính đồng nhất cho toàn bộ pipeline nhập liệu.
+
+\subsection{Gán nhãn phân đoạn và định dạng dữ liệu}
+\label{subsec:annotation}
+
+Sau khi ảnh được làm sạch, nhóm tiến hành gán nhãn phân đoạn thủ công ở cấp độ điểm ảnh (pixel-level) cho tập ảnh có bệnh lý:
+
+\textbf{Công cụ và định dạng:} Nhóm sử dụng phần mềm \textbf{LabelMe} để vẽ trực tiếp đường viền đa giác (Polygon) bao quanh từng vùng khối u/tổn thương xương. Mỗi ảnh có thể chứa một hoặc nhiều polygon tương ứng với nhiều tổn thương khác nhau. Dữ liệu gán nhãn được xuất ra định dạng \textbf{JSON} theo cấu trúc chuẩn của LabelMe, trong đó mỗi polygon được lưu dưới dạng danh sách tọa độ điểm đỉnh.
+
+\textbf{Cơ chế mở rộng dữ liệu từ polygon:} Một điểm quan trọng trong pipeline dữ liệu của PGA-UNet là mỗi polygon được xử lý như một \textit{training sample độc lập}. Nếu một ảnh chứa $k$ polygon (tương ứng $k$ tổn thương khác nhau), hệ thống sẽ sinh ra $k$ mẫu huấn luyện riêng biệt, mỗi mẫu bao gồm ảnh đầy đủ, mặt nạ của đúng polygon đó, và câu nhắc được tạo từ Bounding Box bao quanh polygon đó. Cơ chế này tự nhiên làm tăng hiệu quả sử dụng dữ liệu mà không cần augmentation nhân tạo.
+
+\textbf{Hai định dạng dữ liệu song song:} Để phục vụ cả mô hình đề xuất và các mô hình cơ sở, dữ liệu được chuẩn bị ở hai dạng:
+\begin{itemize}
+    \item \textbf{Định dạng JSON Polygon} (dành cho PGA-UNet): Ảnh gốc cùng tệp JSON annotation được resize về $512 \times 512$. Mặt nạ được sinh ra ngay trong \textit{DataLoader} bằng hàm \texttt{cv2.fillPoly()} từ tọa độ polygon, đảm bảo độ chính xác tối đa khi resize.
+    \item \textbf{Định dạng PNG Mask} (dành cho U-Net, Attention U-Net cơ sở): Mặt nạ được xuất trước thành ảnh PNG nhị phân, lưu cùng thư mục với ảnh gốc, resize về $256 \times 256$.
+\end{itemize}
+
+\subsection{Chuẩn hóa và tăng cường dữ liệu}
+\label{subsec:augmentation}
+
+\textbf{Chuẩn hóa pixel (Normalization):} Toàn bộ ảnh thang xám sau resize được chuẩn hóa về khoảng $[-1, 1]$ theo công thức:
+\begin{equation}
+    x_{\text{norm}} = \frac{x/255 - 0.5}{0.5}
+    \label{eq:normalization}
+\end{equation}
+Cách chuẩn hóa này ($\mu = 0.5$, $\sigma = 0.5$) đưa phân phối pixel về trung tâm, giúp thuật toán tối ưu AdamW hội tụ nhanh hơn và ổn định hơn trong giai đoạn đầu huấn luyện.
+
+\textbf{Tăng cường dữ liệu đồng bộ (Synchronized Augmentation):} Do PGA-UNet nhận đồng thời ba đầu vào (ảnh, mặt nạ, bản đồ nhiệt câu nhắc), mọi phép biến đổi hình học phải được áp dụng \textit{đồng bộ hoàn toàn} trên cả ba thành phần. Nếu ảnh bị lật ngang, mặt nạ và câu nhắc cũng phải lật ngang tương ứng — một sự không khớp không gian giữa câu nhắc và mặt nạ sẽ dạy mạng sai chiều hoàn toàn. Hai phép biến đổi hình học được áp dụng trong quá trình huấn luyện:
+\begin{itemize}
+    \item \textbf{Lật ngang ngẫu nhiên (Random Horizontal Flip):} Xác suất 50\%, áp dụng đồng thời cho cả ba tensor.
+    \item \textbf{Xoay ngẫu nhiên (Random Rotation $\pm 15^{\circ}$):} Góc xoay lấy đều trong khoảng $[-15^{\circ}, +15^{\circ}]$. Ảnh và câu nhắc sử dụng nội suy song tuyến (bilinear), mặt nạ sử dụng nội suy láng giềng gần nhất (nearest-neighbor) để bảo toàn giá trị nhị phân.
+\end{itemize}
+
+Trong quá trình huấn luyện PGA-UNet, để tăng tính bền bỉ (robustness) của mô hình trước các câu nhắc không hoàn hảo, 15\% số mẫu ngẫu nhiên được thay thế câu nhắc bằng bản đồ nhiệt zero (câu nhắc rỗng), và 15\% khác được thêm nhiễu Gaussian vào câu nhắc. Chiến lược này buộc mô hình không được phụ thuộc mù quáng vào câu nhắc mà phải kết hợp với đặc trưng hình ảnh để đưa ra quyết định.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.92\textwidth]{images/augmentation_sync.png}
+    \caption{Minh họa tăng cường dữ liệu đồng bộ: (a) Bộ ba gốc [Ảnh, Mặt nạ, Câu nhắc], (b) Sau lật ngang, (c) Sau xoay $+12^{\circ}$ --- ba thành phần luôn biến đổi đồng nhất}
+    \label{fig:augmentation}
+\end{figure}
+
+% ------------------------------------------------------------
+\section{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}
+\label{sec:pga_unet}
+% ------------------------------------------------------------
+
+Kiến trúc mạng PGA-UNet được đề xuất trong khóa luận không sử dụng cách tiếp cận nối kênh tĩnh (static concatenation) truyền thống. Thay vào đó, mạng được thiết kế để tích hợp tri thức định hướng từ chuyên gia một cách linh hoạt và sâu sát vào cả hai tiến trình: mã hóa (rút trích đặc trưng) và giải mã (khôi phục hình dáng). Sự cải tiến này được thực hiện thông qua ba thành phần cấu trúc cốt lõi dưới đây.
+
+\subsection{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}
+
+Nhằm chuyển đổi thao tác không gian của người dùng thành một định dạng số học mang tính chất dẫn đường mềm dẻo (soft guidance), tọa độ hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ cung cấp sẽ được biểu diễn dưới dạng Bản đồ nhiệt câu nhắc $\mathbf{H}_{prompt} \in [0, 1]^{H \times W}$. 
+
+Trong thiết kế lý thuyết, bản đồ nhiệt câu nhắc có thể xây dựng theo phân phối Gaussian 2D thuần túy như đã trình bày tại Phương trình~\eqref{eq:gaussian_heatmap}, với cường độ đạt cực đại tại tâm và phân rã dần về biên. Tuy nhiên, trong thực tế triển khai, nhóm sử dụng phương pháp \textbf{Plateau Heatmap}: vùng bên trong hộp giới hạn được gán đồng nhất giá trị $1.0$ (tạo vùng cao nguyên phẳng - plateau), sau đó làm mềm đường biên bằng bộ lọc Gaussian (kernel $31 \times 31$):
+\begin{equation}
+    \mathbf{H}_{prompt} = \text{GaussianBlur}\!\left(\mathbf{B}_{\text{mask}},\; k=31\right)
+    \label{eq:plateau_heatmap}
+\end{equation}
+trong đó $\mathbf{B}_{\text{mask}} \in \{0, 1\}^{H \times W}$ là mặt nạ nhị phân của hộp giới hạn (có đệm 5 px mỗi phía). Cách tiếp cận này giữ được tín hiệu dẫn đường mạnh và đồng đều bên trong vùng câu nhắc (không bị suy giảm về phía tâm như Gaussian thuần), đồng thời tạo ra đường chuyển tiếp mượt mà ở viền hộp để mạng không học các gradient giả tạo từ đường viền sắc nét. Bản đồ nhiệt $\mathbf{H}_{prompt}$ này đóng vai trò như một kênh dữ liệu độc lập, song hành cùng ảnh X-quang đi vào mạng.
+
+\subsection{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}
+
+Trong kiến trúc U-Net truyền thống, bộ mã hóa (Encoder) chịu trách nhiệm trích xuất các đặc trưng ngữ nghĩa. Tuy nhiên, nếu thiếu định hướng, nó có xu hướng học mọi thứ xuất hiện trên ảnh X-quang, dẫn đến việc lãng phí tài nguyên tính toán vào các vùng nền không liên quan. 
+
+PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (Prompt Spatial Gate)} trực tiếp vào nhánh mã hóa. Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng (gate filter) để sinh ra tín hiệu khuếch đại không gian:
+\begin{equation}
+    \tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \left(1 + \alpha \cdot \sigma\!\left(\mathbf{W}_{gate} \ast \mathbf{H}^l\right)\right)
+    \label{eq:spatial_gate}
+\end{equation}
+trong đó $\mathbf{W}_{gate}$ là phép tích chập $1\!\times\!1$ ánh xạ bản đồ nhiệt (1 kênh) sang không gian kênh đặc trưng $C^l$; $\sigma$ là hàm Sigmoid; $\alpha \in [0,1]$ là tham số học được (khởi tạo nhỏ tại $0.1$ để không làm xáo trộn huấn luyện ban đầu); và $\odot$ là phép nhân theo phần tử.
+
+Thiết kế này hoạt động theo nguyên lý \textit{tăng cường có chọn lọc} (selective enhancement) thay vì ức chế: các đặc trưng nằm trong vùng câu nhắc được nhân thêm một hệ số $> 1$ (tăng lên), trong khi các đặc trưng ngoài vùng câu nhắc (nơi $\mathbf{H}^l \approx 0$) vẫn giữ nguyên giá trị ban đầu (nhân với $\approx 1$). Nhờ đó, bộ mã hóa không bị mất thông tin toàn cục nhưng vẫn ưu tiên truyền tải các đặc trưng trong vùng mục tiêu xuống các tầng sâu hơn.
+
+\subsection{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}
+
+Dù Cổng không gian ở bộ mã hóa đã giúp loại bỏ nhiễu nền đáng kể, nhưng tại bộ giải mã (Decoder) – nơi mạng thực hiện phép tăng mẫu để khôi phục ranh giới xương – tín hiệu định vị vẫn có nguy cơ bị phân tán. Để thiết lập sự dẫn đường xuyên suốt, khóa luận đề xuất thay đổi cấu trúc của \textit{Attention U-Net} thông qua \textbf{Cơ chế chú ý có điều kiện}.
+
+Khác với Cổng chú ý (Attention Gate) cơ sở chỉ dùng tín hiệu gating $\mathbf{g}$ từ tầng giải mã bên dưới, cấu kiện \texttt{unetUp\_PromptAttention} tích hợp tri thức câu nhắc vào tín hiệu gating thông qua \textbf{cơ chế dung hợp cộng có trọng số tin cậy} (confidence-weighted additive fusion). Cụ thể, bản đồ câu nhắc $\mathbf{H}_{prompt}$ được giảm mẫu về kích thước của $\mathbf{g}$ và đưa qua một bộ mã hóa hai tầng tích chập ($3\times 3$, InstanceNorm, ReLU) để trích xuất biểu diễn đặc trưng câu nhắc $\mathbf{p}_{\text{enc}}$. Từ đó, một điểm số tin cậy vô hướng $c \in (0,1)$ được tính bằng cách áp dụng GAP (Global Average Pooling) lên $\mathbf{p}_{\text{enc}}$:
+\begin{equation}
+    \mathbf{p}_{\text{enc}} = f_{\text{enc}}(\mathbf{H}_{prompt}), \quad
+    c = \sigma\!\left(\text{GAP}(\mathbf{p}_{\text{enc}})\right)
+    \label{eq:prompt_confidence}
+\end{equation}
+Tín hiệu gating được điều kiện hóa bằng phép cộng có trọng số:
+\begin{equation}
+    \mathbf{g}' = \mathbf{g} + c \cdot \alpha \cdot w \cdot \mathbf{p}_{\text{enc}}
+    \label{eq:conditioned_gate}
+\end{equation}
+trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là tham số học được (blend weight), và $w$ là hệ số prompt cố định theo từng tầng giải mã (giảm dần: $1.0 \to 0.7 \to 0.4 \to 0.2$) nhằm suy giảm dần ảnh hưởng của câu nhắc ở các tầng phân giải cao — nơi mạng cần tự do tái tạo chi tiết đường biên.
+
+Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng skip connection $\mathbf{x}^l$, kết hợp cùng kết nối tắt dư ($+0.3 \cdot \mathbf{x}^l$) và thêm tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$). Thiết kế đa lớp này đảm bảo câu nhắc không chỉ ảnh hưởng qua một điểm duy nhất mà được duy trì xuyên suốt toàn bộ bộ giải mã ở cường độ giảm dần, phù hợp với vai trò hướng dẫn từ ngữ nghĩa đến chi tiết. Sự kết hợp giữa ``Cổng không gian tại bộ mã hóa'' và ``Cơ chế chú ý có điều kiện tại bộ giải mã'' là yếu tố chính mang lại sự cải thiện đáng kể về hiệu năng Dice so với các mạng cơ sở hoạt động theo paradigm tự động (chi tiết tại Chương~\ref{Chapter4}).
+
+% ------------------------------------------------------------
+\section{Hệ thống phòng vệ và tinh chỉnh câu nhắc tự động (IPR Pipeline)}
+\label{sec:ipr_pipeline}
+% ------------------------------------------------------------
+
+Một hệ thống AI ứng dụng trong môi trường y khoa thực tế không thể giả định rằng dữ liệu đầu vào từ người dùng luôn hoàn hảo. Áp lực thời gian, sự mỏi mắt hay góc nhìn chủ quan có thể khiến bác sĩ khoanh vùng lệch tâm hoặc đặt câu nhắc sai vị trí. Để đảm bảo tính an toàn và minh bạch, hệ thống được thiết kế tích hợp một quy trình phòng vệ và tự động nắn nét đa tầng, hoạt động như một màng lọc kiểm duyệt kết quả trước khi hiển thị cho người dùng.
+
+\subsection{Cơ chế cảnh báo lỗi từ người dùng (Confidence \& Center Distance Check)}
+
+Sau khi thực hiện suy luận lần đầu với câu nhắc $\mathbf{H}^{(0)}$ của bác sĩ, hệ thống không chấp nhận mặt nạ dự đoán $\hat{\mathbf{M}}^{(0)}$ một cách mù quáng. Thay vào đó, một module kiểm duyệt sẽ tự động phân tích kết quả dựa trên \textbf{ba tiêu chí an toàn} để đánh giá tính hợp lệ của câu nhắc. Khi bất kỳ tiêu chí nào bị vi phạm, luồng cứu hộ được kích hoạt.
+
+\textbf{1. Tiêu chí độ tin cậy (Confidence Check):} Hệ thống trích xuất giá trị xác suất lớn nhất từ bản đồ dự đoán thô: $p_{\max} = \max_{i,j}(\hat{\mathbf{P}}^{(0)}_{i,j})$. Nếu $p_{\max} < 0.25$, mạng nơ-ron không tìm thấy đặc trưng bệnh lý có độ chắc chắn đủ mạnh trong vùng chỉ định — dấu hiệu cho thấy câu nhắc lệch khỏi tổn thương.
+
+\textbf{2. Tiêu chí diện tích dự đoán (Empty Mask Check):} Nếu tổng số điểm ảnh dương tính trong mặt nạ nhị phân $\hat{\mathbf{M}}^{(0)}$ nhỏ hơn ngưỡng 50 điểm ảnh (về cơ bản là mặt nạ rỗng), câu nhắc được coi là sai lệch hoàn toàn và kết quả bị từ chối.
+
+\textbf{3. Tiêu chí vùng tối (Dark Background Check):} Câu nhắc đặt vào vùng mô mềm hoặc nền không gian (không phải cấu trúc xương) sẽ tạo ra một câu nhắc "mù" về mặt giải phẫu. Hệ thống kiểm tra: nếu hơn $70\%$ điểm ảnh bên trong vùng câu nhắc có cường độ rất tối (dưới ngưỡng chuẩn hóa $-0.80$, tương đương khoảng 26 trên thang 0–255), câu nhắc được xác định là đặt vào vùng phi xương và luồng cứu hộ được kích hoạt ngay lập tức mà không cần chờ đánh giá hai tiêu chí trên.
+
+\textbf{Tiêu chí lệch tâm (Center Distance Check) — dành riêng cho IPR:} Trong trường hợp ba tiêu chí trên đều thỏa mãn (câu nhắc có u nhưng bị lệch nhẹ), hệ thống đo khoảng cách Euclid $d$ giữa tâm câu nhắc và tâm hình học mặt nạ dự đoán. Nếu $d > 0.25 \times \text{kích thước ảnh}$, thuật toán IPR được kích hoạt để nắn nét mà không cần đến GradCAM.
+
+\subsection{Giải pháp cứu hộ dự phòng bằng GradCAM}
+
+Khi bất kỳ tiêu chí an toàn nào bị vi phạm (câu nhắc rỗng, độ tin cậy thấp $p_{\max} < 0.25$, hoặc vùng câu nhắc tối $> 70\%$), hệ thống kích hoạt kịch bản phòng vệ an toàn (Kịch bản 2). Để tránh cung cấp thông tin sai lệch dẫn đến chẩn đoán nhầm, mặt nạ dự đoán sẽ lập tức bị hủy bỏ và hệ thống trả về kết quả rỗng ($\hat{\mathbf{M}} = \mathbf{0}$). 
+
+Ngay lúc này, giải pháp cứu hộ bằng Explainable AI được kích hoạt. Mô hình chạy thuật toán GradCAM, tính toán đạo hàm ngược từ đầu ra để lập bản đồ nhiệt $L_{\text{GradCAM}}$ trên toàn bộ bức ảnh (áp dụng phương trình \eqref{eq:gradcam_weights} và \eqref{eq:gradcam_map}). Bằng cách tìm kiếm điểm ảnh có cường độ kích hoạt cực đại:
+\begin{equation}
+    \mathbf{c}_{\text{rescue}} = \arg\max_{x,y} L_{\text{GradCAM}}(x, y)
+\end{equation}
+hệ thống xác định được tọa độ có dấu hiệu bất thường cao nhất. Điểm $\mathbf{c}_{\text{rescue}}$ này được sử dụng làm tâm hình học cho một hộp giới hạn mới. Nhằm tôn trọng tri thức lâm sàng của bác sĩ về mặt ước lượng thể tích tổn thương, hộp giới hạn cứu hộ này sẽ kế thừa nguyên vẹn chiều rộng và chiều cao từ hộp giới hạn ban đầu. Câu nhắc mới này sau đó được tự động đưa trở lại mô hình để tiến hành dự đoán gợi ý.
+
+\subsection{Thuật toán tinh chỉnh câu nhắc tuần tự (Iterative Prompt Refinement - IPR)}
+
+Khi hệ thống đối mặt với tình huống câu nhắc bị lệch tay (vi phạm tiêu chí lệch tâm) hoặc khi vừa khởi tạo xong câu nhắc cứu hộ từ GradCAM, thuật toán Iterative Prompt Refinement (IPR) sẽ được kích hoạt để tự động gọt giũa và nắn lại nét cắt cho chính xác.
+
+Thay vì dựa vào các điểm có xác suất cao nhất (Max Confidence Point) - vốn dễ bị nhiễu do các điểm ảnh dị biệt cục bộ, thuật toán IPR trong khóa luận sử dụng \textbf{Tâm hình học (Centroid)} của mặt nạ dự đoán để mang lại sự ổn định cao hơn. Quy trình tinh chỉnh được thực hiện tuần tự theo các bước:
+\begin{enumerate}
+    \item Tính toán tâm hình học $(x_c, y_c)$ của mặt nạ phân đoạn thô $\hat{\mathbf{M}}^{(i)}$ thu được ở vòng lặp thứ $i$.
+    \item Khởi tạo một bản đồ nhiệt câu nhắc mới $\mathbf{H}^{(i+1)}$, lấy tâm tại $(x_c, y_c)$ và giữ nguyên kích thước Gaussian của câu nhắc gốc.
+    \item Đưa $\mathbf{H}^{(i+1)}$ vào mạng PGA-UNet để suy luận ra mặt nạ mới $\hat{\mathbf{M}}^{(i+1)}$.
+\end{enumerate}
+
+Để đảm bảo khả năng triển khai thực tế của ứng dụng lâm sàng, quá trình này không lặp lại vô hạn. Số vòng lặp tối đa được giới hạn ở mức $N = 3$. Kết quả phân tích sự hội tụ trong thực nghiệm (trình bày ở Chương~\ref{Chapter4}) cho thấy tại $k=2$, hệ số Dice đã tiệm cận bão hòa; tuy nhiên, $N=3$ được chọn để bao phủ các trường hợp điểm khởi đầu từ GradCAM lệch xa hơn so với câu nhắc tay thông thường — khi đó một vòng lặp bổ sung vẫn có thể cải thiện vị trí tâm đáng kể. Đồng thời, tổng thời gian xử lý với $N=3$ (${\approx}180$ ms) vẫn nằm dưới ngưỡng tương tác thời gian thực $200$ ms, đảm bảo trải nghiệm liền mạch cho bác sĩ.
+
+% ------------------------------------------------------------
+\section{Mô hình phân lớp bệnh lý (Gatekeeper)}
+\label{sec:phan_lop}
+% ------------------------------------------------------------
+
+\subsection{Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}
+
+Mô hình PGA-UNet được thiết kế và huấn luyện hoàn toàn trên tập ảnh \textbf{chỉ chứa các ca bệnh lý} (có khối u xương được gán nhãn phân đoạn). Đây là điều kiện bắt buộc vì bài toán phân đoạn có giám sát yêu cầu nhãn mặt nạ chính xác ở cấp pixel, mà việc gán nhãn thủ công chỉ được thực hiện cho các ảnh có tổn thương thực sự.
+
+Tuy nhiên, trong môi trường lâm sàng thực tế, luồng ảnh X-quang đầu vào bao gồm cả ảnh bình thường lẫn ảnh bệnh lý. Nếu đưa trực tiếp một ảnh xương bình thường (không có u) vào PGA-UNet, mô hình sẽ cố gắng "tìm ra" một vùng phân đoạn nào đó bất kể câu nhắc, dẫn đến hai hậu quả:
+
+\begin{enumerate}
+    \item \textbf{Kết quả phân đoạn dương tính giả (False Positive):} Mạng trả về một mặt nạ sai lệch trên ảnh lành lặn, gây hiểu nhầm nghiêm trọng cho bác sĩ.
+    \item \textbf{Lãng phí tài nguyên tính toán:} Toàn bộ pipeline phân đoạn tương tác (prompt drawing, IPR, GradCAM) được kích hoạt không cần thiết.
+\end{enumerate}
+
+\textbf{Giải pháp:} Một module phân lớp nhị phân đóng vai trò \textbf{gác cổng (Gatekeeper)} được đặt trước toàn bộ pipeline phân đoạn. Module này sàng lọc tự động ảnh đầu vào: nếu là ảnh bình thường, luồng kết thúc sớm; chỉ ảnh dương tính (có bệnh lý) mới được chuyển sang giai đoạn phân đoạn tương tác PGA-UNet.
+
+\subsection{Kiến trúc và chiến lược tinh chỉnh}
+
+\textbf{Kiến trúc được chọn:} MobileNetV4-Hybrid-Medium (\texttt{mobilenet\-v4\_hybrid\_medium.\allowbreak{}ix\_e550\_r384\_in1k}), một mạng nơ-ron thuộc dòng MobileNetV4 do Google phát triển. Điểm nổi bật của MobileNetV4-Hybrid-Medium là kiến trúc \textit{lai} (hybrid): các tầng tích chập CNN ở đầu trích xuất nhanh các đặc trưng cục bộ (đường nét xương, kết cấu mô), trong khi các tầng Transformer phía sau nắm bắt ngữ cảnh toàn cục (phân phối bất thường ở quy mô lớn). Mô hình có khoảng \textbf{11 triệu tham số} và được tiền huấn luyện trên ImageNet-1K với độ chính xác Top-1 đạt 83.394\%, chỉ chiếm \textbf{37.88 MB} dung lượng lưu trữ — đảm bảo khả năng triển khai thực tiễn trên phần cứng bệnh viện thông thường.
+
+Tầng phân lớp gốc (head) của mô hình được thay thế bởi một lớp tuyến tính:
+\[
+    \text{head} = \text{Linear}(d_{\text{model}}, 1)
+\]
+Đầu ra vô hướng duy nhất này được đưa qua hàm Sigmoid để thu về xác suất $p \in (0, 1)$, trong đó $p > 0.5$ biểu thị dự đoán "có bệnh lý".
+
+\textbf{Chiến lược tinh chỉnh hai giai đoạn} được áp dụng để đảm bảo tính ổn định và tránh hiện tượng quá khớp:
+
+\textit{Giai đoạn 1 — Warmup (5 epoch đầu):} Toàn bộ trọng số backbone (CNN + Transformer) được đóng băng. Chỉ tầng phân lớp mới được cập nhật với tốc độ học $10^{-4}$. Bước khởi động này cho phép tầng phân lớp thích nghi dần với không gian đặc trưng của ảnh X-quang xương mà không phá hủy các đặc trưng tổng quát đã được ImageNet tích lũy.
+
+\textit{Giai đoạn 2 — Tinh chỉnh toàn bộ (95 epoch còn lại):} Toàn bộ mạng được mở khóa và tham gia lan truyền ngược. Tốc độ học hạ xuống $3 \times 10^{-5}$ với lịch giảm theo hàm cosine (CosineAnnealingLR), cho phép mô hình lai CNN-Transformer điều chỉnh tinh tế theo đặc thù tổn thương xương trong BTXRD. Các kỹ thuật kiểm soát huấn luyện bao gồm: hàm mất mát BCEWithLogitsLoss, thuật toán tối ưu AdamW, dừng sớm với patience = 10, và cắt giảm độ dốc (Gradient Clipping, max\_norm = 1.0) để tránh bùng nổ đạo hàm.
+
+% ─── Sơ đồ pipeline phân lớp ──────────────────────────────────────────────────
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance = 0.5cm and 0.4cm,
+    proc/.style  = {rectangle, rounded corners=4pt, draw=cyan!60!black, fill=cyan!8,
+                    text width=2.6cm, align=center, minimum height=1cm, font=\small},
+    dec/.style   = {diamond, aspect=2.5, draw=orange!80, fill=orange!10,
+                    text width=1.8cm, align=center, font=\small},
+    res/.style   = {rectangle, rounded corners=4pt, draw=gray!70, fill=gray!10,
+                    text width=2.8cm, align=center, minimum height=1cm, font=\small},
+    arr/.style   = {-Stealth, thick, gray!60},
+]
+  \node[proc] (img)   {Ảnh X-quang\\sạch};
+  \node[proc, right=of img]  (pre)   {Resize 384×384\\RGB + Normalize};
+  \node[proc, right=of pre]  (net)   {MobileNetV4\\Hybrid-Medium};
+  \node[proc, right=of net]  (fc)    {FC(1)\\+ Sigmoid};
+  \node[dec,  right=of fc]   (thr)   {$p > 0.5$?};
+  \node[res,  above right=0.5cm and 0.4cm of thr] (pos)
+        {\textbf{Có bệnh lý}\\$\rightarrow$ Tiếp tục\\phân đoạn PGA-UNet};
+  \node[res,  below right=0.5cm and 0.4cm of thr] (neg)
+        {\textbf{Bình thường}\\$\rightarrow$ Kết thúc\\quy trình};
+
+  \draw[arr] (img) -- (pre);
+  \draw[arr] (pre) -- (net);
+  \draw[arr] (net) -- (fc);
+  \draw[arr] (fc)  -- (thr);
+  \draw[-Stealth, thick] (thr.north east) -- node[above left, font=\footnotesize, pos=0.4]{Có} (pos.west);
+  \draw[-Stealth, thick] (thr.south east) -- node[below left, font=\footnotesize, pos=0.4]{Không} (neg.west);
+\end{tikzpicture}%
+}
+\caption{Sơ đồ pipeline của mô hình phân lớp Gatekeeper: sàng lọc ảnh X-quang trước khi chuyển sang phân đoạn}
+\label{fig:classification_pipeline}
+\end{figure}
+% ──────────────────────────────────────────────────────────────────────────────
+
+\subsection{Vai trò trong hệ thống tổng thể}
+
+Cần nhấn mạnh rằng mô hình phân lớp \textbf{không phải đóng góp kỹ thuật trọng tâm} của khóa luận, mà là một module hỗ trợ để lấp đầy khoảng trống giữa điều kiện huấn luyện (chỉ có ảnh bệnh) và điều kiện triển khai thực tế (hỗn hợp cả hai). Vai trò cụ thể của module này trong hệ thống đầu cuối (Giai đoạn 2 theo mô tả tại Mục~\ref{sec:tong_the}):
+\begin{itemize}
+    \item Tự động chạy ngầm ngay khi ảnh X-quang được tải lên, trước khi bác sĩ thực hiện bất kỳ tương tác nào.
+    \item Kết quả phân lớp và điểm tin cậy $(p)$ được hiển thị trên giao diện để bác sĩ tham khảo, nhưng \textit{quyết định cuối cùng về việc có tiến hành phân đoạn hay không luôn thuộc về bác sĩ}.
+    \item Khi bác sĩ xác nhận "có bệnh", hệ thống bật chế độ tương tác và chờ câu nhắc Bounding Box từ bác sĩ để đưa vào PGA-UNet.
+\end{itemize}
+
+Kết quả đánh giá định lượng của mô hình phân lớp trên tập kiểm thử được trình bày chi tiết tại Mục~\ref{sec:danh_gia_phan_lop} (Chương~\ref{Chapter4}).

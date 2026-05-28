@@ -1,0 +1,38 @@
+\chapter*{Đề cương chi tiết}
+
+\section*{Thông tin chung}
+
+\begin{itemize}
+    \item \textbf{Tên đề tài:} Phát triển hệ thống phân đoạn ảnh X-quang về xương dựa vào câu nhắc trực quan
+    \item \textbf{Tên tiếng Anh:} Developing a bone X-ray image segmentation system based on visual prompts
+    \item \textbf{Người hướng dẫn:} PGS.TS. Lý Quốc Ngọc, ThS. Đỗ Thị Thanh Hà (Khoa Công nghệ Thông tin)
+    \item \textbf{Nhóm sinh viên thực hiện:}
+    \begin{enumerate}
+        \item Nguyễn Hữu Bình (MSSV: 22120031)
+        \item Thông Lúc (MSSV: 22120196)
+    \end{enumerate}
+    \item \textbf{Loại đề tài:} Nghiên cứu
+    \item \textbf{Thời gian thực hiện:} Từ 01/2026 đến 07/2026
+\end{itemize}
+
+\section*{Giới thiệu về đề tài}
+
+Trong lĩnh vực chẩn đoán hình ảnh y tế hiện nay, việc phân đoạn chính xác cấu trúc giải phẫu xương trên ảnh X-quang là nhiệm vụ nền tảng giúp hỗ trợ bác sĩ xác định các bất thường hình thái và lập kế hoạch điều trị. Tuy nhiên, việc xây dựng các mô hình học sâu truyền thống thường yêu cầu một lượng lớn dữ liệu được gán nhãn ở mức độ điểm ảnh bởi các chuyên gia, điều vốn gây tốn kém về chi phí và thời gian trong thực tiễn.
+
+Đề tài hướng đến xây dựng một hệ thống phân đoạn ảnh X-quang xương tương tác, trong đó bác sĩ cung cấp câu nhắc trực quan (hộp giới hạn) để định hướng mô hình học sâu tập trung vào vùng tổn thương mục tiêu. Hệ thống tích hợp cơ chế phòng vệ thông minh nhằm đảm bảo an toàn khi triển khai trong môi trường lâm sàng.
+
+\section*{Mục tiêu đề tài}
+
+\begin{enumerate}
+    \item Xây dựng kiến trúc mạng PGA-UNet (Prompt-Guided Attention U-Net) tích hợp câu nhắc trực quan vào quá trình phân đoạn.
+    \item Phát triển cơ chế phòng vệ và tự tinh chỉnh câu nhắc (GradCAM kết hợp IPR) để xử lý các trường hợp thao tác sai của người dùng.
+    \item Tích hợp toàn bộ thành phần vào một ứng dụng phần mềm hoàn chỉnh phục vụ hỗ trợ chẩn đoán lâm sàng.
+\end{enumerate}
+
+\section*{Kết quả dự kiến}
+
+\begin{itemize}
+    \item Mô hình phân đoạn PGA-UNet đạt hệ số Dice trên 80\% trong kịch bản câu nhắc hợp lệ.
+    \item Hệ thống cứu hộ GradCAM + IPR đạt tỷ lệ phục hồi trên 85\% trong kịch bản câu nhắc sai lệch.
+    \item Ứng dụng phần mềm với thời gian phản hồi dưới 200ms, đáp ứng yêu cầu tương tác thời gian thực.
+\end{itemize}

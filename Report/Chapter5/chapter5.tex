@@ -1,0 +1,43 @@
+% ==========================================
+% CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+% ==========================================
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+\label{Chapter5}
+
+\section{Kết luận những đóng góp đạt được}
+\label{sec:ket_luan}
+
+Mục tiêu xuyên suốt của khóa luận này là nghiên cứu, thiết kế và phát triển một hệ thống hỗ trợ chẩn đoán ảnh X-quang xương thông minh, an toàn và có tính tương tác cao. Vượt qua những giới hạn của các phương pháp phân đoạn tự động hoàn toàn truyền thống và rào cản tài nguyên của các mô hình nền tảng hạng nặng, khóa luận đã hoàn thành các mục tiêu chính đề ra với những đóng góp kỹ thuật cụ thể sau:
+
+\begin{itemize}
+    \item \textbf{Đề xuất kiến trúc PGA-UNet:} Khóa luận đã thiết kế thành công mô hình Prompt-Guided Attention U-Net. Bằng cách tích hợp Cổng không gian (Prompt Spatial Gate) tại nhánh mã hóa và Cơ chế chú ý có điều kiện (Conditioned Attention) tại nhánh giải mã, hệ thống đã biến đổi thành công thông tin Bounding Box từ bác sĩ thành tín hiệu định hướng không gian sâu sát. Kết quả thực nghiệm cho thấy PGA-UNet đạt hệ số Dice 0.8599 và sai số đường biên HD95 chỉ 12.22 px, cải thiện đáng kể so với U-Net và Attention U-Net truyền thống hoạt động theo paradigm tự động (không có prompt).
+    
+    \item \textbf{Phát triển luồng cứu hộ thông minh GradCAM kết hợp IPR:} Điểm sáng tạo lớn nhất của khóa luận nằm ở việc giải quyết bài toán "khi bác sĩ thao tác sai". Hệ thống không mù quáng tin vào câu nhắc, mà sử dụng cơ chế thẩm định để từ chối các câu nhắc lệch lạc. Sự kết hợp giữa khả năng dò tìm vùng bất thường của GradCAM và thuật toán nắn nét tuần tự dựa trên tâm hình học (IPR) đã tạo ra một tấm khiên phòng vệ vững chắc, tự động đưa ra các "Mặt nạ gợi ý" có độ chính xác cao để cứu hộ luồng chẩn đoán.
+    
+    \item \textbf{Tối ưu hóa dữ liệu và xây dựng mô hình gác cổng:} Nhóm nghiên cứu đã xử lý thành công một lượng lớn dữ liệu X-quang thực tế chứa nhiều nhiễu phức tạp (đặc biệt là nhiễu ký tự R/L). Việc tích hợp thêm mô hình phân lớp bệnh lý nhị phân làm "người gác cổng" giúp lọc bỏ các ca bệnh bình thường, tối ưu hóa đáng kể thời gian chẩn đoán lâm sàng.
+    
+    \item \textbf{Tích hợp thành phần mềm ứng dụng thực tiễn:} Toàn bộ các thuật toán phức tạp được đóng gói vào một ứng dụng phần mềm giao diện đồ họa (\texttt{app.py}). Hệ thống đạt được tốc độ phản hồi thời gian thực (dưới 200ms cho toàn bộ luồng xử lý), khẳng định tính khả thi trong việc triển khai trực tiếp tại các cơ sở y tế với vai trò là một trợ lý ảo "Human-in-the-loop".
+\end{itemize}
+
+\section{Hạn chế của hệ thống}
+\label{sec:han_che}
+
+Mặc dù đạt được nhiều kết quả khả quan, hệ thống đề xuất vẫn còn tồn tại một số giới hạn nhất định cần được nhìn nhận khách quan:
+
+\begin{itemize}
+    \item \textbf{Hạn chế của thông tin không gian 2D:} Do ảnh X-quang là hình chiếu 2D của cấu trúc xương 3D phức tạp, sự chồng lấp giữa các khớp xương dày đặc đôi khi tạo ra những tín hiệu gradient gây nhiễu. Bounding Box hình chữ nhật dù được chuyển đổi thành Gaussian Heatmap vẫn mang tính chất ước lượng viền thô, có thể gặp khó khăn với các khối u có hình dáng kéo dài hoặc phân nhánh phức tạp.
+    \item \textbf{Sự phụ thuộc của GradCAM vào dữ liệu phân lớp:} Luồng cứu hộ GradCAM phụ thuộc vào đạo hàm của các đặc trưng học được. Trong một số trường hợp hiếm gặp, nếu ảnh chụp xuất hiện một dị vật ngoại lai có độ kích hoạt cao hơn cả khối u, GradCAM có thể gợi ý sai điểm neo cứu hộ, dẫn đến việc IPR nắn nét sai vị trí.
+    \item \textbf{Đa dạng hóa trải nghiệm thao tác:} Mặc dù kiến trúc hiện tại đã hỗ trợ tính linh hoạt cao bằng cách quy đổi mọi thao tác người dùng (nhấp điểm, vẽ đa giác) về dạng Bounding Box bao trọn vùng tổn thương để tối ưu hóa hiệu năng, hệ thống vẫn có thể được nâng cấp để hỗ trợ trực tiếp các dạng câu nhắc không gian phi hình chữ nhật. Việc xử lý trực tiếp bản đồ nhiệt từ các phác thảo đa giác phức tạp (thay vì quy đổi về box) sẽ giúp bác sĩ truyền đạt tri thức lâm sàng chính xác hơn nữa đối với các tổn thương có hình dạng bất thường.
+    \item \textbf{Thiếu ablation study phân tách đóng góp từng module:} Các thí nghiệm hiện tại so sánh PGA-UNet (paradigm tương tác) với U-Net/Attention U-Net (paradigm tự động), do đó chưa phân tách rõ đóng góp riêng lẻ của từng cấu kiện kiến trúc. Các thí nghiệm cần bổ sung trong tương lai gồm: (1) U-Net cơ bản nhận prompt đầu vào (crop ảnh theo bounding box) để đánh giá đóng góp thuần túy của kiến trúc PGA; (2) PGA-UNet chỉ bật Spatial Gate (tắt Conditioned Attention) và ngược lại, để lượng hóa riêng hiệu quả của từng module; (3) So sánh trực tiếp với MedSAM trong cùng điều kiện bounding box prompt để đặt kết quả vào bối cảnh rộng hơn.
+\end{itemize}
+
+\section{Định hướng phát triển tương lai}
+\label{sec:tuong_lai}
+
+Từ những kết quả đạt được và các hạn chế còn tồn đọng, nhóm nghiên cứu đề xuất các định hướng phát triển tiếp theo nhằm hoàn thiện hệ thống:
+
+\begin{itemize}
+    \item \textbf{Mở rộng phương thức câu nhắc đa dạng (Multi-prompting):} Nâng cấp kiến trúc PGA-UNet để có thể mã hóa và tiếp nhận đồng thời nhiều loại câu nhắc khác nhau như: điểm bấm (Point Clicks) để bổ sung/loại bỏ các vùng phân đoạn sai nhỏ lẻ, hoặc kết hợp với văn bản (Text Prompt) mô tả triệu chứng lâm sàng để tăng độ chính xác.
+    \item \textbf{Thử nghiệm với các kiến trúc mã hóa tiên tiến:} Trong tương lai, bộ mã hóa CNN truyền thống của U-Net có thể được thay thế hoặc lai tạo với các kiến trúc Transformers nhẹ (lightweight Vision Transformers) như Swin-UNet. Việc này hứa hẹn sẽ khai thác tốt hơn các phụ thuộc tầm xa (long-range dependencies) trên ảnh X-quang, giúp phát hiện các cấu trúc bệnh lý có kích thước lớn tốt hơn.
+    \item \textbf{Đánh giá lâm sàng quy mô lớn (Clinical Trials):} Chuyển giao phần mềm \texttt{app.py} cho các bệnh viện hoặc phòng khám đối tác để tiến hành thử nghiệm mù đôi (double-blind test) trên các dữ liệu chụp mới hoàn toàn (prospective data). Thu thập phản hồi trực tiếp từ các bác sĩ chẩn đoán hình ảnh để liên tục cải tiến giao diện UX/UI và tinh chỉnh các ngưỡng an toàn của luồng cứu hộ IPR.
+\end{itemize}
