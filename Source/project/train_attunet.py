@@ -12,7 +12,7 @@ from dataset_simple import BTXRD_Dataset
 from models.networks.attention_unet_2D import Attention_UNet_2D
 
 # =========================================================
-# CẤU HÌNH — CHỐT CUỐI (CÔNG BẰNG VỚI UNET & PGA)
+# CAU HINH — CHOT CUOI (CONG BANG VOI UNET & PGA)
 # =========================================================
 DEVICE        = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE    = 4
@@ -20,13 +20,10 @@ EPOCHS        = 100
 LR            = 1e-4
 WEIGHT_DECAY  = 1e-4
 IMG_SIZE      = 512
-PATIENCE      = 15   # early stopping
-SCHED_PATIENCE = 5   # scheduler patience
+PATIENCE      = 15
+SCHED_PATIENCE = 5
 
 
-# =========================================================
-# LOSS & METRICS
-# =========================================================
 def dice_loss(pred, target, smooth=1e-5):
     pred_soft    = torch.sigmoid(pred)
     intersection = (pred_soft * target).sum(dim=(1, 2, 3))
@@ -46,9 +43,6 @@ def batch_metrics_sum(pred, target, smooth=1e-5):
     return dice.sum().item(), iou.sum().item(), precision.sum().item(), recall.sum().item()
 
 
-# =========================================================
-# LOGGER
-# =========================================================
 def setup_logger():
     os.makedirs("logs", exist_ok=True)
     t = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -62,15 +56,12 @@ def setup_logger():
     return logging.getLogger()
 
 
-# =========================================================
-# MAIN
-# =========================================================
 def main():
     logger = setup_logger()
     logger.info("=" * 90)
-    logger.info(f"TRAIN ATTENTION U-NET 2D (BASELINE) | Device: {DEVICE}")
+    logger.info(f"TRAIN ATTENTION U-NET 2D | Device: {DEVICE}")
     logger.info(f"Batch: {BATCH_SIZE} | MaxEpochs: {EPOCHS} | LR: {LR} | ImgSize: {IMG_SIZE}")
-    logger.info(f"WeightDecay: {WEIGHT_DECAY} | EarlyStop patience: {PATIENCE} | Scheduler patience: {SCHED_PATIENCE}")
+    logger.info(f"WeightDecay: {WEIGHT_DECAY} | EarlyStop patience: {PATIENCE}")
     logger.info("=" * 90)
 
     train_ds = BTXRD_Dataset(
@@ -92,11 +83,10 @@ def main():
     scheduler     = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=SCHED_PATIENCE, min_lr=1e-7)
 
     os.makedirs("checkpoints", exist_ok=True)
-    best_val_dice  = 0.0
-    no_improve     = 0
+    best_val_dice = 0.0
+    no_improve    = 0
 
     for epoch in range(EPOCHS):
-        # --- TRAIN ---
         model.train()
         train_loss = 0.0
         loop = tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS} [Train]")
@@ -111,7 +101,6 @@ def main():
             train_loss += loss.item()
             loop.set_postfix(loss=f"{loss.item():.4f}")
 
-        # --- VALIDATE ---
         model.eval()
         sum_dice, sum_iou, sum_pre, sum_rec = 0, 0, 0, 0
         total = 0
@@ -143,7 +132,7 @@ def main():
         logger.info(log_str)
 
         if no_improve >= PATIENCE:
-            logger.info(f"\nEarly stopping triggered at epoch {epoch+1} (no improvement for {PATIENCE} epochs)")
+            logger.info(f"\nEarly stopping at epoch {epoch+1} (no improve for {PATIENCE} epochs)")
             break
 
     logger.info(f"\nBest Val Dice: {best_val_dice:.4f}")
