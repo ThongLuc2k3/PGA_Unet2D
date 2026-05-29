@@ -418,3 +418,126 @@ Chạy tuần tự 4 notebook trên Colab T4/A100. Mỗi notebook cho ra 1 file 
 
 > **Bottleneck chính:** Thời gian training trên Colab T4 (~18–28h tổng cho 4 model).  
 > Nên chạy song song nếu có 2 tài khoản Colab Pro, hoặc xếp hàng chạy qua đêm.
+
+---
+
+## 12. Hướng Mở Rộng: Bán Giám Sát Với Prompt-Constrained Pseudo-Label (PCPL)
+
+> Cập nhật: 2026-05-29
+
+### 12.1 Cơ Sở Khả Thi
+
+PGA-UNet có **cơ sở rõ ràng** để kết hợp học bán giám sát (semi-supervised learning) với điều kiện:
+- Nhãn **prompt (bounding box) luôn có 100%** — cả labeled lẫn unlabeled
+- Nhãn **mask polygon chỉ có ở subset labeled**
+
+**Lý do PGA phù hợp hơn UNet thuần cho bán giám sát:**
+
+| Yếu tố | UNet thuần | PGA-UNet |
+|--------|-----------|----------|
+| Pseudo-mask noise | Toàn ảnh, không có prior | Bị constrain vào vùng prompt bbox → ít noise |
+| Spatial prior | Không có | PromptSpatialGate boost features đúng vùng tổn thương |
+| Model robustness | Không có augmentation prompt | Forward() đã zero-out/noise prompt 30% training → robust |
+| Pseudo-label quality | Thấp (dễ false positive ngoài ROI) | Cao hơn (prompt mask out vùng không liên quan) |
+
+**Tính thực tế trong y tế:**
+- Vẽ bounding box: ~5 giây/ảnh — rất rẻ
+- Vẽ polygon mask: ~2–5 phút/ảnh — đắt gấp 20–60×
+- → Semi-supervised với prompt 100% là kịch bản **hoàn toàn realistic**
+
+### 12.2 Phương Pháp Đề Xuất: PCPL
+
+**Prompt-Constrained Pseudo-Label** — 2 giai đoạn:
+
+```
+Phase 1 — Warm-up (supervised only, 30 epochs):
+    Labeled data (L%): image + mask + prompt
+    → train bình thường với L_sup = BCE + Dice
+    → lưu model làm Teacher
+
+Phase 2 — Semi-supervised (full training, ≤100 epochs):
+    Labeled:   L_sup = BCE + Dice  (như cũ)
+    Unlabeled: Teacher(image, prompt) → raw_pseudo
+               pseudo = (sigmoid(raw_pseudo) > τ).float()
+               pseudo *= (prompt_heatmap > 0.1).float()  ← clip vào vùng prompt
+               L_pseudo = BCE(student(image, prompt), pseudo) + Dice(...)
+    
+    Tổng loss: L = L_sup + λ * L_pseudo
+    Cập nhật Teacher: EMA của Student weights (α=0.999)
+```
+
+**Tham số cần tune:**
+- `L%` ∈ {20%, 50%, 80%} — tỷ lệ dữ liệu có mask
+- `τ = 0.5` — threshold tạo pseudo-mask
+- `λ = 0.5` — trọng số unsupervised loss
+- `α = 0.999` — EMA decay cho Teacher
+
+### 12.3 Thiết Kế Thực Nghiệm
+
+**Split dữ liệu train (tổng ~1859 samples):**
+
+| Tên thực nghiệm | Labeled (có mask) | Unlabeled (chỉ prompt) |
+|-----------------|-------------------|----------------------|
+| PCPL-20 | 372 (~20%) | 1487 (~80%) |
+| PCPL-50 | 930 (~50%) | 929 (~50%) |
+| PCPL-80 | 1487 (~80%) | 372 (~20%) |
+| Supervised-100 | 1859 (100%) | — (baseline) |
+
+**Test:** giữ nguyên 248 samples, 3 prompt modes (zoom_out / shift / mixed_7_3).
+
+**Bảng so sánh kết quả kỳ vọng:**
+
+| Model | Labeled % | Dice↑ | IoU↑ | Pre↑ | Rec↑ | HD95↓ | CBL↑ |
+|-------|-----------|-------|------|------|------|-------|------|
+| PGA Supervised | 100% | — | — | — | — | — | — |
+| PGA PCPL-80 | 80% | — | — | — | — | — | — |
+| PGA PCPL-50 | 50% | — | — | — | — | — | — |
+| PGA PCPL-20 | 20% | — | — | — | — | — | — |
+| UNet Pseudo-50 | 50% | — | — | — | — | — | — |
+
+> Kỳ vọng: **PCPL-80 ≈ Supervised-100** (prompt constraint giúp pseudo-label đủ sạch).  
+> **PCPL-50 > UNet Pseudo-50** (lợi thế rõ nhờ spatial prior từ prompt).
+
+### 12.4 Thay Đổi Code Cần Thiết
+
+Không cần thay kiến trúc model. Chỉ cần bổ sung vào training pipeline:
+
+**1. `dataset.py`** — thêm flag `has_mask=True/False` để split labeled/unlabeled:
+```python
+# Labeled sample: trả về (image, mask, prompt)
+# Unlabeled sample: trả về (image, None, prompt)  ← mask = None
+```
+
+**2. `train_pga.py`** — thêm semi-supervised training loop:
+```python
+# Tách DataLoader thành labeled_loader + unlabeled_loader
+# Phase 1: warm-up 30 epochs chỉ dùng labeled_loader
+# Phase 2: mỗi batch = 1 labeled batch + 1 unlabeled batch
+#   - Teacher.eval() → sinh pseudo_mask → clip prompt
+#   - Student.train() → tính L_sup + λ * L_pseudo
+#   - Cập nhật Teacher: EMA(Student)
+```
+
+**3. `PGA_Unet2D.ipynb`** — thêm cell mới sau cell Train:
+- Cell markdown "**Bán Giám Sát (PCPL)**"
+- Cell code chạy `train_pga_semi.py` với các tham số `--labeled_ratio 0.5 --lambda_unsup 0.5`
+
+### 12.5 Điểm Mạnh Khi Báo Cáo
+
+1. **Novelty rõ ràng**: Kết hợp prompt-guided attention với semi-supervised — chưa thấy trong các paper sỏi tiết niệu X-quang 2D.
+2. **Practical contribution**: Chứng minh PGA cho phép giảm 50% công annotation mask mà vẫn giữ hiệu năng chấp nhận được.
+3. **Phân tích so sánh**: PCPL-PGA vs Pseudo-UNet (cùng % labeled) → thấy rõ lợi thế của prompt constraint.
+4. **Phù hợp hướng phát triển** (Chapter 5): "Bán giám sát với prompt cheaply annotated là hướng triển khai thực tế nhất trong bệnh viện."
+
+### 12.6 Checklist Thực Hiện
+
+> Chỉ thực hiện **sau khi có số liệu supervised đầy đủ** (Giai đoạn 1–2 hoàn thành).
+
+- [ ] Có đủ số liệu supervised làm baseline (Section 6 điền xong)
+- [ ] Viết `train_pga_semi.py` — thêm EMA teacher + pseudo-label loop
+- [ ] Cập nhật `dataset.py` — thêm `labeled_ratio` split
+- [ ] Thêm cell "Bán Giám Sát (PCPL)" vào `PGA_Unet2D.ipynb`
+- [ ] Chạy PCPL-50 trước (thực nghiệm trọng tâm, ~8–12h trên T4)
+- [ ] Chạy PCPL-20 và PCPL-80 nếu còn thời gian
+- [ ] Điền bảng Section 12.3
+- [ ] Viết đoạn phân tích trong Chapter 5 (hướng phát triển)
