@@ -111,7 +111,7 @@ Input (256×256×3)
 
 ### PGA-UNet — Plateau Heatmap
 ```
-GT BBox → noisy BBox (zoom_out/shift) → Gaussian blur (kernel 31, σ≈10)
+GT BBox → noisy BBox (zoom_out/shift) → Gaussian blur (kernel 31, σ≈5)
        → heatmap [0,1] cùng resolution với image (512×512)
        → đưa vào model cùng image (2-channel input)
 ```
@@ -159,9 +159,9 @@ GT BBox → noisy BBox → 4 tọa độ [x1,y1,x2,y2]
 
 | | PGA-UNet | SAM-Med2D |
 |---|---|---|
-| **Loss** | BCE + Dice Loss | FocalDiceloss_IoULoss |
-| **BCE** | Binary Cross-Entropy (pixel-wise) | Không dùng trực tiếp |
-| **Dice** | Dice Loss (overlap-based) | Focal Dice (trọng số class imbalance) |
+| **Loss** | `BCEWithLogitsLoss + DiceLoss` | `FocalDiceloss_IoULoss` |
+| **BCE** | BCEWithLogitsLoss (pixel-wise, logits) | Không dùng trực tiếp |
+| **Dice** | `1 - (2·intersection + ε)/(union + ε)` | Focal Dice (trọng số class imbalance) |
 | **IoU** | Không có | IoU regression loss (decoder IoU head) |
 | **Focal** | Không có | Áp dụng vào Dice để down-weight easy examples |
 | **Mục tiêu** | Pixel accuracy + overlap | Overlap + localization quality |
@@ -175,7 +175,7 @@ GT BBox → noisy BBox → 4 tọa độ [x1,y1,x2,y2]
 | **Optimizer** | AdamW | Adam |
 | **Weight decay** | 1e-4 | Không rõ |
 | **Learning rate** | 1e-4 | 1e-4 |
-| **Scheduler** | ReduceLROnPlateau (factor=0.5, patience=5) | MultiStepLR (milestones=[5,10], γ=0.5) — optional |
+| **Scheduler** | ReduceLROnPlateau (**mode='max'**, factor=0.5, patience=5) — theo dõi val Dice | MultiStepLR (milestones=[5,10], γ=0.5) — optional |
 | **Grad clip** | max_norm=1.0 | Không có |
 | **Early stop** | patience=15 | patience=10 |
 | **Max epochs** | 100 | 50 |
@@ -194,12 +194,12 @@ Epoch 1..100:
     loss.backward()
     optimizer.step()
   
-  val_loss = evaluate(val_loader)
-  if val_loss < best → save checkpoint
-  scheduler.step(val_loss)
+  val_dice = evaluate(val_loader)          ← tính Dice trên val set
+  if val_dice > best → save checkpoint    ← lưu khi Dice cao hơn
+  scheduler.step(val_dice)               ← ReduceLROnPlateau mode='max'
 ```
 - Toàn bộ model train từ đầu, không freeze gì
-- Val checkpoint dựa trên **validation loss** (hoặc val Dice)
+- Val checkpoint dựa trên **validation Dice** (ReduceLROnPlateau mode='max')
 
 ### SAM-Med2D — Two-Stage per Batch
 ```
@@ -297,7 +297,7 @@ Inference (test):
 | **Epochs** | 100 | 50 |
 | **Augmentation** | HFlip + Rotation + prompt noise | Resize/Normalize only |
 | **Training passes/sample** | 1 | 4 (1 init + 3 refinement) |
-| **Checkpoint selection** | Val Dice | Val Dice (single-pass) |
+| **Checkpoint selection** | Val Dice (ReduceLROnPlateau max) | Val Dice (single-pass bbox) |
 | **Inference** | IPR k=3 (4 passes) | Single-pass |
 | **GradCAM Rescue** | Có (dark background) | Không |
 | **Speed (inference)** | ~4× SAM | 1× (baseline) |
@@ -306,4 +306,40 @@ Inference (test):
 
 ---
 
-*File tạo tự động từ phân tích source code — cập nhật lần cuối: 2026-05-30*
+---
+
+## 13. Kết Quả Thực Nghiệm (BTXRD, 2026-05-30)
+
+> Dataset: BTXRD | N=248 (per-polygon) | GPU: Colab T4
+
+### 13.1 Kết quả theo kịch bản prompt
+
+| Model | Mode | Dice↑ | IoU↑ | Pre↑ | Rec↑ | HD95↓(px) | HD95/size↓ | CBL↑ |
+|---|---|---|---|---|---|---|---|---|
+| **PGA-UNet** | zoom_out | **0.8658** | **0.7692** | **0.8640** | **0.8817** | **12.10** | **0.0236** | **0.9584** |
+| **PGA-UNet** | shift | **0.8280** | **0.7159** | **0.8348** | **0.8391** | **15.32** | **0.0299** | **0.9315** |
+| **PGA-UNet** | mixed_7_3 | **0.8552** | **0.7540** | **0.8542** | **0.8708** | **13.08** | **0.0255** | **0.9525** |
+| SAM-Med2D | zoom_out | 0.7624 | 0.6424 | 0.7597 | 0.7880 | 52.08 | 0.2035 | 0.9003 |
+| SAM-Med2D | shift | 0.7273 | 0.5983 | 0.7318 | 0.7496 | 54.44 | 0.2126 | 0.8834 |
+| SAM-Med2D | mixed_7_3 | 0.7554 | 0.6325 | 0.7558 | 0.7813 | 51.84 | 0.2025 | 0.8997 |
+
+> HD95/size = hd95\_raw ÷ img\_size (PGA÷512, SAM÷256) — dùng để so sánh tương đối.
+
+### 13.2 Training summary
+
+| Model | Best Val Dice | Epoch dừng | Params |
+|---|---|---|---|
+| PGA-UNet | 0.8652 | 60/100 | ~4M (100% trainable) |
+| SAM-Med2D | 0.7731 | 12/50 | ~100M (~15M trainable) |
+
+### 13.3 Nhận xét chính
+
+- PGA vượt SAM mixed_7_3 **+9.98% Dice** — mặc dù nhỏ hơn 25× về tham số
+- HD95 normalized: PGA ~0.025 vs SAM ~0.20 — PGA chính xác biên hơn **~8×**
+- CBL: PGA 0.9525 > SAM 0.8997 — PGA định vị tâm tốt hơn
+- SAM hội tụ rất nhanh (epoch 12) nhờ pretrained, nhưng resolution 256 là giới hạn vốn có
+- Robustness drop (zoom_out→shift): PGA −4.4%, SAM −4.6% — tương đương nhau
+
+---
+
+*File tạo tự động từ phân tích source code — cập nhật lần cuối: 2026-05-30 (re-verify từ TN_B_ON folder, thêm kết quả thực nghiệm)*
