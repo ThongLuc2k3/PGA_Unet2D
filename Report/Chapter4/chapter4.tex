@@ -128,6 +128,7 @@ Trong thực tế ứng dụng, bác sĩ không thể luôn luôn khoanh một h
     \caption{Bảng đánh giá tính bền bỉ của PGA-UNet qua các kịch bản kiểm thử}
     \label{tab:robustness_comparison}
     \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|c|c|}
         \hline
         \textbf{Kịch bản Prompt} & \textbf{Dice $\uparrow$} & \textbf{IoU $\uparrow$} & \textbf{Precision $\uparrow$} & \textbf{Recall $\uparrow$} & \textbf{HD95 $\downarrow$} & \textbf{CBL $\uparrow$} \\
@@ -138,7 +139,8 @@ Trong thực tế ứng dụng, bác sĩ không thể luôn luôn khoanh một h
         \hline
         Mixed (70 - 30) & 0.8552 & 0.7540 & 0.8542 & 0.8708 & 13.08 & 0.9525 \\
         \hline
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 \textbf{Phân tích tính bền bỉ:}
@@ -149,13 +151,14 @@ Số liệu từ Bảng \ref{tab:robustness_comparison} khẳng định đặc t
 \subsection{So sánh với SAM-Med2D (SOTA Prompt-based)}
 \label{subsec:sam_comparison}
 
-Để đánh giá đầy đủ hơn, mô hình PGA-UNet được so sánh trực tiếp với SAM-Med2D~\cite{cheng2023sammed2d} — mô hình SOTA prompt-based dựa trên kiến trúc ViT-B (~100M tham số, fine-tuned từ 4M+ ảnh y tế). Cả hai mô hình được đánh giá trên cùng 248 mẫu kiểm thử per-polygon, cùng 3 kịch bản prompt. SAM-Med2D sử dụng độ phân giải ảnh 256×256 (bắt buộc do position embedding), trong khi PGA-UNet dùng 512×512.
+Để đánh giá đầy đủ hơn, mô hình PGA-UNet được so sánh trực tiếp với SAM-Med2D~\cite{2023-SAMMed2D-Cheng} — mô hình SOTA prompt-based dựa trên kiến trúc ViT-B (~100M tham số, fine-tuned từ 4M+ ảnh y tế). Cả hai mô hình được đánh giá trên cùng 248 mẫu kiểm thử per-polygon, cùng 3 kịch bản prompt. SAM-Med2D sử dụng độ phân giải ảnh 256×256 (bắt buộc do position embedding), trong khi PGA-UNet dùng 512×512.
 
 \begin{table}[htbp]
     \centering
     \caption{So sánh PGA-UNet và SAM-Med2D trên 3 kịch bản prompt (N=248, cùng dataset BTXRD)}
     \label{tab:sam_comparison}
     \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|l|c|c|c|c|c|c|}
         \hline
         \textbf{Mô hình} & \textbf{Kịch bản} & \textbf{Dice $\uparrow$} & \textbf{IoU $\uparrow$} & \textbf{Pre $\uparrow$} & \textbf{Rec $\uparrow$} & \textbf{HD95 $\downarrow$} & \textbf{CBL $\uparrow$} \\
@@ -168,7 +171,8 @@ Số liệu từ Bảng \ref{tab:robustness_comparison} khẳng định đặc t
         SAM-Med2D & Shift      & 0.7273 & 0.5983 & 0.7318 & 0.7496 & 54.44$^*$ & 0.8834 \\
         SAM-Med2D & Mixed 70/30 & 0.7554 & 0.6325 & 0.7558 & 0.7813 & 51.84$^*$ & 0.8997 \\
         \hline
-    \end{tabular}
+    \end{tabular}%
+    }
     \begin{flushleft}
         \footnotesize $^*$ HD95 của SAM-Med2D tính trên không gian 256×256px; HD95 chuẩn hóa ($\div$256) $\approx$ 0.20, so với PGA ($\div$512) $\approx$ 0.025 — PGA chính xác hơn ~8× về biên.
     \end{flushleft}
@@ -205,6 +209,7 @@ Kiến trúc PGA-UNet cơ sở đã chứng minh khả năng chịu lỗi tốt 
     \caption{Khả năng phục hồi hệ số Dice khi áp dụng chuỗi cứu hộ GradCAM + IPR}
     \label{tab:gradcam_rescue}
     \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Tình trạng câu nhắc đầu vào} & \textbf{Dice Trước Cứu Hộ} & \textbf{Dice Sau Cứu Hộ} & \textbf{CBL} & \textbf{Tỷ lệ cứu sống} \\
@@ -213,7 +218,8 @@ Kiến trúc PGA-UNet cơ sở đã chứng minh khả năng chịu lỗi tốt 
         \hline
         Khoanh mù (Vào vùng nền) & 0.0000 (Rỗng) & \textbf{0.7102} & 0.8122 & 85.3\% \\
         \hline
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 \textbf{Phân tích:}
@@ -228,6 +234,7 @@ Bảng \ref{tab:gradcam_rescue} minh chứng sức mạnh của sự kết hợp
     \caption{Phân tích sự hội tụ của thuật toán IPR qua các vòng lặp ($k$)}
     \label{tab:ipr_convergence}
     \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Vòng lặp IPR} & \textbf{Hệ số Dice $\uparrow$} & \textbf{Độ lệch biên HD95 $\downarrow$} & \textbf{Độ định tâm CBL $\uparrow$} & \textbf{Thời gian (ms) / ảnh} \\
@@ -240,7 +247,8 @@ Bảng \ref{tab:gradcam_rescue} minh chứng sức mạnh của sự kết hợp
         \hline
         $k=3$ (Vòng nắn 3) & 0.8525 & 12.74 px & 0.9515 & ~ 180 ms \\
         \hline
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 \textbf{Phân tích sự hội tụ:}
@@ -259,7 +267,7 @@ Bên cạnh các đánh giá định lượng bằng số liệu thống kê, vi
 
 \subsection{Trực quan hóa các kịch bản phân đoạn tiêu biểu}
 
-Hình \ref{fig:qualitative_segmentation} so sánh trực quan mặt nạ dự đoán của các mô hình trong kịch bản bác sĩ cung cấp câu nhắc bao quát tốt tổn thương. Các ca kiểm thử được lựa chọn đại diện cho những khó khăn đặc thù nhất của ảnh X-quang xương:
+Các hình từ \ref{fig:qualitative_pga} đến \ref{fig:qualitative_attunet2} so sánh trực quan mặt nạ dự đoán của các mô hình trong kịch bản bác sĩ cung cấp câu nhắc bao quát tốt tổn thương. Các ca kiểm thử được lựa chọn đại diện cho những khó khăn đặc thù nhất của ảnh X-quang xương:
 
 \begin{itemize}
     \item \textbf{Ca tổn thương có độ tương phản thấp:} Ranh giới khối u bị hòa lẫn với vùng mô mềm và xương nền. Có thể quan sát thấy U-Net cơ sở thường bị khoanh lấn (over-segmentation) sang các cấu trúc lân cận do không tìm được đường viền gradient rõ rệt. Ngược lại, nhờ tác dụng của Cổng không gian (Prompt Spatial Gate), PGA-UNet chặn đứng được sự lan truyền đặc trưng sai lệch này, giữ cho đường biên dự đoán bám sát với vùng gán nhãn gốc (Ground Truth).
@@ -283,8 +291,22 @@ Hình \ref{fig:qualitative_segmentation} so sánh trực quan mặt nạ dự đ
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.80\textwidth]{images/vis_attunet_1.png}
-    \caption{Trực quan hóa Attention U-Net 2D trên mẫu kiểm thử. Dice=0.4110, HD95=141.23px — thấp hơn U-Net gốc, minh chứng hiện tượng attention khuếch đại nhiễu khi thiếu tín hiệu prompt.}
+    \caption{Trực quan hóa Attention U-Net 2D trên mẫu kiểm thử (Sample 1). Dice=0.4110, HD95=141.23px — thấp hơn U-Net gốc, minh chứng hiện tượng attention khuếch đại nhiễu khi thiếu tín hiệu prompt.}
     \label{fig:qualitative_attunet}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.98\textwidth]{images/vis_unet_2.png}
+    \caption{Trực quan hóa U-Net 2D trên mẫu kiểm thử Sample ID: 1 (ảnh gối). Từ trái sang: Ảnh gốc, Ground Truth (xanh), Dự đoán U-Net (đỏ), Overlay. Minh chứng thêm cho xu hướng phân đoạn sai khi không có câu nhắc định hướng.}
+    \label{fig:qualitative_unet2}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.98\textwidth]{images/vis_attunet_2.png}
+    \caption{Trực quan hóa Attention U-Net 2D trên mẫu kiểm thử Sample ID: 5 (ảnh bàn chân). Dice=0.056, HD95=41.1px, CBL=0.392 — mặt nạ dự đoán lệch hoàn toàn khỏi tổn thương thực tế, minh họa rõ hiện tượng attention bị kích hoạt sai vùng nhiễu thiết bị.}
+    \label{fig:qualitative_attunet2}
 \end{figure}
 
 \subsection{Trực quan hóa quá trình nắn nét tự động của IPR}
@@ -308,9 +330,23 @@ Trình tự quan sát trên hình minh họa cụ thể diễn biến sau:
 
 \begin{figure}[htbp]
     \centering
+    \includegraphics[width=0.95\textwidth]{images/vis_pga_3.png}
+    \caption{Trực quan hóa PGA-UNet trên mẫu IMG001100 — hàng trên: kịch bản Zoom-out; hàng dưới: kịch bản Shift. Minh họa khả năng bám sát khối u lớn ở vùng đùi xương dài với độ chính xác cao trong cả hai kịch bản.}
+    \label{fig:qualitative_pga3}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
     \includegraphics[width=0.95\textwidth]{images/vis_sam_1.png}
     \caption{Trực quan hóa SAM-Med2D trên mẫu IMG001768 — 3 hàng tương ứng 3 kịch bản prompt: Zoom-out, Shift, Mixed 70/30. Các cột: Bbox prompt, Ground Truth, SAM-Med2D prediction, GT/Pred overlay. Dice(zoom-out)=0.7624, Dice(shift)=0.7273.}
     \label{fig:qualitative_sam}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/vis_sam_2.png}
+    \caption{Trực quan hóa SAM-Med2D trên mẫu IMG001538 — 3 kịch bản Zoom-out (xanh), Shift (đỏ), Mixed (vàng). Các cột: Bbox prompt, Ground Truth, SAM-Med2D prediction, GT/Pred overlay. Kết quả bổ sung minh chứng sự hạn chế về độ phân giải 256×256 của SAM-Med2D trên cấu trúc gót chân nhỏ.}
+    \label{fig:qualitative_sam2}
 \end{figure}
 
 Sự dịch chuyển không gian rõ rệt của tâm mặt nạ qua từng vòng lặp (hướng dần về phía tâm thực tế) là minh chứng trực quan cho tính hiệu quả của thuật toán tinh chỉnh tuần tự IPR, giúp bác sĩ tiết kiệm thời gian thao tác lại từ đầu.
@@ -430,8 +466,7 @@ Với thời gian đáp ứng này, hệ thống hoàn toàn đạt tiêu chuẩ
 
 \begin{figure}[htbp]
     \centering
-    % [GHI CHÚ CHO NHÓM: Bỏ comment dòng bên dưới và chèn ảnh chụp màn hình giao diện ứng dụng app.py đang chạy thực tế, tốt nhất là lúc đang bật luồng GradCAM gợi ý]
-    % \includegraphics[width=0.95\textwidth]{images/app_interface.png}
+    \includegraphics[width=0.95\textwidth]{images/app_interface.png}
     \caption{Giao diện ứng dụng hỗ trợ chẩn đoán (\texttt{app.py}) minh họa luồng xử lý tương tác giữa bác sĩ và hệ thống AI}
     \label{fig:app_interface}
 \end{figure}

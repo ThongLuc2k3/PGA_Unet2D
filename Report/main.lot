@@ -1,0 +1,13 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}}{33}{table.3.1}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố bộ dữ liệu thực nghiệm}}{47}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Bảng so sánh hiệu năng giữa các mô hình phân đoạn cơ sở và PGA-UNet}}{50}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Bảng đánh giá tính bền bỉ của PGA-UNet qua các kịch bản kiểm thử}}{52}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh PGA-UNet và SAM-Med2D trên 3 kịch bản prompt (N=248, cùng dataset BTXRD)}}{53}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Khả năng phục hồi hệ số Dice khi áp dụng chuỗi cứu hộ GradCAM + IPR}}{55}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Phân tích sự hội tụ của thuật toán IPR qua các vòng lặp ($k$)}}{56}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{65}{table.4.7}%
+\addvspace {10\p@ }
