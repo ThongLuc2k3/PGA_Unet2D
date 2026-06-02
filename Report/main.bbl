@@ -436,6 +436,102 @@
     \field{year}{2023}
   \endentry
 
+  \entry{2023-SAM-Kirillov}{article}{}{}
+    \name{author}{13}{}{%
+      {{hash=KA}{%
+         family={Kirillov},
+         familyi={K\bibinitperiod},
+         given={Alexander},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=ME}{%
+         family={Mintun},
+         familyi={M\bibinitperiod},
+         given={Eric},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=RN}{%
+         family={Ravi},
+         familyi={R\bibinitperiod},
+         given={Nikhila},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=MH}{%
+         family={Mao},
+         familyi={M\bibinitperiod},
+         given={Hanzi},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=RC}{%
+         family={Rolland},
+         familyi={R\bibinitperiod},
+         given={Chloe},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=GL}{%
+         family={Gustafson},
+         familyi={G\bibinitperiod},
+         given={Laura},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=XT}{%
+         family={Xiao},
+         familyi={X\bibinitperiod},
+         given={Tegan},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=FCY}{%
+         family={Fu},
+         familyi={F\bibinitperiod},
+         given={Cheng-Yang},
+         giveni={C\bibinithyphendelim Y\bibinitperiod},
+      }}%
+      {{hash=ISI}{%
+         family={Iyer},
+         familyi={I\bibinitperiod},
+         given={Shahabul\bibnamedelima Islam},
+         giveni={S\bibinitperiod\bibinitdelim I\bibinitperiod},
+      }}%
+      {{hash=JJ}{%
+         family={Jiang},
+         familyi={J\bibinitperiod},
+         given={James},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=JJ}{%
+         family={Johnson},
+         familyi={J\bibinitperiod},
+         given={Justin},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=DP}{%
+         family={Dollár},
+         familyi={D\bibinitperiod},
+         given={Piotr},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=GR}{%
+         family={Girshick},
+         familyi={G\bibinitperiod},
+         given={Ross},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KA+1}
+    \strng{fullhash}{KAMERNMHRCGLXTFCYISIJJJJDPGR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{pages}{4015\bibrangedash 4026}
+    \field{title}{{Segment Anything}}
+    \verb{url}
+    \verb https://arxiv.org/abs/2304.02643
+    \endverb
+    \field{journaltitle}{Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)}
+    \field{year}{2023}
+  \endentry
+
   \entry{ma2024medsam}{article}{}{}
     \name{author}{6}{}{%
       {{hash=MJ}{%
