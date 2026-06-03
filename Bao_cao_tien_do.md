@@ -1,5 +1,5 @@
 # Báo cáo tiến độ — PGA-UNet2D
-**Ngày cập nhật:** 02/06/2026 | **Deadline nộp báo cáo:** 12/06/2026
+**Ngày cập nhật:** 03/06/2026 | **Deadline nộp báo cáo:** 12/06/2026
 
 ---
 
@@ -92,25 +92,40 @@ Giải pháp áp dụng:
 | 3 sơ đồ diagrams | PNG export xong, đã `\includegraphics` trong chapter3.tex |
 | `SubCat_PGA_vs_SAM.ipynb` fix | Sửa lỗi `ImportError: build_sam` trên Kaggle (sys.modules cache clear) |
 
+### ✅ Mới hoàn thành (03/06/2026)
+| Nhiệm vụ | Ghi chú |
+|---|---|
+| `sec:product_overview` — Tổng quan Đóng góp 2 | Viết rõ 3 lớp pipeline, so sánh SAM không có GradCAM+IPR — chapter4.tex |
+| `subsec:cascading_error` — Phân tích sai số tích lũy | Lý thuyết: 89.64%×85.58%≈76.7%; thực nghiệm đang chuẩn bị — chapter4.tex |
+| `tab:ipr_convergence` — Một phần | k=0 (CBL=0.298), k=1 (Dice=0.260); k=2,k=3 chờ PGA_Ablation.ipynb |
+| Làm rõ IPR chỉ kích hoạt sau GradCAM rescue | Không chạy trong luồng phân đoạn thông thường — chapter4.tex |
+| Chapter 5 — Viết lại toàn bộ kết luận + hướng phát triển | 4 hướng cụ thể: cải thiện gác cổng, Unified Model, Multi-prompt, đa tập — chapter5.tex |
+
 ### 🔴 Cần làm trước 12/6 (còn ~9 ngày)
 | # | Nhiệm vụ | Thuộc đóng góp | File |
 |---|---|---|---|
-| 1 | Chạy 5 ablation V1–V5 trên Colab | Đóng góp 1 | `Source/Ablation/` → cập nhật `tab:ablation_prompt` |
+| 1 | Chạy 5 ablation V1–V5 trên Colab | Đóng góp 1 | `Source/Ablation/` → cập nhật `tab:ablation_arch` |
 | 2 | Cross-validation: chia lại train/val/test, train lại PGA 1 lần → ghi mean±std Dice | Đóng góp 1 | `Source/PGA_Unet2D.ipynb` + new split |
 | 3 | Review `references.bib` — đảm bảo mọi kỹ thuật dùng đều có cite đúng | Cả 2 | `Report/References/references.bib` |
 | 4 | Compile `main.pdf` lần cuối, kiểm tra không lỗi LaTeX | Cả 2 | `Report/main.tex` |
 
+### 🟠 Ưu tiên trung bình
+| # | Nhiệm vụ | Ghi chú |
+|---|---|---|
+| 5 | IPR k=2, k=3 | Chạy `Source/PGA_Ablation.ipynb` → điền `tab:ipr_convergence` |
+| 6 | Cascading error thực nghiệm | Tạo `test_mixed/` (248 bệnh + N không bệnh), chạy full pipeline MobileNetV4→PGA |
+| 7 | Sub-category visualization | Ảnh từ Kaggle → thêm vào chapter4.tex |
+
 ### 🟡 Làm nếu còn thời gian
 | Nhiệm vụ | Lý do bỏ qua được |
 |---|---|
-| Ảnh sub-category visualization | Thêm vào chapter4.tex sau khi có ảnh từ Kaggle |
 | Loss function thay thế MobileNetV4 | Hướng phát triển tương lai (Chapter 5) |
 | Multi-dataset testing | Hướng phát triển tương lai (Chapter 5) |
 | app.py (Gradio UI) | Demo sản phẩm, không ảnh hưởng điểm báo cáo |
 
 ### Đóng góp 2 — Ghi chú
 - **Ảnh không bệnh** (GV hỏi): Thuộc Đóng góp 2 — xử lý bởi MobileNetV4 gatekeeper (AUC-ROC=0.9514). PGA chỉ nhận ảnh có bệnh đã qua lọc. Ghi rõ trong chapter4.tex là đủ.
-- **Cascading error**: 0.86 × 0.88 ≈ 75% tổng thể — đã thừa nhận và giải thích trong báo cáo (tách 2 đóng góp).
+- **Cascading error**: 89.64%×85.58%≈76.7% tổng thể — đã thừa nhận, tách rõ Đóng góp 1 (Dice=0.8606 số sạch) và Đóng góp 2 (pipeline end-to-end).
 
 ---
 

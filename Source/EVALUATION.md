@@ -35,19 +35,21 @@
 
 ---
 
-### Đóng góp 2 — Sản phẩm (Pipeline lâm sàng) — **Tạm gác**
+### Đóng góp 2 — Sản phẩm (Pipeline lâm sàng end-to-end)
 
-> Quyết định: tập trung hoàn thiện Đóng góp 1 trước deadline 12/6. Đóng góp 2 chỉ cần đủ để trình bày, không cần thực nghiệm mới.
+> Pipeline: MobileNetV4 (sàng lọc) → PGA-UNet (phân đoạn) → GradCAM+IPR (phòng vệ câu nhắc sai) → app.py
 
 | Hạng mục | Trạng thái | Ghi chú |
 |---|---|---|
 | MobileNetV4 gatekeeper (AUC-ROC=0.9514) | ✅ Số thật | Result/MobileNetV4_BTXRD_dataset.ipynb |
-| GradCAM rescue + IPR pipeline | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
-| Defense comparison SAM vs PGA | ✅ Số thật | Result/defense-comparison-sam-vs-pga.ipynb |
+| GradCAM rescue: 174/174=100% phát hiện, 21.8% cứu hộ thành công | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
+| IPR convergence sau GradCAM (k=1 có số; k=2,3 chờ) | ⚠️ Một phần | tab:ipr_convergence — cần PGA_Ablation.ipynb |
+| Defense comparison SAM vs PGA (SAM không có cơ chế phòng vệ) | ✅ Số thật | Result/defense-comparison-sam-vs-pga.ipynb |
+| Cascading error lý thuyết: 89.64%×85.58%≈76.7% | ✅ Viết xong | chapter4.tex subsec:cascading_error |
+| **Cascading error thực nghiệm** (test hỗn hợp) | 🔴 Chưa có | Xem task bên dưới |
 | app.py Gradio UI | ✅ Có sẵn | Source/project/app.py |
-| Cross-validation / resampling | 🟡 Bỏ qua | Đề cập limitations Chapter 5 |
-| Multi-dataset testing | 🟡 Bỏ qua | Hướng phát triển Chapter 5 |
-| Loss function research thay MobileNetV4 | 🟡 Bỏ qua | Hướng phát triển Chapter 5 |
+| Intro Đóng góp 2 + so sánh SAM không có GradCAM+IPR | ✅ Viết xong | chapter4.tex sec:product_overview |
+| Chapter 5 kết luận + hướng phát triển (Unified model) | ✅ Viết xong | chapter5.tex |
 
 ---
 
@@ -55,10 +57,28 @@
 
 | # | Việc | Ưu tiên | Nơi chạy |
 |---|---|---|---|
-| 1 | Chạy 5 ablation V1–V5 → số thật cho tab:ablation_prompt | 🔴 Cao | 5 tab Colab song song |
-| 2 | Xác nhận tab:ipr_convergence bằng số thật từ V5 | 🔴 Cao | Lấy từ kết quả V5 |
-| 3 | Thêm ảnh visualization sub-category vào chapter4.tex | 🟡 TB | Local |
-| 4 | Compile main.pdf lần cuối, kiểm tra không lỗi LaTeX | 🟡 TB | Local |
+| 1 | Chạy 5 ablation V1–V5 → số thật cho tab:ablation_arch | 🔴 Cao | 5 tab Colab song song |
+| 2 | Cross-validation: train lại PGA với split mới → tab:cross_validation | 🔴 Cao | 1 tab Colab |
+| 3 | Review references.bib — cite đúng mọi kỹ thuật dùng | 🔴 Cao | Local |
+| 4 | **Cascading error thực nghiệm**: tạo folder hỗn hợp (248 bệnh + N không bệnh), chạy full pipeline MobileNetV4→PGA, ghi kết quả thực vào tab:cascading_error | 🟠 TB | Colab/Local |
+| 5 | Thêm ảnh visualization sub-category vào chapter4.tex | 🟡 TB | Local (copy từ Kaggle) |
+| 6 | Compile main.pdf lần cuối, kiểm tra không lỗi LaTeX | 🟡 TB | Local |
+
+### Đóng góp 2 — Chi tiết task Cascading Error Empirical Test
+
+**Mục tiêu:** Thay ước tính lý thuyết 76.7% bằng con số đo thực tế trên tập hỗn hợp.
+
+**Cách làm:**
+1. Tạo folder `test_mixed/` gồm:
+   - 248 ảnh từ tập test BTXRD (có bệnh)
+   - $N$ ảnh không bệnh (lấy từ BTXRD train split hoặc thu thập thêm)
+2. Chạy full pipeline: MobileNetV4 phân lớp → nếu "có bệnh" → PGA-UNet phân đoạn
+3. Ghi nhận:
+   - TP rate (ảnh bệnh được đưa vào phân đoạn)
+   - TN rate (ảnh không bệnh bị lọc đúng)
+   - Dice trung bình trên TP samples
+   - Cascading accuracy = TP_rate × Dice
+4. Điền vào `tab:cascading_error` trong chapter4.tex (thay thế số ước tính)
 
 ---
 
