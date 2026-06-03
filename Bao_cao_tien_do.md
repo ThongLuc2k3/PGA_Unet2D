@@ -1,5 +1,5 @@
 # Báo cáo tiến độ — PGA-UNet2D
-**Ngày cập nhật:** 03/06/2026 | **Deadline nộp báo cáo:** 12/06/2026
+**Ngày cập nhật:** 03/06/2026 (chiều) | **Deadline nộp báo cáo:** 12/06/2026
 
 ---
 
@@ -100,26 +100,33 @@ Giải pháp áp dụng:
 | `tab:ipr_convergence` — Một phần | k=0 (CBL=0.298), k=1 (Dice=0.260); k=2,k=3 chờ PGA_Ablation.ipynb |
 | Làm rõ IPR chỉ kích hoạt sau GradCAM rescue | Không chạy trong luồng phân đoạn thông thường — chapter4.tex |
 | Chapter 5 — Viết lại toàn bộ kết luận + hướng phát triển | 4 hướng cụ thể: cải thiện gác cổng, Unified Model, Multi-prompt, đa tập — chapter5.tex |
+| Extract + đặt tên ảnh từ Result notebooks | 41 ảnh → Report/images/, xóa trùng/orphaned, còn 54 files sạch |
+| Fix 5 ablation notebooks | Xóa `verbose` (PyTorch≥2.2), `leave=True`, print mỗi epoch, lưu Drive, visualization cell 5 cột |
 
-### 🔴 Cần làm trước 12/6 (còn ~9 ngày)
+### 🖼️ Chính sách ảnh trong báo cáo (chốt 03/06)
+- **KHÔNG thêm ảnh minh chứng mới** vào report — đã đủ `vis_pga/attunet/unet/sam` hiện có
+- **CHỈ thêm** sơ đồ kiến trúc hoặc workflow mới nếu cần giải thích kỹ thuật
+- Ảnh trong `Report/images/` còn lại (subcat, gradcam, defense, ablation) dùng cho **slide + bằng chứng hội đồng**
+- Report dùng khoảng **15–20 ảnh** (số liệu + 2–3 vis đại diện mỗi mô hình + biểu đồ tổng hợp)
+
+### 🔴 Cần làm trước 12/6 (còn 9 ngày)
 | # | Nhiệm vụ | Thuộc đóng góp | File |
 |---|---|---|---|
-| 1 | Chạy 5 ablation V1–V5 trên Colab | Đóng góp 1 | `Source/Ablation/` → cập nhật `tab:ablation_arch` |
-| 2 | Cross-validation: chia lại train/val/test, train lại PGA 1 lần → ghi mean±std Dice | Đóng góp 1 | `Source/PGA_Unet2D.ipynb` + new split |
-| 3 | Review `references.bib` — đảm bảo mọi kỹ thuật dùng đều có cite đúng | Cả 2 | `Report/References/references.bib` |
+| 1 | Chạy 5 ablation V1–V5 trên Colab → lấy số thật | Đóng góp 1 | `Source/Ablation/` → `tab:ablation_arch` |
+| 2 | Cross-validation: train lại PGA với split mới → ghi mean±std Dice | Đóng góp 1 | `Source/PGA_Unet2D.ipynb` |
+| 3 | Review `references.bib` — cite đúng mọi kỹ thuật đã dùng | Cả 2 | `Report/References/references.bib` |
 | 4 | Compile `main.pdf` lần cuối, kiểm tra không lỗi LaTeX | Cả 2 | `Report/main.tex` |
 
 ### 🟠 Ưu tiên trung bình
 | # | Nhiệm vụ | Ghi chú |
 |---|---|---|
 | 5 | IPR k=2, k=3 | Chạy `Source/PGA_Ablation.ipynb` → điền `tab:ipr_convergence` |
-| 6 | Cascading error thực nghiệm | Tạo `test_mixed/` (248 bệnh + N không bệnh), chạy full pipeline MobileNetV4→PGA |
-| 7 | Sub-category visualization | Ảnh từ Kaggle → thêm vào chapter4.tex |
+| 6 | Cascading error thực nghiệm | Tạo `test_mixed/`, chạy full pipeline MobileNetV4→PGA |
 
 ### 🟡 Làm nếu còn thời gian
 | Nhiệm vụ | Lý do bỏ qua được |
 |---|---|
-| Loss function thay thế MobileNetV4 | Hướng phát triển tương lai (Chapter 5) |
+| Sub-category visualization (ảnh) | Đã có bar chart tổng hợp là đủ cho report |
 | Multi-dataset testing | Hướng phát triển tương lai (Chapter 5) |
 | app.py (Gradio UI) | Demo sản phẩm, không ảnh hưởng điểm báo cáo |
 
