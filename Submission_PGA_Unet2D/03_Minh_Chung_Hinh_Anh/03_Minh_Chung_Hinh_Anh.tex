@@ -1,0 +1,219 @@
+
+\section{Minh Chứng Hình Ảnh}
+
+\begin{quote}\itshape Tất cả ảnh nằm trong thư mục \texttt{images/} cùng cấp với file này (21 file PNG).\end{quote}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{Tổng Quan Ảnh}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{File} & \textbf{Nhóm} & \textbf{Nội dung} \\
+\hline
+\texttt{system\_architecture.png} & Hệ thống & Sơ đồ tổng thể 4 giai đoạn pipeline \\
+\hline
+\texttt{preprocessing\_pipeline.png} & Hệ thống & Quy trình tiền xử lý 6 bước \\
+\hline
+\texttt{diagram\_pga.png} & Kiến trúc & PGA-UNet với PSG + CAD \\
+\hline
+\texttt{diagram\_unet.png} & Kiến trúc & U-Net baseline \\
+\hline
+\texttt{diagram\_attunet.png} & Kiến trúc & Attention U-Net \\
+\hline
+\texttt{diagram\_sammed2d.png} & Kiến trúc & SAM-Med2D (ViT-B + Adapter) \\
+\hline
+\texttt{vis\_pga\_1.png} & Kết quả PGA & IMG001768 — Zoom-out vs Shift \\
+\hline
+\texttt{vis\_pga\_2.png} & Kết quả PGA & IMG001538 — Pipeline cứu hộ GradCAM+IPR \\
+\hline
+\texttt{vis\_pga\_3.png} & Kết quả PGA & IMG001100 — Tổn thương lớn \\
+\hline
+\texttt{gradcam\_ipr\_rescue\_1.png} & GradCAM Rescue & Minh họa 174 mẫu câu nhắc sai — nhóm 1 \\
+\hline
+\texttt{gradcam\_ipr\_rescue\_2.png} & GradCAM Rescue & Minh họa 174 mẫu câu nhắc sai — nhóm 2 \\
+\hline
+\texttt{defense\_pga\_rescue\_vis.png} & So sánh phòng vệ & PGA GradCAM rescue vs Ground Truth \\
+\hline
+\texttt{defense\_sam\_dark\_corner.png} & So sánh phòng vệ & SAM-Med2D với câu nhắc góc tối — không có cứu hộ \\
+\hline
+\texttt{vis\_sam\_1.png} & Kết quả SAM & IMG001768 — 3 kịch bản \\
+\hline
+\texttt{vis\_sam\_2.png} & Kết quả SAM & IMG001538 \\
+\hline
+\texttt{vis\_unet\_1.png} & Kết quả baseline & U-Net — over-segmentation \\
+\hline
+\texttt{vis\_unet\_2.png} & Kết quả baseline & U-Net — mẫu bổ sung \\
+\hline
+\texttt{vis\_attunet\_1.png} & Kết quả baseline & Attention U-Net — attention khuếch đại nhiễu \\
+\hline
+\texttt{vis\_attunet\_2.png} & Kết quả baseline & Attention U-Net — mặt nạ lệch hoàn toàn \\
+\hline
+\texttt{classification\_evaluation.png} & Phân lớp & Confusion matrix + ROC AUC=0.9514 \\
+\hline
+\texttt{app\_interface.png} & Ứng dụng & Giao diện Gradio end-to-end \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{A. Sơ Đồ Hệ Thống Tổng Thể}
+
+
+\subsubsection{A.0 Kiến trúc pipeline 4 giai đoạn}
+\textbf{File:} \texttt{images/system\_architecture.png}
+
+Luồng xử lý end-to-end: Tiền xử lý (YOLOv11 xóa nhiễu) $\rightarrow$ Sàng lọc (MobileNetV4) $\rightarrow$ Phân đoạn có hướng dẫn (PGA-UNet) $\rightarrow$ Thẩm định an toàn (GradCAM + IPR). Minh họa cả hai kịch bản: câu nhắc hợp lệ (luồng thường) và câu nhắc sai (luồng cứu hộ).
+
+
+\subsubsection{A.0b Quy trình tiền xử lý 6 bước}
+\textbf{File:} \texttt{images/preprocessing\_pipeline.png}
+
+Từ ảnh JPEG thô $\rightarrow$ xóa ICC Profile $\rightarrow$ gán nhãn nhiễu trên Roboflow $\rightarrow$ huấn luyện YOLOv11s $\rightarrow$ phát hiện và xóa nhiễu R/L bằng inpainting $\rightarrow$ chuẩn hóa thang xám $\rightarrow$ resize 512$\times$512.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{A. Sơ Đồ Kiến Trúc}
+
+
+\subsubsection{A.1 Kiến trúc PGA-UNet đề xuất}
+\textbf{File:} \texttt{images/diagram\_pga.png}
+
+Minh họa hai thành phần đóng góp chính:
+\begin{itemize}
+  \item \textbf{Prompt Spatial Gate (PSG):} tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa qua phép nhân có chọn lọc
+  \item \textbf{Conditioned Attention Decoder (CAD):} điều kiện hóa tín hiệu gating bằng câu nhắc tại từng tầng giải mã, trọng số giảm dần
+\end{itemize}
+
+
+\subsubsection{A.2 Kiến trúc U-Net cơ sở}
+\textbf{File:} \texttt{images/diagram\_unet.png}
+
+Nền tảng encoder-decoder đối xứng với kết nối tắt — cả 4 mô hình đều dựa trên kiến trúc này.
+
+
+\subsubsection{A.3 Kiến trúc Attention U-Net}
+\textbf{File:} \texttt{images/diagram\_attunet.png}
+
+Cổng chú ý (Attention Gate) tại kết nối tắt — tiền đề cho Conditioned Attention của PGA-UNet.
+
+
+\subsubsection{A.4 Kiến trúc SAM-Med2D (mô hình so sánh)}
+\textbf{File:} \texttt{images/diagram\_sammed2d.png}
+
+ViT-B Image Encoder + Adapter layers + Mask Decoder — \textasciitilde{}100M tham số, fine-tune từ 4M+ ảnh y tế.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{B. Kết Quả Phân Loại Sàng Lọc (MobileNetV4)}
+
+\textbf{File:} \texttt{images/classification\_evaluation.png}
+
+Bao gồm: (a) Ma trận nhầm lẫn, (b) Đường cong ROC (AUC=0.9514), (c) Phân phối xác suất dự đoán.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{C. Kết Quả Phân Đoạn — PGA-UNet}
+
+
+\subsubsection{C.1 Mẫu IMG001768 (Kịch bản Zoom-out và Shift)}
+\textbf{File:} \texttt{images/vis\_pga\_1.png}
+
+Hàng trên: Zoom-out (câu nhắc lý tưởng) — Hàng dưới: Shift (câu nhắc lệch tâm).  
+Các cột: Ảnh gốc | Prompt heatmap | Ground Truth | Dự đoán | Overlay.  
+Minh chứng tính bền bỉ: Dice giảm nhẹ từ 0.8606 (Zoom-out) xuống 0.8380 (Shift) — chỉ −2.6\%.
+
+
+\subsubsection{C.2 Mẫu IMG001538 (Pipeline cứu hộ GradCAM + IPR)}
+\textbf{File:} \texttt{images/vis\_pga\_2.png}
+
+Minh họa chuỗi hành động khi câu nhắc hoàn toàn sai vị trí:
+\begin{enumerate}
+  \item Phát hiện $\rightarrow$ từ chối $\rightarrow$ kích hoạt GradCAM
+  \item GradCAM trích xuất điểm neo cứu hộ
+  \item IPR vòng 1 $\rightarrow$ mặt nạ thô bám vùng tổn thương
+  \item IPR vòng 2 $\rightarrow$ mặt nạ hội tụ, bám sát Ground Truth
+\end{enumerate}
+
+
+\subsubsection{C.3 Mẫu IMG001100 (Tổn thương lớn vùng đùi)}
+\textbf{File:} \texttt{images/vis\_pga\_3.png}
+
+PGA-UNet phân đoạn chính xác tổn thương lớn ở cả kịch bản Zoom-out và Shift.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{D. Kết Quả Phân Đoạn — SAM-Med2D (So Sánh)}
+
+
+\subsubsection{D.1 Mẫu IMG001768 — 3 kịch bản prompt}
+\textbf{File:} \texttt{images/vis\_sam\_1.png}
+
+3 hàng: Zoom-out / Shift / Mixed 70/30 — 4 cột: Bbox prompt | Ground Truth | SAM prediction | Overlay.  
+Dice(Zoom-out)=0.7624, Dice(Shift)=0.7273 — thấp hơn PGA ở cả 3 kịch bản.
+
+
+\subsubsection{D.2 Mẫu IMG001538 — Hạn chế độ phân giải 256$\times$256}
+\textbf{File:} \texttt{images/vis\_sam\_2.png}
+
+Minh chứng hạn chế của SAM-Med2D trên cấu trúc xương nhỏ: tổn thương bị mờ, bỏ sót nhiều ở độ phân giải 256px.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{E. Kết Quả Phân Đoạn — Baseline (U-Net, Attention U-Net)}
+
+
+\subsubsection{E.1 U-Net — Phân đoạn sai khi không có câu nhắc}
+\textbf{File:} \texttt{images/vis\_unet\_1.png} và \texttt{images/vis\_unet\_2.png}
+
+Minh họa hiện tượng over-segmentation và nhầm lẫn cấu trúc xương khi mô hình tự tìm kiếm vùng tổn thương không có hướng dẫn.
+
+
+\subsubsection{E.2 Attention U-Net — Attention khuếch đại nhiễu}
+\textbf{File:} \texttt{images/vis\_attunet\_1.png} và \texttt{images/vis\_attunet\_2.png}
+
+Attention Gate khuếch đại sai vùng (thiết bị cố định xương, bờ khớp) khi không có tín hiệu định hướng — dẫn đến Dice thấp hơn cả U-Net cơ sở.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{F. Minh Chứng Cơ Chế Phòng Vệ (Đóng Góp 2)}
+
+
+\subsubsection{F.1 GradCAM Rescue — Các mẫu thực nghiệm}
+\textbf{File:} \texttt{images/gradcam\_ipr\_rescue\_1.png} và \texttt{images/gradcam\_ipr\_rescue\_2.png}
+
+Kết quả thực nghiệm trên 174 mẫu câu nhắc sai hoàn toàn (đặt vào góc tối $\geq$70\% đen). Mỗi hàng là một mẫu, hiển thị: ảnh gốc + câu nhắc sai | bản đồ nhiệt GradCAM | mặt nạ sau IPR k=1 | Ground Truth. Minh chứng trực quan cho tỷ lệ phát hiện 100\% và cơ chế cứu hộ bán tự động.
+
+
+\subsubsection{F.2 So sánh phòng vệ: PGA vs SAM-Med2D}
+\textbf{File:} \texttt{images/defense\_pga\_rescue\_vis.png}
+
+PGA-UNet khi nhận câu nhắc góc tối: từ chối $\rightarrow$ GradCAM $\rightarrow$ IPR $\rightarrow$ xuất mặt nạ gợi ý. Kết quả GradCAM CBL=0.298, cứu hộ thành công 21.8\% ca.
+
+\textbf{File:} \texttt{images/defense\_sam\_dark\_corner.png}
+
+SAM-Med2D khi nhận \textbf{cùng câu nhắc góc tối}: không có kiểm duyệt, trả về mặt nạ sai im lặng. GradCAM CBL=0.497 (tốt hơn PGA về định vị) nhưng \textbf{không có pipeline cứu hộ tích hợp} — đây là khoảng trống mà Đóng góp 2 lấp đầy.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{G. Ứng Dụng Tích Hợp}
+
+
+\subsubsection{G.1 Giao diện Gradio (app.py)}
+\textbf{File:} \texttt{images/app\_interface.png}
+
+Giao diện end-to-end: bác sĩ tải ảnh X-quang $\rightarrow$ MobileNetV4 phân lớp tự động $\rightarrow$ vẽ hộp giới hạn $\rightarrow$ PGA-UNet phân đoạn $\rightarrow$ hiển thị mặt nạ kèm bản đồ nhiệt GradCAM. Kịch bản câu nhắc sai: hệ thống tự động hiển thị "Mặt nạ gợi ý" song song.

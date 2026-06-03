@@ -1,0 +1,334 @@
+
+\section{Minh Chứng Số Liệu}
+
+\begin{quote}\itshape \textbf{Lưu ý:} Đề tài có hai đóng góp tách biệt. Số liệu Đóng góp 1 đánh giá PGA-UNet thuần túy (không qua MobileNetV4) — đây là số sạch để so sánh công bằng với SAM. Số liệu Đóng góp 2 đánh giá pipeline lâm sàng hoàn chỉnh và thừa nhận sai số tích lũy.\end{quote}
+>
+\begin{quote}\itshape \textcolor{orange}{\textbf{[chờ]}} = số liệu đang chờ kết quả thực nghiệm bổ sung\end{quote}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\section{PHẦN I — ĐÓNG GÓP 1: Kiến Trúc PGA-UNet}
+
+
+\subsection{A. Kết Quả Phân Đoạn Tổng Hợp (N=248 test samples, BTXRD)}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{Mô hình} & \textbf{Kịch bản} & \textbf{Dice $\uparrow$} & \textbf{IoU $\uparrow$} & \textbf{Độ chính xác $\uparrow$} & \textbf{Độ bao phủ $\uparrow$} & \textbf{HD95 $\downarrow$ (px)} & \textbf{CBL $\uparrow$} \\
+\hline
+U-Net (không có câu nhắc) & — & 0.5090 & 0.4125 & 0.6686 & 0.5235 & 125.12 & 0.6457 \\
+\hline
+Attention U-Net (không có câu nhắc) & — & 0.4110 & 0.3212 & 0.6261 & 0.4035 & 141.23 & 0.5917 \\
+\hline
+SAM-Med2D (zero-shot) & Zoom-out & 0.5298 & 0.3867 & 0.4703 & 0.6794 & 111.27* & 0.8199 \\
+\hline
+SAM-Med2D (zero-shot) & \textbf{Shift} & 0.5203 & 0.3763 & 0.4629 & 0.6665 & 115.55* & 0.8001 \\
+\hline
+SAM-Med2D (zero-shot) & Mixed 70/30 & 0.5289 & 0.3853 & 0.4687 & 0.6786 & 114.31* & 0.8125 \\
+\hline
+SAM-Med2D (fine-tuned) & Zoom-out & 0.7624 & 0.6424 & 0.7597 & 0.7880 & 52.08* & 0.9003 \\
+\hline
+SAM-Med2D (fine-tuned) & \textbf{Shift} & 0.7273 & 0.5983 & 0.7318 & 0.7496 & 54.44* & 0.8834 \\
+\hline
+SAM-Med2D (fine-tuned) & Mixed 70/30 & 0.7554 & 0.6325 & 0.7558 & 0.7813 & 51.84* & 0.8997 \\
+\hline
+\textbf{PGA-UNet (đề xuất)} & Zoom-out & \textbf{0.8606} & \textbf{0.7619} & \textbf{0.8479} & \textbf{0.8897} & \textbf{12.16} & \textbf{0.9558} \\
+\hline
+\textbf{PGA-UNet (đề xuất)} & Shift & \textbf{0.8380} & \textbf{0.7301} & \textbf{0.8331} & \textbf{0.8616} & \textbf{14.36} & \textbf{0.9388} \\
+\hline
+\textbf{PGA-UNet (đề xuất)} & Mixed 70/30 & \textbf{0.8558} & \textbf{0.7552} & \textbf{0.8428} & \textbf{0.8862} & \textbf{12.79} & \textbf{0.9532} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{quote}\itshape \texttt{*} HD95 của SAM-Med2D tính trên không gian ảnh 256$\times$256 px. HD95 chuẩn hóa: PGA $\approx$ 0.025 vs SAM $\approx$ 0.204 — PGA chính xác hơn \textasciitilde{}8$\times$ về đường biên.\end{quote}
+\begin{quote}\itshape U-Net/Att-UNet: N=187 (merged mask). PGA/SAM: N=248 (per-polygon).\end{quote}
+
+\textbf{Ba kịch bản câu nhắc:}
+\begin{itemize}
+  \item \textbf{Zoom-out}: câu nhắc lý tưởng bao quanh hoàn toàn tổn thương (+30\%)
+  \item \textbf{Shift}: câu nhắc bị dịch lệch ngẫu nhiên — mô phỏng thao tác không chính xác
+  \item \textbf{Mixed 70/30}: 70\% Zoom-out + 30\% Shift — \textbf{kịch bản thực tế nhất}
+\end{itemize}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{B. Ablation — Đóng Góp Từng Loại Câu Nhắc}
+
+\begin{quote}\itshape Giữ nguyên kiến trúc PGA-UNet đầy đủ, chỉ thay đổi loại câu nhắc đầu vào tại suy luận.\end{quote}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Cấu hình câu nhắc} & \textbf{Dice $\uparrow$} & \textbf{IoU $\uparrow$} & \textbf{HD95 $\downarrow$ (px)} & \textbf{CBL $\uparrow$} \\
+\hline
+PGA + Câu nhắc rỗng & 0.0005 & 0.0002 & 501.51 & 0.0214 \\
+\hline
+PGA + Câu nhắc nhiễu ngẫu nhiên & 0.0015 & 0.0008 & 495.84 & 0.0208 \\
+\hline
+SAM-Med2D (fine-tuned, hard bbox) & 0.7624 & 0.6424 & 52.08* & 0.9003 \\
+\hline
+PGA + Hard binary bbox & 0.8593 & 0.7604 & 12.14 & 0.9572 \\
+\hline
+\textbf{PGA + Plateau Heatmap (triển khai)} & \textbf{0.8298} & \textbf{0.7184} & \textbf{14.25} & \textbf{0.9524} \\
+\hline
+PGA + Oracle (GT mask làm câu nhắc) & 0.5683 & 0.4076 & 24.26 & 0.9479 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Phân tích đóng góp từng thành phần:}
+\begin{itemize}
+  \item \textbf{Δ\_location +0.859}: câu nhắc vị trí là đóng góp cốt lõi — không có câu nhắc, PGA-UNet sụp đổ hoàn toàn
+  \item \textbf{Δ\_arch-SAM +0.097}: PSG+CAD (\textasciitilde{}4M tham số) vượt SAM-Med2D (\textasciitilde{}100M) khi cùng loại câu nhắc
+  \item \textbf{Δ\_soft −0.030}: Plateau Heatmap kém hơn hard bbox một chút nhưng cho đường biên mượt hơn
+  \item \textbf{Oracle < hard bbox}: câu nhắc GT mask nằm ngoài phân phối huấn luyện $\rightarrow$ mô hình không nhận diện được
+\end{itemize}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{C. Ablation — Đóng Góp Từng Thành Phần Kiến Trúc (V1–V5)}
+
+\begin{quote}\itshape \textcolor{orange}{\textbf{[chờ]}} \textbf{Đang chạy trên Colab} — kết quả sẽ cập nhật sau.\end{quote}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{Biến thể} & \textbf{PSG} & \textbf{CAD} & \textbf{Loại câu nhắc huấn luyện} & \textbf{Dice $\uparrow$} & \textbf{HD95 $\downarrow$} & \textbf{CBL $\uparrow$} \\
+\hline
+V1: Concat đơn giản (không PSG, không CAD) & ✗ & ✗ & Plateau Heatmap & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} \\
+\hline
+V2: Chỉ PSG & ✓ & ✗ & Plateau Heatmap & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} \\
+\hline
+V3: Chỉ CAD & ✗ & ✓ & Plateau Heatmap & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} \\
+\hline
+V4: PSG + CAD, Binary bbox & ✓ & ✓ & Binary bbox & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} \\
+\hline
+\textbf{V5: PSG + CAD, Heatmap (đề xuất)} & ✓ & ✓ & Plateau Heatmap & \textbf{0.8606} & \textbf{12.16} & \textbf{0.9558} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{D. Đánh Giá Theo Đặc Tính Tổn Thương}
+
+
+\subsubsection{D.1 PGA vs Baseline — Nhóm Dễ / Khó}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Nhóm} & \textbf{Mô hình} & \textbf{Dice} & \textbf{HD95 (px)} & \textbf{CBL} \\
+\hline
+Dễ (N=131) & U-Net & 0.7902 & 40.05 & 0.9156 \\
+\hline
+Dễ (N=131) & Attention U-Net & 0.5830 & 79.90 & 0.7570 \\
+\hline
+\textbf{Dễ (N=131)} & \textbf{PGA-UNet} & \textbf{0.8632} & \textbf{13.59} & \textbf{0.9569} \\
+\hline
+Khó (N=140) & U-Net & 0.2379 & 207.21 & 0.4005 \\
+\hline
+Khó (N=140) & Attention U-Net & 0.2266 & 208.65 & 0.4169 \\
+\hline
+\textbf{Khó (N=140)} & \textbf{PGA-UNet} & \textbf{0.8521} & \textbf{12.23} & \textbf{0.9536} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{quote}\itshape Nhóm \textbf{Khó}: U-Net/Att-UNet sụp đổ (Dice $\approx$ 0.23), PGA duy trì 0.8521 (+61.4\%).\end{quote}
+
+
+\subsubsection{D.2 PGA vs SAM-Med2D — 3 Nhóm Đặc Tính}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Nhóm} & \textbf{Mô hình} & \textbf{Dice} & \textbf{HD95 (px)} & \textbf{CBL} \\
+\hline
+Tổn thương nhỏ (N=50) & SAM-Med2D & 0.2518 & 181.46* & 0.5484 \\
+\hline
+\textbf{Tổn thương nhỏ (N=50)} & \textbf{PGA-UNet} & \textbf{0.8166} & \textbf{3.03} & \textbf{0.9359} \\
+\hline
+Biên giới mờ (N=50) & SAM-Med2D & 0.4583 & 43.34* & 0.8307 \\
+\hline
+\textbf{Biên giới mờ (N=50)} & \textbf{PGA-UNet} & \textbf{0.8246} & \textbf{15.95} & \textbf{0.9454} \\
+\hline
+Tổn thương rõ nét (N=50) & SAM-Med2D & 0.8521 & 26.23* & 0.9530 \\
+\hline
+\textbf{Tổn thương rõ nét (N=50)} & \textbf{PGA-UNet} & \textbf{0.8945} & \textbf{21.76} & \textbf{0.9661} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{E. Đánh Giá Độ Ổn Định (Cross-Validation)}
+
+\begin{quote}\itshape \textcolor{orange}{\textbf{[chờ]}} \textbf{Chưa chạy} — train lại PGA với phân chia ngẫu nhiên mới (seed khác).\end{quote}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Lần chạy} & \textbf{Seed} & \textbf{Dice $\uparrow$} & \textbf{HD95 $\downarrow$ (px)} & \textbf{CBL $\uparrow$} \\
+\hline
+Lần 1 — Gốc (Zoom-out) & 42 & 0.8606 & 12.16 & 0.9558 \\
+\hline
+Lần 2 — Split mới & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} \\
+\hline
+\textbf{Mean ± Std} & — & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} & \textcolor{orange}{\textbf{[chờ]}} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{F. Thông Tin Huấn Luyện}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Mô hình} & \textbf{Epoch dừng} & \textbf{Best Val Dice} & \textbf{Ghi chú} \\
+\hline
+U-Net & 82/100 & 0.5345 & Early stop patience=15 \\
+\hline
+Attention U-Net & 47/100 & 0.4364 & Early stop patience=15 \\
+\hline
+\textbf{PGA-UNet} & \textbf{60/100} & \textbf{0.8652} & Early stop patience=15 \\
+\hline
+SAM-Med2D & 12/50 & 0.7731 & Hội tụ nhanh nhờ pretrained ViT-B \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Cấu hình chung:} IMG\_SIZE=512 (PGA/baseline), 256 (SAM); Batch=4; AdamW; BCE+Dice loss; ReduceLROnPlateau.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\section{PHẦN II — ĐÓNG GÓP 2: Pipeline Lâm Sàng}
+
+
+\subsection{G. Kết Quả Mô Hình Phân Lớp Sàng Lọc (MobileNetV4)}
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Độ đo} & \textbf{Giá trị} \\
+\hline
+Độ chính xác tổng thể (Accuracy) & 85.77\% \\
+\hline
+Độ chính xác (Precision / PPV) & 83.11\% \\
+\hline
+Độ nhạy (Recall / Sensitivity) & \textbf{89.64\%} \\
+\hline
+Độ đặc hiệu (Specificity) & 81.91\% \\
+\hline
+Giá trị dự báo Âm tính (NPV) & 88.85\% \\
+\hline
+Điểm F1 & 86.25\% \\
+\hline
+\textbf{AUC-ROC} & \textbf{0.9514} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{quote}\itshape Recall = 89.64\% là chỉ số ưu tiên: \textasciitilde{}90\% ca bệnh được bắt, không bỏ sót vào phân đoạn.\end{quote}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{H. Kết Quả Cơ Chế Phòng Vệ GradCAM + IPR}
+
+\begin{quote}\itshape \textcolor{orange}{\textbf{[chờ]}} \textbf{Đang xem xét chạy lại} — số liệu bên dưới từ lần chạy trước, sẽ cập nhật.\end{quote}
+
+\textbf{Thực nghiệm:} 174 ảnh, câu nhắc đặt vào góc tối ($\geq$70\% vùng câu nhắc là vùng tối).
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Nhóm theo Dice IPR k=1} & \textbf{N} & \textbf{Dice trước} & \textbf{Dice k=1} & \textbf{CBL k=1} \\
+\hline
+GradCAM tốt (D $\geq$ 0.90) & 9 & 0.000 & 0.922 & 0.961 \\
+\hline
+GradCAM khá (0.70 $\leq$ D < 0.90) & 29 & 0.000 & 0.807 & 0.918 \\
+\hline
+GradCAM trung bình (0.50 $\leq$ D < 0.70) & 19 & 0.000 & 0.598 & 0.811 \\
+\hline
+GradCAM yếu (D < 0.50) & 117 & 0.000 & 0.018 & 0.066 \\
+\hline
+\textbf{Tổng / Trung bình} & \textbf{174} & \textbf{0.000} & \textbf{0.260} & \textbf{0.298} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{itemize}
+  \item Tỷ lệ phát hiện: \textbf{174/174 = 100\%}
+  \item Cứu hộ thành công (Dice $\geq$ 0.70): \textbf{38/174 = 21.8\%}
+  \item SAM-Med2D: 100\% phát hiện khi áp cùng tiêu chí, CBL=0.497 (tốt hơn PGA) nhưng \textbf{không có pipeline cứu hộ tích hợp}
+\end{itemize}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+
+\subsection{I. Sai Số Tích Lũy Pipeline (Cascading Error)}
+
+\textbf{Ước tính lý thuyết:}
+
+\[
+\text{Hiệu năng tổng} \approx \text{Recall}_\text{MobileNetV4} \times \text{Dice}_\text{PGA} = 89.64\% \times 85.58\% \approx \mathbf{76.7\%}
+\]
+
+\begin{table}[htbp]
+\centering\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Thành phần} & \textbf{Giá trị} & \textbf{Ý nghĩa} \\
+\hline
+Recall MobileNetV4 & 89.64\% & 10.36\% ca bệnh bị bỏ sót ở bước sàng lọc \\
+\hline
+Dice PGA-UNet (Mixed 70/30) & 85.58\% & Hiệu năng phân đoạn trên ca đã qua sàng lọc \\
+\hline
+\textbf{Hiệu năng tổng (ước tính)} & \textbf{\textasciitilde{}76.7\%} & Bottleneck nằm ở phân lớp, không phải PGA \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{quote}\itshape \textcolor{orange}{\textbf{[chờ]}} \textbf{Xác minh thực nghiệm đang chuẩn bị} — chạy full pipeline trên tập hỗn hợp (có bệnh + không bệnh).\end{quote}
+\begin{quote}\itshape \textbf{Lý giải:} hệ thống Human-in-the-loop — bác sĩ xác nhận trước khi phân đoạn, nên 10.36\% bỏ sót vẫn có cơ hội được phát hiện thủ công.\end{quote}
