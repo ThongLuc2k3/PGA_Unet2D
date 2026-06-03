@@ -1,84 +1,65 @@
 # Kế Hoạch & Đánh Giá Thực Nghiệm — PGA-UNet2D Luận Văn
 
-> Cập nhật: 2026-06-03 — bổ sung SubCat kết quả, split Đóng góp 1/2, cập nhật % hoàn thành
+> Cập nhật: 2026-06-03 (chiều) — dọn dẹp báo cáo, references, thuật ngữ, loại bỏ số liệu thời gian chưa đo
 
 ---
 
-## 0. Trạng Thái Tổng Quan (03/06/2026)
+## 0. Trạng Thái Tổng Quan (03/06/2026 — chiều)
 
-### Đóng góp 1 — Nghiên cứu (PGA-UNet) — **~90% hoàn thành**
+### Đóng góp 1 — Nghiên cứu (PGA-UNet) — **~85% hoàn thành**
 
-> Mục tiêu: chứng minh PGA-UNet (PSG + CAD + heatmap prompt) vượt trội SAM-Med2D và baseline trên BTXRD.
-
-| Hạng mục | Trạng thái | Nguồn số liệu |
+| Hạng mục | Trạng thái | Nguồn |
 |---|---|---|
 | Kiến trúc PGA-UNet (PSG, CAD, heatmap) — Chapter 3 | ✅ Viết xong | chapter3.tex |
-| Lý thuyết heatmap encoding + so sánh SAM | ✅ Viết xong | chapter3.tex sec 3.3.1 |
-| Chiến lược huấn luyện từ đầu vs fine-tune | ✅ Viết xong | chapter3.tex sec 3.3.4 |
+| Lý thuyết heatmap encoding + so sánh SAM | ✅ Viết xong | chapter3.tex |
+| Chiến lược huấn luyện từ đầu vs tinh chỉnh | ✅ Viết xong | chapter3.tex |
 | Kết quả 4 mô hình (Dice/IoU/HD95/CBL × 3 modes) | ✅ Số thật | Result/ notebooks |
 | SAM zero-shot comparison | ✅ Số thật | Result/sam-med2d-zero-shot.ipynb |
-| GradCAM rescue + `tab:gradcam_rescue` | ✅ Số thật (174/174) | Result/pga-gradcam-ipr.ipynb |
-| IPR convergence `tab:ipr_convergence` (k=0..3) | ⚠️ Số ước tính | Cần chạy PGA_Ablation.ipynb |
-| Ablation prompt type `tab:ablation_prompt` | ✅ Số inference | Result/PGA_Ablation.ipynb |
-| **Ablation kiến trúc V1–V5** (PSG/CAD từng phần) | 🔴 Chưa có số | Source/Ablation/ — cần chạy Colab |
+| GradCAM rescue + `tab:gradcam_rescue` (174/174=100%) | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
+| IPR convergence `tab:ipr_convergence` k=0,1 | ⚠️ Một phần | k=2,3 chờ PGA_Ablation.ipynb |
+| Ablation prompt type `tab:ablation_prompt` | ✅ Số thật | Result/PGA_Ablation.ipynb |
+| **Ablation kiến trúc V1–V5** `tab:ablation_arch` | 🔴 Đang chạy Colab | Source/Ablation/ |
 | Sub-category PGA vs Baseline (Dễ/Khó) | ✅ Số thật | Result/SubCat_PGA_vs_Baseline.ipynb |
 | Sub-category PGA vs SAM (3 nhóm) | ✅ Số thật | Result/SubCat_PGA_vs_SAM.ipynb |
-| Bảng kết quả + phân tích — Chapter 4 | ✅ Viết xong | chapter4.tex |
-| Ảnh visualization sub-category | 🟡 Chờ thêm vào | Kaggle output → Report/images/ |
+| Cross-validation `tab:cross_validation` | 🔴 Chưa chạy | Source/PGA_Unet2D.ipynb |
 
-**% theo yêu cầu `Bao_cao_tien_do.md`:** 3 nhiệm vụ đặt ra → **3/3 hoàn thành = 100%**
-- ✅ 3 sơ đồ diagrams (PNG export + referenced trong chapter3.tex)
-- ✅ Ablation → tab:ipr_convergence (có số ước tính, chờ xác nhận từ V5)
-- ✅ Sub-category evaluation (2 bảng thực tế trong chapter4.tex)
+### Đóng góp 2 — Sản phẩm (Pipeline lâm sàng)
 
-**% theo nội dung chương 4 đầy đủ:** ~90% — còn thiếu số thật từ ablation kiến trúc V1–V5 (mới thêm, ngoài yêu cầu ban đầu).
-
----
-
-### Đóng góp 2 — Sản phẩm (Pipeline lâm sàng end-to-end)
-
-> Pipeline: MobileNetV4 (sàng lọc) → PGA-UNet (phân đoạn) → GradCAM+IPR (phòng vệ câu nhắc sai) → app.py
-
-| Hạng mục | Trạng thái | Ghi chú |
+| Hạng mục | Trạng thái | Nguồn |
 |---|---|---|
 | MobileNetV4 gatekeeper (AUC-ROC=0.9514) | ✅ Số thật | Result/MobileNetV4_BTXRD_dataset.ipynb |
-| GradCAM rescue: 174/174=100% phát hiện, 21.8% cứu hộ thành công | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
-| IPR convergence sau GradCAM (k=1 có số; k=2,3 chờ) | ⚠️ Một phần | tab:ipr_convergence — cần PGA_Ablation.ipynb |
-| Defense comparison SAM vs PGA (SAM không có cơ chế phòng vệ) | ✅ Số thật | Result/defense-comparison-sam-vs-pga.ipynb |
-| Cascading error lý thuyết: 89.64%×85.58%≈76.7% | ✅ Viết xong | chapter4.tex subsec:cascading_error |
-| **Cascading error thực nghiệm** (test hỗn hợp) | 🔴 Chưa có | Xem task bên dưới |
+| GradCAM rescue 174/174=100%, 21.8% cứu hộ | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
+| IPR k=2,3 convergence | 🔴 Chưa có | PGA_Ablation.ipynb |
+| Defense comparison SAM vs PGA | ✅ Số thật | Result/defense-comparison-sam-vs-pga.ipynb |
+| Cascading error lý thuyết ≈76.7% | ✅ Viết xong | chapter4.tex |
+| Cascading error thực nghiệm | 🟠 Chưa làm | Tạo test_mixed/ |
 | app.py Gradio UI | ✅ Có sẵn | Source/project/app.py |
-| Intro Đóng góp 2 + so sánh SAM không có GradCAM+IPR | ✅ Viết xong | chapter4.tex sec:product_overview |
-| Chapter 5 kết luận + hướng phát triển (Unified model) | ✅ Viết xong | chapter5.tex |
+| Chapter 3: Đóng góp IPR phân rõ thuộc Đóng góp 2 | ✅ Viết xong | chapter3.tex sec:ipr_pipeline |
+| Chapter 4: sec:product_overview | ✅ Viết xong | chapter4.tex |
+| Chapter 5: 5 hướng phát triển | ✅ Viết xong | chapter5.tex |
 
----
+### Báo cáo — Chất lượng văn bản (hôm nay đã dọn)
 
-### Việc còn lại trước 12/06 (theo thứ tự ưu tiên)
+| Hạng mục | Trạng thái |
+|---|---|
+| references.bib — 6 entry đúng (U-Net, Att-UNet, SAM-Med2D, MobileNetV4, GradCAM, BTXRD) | ✅ |
+| Cite SAM, YOLOv11, Roboflow, BTXRD đầy đủ | ⏳ Chờ bạn cung cấp PDF/link |
+| Anh-Việt lẫn lộn: paradigm, Warmup, subsection titles, header bảng | ✅ Đã sửa |
+| Số liệu thời gian ms (chưa đo) đã xóa khỏi Ch.3, Ch.4 | ✅ |
+| Phân rõ IPR thuộc Đóng góp 2 trong Ch.3 | ✅ |
+| Float too large (system_architecture, preprocessing_pipeline) | ✅ Đã fix |
+| Chapter 2 dọn sạch: bỏ UNet++, nnU-Net, TransUNet, SAM, SAM2, RITM, MedSAM | ✅ |
 
-| # | Việc | Ưu tiên | Nơi chạy |
-|---|---|---|---|
-| 1 | Chạy 5 ablation V1–V5 → số thật cho tab:ablation_arch | 🔴 Cao | 5 tab Colab song song |
-| 2 | Cross-validation: train lại PGA với split mới → tab:cross_validation | 🔴 Cao | 1 tab Colab |
-| 3 | Review references.bib — cite đúng mọi kỹ thuật dùng | 🔴 Cao | Local |
-| 4 | **Cascading error thực nghiệm**: tạo folder hỗn hợp (248 bệnh + N không bệnh), chạy full pipeline MobileNetV4→PGA, ghi kết quả thực vào tab:cascading_error | 🟠 TB | Colab/Local |
-| 5 | Thêm ảnh visualization sub-category vào chapter4.tex | 🟡 TB | Local (copy từ Kaggle) |
-| 6 | Compile main.pdf lần cuối, kiểm tra không lỗi LaTeX | 🟡 TB | Local |
+### Việc còn lại trước 12/06 (deadline 9 ngày)
 
-### Đóng góp 2 — Chi tiết task Cascading Error Empirical Test
-
-**Mục tiêu:** Thay ước tính lý thuyết 76.7% bằng con số đo thực tế trên tập hỗn hợp.
-
-**Cách làm:**
-1. Tạo folder `test_mixed/` gồm:
-   - 248 ảnh từ tập test BTXRD (có bệnh)
-   - $N$ ảnh không bệnh (lấy từ BTXRD train split hoặc thu thập thêm)
-2. Chạy full pipeline: MobileNetV4 phân lớp → nếu "có bệnh" → PGA-UNet phân đoạn
-3. Ghi nhận:
-   - TP rate (ảnh bệnh được đưa vào phân đoạn)
-   - TN rate (ảnh không bệnh bị lọc đúng)
-   - Dice trung bình trên TP samples
-   - Cascading accuracy = TP_rate × Dice
-4. Điền vào `tab:cascading_error` trong chapter4.tex (thay thế số ước tính)
+| # | Việc | Ưu tiên |
+|---|---|---|
+| 1 | **Ablation V1–V5** → điền `tab:ablation_arch` | 🔴 Đang chạy Colab |
+| 2 | **Cross-validation** → điền `tab:cross_validation` | 🔴 Colab |
+| 3 | **Compile main.pdf** → kiểm tra không lỗi LaTeX | 🔴 |
+| 4 | **PDF bổ sung**: SAM, YOLOv11, Roboflow, BTXRD | 🟠 Chờ bạn |
+| 5 | IPR k=2,3 → điền `tab:ipr_convergence` | 🟠 |
+| 6 | Cascading error thực nghiệm | 🟡 |
 
 ---
 

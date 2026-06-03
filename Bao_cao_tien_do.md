@@ -109,26 +109,34 @@ Giải pháp áp dụng:
 - Ảnh trong `Report/images/` còn lại (subcat, gradcam, defense, ablation) dùng cho **slide + bằng chứng hội đồng**
 - Report dùng khoảng **15–20 ảnh** (số liệu + 2–3 vis đại diện mỗi mô hình + biểu đồ tổng hợp)
 
+### 📚 Bổ sung tài liệu tham khảo (chờ bạn cung cấp PDF/link)
+| Tên | Trạng thái | Ghi chú |
+|---|---|---|
+| **GradCAM** | ✅ Xong | Đã thêm vào bib (`selvaraju2019gradcam`) |
+| **SAM** — Segment Anything, Kirillov 2023 | ⏳ Chờ PDF | Nhắc tên trong Ch.1, Ch.3 chưa có cite |
+| **YOLOv11** — Ultralytics 2024 | ⏳ Chờ link | Dùng Ch.3, Ch.4 chưa có cite |
+| **Roboflow** | ⏳ Chờ link | Dùng Ch.3 chưa có cite |
+| **BTXRD** | ⏳ Chờ bổ sung | Đã có entry placeholder trong bib |
+
 ### 🔴 Cần làm trước 12/6 (còn 9 ngày)
-| # | Nhiệm vụ | Thuộc đóng góp | File |
-|---|---|---|---|
-| 1 | Chạy 5 ablation V1–V5 trên Colab → lấy số thật | Đóng góp 1 | `Source/Ablation/` → `tab:ablation_arch` |
-| 2 | Cross-validation: train lại PGA với split mới → ghi mean±std Dice | Đóng góp 1 | `Source/PGA_Unet2D.ipynb` |
-| 3 | Review `references.bib` — cite đúng mọi kỹ thuật đã dùng | Cả 2 | `Report/References/references.bib` |
-| 4 | Compile `main.pdf` lần cuối, kiểm tra không lỗi LaTeX | Cả 2 | `Report/main.tex` |
+| # | Nhiệm vụ | Ghi chú |
+|---|---|---|
+| 1 | **Ablation V1–V5** — chạy Colab, điền `tab:ablation_arch` | Đang chạy — V1 đã bắt đầu |
+| 2 | **Cross-validation** — train PGA với split mới, ghi mean±std | `Source/PGA_Unet2D.ipynb` |
+| 3 | **Compile** `main.pdf` — kiểm tra không lỗi LaTeX cuối cùng | `Report/main.tex` |
+| 4 | **Bổ sung PDF** SAM, YOLOv11, Roboflow, BTXRD vào References | Báo tôi để thêm vào bib |
 
 ### 🟠 Ưu tiên trung bình
 | # | Nhiệm vụ | Ghi chú |
 |---|---|---|
-| 5 | IPR k=2, k=3 | Chạy `Source/PGA_Ablation.ipynb` → điền `tab:ipr_convergence` |
-| 6 | Cascading error thực nghiệm | Tạo `test_mixed/`, chạy full pipeline MobileNetV4→PGA |
+| 5 | **IPR k=2, k=3** | Chạy `Source/PGA_Ablation.ipynb` → điền `tab:ipr_convergence` |
+| 6 | **Cascading error thực nghiệm** | Tạo tập hỗn hợp, chạy full pipeline |
 
 ### 🟡 Làm nếu còn thời gian
-| Nhiệm vụ | Lý do bỏ qua được |
+| Nhiệm vụ | Ghi chú |
 |---|---|
-| Sub-category visualization (ảnh) | Đã có bar chart tổng hợp là đủ cho report |
-| Multi-dataset testing | Hướng phát triển tương lai (Chapter 5) |
-| app.py (Gradio UI) | Demo sản phẩm, không ảnh hưởng điểm báo cáo |
+| Sub-category ảnh minh chứng | Đã có bar chart, không bắt buộc |
+| app.py demo | Sản phẩm, không ảnh hưởng điểm báo cáo |
 
 ### Đóng góp 2 — Ghi chú
 - **Ảnh không bệnh** (GV hỏi): Thuộc Đóng góp 2 — xử lý bởi MobileNetV4 gatekeeper (AUC-ROC=0.9514). PGA chỉ nhận ảnh có bệnh đã qua lọc. Ghi rõ trong chapter4.tex là đủ.

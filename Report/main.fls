@@ -502,6 +502,7 @@ INPUT ./images/diagram_pga.png
 INPUT ./images/diagram_pga.png
 INPUT ./images/diagram_pga.png
 INPUT ./images/diagram_pga.png
+INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vnbxti10.tfm
 INPUT ./images/classification_pipeline.png
 INPUT ./images/classification_pipeline.png
 INPUT ./images/classification_pipeline.png
@@ -626,6 +627,7 @@ INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx10.600pk
 INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vntt10.600pk
 INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnti10.600pk
 INPUT /home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk
+INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbxti10.864pk
 INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr10.600pk
 INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1493pk
 INPUT /home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnti12.720pk

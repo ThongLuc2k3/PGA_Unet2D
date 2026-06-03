@@ -1,65 +1,61 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{28}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{27}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{Chapter3}{{3}{28}{MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Kiến trúc tổng thể của hệ thống}{28}{section.3.1}\protected@file@percent }
-\newlabel{sec:tong_the}{{3.1}{28}{Kiến trúc tổng thể của hệ thống}{section.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{30}{section.3.2}\protected@file@percent }
-\newlabel{sec:tien_xu_ly}{{3.2}{30}{Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{section.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{30}{subsection.3.2.1}\protected@file@percent }
-\newlabel{subsec:dataset_btxrd}{{3.2.1}{30}{Bộ dữ liệu BTXRD}{subsection.3.2.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: bốn giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý (MobileNetV4), phân đoạn có hướng dẫn (PGA-UNet), đến thẩm định an toàn và tinh chỉnh câu nhắc tự động (IPR + GradCAM)}}{31}{figure.3.1}\protected@file@percent }
-\newlabel{fig:system_architecture}{{3.1}{31}{Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: bốn giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý (MobileNetV4), phân đoạn có hướng dẫn (PGA-UNet), đến thẩm định an toàn và tinh chỉnh câu nhắc tự động (IPR + GradCAM)}{figure.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{32}{subsection.3.2.2}\protected@file@percent }
-\newlabel{subsec:noise_types}{{3.2.2}{32}{Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{subsection.3.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Quy trình tiền xử lý và loại bỏ nhiễu}{33}{subsection.3.2.3}\protected@file@percent }
-\newlabel{subsec:preprocessing_pipeline}{{3.2.3}{33}{Quy trình tiền xử lý và loại bỏ nhiễu}{subsection.3.2.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}}{34}{figure.3.2}\protected@file@percent }
-\newlabel{fig:preprocessing_pipeline}{{3.2}{34}{Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}{figure.3.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}}{35}{table.3.1}\protected@file@percent }
-\newlabel{tab:yolo_noise_detection}{{3.1}{35}{Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}{table.3.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Minh họa kết quả xóa nhiễu: (a) Ảnh X-quang thô chứa ký tự R/L, (b) Bounding Box phát hiện bởi YOLOv11s, (c) Ảnh sau khi xóa nhiễu}}{36}{figure.3.3}\protected@file@percent }
-\newlabel{fig:noise_removal}{{3.3}{36}{Minh họa kết quả xóa nhiễu: (a) Ảnh X-quang thô chứa ký tự R/L, (b) Bounding Box phát hiện bởi YOLOv11s, (c) Ảnh sau khi xóa nhiễu}{figure.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Gán nhãn phân đoạn và định dạng dữ liệu}{36}{subsection.3.2.4}\protected@file@percent }
-\newlabel{subsec:annotation}{{3.2.4}{36}{Gán nhãn phân đoạn và định dạng dữ liệu}{subsection.3.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Chuẩn hóa và tăng cường dữ liệu}{37}{subsection.3.2.5}\protected@file@percent }
-\newlabel{subsec:augmentation}{{3.2.5}{37}{Chuẩn hóa và tăng cường dữ liệu}{subsection.3.2.5}{}}
-\newlabel{eq:normalization}{{3.1}{37}{Chuẩn hóa và tăng cường dữ liệu}{equation.3.2.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Minh họa tăng cường dữ liệu đồng bộ: (a) Bộ ba gốc [Ảnh, Mặt nạ, Câu nhắc], (b) Sau lật ngang, (c) Sau xoay $+12^{\circ }$ --- ba thành phần luôn biến đổi đồng nhất}}{38}{figure.3.4}\protected@file@percent }
-\newlabel{fig:augmentation}{{3.4}{38}{Minh họa tăng cường dữ liệu đồng bộ: (a) Bộ ba gốc [Ảnh, Mặt nạ, Câu nhắc], (b) Sau lật ngang, (c) Sau xoay $+12^{\circ }$ --- ba thành phần luôn biến đổi đồng nhất}{figure.3.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{38}{section.3.3}\protected@file@percent }
-\newlabel{sec:pga_unet}{{3.3}{38}{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{section.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{38}{subsection.3.3.1}\protected@file@percent }
-\newlabel{eq:plateau_heatmap}{{3.2}{39}{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{equation.3.3.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{39}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{40}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{40}{subsection.3.3.2}\protected@file@percent }
-\newlabel{eq:spatial_gate}{{3.3}{41}{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{equation.3.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{41}{subsection.3.3.3}\protected@file@percent }
-\newlabel{eq:prompt_confidence}{{3.4}{42}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.4}{}}
-\newlabel{eq:conditioned_gate}{{3.5}{42}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.5}{}}
+\newlabel{Chapter3}{{3}{27}{MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Kiến trúc tổng thể của hệ thống}{27}{section.3.1}\protected@file@percent }
+\newlabel{sec:tong_the}{{3.1}{27}{Kiến trúc tổng thể của hệ thống}{section.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{29}{section.3.2}\protected@file@percent }
+\newlabel{sec:tien_xu_ly}{{3.2}{29}{Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{section.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{29}{subsection.3.2.1}\protected@file@percent }
+\newlabel{subsec:dataset_btxrd}{{3.2.1}{29}{Bộ dữ liệu BTXRD}{subsection.3.2.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: bốn giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý (MobileNetV4), phân đoạn có hướng dẫn (PGA-UNet), đến thẩm định an toàn và tinh chỉnh câu nhắc tự động (IPR + GradCAM)}}{30}{figure.3.1}\protected@file@percent }
+\newlabel{fig:system_architecture}{{3.1}{30}{Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: bốn giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý (MobileNetV4), phân đoạn có hướng dẫn (PGA-UNet), đến thẩm định an toàn và tinh chỉnh câu nhắc tự động (IPR + GradCAM)}{figure.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{31}{subsection.3.2.2}\protected@file@percent }
+\newlabel{subsec:noise_types}{{3.2.2}{31}{Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{subsection.3.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Quy trình tiền xử lý và loại bỏ nhiễu}{32}{subsection.3.2.3}\protected@file@percent }
+\newlabel{subsec:preprocessing_pipeline}{{3.2.3}{32}{Quy trình tiền xử lý và loại bỏ nhiễu}{subsection.3.2.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}}{33}{figure.3.2}\protected@file@percent }
+\newlabel{fig:preprocessing_pipeline}{{3.2}{33}{Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}{figure.3.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}}{34}{table.3.1}\protected@file@percent }
+\newlabel{tab:yolo_noise_detection}{{3.1}{34}{Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}{table.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Gán nhãn phân đoạn và định dạng dữ liệu}{35}{subsection.3.2.4}\protected@file@percent }
+\newlabel{subsec:annotation}{{3.2.4}{35}{Gán nhãn phân đoạn và định dạng dữ liệu}{subsection.3.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Chuẩn hóa và tăng cường dữ liệu}{36}{subsection.3.2.5}\protected@file@percent }
+\newlabel{subsec:augmentation}{{3.2.5}{36}{Chuẩn hóa và tăng cường dữ liệu}{subsection.3.2.5}{}}
+\newlabel{eq:normalization}{{3.1}{36}{Chuẩn hóa và tăng cường dữ liệu}{equation.3.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{37}{section.3.3}\protected@file@percent }
+\newlabel{sec:pga_unet}{{3.3}{37}{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{section.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{37}{subsection.3.3.1}\protected@file@percent }
+\newlabel{eq:plateau_heatmap}{{3.2}{37}{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{equation.3.3.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{38}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{38}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{39}{subsection.3.3.2}\protected@file@percent }
+\newlabel{eq:spatial_gate}{{3.3}{39}{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{equation.3.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{40}{subsection.3.3.3}\protected@file@percent }
+\newlabel{eq:prompt_confidence}{{3.4}{40}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.4}{}}
+\newlabel{eq:conditioned_gate}{{3.5}{41}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}}{41}{figure.3.3}\protected@file@percent }
+\newlabel{fig:pga_architecture}{{3.3}{41}{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}{figure.3.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{42}{subsection.3.3.4}\protected@file@percent }
 \newlabel{subsec:training_strategy_pga}{{3.3.4}{42}{Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{subsection.3.3.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}}{43}{figure.3.5}\protected@file@percent }
-\newlabel{fig:pga_architecture}{{3.5}{43}{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}{figure.3.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{44}{table.3.2}\protected@file@percent }
-\newlabel{tab:training_strategy_compare}{{3.2}{44}{So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}{table.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Hệ thống phòng vệ và tinh chỉnh câu nhắc tự động (IPR Pipeline)}{44}{section.3.4}\protected@file@percent }
-\newlabel{sec:ipr_pipeline}{{3.4}{44}{Hệ thống phòng vệ và tinh chỉnh câu nhắc tự động (IPR Pipeline)}{section.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Cơ chế cảnh báo lỗi từ người dùng (Confidence \& Center Distance Check)}{45}{subsection.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Giải pháp cứu hộ dự phòng bằng GradCAM}{46}{subsection.3.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Thuật toán tinh chỉnh câu nhắc tuần tự (Iterative Prompt Refinement - IPR)}{46}{subsection.3.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Mô hình phân lớp bệnh lý (Gatekeeper)}{47}{section.3.5}\protected@file@percent }
-\newlabel{sec:phan_lop}{{3.5}{47}{Mô hình phân lớp bệnh lý (Gatekeeper)}{section.3.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}{47}{subsection.3.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Kiến trúc và chiến lược tinh chỉnh}{48}{subsection.3.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Vai trò trong hệ thống tổng thể}{49}{subsection.3.5.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Pipeline phân lớp nhị phân MobileNetV4 Gatekeeper: resize và chuẩn hóa ảnh đầu vào, backbone MobileNetV4-Hybrid-Medium được tinh chỉnh hai giai đoạn (warmup đóng băng → full fine-tune), lớp phân lớp tuyến tính và Sigmoid với ngưỡng 0.5 quyết định CÓ/KHÔNG bệnh lý}}{50}{figure.3.6}\protected@file@percent }
-\newlabel{fig:classification_pipeline}{{3.6}{50}{Pipeline phân lớp nhị phân MobileNetV4 Gatekeeper: resize và chuẩn hóa ảnh đầu vào, backbone MobileNetV4-Hybrid-Medium được tinh chỉnh hai giai đoạn (warmup đóng băng → full fine-tune), lớp phân lớp tuyến tính và Sigmoid với ngưỡng 0.5 quyết định CÓ/KHÔNG bệnh lý}{figure.3.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{43}{table.3.2}\protected@file@percent }
+\newlabel{tab:training_strategy_compare}{{3.2}{43}{So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}{table.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Hệ thống phòng vệ và tinh chỉnh câu nhắc tự động (IPR)}{43}{section.3.4}\protected@file@percent }
+\newlabel{sec:ipr_pipeline}{{3.4}{43}{Hệ thống phòng vệ và tinh chỉnh câu nhắc tự động (IPR)}{section.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Cơ chế kiểm duyệt câu nhắc và phát hiện lệch tâm}{44}{subsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Giải pháp cứu hộ dự phòng bằng GradCAM}{45}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Thuật toán tinh chỉnh câu nhắc tuần tự (Iterative Prompt Refinement - IPR)}{45}{subsection.3.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Mô hình phân lớp bệnh lý (Gatekeeper)}{46}{section.3.5}\protected@file@percent }
+\newlabel{sec:phan_lop}{{3.5}{46}{Mô hình phân lớp bệnh lý (Gatekeeper)}{section.3.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}{46}{subsection.3.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Kiến trúc và chiến lược tinh chỉnh}{47}{subsection.3.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Vai trò trong hệ thống tổng thể}{48}{subsection.3.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Quy trình phân lớp nhị phân MobileNetV4 gác cổng: chuẩn hóa ảnh đầu vào, MobileNetV4-Hybrid-Medium được tinh chỉnh hai giai đoạn (khởi động đóng băng → tinh chỉnh toàn bộ), lớp phân lớp tuyến tính và Sigmoid với ngưỡng 0.5 quyết định CÓ/KHÔNG bệnh lý}}{49}{figure.3.4}\protected@file@percent }
+\newlabel{fig:classification_pipeline}{{3.4}{49}{Quy trình phân lớp nhị phân MobileNetV4 gác cổng: chuẩn hóa ảnh đầu vào, MobileNetV4-Hybrid-Medium được tinh chỉnh hai giai đoạn (khởi động đóng băng → tinh chỉnh toàn bộ), lớp phân lớp tuyến tính và Sigmoid với ngưỡng 0.5 quyết định CÓ/KHÔNG bệnh lý}{figure.3.4}{}}
 \@setckpt{Chapter3/chapter3}{
-\setcounter{page}{52}
+\setcounter{page}{51}
 \setcounter{equation}{6}
 \setcounter{enumi}{2}
 \setcounter{enumii}{0}
@@ -74,7 +70,7 @@
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{6}
+\setcounter{figure}{4}
 \setcounter{table}{2}
 \setcounter{tabx@nest}{0}
 \setcounter{listtotal}{0}
@@ -85,7 +81,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{23}
+\setcounter{instcount}{11}
 \setcounter{maxnames}{3}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{3}
