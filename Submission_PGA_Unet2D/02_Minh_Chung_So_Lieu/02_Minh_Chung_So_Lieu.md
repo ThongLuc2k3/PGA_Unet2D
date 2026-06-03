@@ -57,15 +57,29 @@
 
 ## C. Ablation — Đóng Góp Từng Thành Phần Kiến Trúc (V1–V5)
 
-> ⏳ **Đang chạy trên Colab** — kết quả sẽ cập nhật sau.
+> Đánh giá trên kịch bản **Zoom-out** (N=248 test). Số liệu V1–V4 từ thực nghiệm Kaggle. V5 dùng checkpoint PGA gốc — sẽ cập nhật khi train lại hoàn tất.
 
-| Biến thể | PSG | CAD | Loại câu nhắc huấn luyện | Dice ↑ | HD95 ↓ | CBL ↑ |
-|---|---|---|---|---|---|---|
-| V1: Concat đơn giản (không PSG, không CAD) | ✗ | ✗ | Plateau Heatmap | ⏳ | ⏳ | ⏳ |
-| V2: Chỉ PSG | ✓ | ✗ | Plateau Heatmap | ⏳ | ⏳ | ⏳ |
-| V3: Chỉ CAD | ✗ | ✓ | Plateau Heatmap | ⏳ | ⏳ | ⏳ |
-| V4: PSG + CAD, Binary bbox | ✓ | ✓ | Binary bbox | ⏳ | ⏳ | ⏳ |
-| **V5: PSG + CAD, Heatmap (đề xuất)** | ✓ | ✓ | Plateau Heatmap | **0.8606** | **12.16** | **0.9558** |
+| Biến thể | PSG | CAD | Loại câu nhắc | Dice ↑ | IoU ↑ | HD95 ↓ (px) | CBL ↑ | Best Val Dice | Epoch dừng |
+|---|---|---|---|---|---|---|---|---|---|
+| V1: Concat đơn giản (không PSG, không CAD) | ✗ | ✗ | Plateau Heatmap | 0.8722 | 0.7796 | 12.01 | 0.9666 | 0.8750 | 55/100 |
+| V2: Chỉ PSG | ✓ | ✗ | Plateau Heatmap | 0.8707 | 0.7791 | 14.95 | 0.9610 | 0.8765 | 92/100 |
+| V3: Chỉ CAD | ✗ | ✓ | Plateau Heatmap | 0.8864 | 0.8018 | 11.46 | 0.9685 | 0.9006 | 64/100 |
+| V4: PSG + CAD, Binary bbox | ✓ | ✓ | Binary bbox | 0.8802 | 0.7909 | 11.45 | 0.9649 | 0.8913 | 67/100 |
+| **V5: PSG + CAD, Heatmap (đề xuất)** | ✓ | ✓ | Plateau Heatmap | **0.8606** | **0.7619** | **12.16** | **0.9558** | 0.8652 | 60/100 |
+
+**Kết quả theo kịch bản Shift và Mixed 70/30:**
+
+| Biến thể | Shift Dice | Shift HD95 | Mixed Dice | Mixed HD95 | Mixed CBL |
+|---|---|---|---|---|---|
+| V1 | 0.7210 | 22.00 | 0.8222 | 15.23 | 0.9351 |
+| V2 | 0.7285 | 24.40 | 0.8240 | 17.93 | 0.9310 |
+| V3 | 0.7247 | 21.89 | 0.8337 | 14.81 | 0.9368 |
+| V4 | 0.7321 | 20.88 | 0.8321 | 14.55 | 0.9352 |
+| **V5** | **0.8380** | **14.36** | **0.8558** | **12.79** | **0.9532** |
+
+> **Nhận xét:** V3 (CAD only) đạt Dice cao nhất trên zoom_out (0.8864) do CAD cung cấp attention decoder mạnh. V5 vượt trội rõ ở kịch bản Shift (+11.6pp so V4) — PSG+CAD+Heatmap giúp mô hình ổn định hơn khi prompt bị lệch, đây là ưu thế chính của kiến trúc đề xuất.
+
+**Visualization:** Xem ảnh minh họa 10 mẫu test đầu tại **03_Minh_Chung_Hinh_Anh — Mục C.Ablation**.
 
 ---
 

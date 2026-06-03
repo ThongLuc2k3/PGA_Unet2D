@@ -1,6 +1,6 @@
 # Kế Hoạch & Đánh Giá Thực Nghiệm — PGA-UNet2D Luận Văn
 
-> Cập nhật: 2026-06-03 (chiều) — dọn dẹp báo cáo, references, thuật ngữ, loại bỏ số liệu thời gian chưa đo
+> Cập nhật: 2026-06-03 (tối) — fix references.bib tác giả đúng từ PDF, thêm YOLOv11/Roboflow, compile main.pdf OK (3.8MB), Submission tái cấu trúc 5 folder + .tex
 
 ---
 
@@ -21,7 +21,7 @@
 | **Ablation kiến trúc V1–V5** `tab:ablation_arch` | 🔴 Đang chạy Colab | Source/Ablation/ |
 | Sub-category PGA vs Baseline (Dễ/Khó) | ✅ Số thật | Result/SubCat_PGA_vs_Baseline.ipynb |
 | Sub-category PGA vs SAM (3 nhóm) | ✅ Số thật | Result/SubCat_PGA_vs_SAM.ipynb |
-| Cross-validation `tab:cross_validation` | 🔴 Chưa chạy | Source/PGA_Unet2D.ipynb |
+| Cross-validation `tab:cross_validation` | 🔴 **Đang chạy Colab** | Source/PGA_Unet2D.ipynb |
 
 ### Đóng góp 2 — Sản phẩm (Pipeline lâm sàng)
 
@@ -42,8 +42,11 @@
 
 | Hạng mục | Trạng thái |
 |---|---|
-| references.bib — 6 entry đúng (U-Net, Att-UNet, SAM-Med2D, MobileNetV4, GradCAM, BTXRD) | ✅ |
-| Cite SAM, YOLOv11, Roboflow, BTXRD đầy đủ | ⏳ Chờ bạn cung cấp PDF/link |
+| references.bib — **8 entry đúng** (tác giả lấy từ PDF) | ✅ |
+| YOLOv11, Roboflow thêm link chính thức | ✅ |
+| BTXRD tác giả đúng: Shunhan Yao et al., Sci.Data 12:88 (2025) | ✅ |
+| SAM-Med2D tác giả đúng: Junlong Cheng et al. | ✅ |
+| main.pdf compile không lỗi (3.8 MB) | ✅ |
 | Anh-Việt lẫn lộn: paradigm, Warmup, subsection titles, header bảng | ✅ Đã sửa |
 | Số liệu thời gian ms (chưa đo) đã xóa khỏi Ch.3, Ch.4 | ✅ |
 | Phân rõ IPR thuộc Đóng góp 2 trong Ch.3 | ✅ |
@@ -55,9 +58,11 @@
 | # | Việc | Ưu tiên |
 |---|---|---|
 | 1 | **Ablation V1–V5** → điền `tab:ablation_arch` | 🔴 Đang chạy Colab |
-| 2 | **Cross-validation** → điền `tab:cross_validation` | 🔴 Colab |
-| 3 | **Compile main.pdf** → kiểm tra không lỗi LaTeX | 🔴 |
-| 4 | **PDF bổ sung**: SAM, YOLOv11, Roboflow, BTXRD | 🟠 Chờ bạn |
+| 2 | **Cross-validation** → điền `tab:cross_validation` | 🔴 Đang chạy Colab |
+| 3 | **main.pdf** compile không lỗi | ✅ Xong (3.8MB) |
+| 4 | **IPR k=2,3** → chạy pga-gradcam-ipr sau khi có trọng số tốt nhất | 🟠 Đợi checkpoint |
+| 5 | **Cascading error thực nghiệm** | 🟡 Nếu còn thời gian |
+| 6 | **MobileNetV4 Drive link** | 🟡 Điền vào Submission README |
 | 5 | IPR k=2,3 → điền `tab:ipr_convergence` | 🟠 |
 | 6 | Cascading error thực nghiệm | 🟡 |
 

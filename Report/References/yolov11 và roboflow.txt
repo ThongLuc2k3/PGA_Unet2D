@@ -1,0 +1,2 @@
+Roboflow: https://roboflow.com/; https://www.youtube.com/watch?v=K3sKya6up98&t=3s
+Yolo11s: https://docs.ultralytics.com/models/yolo11#overview

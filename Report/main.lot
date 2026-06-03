@@ -14,7 +14,7 @@
 \contentsline {table}{\numberline {4.8}{\ignorespaces Hiệu năng PGA-UNet phân theo đặc tính tổn thương (Gaussian heatmap, zoom-out 30\%)}}{63}{table.4.8}%
 \contentsline {table}{\numberline {4.9}{\ignorespaces So sánh hiệu năng theo độ khó tổn thương: Nhóm \textit {Dễ} (top-100 U-Net Dice) và \textit {Khó} (bottom-100 U-Net Dice), đánh giá trên per-polygon samples}}{64}{table.4.9}%
 \contentsline {table}{\numberline {4.10}{\ignorespaces So sánh PGA-UNet và SAM-Med2D (fine-tuned) theo đặc tính tổn thương: \textit {Tổn thương nhỏ} (50 mask nhỏ nhất), \textit {Biên giới mờ} (50 ca SAM tệ nhất), \textit {Tổn thương rõ nét} (50 mask lớn còn lại)}}{64}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces Khả năng phục hồi hệ số Dice khi áp dụng chuỗi cứu hộ GradCAM + IPR}}{74}{table.4.11}%
-\contentsline {table}{\numberline {4.12}{\ignorespaces Sự hội tụ của IPR qua từng vòng lặp sau điểm khởi tạo GradCAM (174 mẫu câu nhắc sai hoàn toàn)}}{75}{table.4.12}%
-\contentsline {table}{\numberline {4.13}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{77}{table.4.13}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Khả năng phục hồi hệ số Dice khi áp dụng chuỗi cứu hộ GradCAM + IPR}}{75}{table.4.11}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Sự hội tụ của IPR qua từng vòng lặp sau điểm khởi tạo GradCAM (174 mẫu câu nhắc sai hoàn toàn)}}{76}{table.4.12}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{78}{table.4.13}%
 \addvspace {10\p@ }

@@ -1,20 +1,32 @@
 # Hồ Sơ Gửi Giảng Viên — PGA-UNet
 
 **Đề tài:** Phát triển hệ thống phân đoạn ảnh X-quang xương dựa vào câu nhắc trực quan  
-**Tác giả:** Lục Tố Thông | **Năm:** 2026
+**Tác giả:** Lục Tố Thông | **GVHD:** PGS.TS. Lý Quốc Ngọc & ThS. Đỗ Thị Thanh Hà | **Năm:** 2026
 
 ---
 
 ## Cấu Trúc Hồ Sơ
 
-| File | Nội dung |
-|---|---|
-| `01_Dong_Gop_De_Tai.md` | Đóng góp 1 (kiến trúc PGA-UNet) và Đóng góp 2 (pipeline lâm sàng) — với công thức toán học |
-| `02_Minh_Chung_So_Lieu.md` | Toàn bộ bảng số liệu: phân đoạn, phân lớp, phòng vệ, đặc tính tổn thương |
-| `03_Minh_Chung_Hinh_Anh.md` | Mô tả các ảnh minh chứng kèm đường dẫn (ảnh trong thư mục `images/`) |
-| `04_Tai_Lieu_Tham_Khao.md` | Danh mục 6 tài liệu tham khảo chính |
-| `05_Ky_Thuat_Su_Dung.md` | Phân biệt kỹ thuật kế thừa vs đề xuất mới — tránh đạo văn |
-| `images/` | Ảnh visualization + sơ đồ kiến trúc (14 file PNG) |
+```
+Submission_PGA_Unet2D/
+├── main.tex                        ← compile ra PDF (pdflatex main.tex × 2)
+├── 01_Dong_Gop_De_Tai/             ← Đóng góp PSG, CAD, GradCAM+IPR, MobileNetV4
+│   ├── 01_Dong_Gop_De_Tai.tex
+│   └── 01_Dong_Gop_De_Tai.md
+├── 02_Minh_Chung_So_Lieu/          ← Số liệu phân đoạn, phân lớp, phòng vệ
+│   ├── 02_Minh_Chung_So_Lieu.tex
+│   └── 02_Minh_Chung_So_Lieu.md
+├── 03_Minh_Chung_Hinh_Anh/         ← Mô tả + 21 ảnh PNG
+│   ├── 03_Minh_Chung_Hinh_Anh.tex
+│   ├── 03_Minh_Chung_Hinh_Anh.md
+│   └── images/  (21 ảnh PNG)
+├── 04_Tai_Lieu_Tham_Khao/          ← 8 tài liệu (có PDF hoặc link)
+│   ├── 04_Tai_Lieu_Tham_Khao.tex
+│   └── 04_Tai_Lieu_Tham_Khao.md
+└── 05_Ky_Thuat_Su_Dung/            ← Phân biệt kế thừa vs đề xuất mới
+    ├── 05_Ky_Thuat_Su_Dung.tex
+    └── 05_Ky_Thuat_Su_Dung.md
+```
 
 ---
 
@@ -22,8 +34,8 @@
 
 | Mô hình | Dice (Mixed 70/30) | Tham số |
 |---|---|---|
-| U-Net | 0.5090 | ~7M |
-| Attention U-Net | 0.4110 | ~8M |
+| U-Net (không có câu nhắc) | 0.5090 | ~7M |
+| Attention U-Net (không có câu nhắc) | 0.4110 | ~8M |
 | SAM-Med2D zero-shot | 0.5289 | ~100M |
 | SAM-Med2D fine-tuned | 0.7554 | ~100M |
 | **PGA-UNet (đề xuất)** | **0.8558** | **~4M** |

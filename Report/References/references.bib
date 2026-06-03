@@ -1,7 +1,8 @@
 %%
-%% references.bib
-%% Chỉ chứa các bài báo có file PDF trong thư mục References + BTXRD (sẽ bổ sung)
+%% references.bib — 8 tài liệu, thông tin lấy trực tiếp từ file PDF
 %%
+
+% ── Kiến trúc nền tảng ───────────────────────────────────────────────────────
 
 @inproceedings{ronneberger2015unet,
   author    = {Olaf Ronneberger and Philipp Fischer and Thomas Brox},
@@ -14,32 +15,50 @@
 }
 
 @inproceedings{oktay2018attentionunet,
-  author    = {Ozan Oktay and Jo Schlemper and Loic Le Folgoc and Matthew Lee and Mattias Heinrich and Kazunari Misawa and Kensaku Mori and Steven McDonagh and Nils Y. Hammerla and Bernhard Kainz and Ben Glocker and Daniel Rueckert},
+  author    = {Ozan Oktay and Jo Schlemper and Loic Le Folgoc and Matthew Lee
+               and Mattias Heinrich and Kazunari Misawa and Kensaku Mori
+               and Steven McDonagh and Nils Y. Hammerla and Bernhard Kainz
+               and Ben Glocker and Daniel Rueckert},
   title     = {{Attention U-Net: Learning Where to Look for the Pancreas}},
   booktitle = {Medical Imaging with Deep Learning (MIDL)},
   year      = {2018},
   url       = {https://arxiv.org/abs/1804.03999}
 }
 
+% ── Mô hình so sánh ──────────────────────────────────────────────────────────
+
 @article{2023-SAMMed2D-Cheng,
-  author    = {Junxiong Cheng and Ye Peng and Cheng Guo and Rongqi Fan and Zonghao Peng and Guibo Lv and Jianpeng Peng},
-  title     = {{SAM-Med2D: A Combined Training Strategy for Generic Medical Image Segmentation}},
+  author    = {Junlong Cheng and Jin Ye and Zhongying Deng and Haoyu Wang
+               and Yanzhou Su and Ziyan Huang and Hui Sun and Junjun He
+               and Shaoting Zhang and Jianpin Chen and Jilong Chen
+               and Min Zhu and Tianbin Li and Lei Jiang and Yu Qiao},
+  title     = {{SAM-Med2D}},
   journal   = {arXiv preprint arXiv:2308.16184},
   year      = {2023},
   url       = {https://arxiv.org/abs/2308.16184}
 }
 
-@misc{mobilenetv4-timm,
-  author       = {Qin, Danfeng and Leichner, Chas and Delakis, Manolis and others},
-  title        = {{MobileNetV4 -- Universal Models for the Mobile Ecosystem}},
-  year         = {2024},
-  howpublished = {\url{https://huggingface.co/timm/mobilenetv4_hybrid_medium.ix_e550_r384_in1k}},
-  note         = {Mô hình tiền huấn luyện truy cập qua thư viện timm}
+% ── Mô hình phân lớp ─────────────────────────────────────────────────────────
+
+@article{mobilenetv4-timm,
+  author    = {Danfeng Qin and Chas Leichner and Manolis Delakis
+               and Marco Fornoni and Shixin Luo and Fan Yang
+               and Weijun Wang and Colby Banbury and Chengxi Ye
+               and Berkin Akin and Vaibhav Aggarwal and Tenghui Zhu
+               and Daniele Moro and Andrew Howard},
+  title     = {{MobileNetV4: Universal Models for the Mobile Ecosystem}},
+  journal   = {arXiv preprint arXiv:2404.10518},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2404.10518}
 }
 
+% ── Giải thích mô hình ───────────────────────────────────────────────────────
+
 @article{selvaraju2019gradcam,
-  author    = {Ramprasaath R. Selvaraju and Michael Cogswell and Abhishek Das and Ramakrishna Vedantam and Devi Parikh and Dhruv Batra},
-  title     = {{Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization}},
+  author    = {Ramprasaath R. Selvaraju and Michael Cogswell and Abhishek Das
+               and Ramakrishna Vedantam and Devi Parikh and Dhruv Batra},
+  title     = {{Grad-CAM: Visual Explanations from Deep Networks via
+               Gradient-based Localization}},
   journal   = {International Journal of Computer Vision},
   year      = {2019},
   volume    = {128},
@@ -48,11 +67,37 @@
   doi       = {10.1007/s11263-019-01228-7}
 }
 
+% ── Bộ dữ liệu ───────────────────────────────────────────────────────────────
+
 @article{btxrd2024,
-  author    = {Nguyen, Minh Duc and Tran, Thi Thu Thuy and Dang, Anh Tuan and Nguyen, Van Linh and others},
-  title     = {{BTXRD: A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}},
+  author    = {Shunhan Yao and Yuanxiang Huang and Xiaoyu Wang
+               and Yiwen Zhang and Ian Costa Paixao and Zhikang Wang
+               and Charla Lu Chai and Hongtao Wang and Dinggui Lu
+               and Geoffrey I. Webb and Shanshan Li and Yuming Guo
+               and Qingfeng Chen and Jiangning Song},
+  title     = {{A Radiograph Dataset for the Classification, Localization,
+               and Segmentation of Primary Bone Tumors}},
   journal   = {Scientific Data},
-  year      = {2024},
-  publisher = {Nature Publishing Group},
-  url       = {https://www.nature.com/articles/s41597-024-04311-y}
+  year      = {2025},
+  volume    = {12},
+  pages     = {88},
+  doi       = {10.1038/s41597-024-04311-y},
+  publisher = {Nature Publishing Group}
+}
+
+% ── Công cụ ──────────────────────────────────────────────────────────────────
+
+@misc{yolov11,
+  author       = {Glenn Jocher and Ayush Chaurasia and Jing Qiu},
+  title        = {{Ultralytics YOLO11}},
+  year         = {2024},
+  howpublished = {\url{https://docs.ultralytics.com/models/yolo11}},
+  note         = {Phiên bản 11}
+}
+
+@misc{roboflow2023,
+  author       = {Brad Dwyer and Joseph Nelson and Jacob Solawetz},
+  title        = {{Roboflow: Give Your Software the Power to See}},
+  year         = {2023},
+  howpublished = {\url{https://roboflow.com}}
 }

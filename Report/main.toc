@@ -77,21 +77,21 @@
 \contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{65}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{65}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}Trực quan hóa pipeline cứu hộ GradCAM + IPR}{68}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Trực quan hóa theo đặc tính tổn thương (Sub-Category)}{71}{subsection.4.4.3}%
-\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{71}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{71}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Tổng quan Đóng góp 2: Sản phẩm phần mềm lâm sàng}{72}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Đánh giá cơ chế phòng vệ câu nhắc (GradCAM + IPR Rescue)}{73}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Hiệu năng của hệ thống gợi ý cứu hộ GradCAM}{73}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.4.3}Trực quan hóa theo đặc tính tổn thương (Sub-Category)}{72}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{72}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{72}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Tổng quan Đóng góp 2: Sản phẩm phần mềm lâm sàng}{73}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Đánh giá cơ chế phòng vệ câu nhắc (GradCAM + IPR Rescue)}{74}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Hiệu năng của hệ thống gợi ý cứu hộ GradCAM}{74}{subsection.4.7.1}%
 \contentsline {subsection}{\numberline {4.7.2}Sự hội tụ của IPR trong pipeline cứu hộ GradCAM}{75}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Phân tích giới hạn GradCAM trong kịch bản câu nhắc sai hoàn toàn}{75}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}So sánh khả năng phòng vệ: PGA-UNet và SAM-Med2D}{76}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.3}Phân tích giới hạn GradCAM trong kịch bản câu nhắc sai hoàn toàn}{76}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}So sánh khả năng phòng vệ: PGA-UNet và SAM-Med2D}{77}{subsection.4.7.4}%
 \contentsline {section}{\numberline {4.8}Đánh giá mô hình phân lớp gác cổng (MobileNetV4)}{77}{section.4.8}%
-\contentsline {subsection}{\numberline {4.8.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{78}{subsection.4.8.1}%
-\contentsline {section}{\numberline {4.9}Tích hợp và đánh giá ứng dụng lâm sàng (app.py)}{80}{section.4.9}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{84}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{84}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{85}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{86}{section.5.3}%
-\contentsline {chapter}{Danh mục công trình của tác giả}{89}{equation.5.3.1}%
-\contentsline {chapter}{Tài liệu tham khảo}{90}{Item.36}%
+\contentsline {subsection}{\numberline {4.8.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{80}{subsection.4.8.1}%
+\contentsline {section}{\numberline {4.9}Tích hợp và đánh giá ứng dụng lâm sàng (app.py)}{81}{section.4.9}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{85}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{85}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{86}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{87}{section.5.3}%
+\contentsline {chapter}{Danh mục công trình của tác giả}{90}{equation.5.3.1}%
+\contentsline {chapter}{Tài liệu tham khảo}{91}{Item.36}%

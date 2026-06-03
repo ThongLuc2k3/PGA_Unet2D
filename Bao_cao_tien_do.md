@@ -1,5 +1,5 @@
 # Báo cáo tiến độ — PGA-UNet2D
-**Ngày cập nhật:** 03/06/2026 (chiều) | **Deadline nộp báo cáo:** 12/06/2026
+**Ngày cập nhật:** 03/06/2026 (tối) | **Deadline nộp báo cáo:** 12/06/2026
 
 ---
 
@@ -118,13 +118,23 @@ Giải pháp áp dụng:
 | **Roboflow** | ⏳ Chờ link | Dùng Ch.3 chưa có cite |
 | **BTXRD** | ⏳ Chờ bổ sung | Đã có entry placeholder trong bib |
 
+### ✅ Mới hoàn thành (03/06/2026 — tối)
+| Nhiệm vụ | Ghi chú |
+|---|---|
+| Fix references.bib — tác giả đúng từ PDF | SAM-Med2D: Junlong Cheng; BTXRD: Shunhan Yao et al. |
+| Thêm YOLOv11 + Roboflow vào bib + cite trong tex | Link chính thức |
+| **main.pdf compile không lỗi** | 3.8 MB — LaTeX sạch |
+| Submission tái cấu trúc 5 folder + .tex + main.tex | Sẵn sàng compile ra PDF gửi thầy |
+| GVHD điền đúng: PGS.TS. Lý Quốc Ngọc & ThS. Đỗ Thị Thanh Hà | Trong Report + Submission |
+| V1–V5 ablation notebooks fix hoàn chỉnh | 3-mode eval, vis inline, không Drive |
+
 ### 🔴 Cần làm trước 12/6 (còn 9 ngày)
 | # | Nhiệm vụ | Ghi chú |
 |---|---|---|
-| 1 | **Ablation V1–V5** — chạy Colab, điền `tab:ablation_arch` | Đang chạy — V1 đã bắt đầu |
-| 2 | **Cross-validation** — train PGA với split mới, ghi mean±std | `Source/PGA_Unet2D.ipynb` |
-| 3 | **Compile** `main.pdf` — kiểm tra không lỗi LaTeX cuối cùng | `Report/main.tex` |
-| 4 | **Bổ sung PDF** SAM, YOLOv11, Roboflow, BTXRD vào References | Báo tôi để thêm vào bib |
+| 1 | **Ablation V1–V5** → điền `tab:ablation_arch` | 🔴 Đang chạy Colab |
+| 2 | **Cross-validation** → điền `tab:cross_validation` | 🔴 Đang chạy Colab |
+| 3 | **IPR k=2,3** → chạy pga-gradcam-ipr sau khi có trọng số tốt | 🟠 Đợi checkpoint |
+| 4 | **MobileNetV4 Drive link** → điền vào Submission README | 🟡 |
 
 ### 🟠 Ưu tiên trung bình
 | # | Nhiệm vụ | Ghi chú |

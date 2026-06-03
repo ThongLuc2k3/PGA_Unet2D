@@ -88,11 +88,11 @@ Bộ dữ liệu này phục vụ hai mục đích song song trong kiến trúc 
 
 \textbf{Bước 1 — Xóa ICC Profile:} Toàn bộ các tệp PNG trong bộ dữ liệu được quét và xử lý bằng script \texttt{clean\_data.py}: hệ thống đọc từng ảnh vào bộ nhớ bằng \texttt{cv2.IMREAD\_UNCHANGED} rồi ghi lại ngay tại chỗ bằng \texttt{cv2.imwrite()}. Khi OpenCV ghi ảnh, thư viện chỉ lưu dữ liệu điểm ảnh thuần túy theo chuẩn PNG, tự động loại bỏ mọi khối metadata ngoại lai (bao gồm ICC Profile). Kết quả là toàn bộ tập ảnh được "rửa sạch" mà không làm biến đổi bất kỳ giá trị pixel nào.
 
-\textbf{Bước 2 — Phát hiện và xóa ký tự nhiễu bằng YOLOv11s:} Đây là bước xử lý cốt lõi và phức tạp nhất của quy trình. Nhóm sử dụng mô hình phát hiện đối tượng \textbf{YOLOv11s} (phiên bản nhỏ gọn của họ YOLO thế hệ 11) để xác định chính xác tọa độ (hộp giới hạn) của từng vùng nhiễu trên ảnh. Sau khi xác định được vùng nhiễu, các vùng này được xóa và phục hồi bằng kỹ thuật nội suy (inpainting).
+\textbf{Bước 2 — Phát hiện và xóa ký tự nhiễu bằng YOLOv11s:} Đây là bước xử lý cốt lõi và phức tạp nhất của quy trình. Nhóm sử dụng mô hình phát hiện đối tượng \textbf{YOLOv11s}~\cite{yolov11} (phiên bản nhỏ gọn của họ YOLO thế hệ 11) để xác định chính xác tọa độ (hộp giới hạn) của từng vùng nhiễu trên ảnh. Sau khi xác định được vùng nhiễu, các vùng này được xóa và phục hồi bằng kỹ thuật nội suy (inpainting).
 
 Quy trình xây dựng và huấn luyện mô hình phát hiện nhiễu gồm các bước sau:
 \begin{enumerate}
-    \item \textbf{Gán nhãn dữ liệu (Annotation):} Nền tảng \textbf{Roboflow} được sử dụng để vẽ thủ công hộp giới hạn cho tất cả các vùng nhiễu (ký tự R/L, nhãn kỹ thuật) trên toàn bộ tập ảnh BTXRD. Tập dữ liệu đã gán nhãn được phân chia theo tỷ lệ 90/10 cho huấn luyện và đánh giá.
+    \item \textbf{Gán nhãn dữ liệu (Annotation):} Nền tảng \textbf{Roboflow}~\cite{roboflow2023} được sử dụng để vẽ thủ công hộp giới hạn cho tất cả các vùng nhiễu (ký tự R/L, nhãn kỹ thuật) trên toàn bộ tập ảnh BTXRD. Tập dữ liệu đã gán nhãn được phân chia theo tỷ lệ 90/10 cho huấn luyện và đánh giá.
     \item \textbf{Cấu hình huấn luyện:} Mô hình \texttt{yolo11s} được khởi tạo với trọng số tiền huấn luyện trên tập COCO. Ảnh đầu vào được đệm thêm (padding) về tỷ lệ vuông rồi thay đổi kích thước về $1024 \times 1024$ pixel. Quá trình huấn luyện chạy tối đa 100 epoch với cơ chế dừng sớm (patience = 10) và thuật toán tối ưu AdamW (tốc độ học $10^{-3}$), mỗi lô gồm 8 ảnh.
     \item \textbf{Suy luận và xóa nhiễu:} Sau khi huấn luyện, mô hình YOLO duyệt qua toàn bộ tập ảnh, xuất ra danh sách Bounding Box cho các vùng nhiễu. Mỗi vùng được xóa và lấp đầy bằng giá trị lân cận phù hợp, đảm bảo bề mặt ảnh liền mạch tự nhiên.
 \end{enumerate}

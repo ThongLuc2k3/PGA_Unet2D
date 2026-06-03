@@ -18,57 +18,105 @@
 
 \datalist[entry]{nty/global//global/global/global}
   \entry{2023-SAMMed2D-Cheng}{article}{}{}
-    \name{author}{7}{}{%
+    \name{author}{15}{}{%
       {{hash=CJ}{%
          family={Cheng},
          familyi={C\bibinitperiod},
-         given={Junxiong},
+         given={Junlong},
          giveni={J\bibinitperiod},
       }}%
-      {{hash=PY}{%
-         family={Peng},
-         familyi={P\bibinitperiod},
-         given={Ye},
-         giveni={Y\bibinitperiod},
+      {{hash=YJ}{%
+         family={Ye},
+         familyi={Y\bibinitperiod},
+         given={Jin},
+         giveni={J\bibinitperiod},
       }}%
-      {{hash=GC}{%
-         family={Guo},
-         familyi={G\bibinitperiod},
-         given={Cheng},
-         giveni={C\bibinitperiod},
-      }}%
-      {{hash=FR}{%
-         family={Fan},
-         familyi={F\bibinitperiod},
-         given={Rongqi},
-         giveni={R\bibinitperiod},
-      }}%
-      {{hash=PZ}{%
-         family={Peng},
-         familyi={P\bibinitperiod},
-         given={Zonghao},
+      {{hash=DZ}{%
+         family={Deng},
+         familyi={D\bibinitperiod},
+         given={Zhongying},
          giveni={Z\bibinitperiod},
       }}%
-      {{hash=LG}{%
-         family={Lv},
-         familyi={L\bibinitperiod},
-         given={Guibo},
-         giveni={G\bibinitperiod},
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Haoyu},
+         giveni={H\bibinitperiod},
       }}%
-      {{hash=PJ}{%
-         family={Peng},
-         familyi={P\bibinitperiod},
-         given={Jianpeng},
+      {{hash=SY}{%
+         family={Su},
+         familyi={S\bibinitperiod},
+         given={Yanzhou},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=HZ}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Ziyan},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=SH}{%
+         family={Sun},
+         familyi={S\bibinitperiod},
+         given={Hui},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=HJ}{%
+         family={He},
+         familyi={H\bibinitperiod},
+         given={Junjun},
          giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZS}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Shaoting},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Jianpin},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Jilong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZM}{%
+         family={Zhu},
+         familyi={Z\bibinitperiod},
+         given={Min},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LT}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Tianbin},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=JL}{%
+         family={Jiang},
+         familyi={J\bibinitperiod},
+         given={Lei},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=QY}{%
+         family={Qiao},
+         familyi={Q\bibinitperiod},
+         given={Yu},
+         giveni={Y\bibinitperiod},
       }}%
     }
     \strng{namehash}{CJ+1}
-    \strng{fullhash}{CJPYGCFRPZLGPJ1}
+    \strng{fullhash}{CJYJDZWHSYHZSHHJZSCJCJZMLTJLQY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{sortinit}{C}
     \field{sortinithash}{C}
-    \field{title}{{SAM-Med2D: A Combined Training Strategy for Generic Medical Image Segmentation}}
+    \field{title}{{SAM-Med2D}}
     \verb{url}
     \verb https://arxiv.org/abs/2308.16184
     \endverb
@@ -76,49 +124,68 @@
     \field{year}{2023}
   \endentry
 
-  \entry{btxrd2024}{article}{}{}
-    \true{moreauthor}
-    \true{morelabelname}
-    \name{author}{4}{}{%
-      {{hash=NMD}{%
-         family={Nguyen},
-         familyi={N\bibinitperiod},
-         given={Minh\bibnamedelima Duc},
-         giveni={M\bibinitperiod\bibinitdelim D\bibinitperiod},
-      }}%
-      {{hash=TTTT}{%
-         family={Tran},
-         familyi={T\bibinitperiod},
-         given={Thi Thu\bibnamedelima Thuy},
-         giveni={T\bibinitperiod\bibinitdelim T\bibinitperiod\bibinitdelim T\bibinitperiod},
-      }}%
-      {{hash=DAT}{%
-         family={Dang},
+  \entry{roboflow2023}{misc}{}{}
+    \name{author}{3}{}{%
+      {{hash=DB}{%
+         family={Dwyer},
          familyi={D\bibinitperiod},
-         given={Anh\bibnamedelima Tuan},
-         giveni={A\bibinitperiod\bibinitdelim T\bibinitperiod},
+         given={Brad},
+         giveni={B\bibinitperiod},
       }}%
-      {{hash=NVL}{%
-         family={Nguyen},
+      {{hash=NJ}{%
+         family={Nelson},
          familyi={N\bibinitperiod},
-         given={Van\bibnamedelima Linh},
-         giveni={V\bibinitperiod\bibinitdelim L\bibinitperiod},
+         given={Joseph},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Solawetz},
+         familyi={S\bibinitperiod},
+         given={Jacob},
+         giveni={J\bibinitperiod},
       }}%
     }
-    \list{publisher}{1}{%
-      {Nature Publishing Group}%
-    }
-    \strng{namehash}{NMD+1}
-    \strng{fullhash}{NMDTTTTDATNVL+1}
+    \strng{namehash}{DBNJSJ1}
+    \strng{fullhash}{DBNJSJ1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{sortinit}{N}
-    \field{sortinithash}{N}
-    \field{title}{{BTXRD: A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}}
-    \verb{url}
-    \verb https://www.nature.com/articles/s41597-024-04311-y
-    \endverb
-    \field{journaltitle}{Scientific Data}
+    \field{sortinit}{D}
+    \field{sortinithash}{D}
+    \field{howpublished}{\url{https://roboflow.com}}
+    \field{title}{{Roboflow: Give Your Software the Power to See}}
+    \field{year}{2023}
+  \endentry
+
+  \entry{yolov11}{misc}{}{}
+    \name{author}{3}{}{%
+      {{hash=JG}{%
+         family={Jocher},
+         familyi={J\bibinitperiod},
+         given={Glenn},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=CA}{%
+         family={Chaurasia},
+         familyi={C\bibinitperiod},
+         given={Ayush},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=QJ}{%
+         family={Qiu},
+         familyi={Q\bibinitperiod},
+         given={Jing},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{JGCAQJ1}
+    \strng{fullhash}{JGCAQJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{J}
+    \field{sortinithash}{J}
+    \field{howpublished}{\url{https://docs.ultralytics.com/models/yolo11}}
+    \field{note}{Phiên bản 11}
+    \field{title}{{Ultralytics YOLO11}}
     \field{year}{2024}
   \endentry
 
@@ -211,10 +278,8 @@
     \field{year}{2018}
   \endentry
 
-  \entry{mobilenetv4-timm}{misc}{}{}
-    \true{moreauthor}
-    \true{morelabelname}
-    \name{author}{3}{}{%
+  \entry{mobilenetv4-timm}{article}{}{}
+    \name{author}{14}{}{%
       {{hash=QD}{%
          family={Qin},
          familyi={Q\bibinitperiod},
@@ -233,16 +298,84 @@
          given={Manolis},
          giveni={M\bibinitperiod},
       }}%
+      {{hash=FM}{%
+         family={Fornoni},
+         familyi={F\bibinitperiod},
+         given={Marco},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Luo},
+         familyi={L\bibinitperiod},
+         given={Shixin},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=YF}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={Fan},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=WW}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Weijun},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=BC}{%
+         family={Banbury},
+         familyi={B\bibinitperiod},
+         given={Colby},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=YC}{%
+         family={Ye},
+         familyi={Y\bibinitperiod},
+         given={Chengxi},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=AB}{%
+         family={Akin},
+         familyi={A\bibinitperiod},
+         given={Berkin},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=AV}{%
+         family={Aggarwal},
+         familyi={A\bibinitperiod},
+         given={Vaibhav},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=ZT}{%
+         family={Zhu},
+         familyi={Z\bibinitperiod},
+         given={Tenghui},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=MD}{%
+         family={Moro},
+         familyi={M\bibinitperiod},
+         given={Daniele},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=HA}{%
+         family={Howard},
+         familyi={H\bibinitperiod},
+         given={Andrew},
+         giveni={A\bibinitperiod},
+      }}%
     }
-    \strng{namehash}{QDLCDM+1}
-    \strng{fullhash}{QDLCDM+1}
+    \strng{namehash}{QD+1}
+    \strng{fullhash}{QDLCDMFMLSYFWWBCYCABAVZTMDHA1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{sortinit}{Q}
     \field{sortinithash}{Q}
-    \field{howpublished}{\url{https://huggingface.co/timm/mobilenetv4_hybrid_medium.ix_e550_r384_in1k}}
-    \field{note}{Mô hình tiền huấn luyện truy cập qua thư viện timm}
-    \field{title}{{MobileNetV4 -- Universal Models for the Mobile Ecosystem}}
+    \field{title}{{MobileNetV4: Universal Models for the Mobile Ecosystem}}
+    \verb{url}
+    \verb https://arxiv.org/abs/2404.10518
+    \endverb
+    \field{journaltitle}{arXiv preprint arXiv:2404.10518}
     \field{year}{2024}
   \endentry
 
@@ -276,12 +409,14 @@
     \field{labeltitlesource}{title}
     \field{sortinit}{R}
     \field{sortinithash}{R}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention (MICCAI)}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted
+  Intervention (MICCAI)}
     \verb{doi}
     \verb 10.1007/978-3-319-24574-4_28
     \endverb
     \field{pages}{234\bibrangedash 241}
-    \field{title}{{U-Net: Convolutional Networks for Biomedical Image Segmentation}}
+    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
+  Segmentation}}
     \field{year}{2015}
   \endentry
 
@@ -335,10 +470,118 @@
     \endverb
     \field{number}{2}
     \field{pages}{336\bibrangedash 359}
-    \field{title}{{Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization}}
+    \field{title}{{Grad-CAM: Visual Explanations from Deep Networks via
+  Gradient-based Localization}}
     \field{volume}{128}
     \field{journaltitle}{International Journal of Computer Vision}
     \field{year}{2019}
+  \endentry
+
+  \entry{btxrd2024}{article}{}{}
+    \name{author}{14}{}{%
+      {{hash=YS}{%
+         family={Yao},
+         familyi={Y\bibinitperiod},
+         given={Shunhan},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=HY}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Yuanxiang},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=WX}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Xiaoyu},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Yiwen},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=PIC}{%
+         family={Paixao},
+         familyi={P\bibinitperiod},
+         given={Ian\bibnamedelima Costa},
+         giveni={I\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+      {{hash=WZ}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Zhikang},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=CCL}{%
+         family={Chai},
+         familyi={C\bibinitperiod},
+         given={Charla\bibnamedelima Lu},
+         giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Hongtao},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=LD}{%
+         family={Lu},
+         familyi={L\bibinitperiod},
+         given={Dinggui},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=WGI}{%
+         family={Webb},
+         familyi={W\bibinitperiod},
+         given={Geoffrey\bibnamedelima I.},
+         giveni={G\bibinitperiod\bibinitdelim I\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Shanshan},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=GY}{%
+         family={Guo},
+         familyi={G\bibinitperiod},
+         given={Yuming},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CQ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Qingfeng},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Song},
+         familyi={S\bibinitperiod},
+         given={Jiangning},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{YS+1}
+    \strng{fullhash}{YSHYWXZYPICWZCCLWHLDWGILSGYCQSJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Y}
+    \field{sortinithash}{Y}
+    \verb{doi}
+    \verb 10.1038/s41597-024-04311-y
+    \endverb
+    \field{pages}{88}
+    \field{title}{{A Radiograph Dataset for the Classification, Localization,
+  and Segmentation of Primary Bone Tumors}}
+    \field{volume}{12}
+    \field{journaltitle}{Scientific Data}
+    \field{year}{2025}
   \endentry
 \enddatalist
 \endinput
