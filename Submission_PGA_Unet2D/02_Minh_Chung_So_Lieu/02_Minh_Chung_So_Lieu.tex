@@ -11,7 +11,7 @@
 \section{PHẦN I — ĐÓNG GÓP 1: Kiến Trúc PGA-UNet}
 
 
-\subsection{A. Kết Quả Phân Đoạn Tổng Hợp (N=248 test samples, BTXRD)}
+\subsection{A. Kết Quả Phân Đoạn Tổng Hợp (BTXRD)}
 
 \begin{table}[htbp]
 \centering\renewcommand{\arraystretch}{1.2}
@@ -47,7 +47,7 @@ SAM-Med2D (fine-tuned) & Mixed 70/30 & 0.7554 & 0.6325 & 0.7558 & 0.7813 & 51.84
 \end{table}
 
 \begin{quote}\itshape \texttt{*} HD95 của SAM-Med2D tính trên không gian ảnh 256$\times$256 px. HD95 chuẩn hóa: PGA $\approx$ 0.025 vs SAM $\approx$ 0.204 — PGA chính xác hơn \textasciitilde{}8$\times$ về đường biên.\end{quote}
-\begin{quote}\itshape U-Net/Att-UNet: N=187 (merged mask). PGA/SAM: N=248 (per-polygon).\end{quote}
+\begin{quote}\itshape U-Net/Att-UNet: merged mask (per-ảnh). PGA/SAM: per-polygon.\end{quote}
 
 \textbf{Ba kịch bản câu nhắc:}
 \begin{itemize}

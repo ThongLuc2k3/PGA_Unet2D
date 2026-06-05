@@ -1,12 +1,12 @@
 # Kế Hoạch & Đánh Giá Thực Nghiệm — PGA-UNet2D Luận Văn
 
-> Cập nhật: 2026-06-03 (tối) — fix references.bib tác giả đúng từ PDF, thêm YOLOv11/Roboflow, compile main.pdf OK (3.8MB), Submission tái cấu trúc 5 folder + .tex
+> Cập nhật: 2026-06-04 — V1–V4 ablation xong (số thật), chapter4.tex điền xong, 03_Minh_Chung_Hinh_Anh cập nhật 25 ảnh, main.pdf compile OK (110 trang)
 
 ---
 
-## 0. Trạng Thái Tổng Quan (03/06/2026 — chiều)
+## 0. Trạng Thái Tổng Quan (04/06/2026)
 
-### Đóng góp 1 — Nghiên cứu (PGA-UNet) — **~85% hoàn thành**
+### Đóng góp 1 — Nghiên cứu (PGA-UNet) — **~92% hoàn thành**
 
 | Hạng mục | Trạng thái | Nguồn |
 |---|---|---|
@@ -18,10 +18,12 @@
 | GradCAM rescue + `tab:gradcam_rescue` (174/174=100%) | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
 | IPR convergence `tab:ipr_convergence` k=0,1 | ⚠️ Một phần | k=2,3 chờ PGA_Ablation.ipynb |
 | Ablation prompt type `tab:ablation_prompt` | ✅ Số thật | Result/PGA_Ablation.ipynb |
-| **Ablation kiến trúc V1–V5** `tab:ablation_arch` | 🔴 Đang chạy Colab | Source/Ablation/ |
+| **Ablation kiến trúc V1–V4** `tab:ablation_arch` | ✅ **Xong (04/06)** | Result/v1–v4.ipynb → chapter4.tex |
+| **Ablation kiến trúc V5** (đề xuất) | ⏳ Chờ retrain | Tạm dùng số PGA cũ (0.8606) |
 | Sub-category PGA vs Baseline (Dễ/Khó) | ✅ Số thật | Result/SubCat_PGA_vs_Baseline.ipynb |
 | Sub-category PGA vs SAM (3 nhóm) | ✅ Số thật | Result/SubCat_PGA_vs_SAM.ipynb |
-| Cross-validation `tab:cross_validation` | 🔴 **Đang chạy Colab** | Source/PGA_Unet2D.ipynb |
+| Sub-category ảnh minh chứng (chapter4.tex) | ⏳ Chưa thêm | TODO line 508 chapter4.tex |
+| Cross-validation `tab:cross_validation` | 🔴 Chưa chạy | Source/PGA_Unet2D.ipynb seed mới |
 
 ### Đóng góp 2 — Sản phẩm (Pipeline lâm sàng)
 
@@ -29,42 +31,34 @@
 |---|---|---|
 | MobileNetV4 gatekeeper (AUC-ROC=0.9514) | ✅ Số thật | Result/MobileNetV4_BTXRD_dataset.ipynb |
 | GradCAM rescue 174/174=100%, 21.8% cứu hộ | ✅ Số thật | Result/pga-gradcam-ipr.ipynb |
-| IPR k=2,3 convergence | 🔴 Chưa có | PGA_Ablation.ipynb |
+| IPR k=2,3 convergence | ⏳ Chưa chạy | PGA_Ablation.ipynb |
 | Defense comparison SAM vs PGA | ✅ Số thật | Result/defense-comparison-sam-vs-pga.ipynb |
 | Cascading error lý thuyết ≈76.7% | ✅ Viết xong | chapter4.tex |
-| Cascading error thực nghiệm | 🟠 Chưa làm | Tạo test_mixed/ |
+| Cascading error thực nghiệm | 🟡 Chưa làm | Tạo test_mixed/ nếu còn thời gian |
 | app.py Gradio UI | ✅ Có sẵn | Source/project/app.py |
-| Chapter 3: Đóng góp IPR phân rõ thuộc Đóng góp 2 | ✅ Viết xong | chapter3.tex sec:ipr_pipeline |
 | Chapter 4: sec:product_overview | ✅ Viết xong | chapter4.tex |
-| Chapter 5: 5 hướng phát triển | ✅ Viết xong | chapter5.tex |
+| Chapter 5: hướng phát triển | ✅ Viết xong | chapter5.tex |
 
-### Báo cáo — Chất lượng văn bản (hôm nay đã dọn)
+### Submission & Minh chứng
 
 | Hạng mục | Trạng thái |
 |---|---|
-| references.bib — **8 entry đúng** (tác giả lấy từ PDF) | ✅ |
-| YOLOv11, Roboflow thêm link chính thức | ✅ |
-| BTXRD tác giả đúng: Shunhan Yao et al., Sci.Data 12:88 (2025) | ✅ |
-| SAM-Med2D tác giả đúng: Junlong Cheng et al. | ✅ |
-| main.pdf compile không lỗi (3.8 MB) | ✅ |
-| Anh-Việt lẫn lộn: paradigm, Warmup, subsection titles, header bảng | ✅ Đã sửa |
-| Số liệu thời gian ms (chưa đo) đã xóa khỏi Ch.3, Ch.4 | ✅ |
-| Phân rõ IPR thuộc Đóng góp 2 trong Ch.3 | ✅ |
-| Float too large (system_architecture, preprocessing_pipeline) | ✅ Đã fix |
-| Chapter 2 dọn sạch: bỏ UNet++, nnU-Net, TransUNet, SAM, SAM2, RITM, MedSAM | ✅ |
+| 02_Minh_Chung_So_Lieu — V1–V4 ablation | ✅ Xong (04/06) |
+| 03_Minh_Chung_Hinh_Anh — 25 ảnh, chia Phần I/II, inline | ✅ Xong (04/06) |
+| chapter4.tex ablation tab:ablation_arch V1–V4 | ✅ Xong (04/06) |
+| main.pdf compile không lỗi (110 trang, 3.9MB) | ✅ Xong (04/06) |
+| references.bib — 8 entry đúng tác giả từ PDF | ✅ |
 
-### Việc còn lại trước 12/06 (deadline 9 ngày)
+### Việc còn lại trước 12/06 (deadline 8 ngày)
 
 | # | Việc | Ưu tiên |
 |---|---|---|
-| 1 | **Ablation V1–V5** → điền `tab:ablation_arch` | 🔴 Đang chạy Colab |
-| 2 | **Cross-validation** → điền `tab:cross_validation` | 🔴 Đang chạy Colab |
-| 3 | **main.pdf** compile không lỗi | ✅ Xong (3.8MB) |
-| 4 | **IPR k=2,3** → chạy pga-gradcam-ipr sau khi có trọng số tốt nhất | 🟠 Đợi checkpoint |
-| 5 | **Cascading error thực nghiệm** | 🟡 Nếu còn thời gian |
-| 6 | **MobileNetV4 Drive link** | 🟡 Điền vào Submission README |
-| 5 | IPR k=2,3 → điền `tab:ipr_convergence` | 🟠 |
-| 6 | Cascading error thực nghiệm | 🟡 |
+| 1 | **V5 retrain** → chốt số hàng V5 `tab:ablation_arch` | 🔴 Gấp |
+| 2 | **Cross-validation** → điền `tab:cross_validation` (mục E) | 🔴 Gấp |
+| 3 | **IPR k=2,3** → chạy `PGA_Ablation.ipynb` → điền `tab:ipr_convergence` | 🟠 Trung bình |
+| 4 | **Cascading error thực nghiệm** → tập test hỗn hợp | 🟡 Nếu còn thời gian |
+| 5 | **3 ảnh sub-category** → thêm vào chapter4.tex (line 508) | 🟡 Nhỏ |
+| 6 | **Compile main.pdf lần cuối** sau khi điền hết số | ⬜ Cuối cùng |
 
 ---
 

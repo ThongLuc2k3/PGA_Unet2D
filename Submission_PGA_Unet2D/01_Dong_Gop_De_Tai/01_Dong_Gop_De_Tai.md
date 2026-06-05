@@ -53,7 +53,7 @@ Phân loại tự động ảnh X-quang "có bệnh / bình thường" trước 
 2. GradCAM trích xuất điểm kích hoạt cực đại làm tâm câu nhắc cứu hộ
 3. IPR (Iterative Prompt Refinement) tinh chỉnh tối đa 3 vòng dùng tâm hình học mặt nạ dự đoán
 
-Tỷ lệ phát hiện đạt **174/174 = 100%**; cứu hộ thành công (Dice ≥ 0.70): **21.8%**.
+Tỷ lệ phát hiện: **100%** (toàn bộ mẫu có góc tối đều bị bắt); cứu hộ thành công (Dice ≥ 0.70): ⏳ (chờ số mới).
 
 ### 2.3 Ứng dụng tích hợp (app.py)
 

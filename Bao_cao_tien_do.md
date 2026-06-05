@@ -1,5 +1,5 @@
 # Báo cáo tiến độ — PGA-UNet2D
-**Ngày cập nhật:** 03/06/2026 (tối) | **Deadline nộp báo cáo:** 12/06/2026
+**Ngày cập nhật:** 04/06/2026 | **Deadline nộp báo cáo:** 12/06/2026
 
 ---
 
@@ -128,25 +128,62 @@ Giải pháp áp dụng:
 | GVHD điền đúng: PGS.TS. Lý Quốc Ngọc & ThS. Đỗ Thị Thanh Hà | Trong Report + Submission |
 | V1–V5 ablation notebooks fix hoàn chỉnh | 3-mode eval, vis inline, không Drive |
 
-### 🔴 Cần làm trước 12/6 (còn 9 ngày)
-| # | Nhiệm vụ | Ghi chú |
-|---|---|---|
-| 1 | **Ablation V1–V5** → điền `tab:ablation_arch` | 🔴 Đang chạy Colab |
-| 2 | **Cross-validation** → điền `tab:cross_validation` | 🔴 Đang chạy Colab |
-| 3 | **IPR k=2,3** → chạy pga-gradcam-ipr sau khi có trọng số tốt | 🟠 Đợi checkpoint |
-| 4 | **MobileNetV4 Drive link** → điền vào Submission README | 🟡 |
-
-### 🟠 Ưu tiên trung bình
-| # | Nhiệm vụ | Ghi chú |
-|---|---|---|
-| 5 | **IPR k=2, k=3** | Chạy `Source/PGA_Ablation.ipynb` → điền `tab:ipr_convergence` |
-| 6 | **Cascading error thực nghiệm** | Tạo tập hỗn hợp, chạy full pipeline |
-
-### 🟡 Làm nếu còn thời gian
+### ✅ Mới hoàn thành (04/06/2026)
 | Nhiệm vụ | Ghi chú |
 |---|---|
-| Sub-category ảnh minh chứng | Đã có bar chart, không bắt buộc |
-| app.py demo | Sản phẩm, không ảnh hưởng điểm báo cáo |
+| **Dataset ID** sửa toàn bộ 31 notebooks | ID mới: `1X1SY8T63pdBPIdrv_3P0gKVwoLxCa5sW` |
+| **02_Minh_Chung_So_Lieu** reset về ⏳ | Toàn bộ số liệu chờ chạy lại với dataset mới |
+| **chapter4.tex** reset ablation V1–V5 về \textit{chờ} | Chờ kết quả mới |
+| **03_Minh_Chung_Hinh_Anh** tái cấu trúc | 25 ảnh, chia Phần I/II, ảnh nhúng inline |
+
+---
+
+## 🔴 NHIỆM VỤ CẦN CHẠY NGAY (deadline 12/6 — còn 8 ngày)
+
+> Dataset đổi sang `1X1SY8T63pdBPIdrv_3P0gKVwoLxCa5sW` — tất cả số liệu cũ không còn hợp lệ, chạy lại toàn bộ.  
+> **Tổng cộng 18 notebooks** trong `Source/`, chia 3 nhóm theo thứ tự phụ thuộc.
+
+---
+
+### 🟢 Nhóm 1 — Chạy song song ngay, không phụ thuộc nhau (10 notebooks)
+
+| # | Notebook | Mục đích | Output cần lấy |
+|---|---|---|---|
+| 1 | `Unet2D.ipynb` | Train + test U-Net baseline (không prompt) | Dice/IoU/HD95/CBL × 1 mode, epoch dừng, best val Dice |
+| 2 | `Attention_Unet2D.ipynb` | Train + test Attention U-Net baseline (không prompt) | Dice/IoU/HD95/CBL × 1 mode, epoch dừng, best val Dice |
+| 3 | `PGA_Unet2D.ipynb` | **Train + test PGA chính (V5)** — bao gồm cross-validation seed mới | Dice × 3 mode, epoch dừng, best val Dice |
+| 4 | `Finetune_SAMMed2D_test_robust.ipynb` | Fine-tune SAM-Med2D trên BTXRD + test 3 mode | Dice × 3 mode, epoch dừng |
+| 5 | `SAMMed2D_ZeroShot.ipynb` | Test SAM-Med2D zero-shot (không fine-tune) | Dice × 3 mode |
+| 6 | `Ablation/V1_NoPSG_NoCAD_Concat.ipynb` | Train + test V1: concat heatmap đơn giản, không PSG không CAD | Dice × 3 mode, best val Dice |
+| 7 | `Ablation/V2_PSG_Only.ipynb` | Train + test V2: chỉ có PSG ở encoder, decoder thường | Dice × 3 mode, best val Dice |
+| 8 | `Ablation/V3_CAD_Only.ipynb` | Train + test V3: chỉ có CAD ở decoder, encoder thường | Dice × 3 mode, best val Dice |
+| 9 | `Ablation/V4_Full_BinaryPrompt.ipynb` | Train + test V4: PSG+CAD đầy đủ nhưng dùng binary bbox thay heatmap | Dice × 3 mode, best val Dice |
+| 10 | `MobileNetV4_BTXRD_dataset.ipynb` | Train + test MobileNetV4 phân lớp gác cổng (có bệnh / không bệnh) | Accuracy/Recall/Precision/F1/AUC-ROC |
+
+> **Lưu ý #3 và #6–#9:** `Ablation/V5_Full_HeatmapPrompt.ipynb` là bản ablation reference của PGA_Unet2D — kiến trúc giống hệt nhau. Dùng checkpoint từ `PGA_Unet2D.ipynb` (#3) làm V5, **không cần chạy V5 riêng**.
+
+---
+
+### 🟡 Nhóm 2 — Chờ checkpoint PGA từ #3 xong (2 notebooks)
+
+| # | Notebook | Mục đích | Phụ thuộc |
+|---|---|---|---|
+| 11 | `PGA_Ablation.ipynb` | Ablation loại câu nhắc: empty / noise / hard bbox / plateau heatmap / oracle GT | PGA checkpoint (#3) |
+| 12 | `PGA_GradCAM_IPR.ipynb` | Cơ chế phòng vệ: 174 mẫu prompt sai → GradCAM → IPR cứu hộ k=1,2,3 | PGA checkpoint (#3) |
+
+> `PGA_Extended_Test.ipynb` — load checkpoint PGA và chạy test + visualization bổ sung. Chạy sau #3 nếu cần ảnh minh chứng thêm, **không bắt buộc** cho số liệu báo cáo.
+
+---
+
+### 🔵 Nhóm 3 — Chờ đủ checkpoint PGA + baseline + SAM (#1–#5 xong) (3 notebooks)
+
+| # | Notebook | Mục đích | Phụ thuộc |
+|---|---|---|---|
+| 13 | `SubCat_PGA_vs_Baseline.ipynb` | So sánh PGA vs U-Net/AttUNet theo nhóm dễ/khó | PGA (#3) + UNet (#1) + AttUNet (#2) ckpt |
+| 14 | `SubCat_PGA_vs_SAM.ipynb` | So sánh PGA vs SAM theo nhóm nhỏ/mờ/rõ nét | PGA (#3) + SAM (#4) ckpt |
+| 15 | `Defense_Comparison_SAM_vs_PGA.ipynb` | So sánh cơ chế phòng vệ: PGA có GradCAM+IPR vs SAM không có | PGA (#3) + SAM (#4) ckpt |
+
+> `Test_app.ipynb` — test end-to-end app.py Gradio với tất cả checkpoints. Chạy **sau cùng** khi đã có đủ mọi checkpoint, mục đích demo sản phẩm, không lấy số liệu báo cáo.
 
 ### Đóng góp 2 — Ghi chú
 - **Ảnh không bệnh** (GV hỏi): Thuộc Đóng góp 2 — xử lý bởi MobileNetV4 gatekeeper (AUC-ROC=0.9514). PGA chỉ nhận ảnh có bệnh đã qua lọc. Ghi rõ trong chapter4.tex là đủ.

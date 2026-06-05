@@ -409,14 +409,12 @@
     \field{labeltitlesource}{title}
     \field{sortinit}{R}
     \field{sortinithash}{R}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted
-  Intervention (MICCAI)}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention (MICCAI)}
     \verb{doi}
     \verb 10.1007/978-3-319-24574-4_28
     \endverb
     \field{pages}{234\bibrangedash 241}
-    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
-  Segmentation}}
+    \field{title}{{U-Net: Convolutional Networks for Biomedical Image Segmentation}}
     \field{year}{2015}
   \endentry
 
@@ -470,8 +468,7 @@
     \endverb
     \field{number}{2}
     \field{pages}{336\bibrangedash 359}
-    \field{title}{{Grad-CAM: Visual Explanations from Deep Networks via
-  Gradient-based Localization}}
+    \field{title}{{Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization}}
     \field{volume}{128}
     \field{journaltitle}{International Journal of Computer Vision}
     \field{year}{2019}
@@ -577,8 +574,7 @@
     \verb 10.1038/s41597-024-04311-y
     \endverb
     \field{pages}{88}
-    \field{title}{{A Radiograph Dataset for the Classification, Localization,
-  and Segmentation of Primary Bone Tumors}}
+    \field{title}{{A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}}
     \field{volume}{12}
     \field{journaltitle}{Scientific Data}
     \field{year}{2025}
