@@ -127,43 +127,6 @@ Một giải pháp lý thuyết triệt để hơn là \textbf{Cơ chế chú ý
 Về mặt khái niệm, bản đồ chú ý lúc này được biểu diễn dưới dạng xác suất có điều kiện: $\boldsymbol{\alpha} = f(\mathbf{x}, \mathbf{g} \mid \mathbf{H})$. Nhờ đó, tại mỗi tầng của bộ giải mã, mạng nơ-ron bị "ép" phải đối chiếu lại các đặc trưng ngữ nghĩa mà nó học được với vùng không gian đã được bác sĩ chỉ định. Bất kỳ tín hiệu đặc trưng nào nằm ngoài vùng kích hoạt của $\mathbf{H}$ sẽ bị ức chế mạnh mẽ, giải quyết triệt để vấn đề mạng cắt lấn sang mô xương lành lân cận. Cơ sở lý thuyết này chính là nền tảng để thiết kế kiến trúc PGA-UNet trong Chương 3 của khóa luận.
  
 % ------------------------------------------------------------
-\section{Phương pháp luận giải thích mô hình (Explainable AI - XAI)}
-\label{sec:xai}
-% ------------------------------------------------------------
-
-\subsection{Sự cần thiết của giải thích mô hình trong y tế}
-
-Trí tuệ nhân tạo (AI) và các mô hình Học sâu (Deep Learning) đã đạt được nhiều thành tựu vượt bậc trong bài toán phân tích hình ảnh y khoa. Tuy nhiên, rào cản lớn nhất ngăn cản việc triển khai AI vào quy trình chẩn đoán lâm sàng thực tế chính là bản chất "hộp đen" (black-box) của chúng. Một mạng nơ-ron có thể đưa ra kết quả phân đoạn với độ chính xác cao, nhưng lại không thể cung cấp lý do hay bằng chứng logic giải thích cho quyết định đó. 
-
-Trong lĩnh vực y tế, một quyết định sai lầm có thể ảnh hưởng trực tiếp đến sức khỏe của bệnh nhân. Do đó, các bác sĩ không thể đặt niềm tin tuyệt đối vào một kết quả dự đoán thiếu minh bạch. Lĩnh vực Trí tuệ Nhân tạo có thể giải thích được (Explainable AI - XAI) ra đời nhằm giải quyết vấn đề này, giúp người dùng hiểu được AI đang "nhìn" vào đâu và dựa vào đặc trưng nào để đưa ra kết luận. 
-
-Đặc biệt trong hệ thống đề xuất của khóa luận, XAI không chỉ đóng vai trò giải thích thụ động cho con người quan sát, mà còn được tích hợp sâu vào luồng xử lý thực thi (Online pipeline) như một \textit{công cụ cứu hộ chủ động}. Khi hệ thống từ chối câu nhắc sai lệch của bác sĩ, XAI được dùng để tìm ra các bằng chứng bệnh lý tiềm ẩn trên ảnh thô, từ đó cung cấp ngược lại gợi ý vị trí để hỗ trợ chuyên gia thao tác lại chính xác hơn.
-
-\subsection{Bản đồ kích hoạt theo gradient (GradCAM)}
-\label{subsec:gradcam}
-
-GradCAM (Gradient-weighted Class Activation Mapping)~\cite{selvaraju2019gradcam} là một trong những kỹ thuật phổ biến và hiệu quả nhất thuộc nhóm XAI. Phương pháp này tạo ra một bản đồ nhiệt (heatmap) thô nhằm trực quan hóa các vùng không gian trên ảnh có mức độ đóng góp cao nhất vào dự đoán cuối cùng của mô hình, mà không yêu cầu phải thay đổi kiến trúc mạng hay huấn luyện lại.
-
-Cơ chế hoạt động của GradCAM dựa trên việc khai thác thông tin đạo hàm (gradients) lan truyền ngược từ đầu ra dự đoán về lại tầng tích chập không gian (thường là tầng tích chập sâu nhất của bộ mã hóa hoặc bộ giải mã). Đối với một lớp đối tượng $c$ (trong bài toán này là vùng tổn thương), gọi $y^c$ là điểm số (score) của lớp đó trước khi đi qua hàm kích hoạt cuối cùng, và $A^k$ là bản đồ đặc trưng thứ $k$ tại tầng tích chập đang xét.
-
-Đầu tiên, hệ số tầm quan trọng (trọng số) $\alpha_k^c$ của bản đồ đặc trưng thứ $k$ đối với lớp $c$ được tính toán bằng cách lấy trung bình toàn cục (Global Average Pooling) của các đạo hàm:
-\begin{equation}
-    \alpha_k^c = \frac{1}{Z} \sum_{i} \sum_{j} \frac{\partial y^c}{\partial A_{i,j}^k}
-    \label{eq:gradcam_weights}
-\end{equation}
-trong đó, $Z$ là tổng số điểm ảnh (kích thước không gian) của bản đồ đặc trưng, $i$ và $j$ là chỉ số tọa độ không gian. Trọng số $\alpha_k^c$ phản ánh mức độ quan trọng của toàn bộ kênh đặc trưng $k$ đối với việc nhận diện đối tượng $c$.
-
-Tiếp theo, bản đồ nhiệt GradCAM được xây dựng bằng cách tính tổng có trọng số của tất cả các bản đồ đặc trưng, sau đó áp dụng hàm kích hoạt ReLU:
-\begin{equation}
-    L_{\text{GradCAM}}^c = \text{ReLU} \left( \sum_k \alpha_k^c A^k \right)
-    \label{eq:gradcam_map}
-\end{equation}
-
-Việc sử dụng hàm ReLU đóng vai trò cực kỳ quan trọng: nó loại bỏ tất cả các giá trị âm (đại diện cho những vùng không gian có ảnh hưởng tiêu cực đến dự đoán thuộc lớp $c$), và chỉ giữ lại những vùng có đóng góp tích cực. Kết quả trả về là một bản đồ nhiệt không gian, sau đó được phóng to (upsample) về kích thước ảnh gốc để rọi lên ảnh X-quang. 
-
-Trong phạm vi của khóa luận, điểm ảnh có giá trị cường độ cực đại trên bản đồ nhiệt $L_{\text{GradCAM}}^c$ chính là "vị trí có đặc trưng bệnh lý đáng ngờ nhất". Tọa độ không gian này sẽ được hệ thống trích xuất tự động để làm điểm neo trung tâm cho thuật toán cứu hộ và nắn nét IPR.
- 
-% ------------------------------------------------------------
 \section{Các độ đo đánh giá hiệu năng}
 \label{sec:metrics}
 % ------------------------------------------------------------
@@ -225,7 +188,7 @@ Do công thức $\text{HD}$ cơ bản sử dụng hàm cực đại ($\max$ và 
 \subsection{Độ chuẩn xác định vị tâm (CBL)}
 \label{subsec:cbl}
 
-Hệ số Dice và HD95 đánh giá chất lượng phân đoạn đầu ra, nhưng không phản ánh được mức độ hội tụ về mặt vị trí của câu nhắc trong quá trình chạy thuật toán IPR. Để phục vụ việc đánh giá khả năng tự nắn nét của hệ thống, khóa luận sử dụng độ đo Độ chuẩn xác định vị tâm (Center-Based Localization - CBL).
+Hệ số Dice và HD95 đánh giá chất lượng phân đoạn đầu ra, nhưng không phản ánh được độ lệch không gian giữa tâm dự đoán và tâm tổn thương thực tế. Để đánh giá tính chính xác định vị không gian của hệ thống trong các kịch bản câu nhắc bị lệch, khóa luận sử dụng độ đo Độ chuẩn xác định vị tâm (Center-Based Localization - CBL).
 
 CBL đo lường khoảng cách hình học giữa tâm của mặt nạ dự đoán và tâm của mặt nạ gốc, sau đó được chuẩn hóa bởi kích thước của đối tượng để đảm bảo tính công bằng khi đánh giá các khối u có kích thước khác nhau.
 \begin{equation}
@@ -242,4 +205,4 @@ trong đó, $(x_p, y_p)$ là tọa độ tâm của vùng dự đoán, $(x_g, y_
  
 Chương 2 đã cung cấp bức tranh toàn cảnh và các cơ sở lý thuyết toán học vững chắc làm nền tảng cho khóa luận. Việc khảo sát ba kiến trúc đối sánh chính (U-Net, Attention U-Net, SAM-Med2D) làm nổi bật khoảng trống nghiên cứu: cần một kiến trúc CNN hạng nhẹ tích hợp câu nhắc trực quan từ bác sĩ và có cơ chế phòng vệ khi câu nhắc sai.
 
-Bên cạnh đó, các lý thuyết về chuyển đổi hộp giới hạn thành bản đồ nhiệt, Cổng chú ý có điều kiện, và thuật toán GradCAM là những nền tảng cốt lõi sẽ được tích hợp vào kiến trúc PGA-UNet trình bày ở Chương 3.
+Bên cạnh đó, các lý thuyết về chuyển đổi hộp giới hạn thành bản đồ nhiệt, Cổng chú ý có điều kiện, là những nền tảng cốt lõi sẽ được tích hợp vào kiến trúc PGA-UNet trình bày ở Chương 3.

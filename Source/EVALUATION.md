@@ -49,16 +49,21 @@
 | main.pdf compile không lỗi (110 trang, 3.9MB) | ✅ Xong (04/06) |
 | references.bib — 8 entry đúng tác giả từ PDF | ✅ |
 
-### Việc còn lại trước 12/06 (deadline 8 ngày)
+### Việc còn lại trước 12/06 (deadline 6 ngày — cập nhật 06/06)
+
+> **Quyết định 06/06:** Bỏ GradCAM khỏi hệ thống. IPR được reframe thành "Normal Flow IPR" — chạy trên toàn bộ test set, không phụ thuộc GradCAM.
 
 | # | Việc | Ưu tiên |
 |---|---|---|
 | 1 | **V5 retrain** → chốt số hàng V5 `tab:ablation_arch` | 🔴 Gấp |
 | 2 | **Cross-validation** → điền `tab:cross_validation` (mục E) | 🔴 Gấp |
-| 3 | **IPR k=2,3** → chạy `PGA_Ablation.ipynb` → điền `tab:ipr_convergence` | 🟠 Trung bình |
-| 4 | **Cascading error thực nghiệm** → tập test hỗn hợp | 🟡 Nếu còn thời gian |
-| 5 | **3 ảnh sub-category** → thêm vào chapter4.tex (line 508) | 🟡 Nhỏ |
-| 6 | **Compile main.pdf lần cuối** sau khi điền hết số | ⬜ Cuối cùng |
+| 3 | **PGA trên dataset chưa xử lý (raw)** → Dice/IoU/HD95/CBL × 3 modes làm baseline so sánh | 🔴 Gấp |
+| 4 | **PGA trên dataset đã xử lý (preprocessed)** → so sánh với raw để chứng minh giá trị tiền xử lý | 🔴 Gấp |
+| 5 | **IPR k=1..5** → chạy `Source/PGA_IPR.ipynb` → điền `tab:ipr_convergence` (k=0 baseline vs k=1..5) | 🟠 Trung bình |
+| 6 | **Dọn GradCAM khỏi report** → xóa `sec:pipeline_defense`, `tab:gradcam_rescue`, sửa chapter3/4/5 | 🟠 Trung bình |
+| 7 | **Cascading error thực nghiệm** → tập test hỗn hợp | 🟡 Nếu còn thời gian |
+| 8 | **3 ảnh sub-category** → thêm vào chapter4.tex (line 508) | 🟡 Nhỏ |
+| 9 | **Compile main.pdf lần cuối** sau khi điền hết số | ⬜ Cuối cùng |
 
 ---
 

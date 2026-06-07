@@ -7,7 +7,7 @@
                 <mxCell id="xray" value="&lt;b&gt;Ảnh X-quang&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="100" y="15" width="140" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="gate" value="&lt;b&gt;MobileNetV4&lt;/b&gt;&lt;br&gt;Phân loại tổn thương xương&lt;br&gt;Acc = 88%  |  F1 = 88%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="gate" value="&lt;b&gt;MobileNetV4&lt;/b&gt;&lt;br&gt;Phân loại tổn thương xương" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="80" y="83" width="180" height="65" as="geometry"/>
                 </mxCell>
                 <mxCell id="dec1" value="Phát hiện&lt;br&gt;tổn thương?&lt;div&gt;Có / Không&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
@@ -28,28 +28,27 @@
                 <mxCell id="prompt0" value="&lt;b&gt;Sinh Prompt₀&lt;/b&gt;&lt;br&gt;BBox → Gaussian heatmap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="385" y="545" width="165" height="55" as="geometry"/>
                 </mxCell>
-                <mxCell id="pga_init" value="&lt;b&gt;PGA-UNet — Inference₀&lt;/b&gt;&lt;br&gt;(image, Prompt₀) → Prediction₀&lt;br&gt;&lt;i&gt;Forward pass lần đầu&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                <mxCell id="pga_init" value="&lt;b&gt;PGA-UNet Inference₀&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
                     <mxGeometry x="375" y="630" width="185" height="65" as="geometry"/>
                 </mxCell>
-                <mxCell id="dec_rescue" value="Cần cứu hộ?&lt;br&gt;&lt;font style=&#39;font-size:10px;&#39;&gt;① Prompt &gt;70% đen&lt;br&gt;② Prediction &lt; 50px&lt;br&gt;③ Confidence &lt; 0.25&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" parent="1" vertex="1">
+                <mxCell id="dec_rescue" value="Câu nhắc&lt;br&gt;hợp lệ?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" parent="1" vertex="1">
                     <mxGeometry x="368" y="725" width="200" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="fout_normal" value="&lt;b&gt;Output: Binary Mask Đỏ&lt;/b&gt;&lt;br&gt;Overlay Prediction₀ lên ảnh gốc&lt;br&gt;&lt;i&gt;(Gradio UI — Mask Đỏ)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                <mxCell id="fout_normal" value="&lt;b&gt;Output: Mặt nạ phân đoạn&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
                     <mxGeometry x="375" y="880" width="190" height="65" as="geometry"/>
                 </mxCell>
-                <mxCell id="pred_empty" value="&lt;b&gt;Dự đoán rỗng&lt;/b&gt;&lt;br&gt;model(ảnh, Zero Prompt) → Mask = ∅&lt;br&gt;&lt;i&gt;✅ Achievement 1: Bảo hộ kích hoạt&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=0;fontSize=11;" parent="1" vertex="1">
+                <mxCell id="pred_empty" value="&lt;b&gt;Mặt nạ rỗng&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=0;fontSize=11;" parent="1" vertex="1">
                     <mxGeometry x="655" y="740" width="210" height="72" as="geometry"/>
                 </mxCell>
-                <mxCell id="gcam_mode" value="&lt;b&gt;GradCAM Mode&lt;/b&gt;&lt;br&gt;Trích GradCAM từ Zero Prompt pass&lt;br&gt;→ Peak activation → Prompt₁" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="660" y="840" width="200" height="72" as="geometry"/>
+                
                 </mxCell>
-                <mxCell id="ipr_gcam" value="&lt;b&gt;IPR k = 3&lt;/b&gt;&lt;br&gt;PGA-UNet(image, prompt_t) → pred_t&lt;br&gt;prompt_{t+1} = centroid(pred_t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                <mxCell id="ipr_gcam" value="&lt;b&gt;IPR (k=1…5)&lt;/b&gt;&lt;br&gt;Iterative Prompt Refinement" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
                     <mxGeometry x="655" y="950" width="210" height="72" as="geometry"/>
                 </mxCell>
                 <mxCell id="lcc" value="&lt;b&gt;LCC Extraction&lt;/b&gt;&lt;br&gt;Lấy vùng liên thông lớn nhất, loại noise" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="655" y="1065" width="210" height="55" as="geometry"/>
                 </mxCell>
-                <mxCell id="fout_rescue" value="&lt;b&gt;Output: Binary Mask Xanh&lt;/b&gt;&lt;br&gt;Overlay IPR mask + Rescue Box&lt;br&gt;&lt;i&gt;(Gradio UI — Mask Xanh + Box Vàng)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                <mxCell id="fout_rescue" value="&lt;b&gt;Output: Mặt nạ IPR&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
                     <mxGeometry x="650" y="1170" width="220" height="65" as="geometry"/>
                 </mxCell>
                 <mxCell id="a_xg" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="xray" target="gate" edge="1">

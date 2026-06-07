@@ -61,7 +61,7 @@
                 <mxCell id="s3b" value="&lt;b&gt;Sinh Gaussian Heatmap Prompt₀&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="624" width="250" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="s3c" value="&lt;b&gt;PGA-UNet Phân đoạn&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;(Image, Prompt₀) → Prediction₀&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="s3c" value="&lt;b&gt;PGA-UNet Phân đoạn&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="692" width="250" height="55" as="geometry"/>
                 </mxCell>
 
@@ -72,12 +72,12 @@
                 <mxCell id="s4a" value="&lt;b&gt;Kiểm tra an toàn câu nhắc&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="786" width="250" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="s4b" value="&lt;b&gt;IPR / GradCAM Rescue&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Tinh chỉnh câu nhắc tự động (k=3)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="s4b" value="&lt;b&gt;IPR&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Tinh chỉnh câu nhắc tự động (k=1…5)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="854" width="250" height="55" as="geometry"/>
                 </mxCell>
 
                 <!-- OUTPUT -->
-                <mxCell id="out" value="&lt;b&gt;Kết quả phân đoạn&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Binary Mask + GradCAM Overlay&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="out" value="&lt;b&gt;Kết quả phân đoạn&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Binary Mask&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="930" width="250" height="55" as="geometry"/>
                 </mxCell>
 

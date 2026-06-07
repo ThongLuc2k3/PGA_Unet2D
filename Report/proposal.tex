@@ -121,8 +121,6 @@
     Mục tiêu chính của đề tài là xây dựng một hệ thống hỗ trợ chẩn đoán hình ảnh toàn diện, giúp bác sĩ bóc tách nhanh chóng và chính xác các cấu trúc xương tổn thương. Cụ thể:
     \begin{itemize}
         \item Nghiên cứu và triển khai kiến trúc \textbf{PGA-UNet} với hai thành phần cải tiến: Cổng không gian (Prompt Spatial Gate) ở Encoder và Cơ chế chú ý có điều kiện (Conditioned Attention) ở Decoder.
-        \item Xây dựng quy trình \textbf{IPR} (Sequential Prompt Refinement) giúp hệ thống tự động tinh chỉnh câu nhắc, tăng độ sắc nét cho đường biên phân đoạn.
-        \item Phát triển cơ chế cứu hộ bằng \textbf{GradCAM} để hỗ trợ tìm kiếm vùng nghi ngờ khi người dùng cung cấp câu nhắc sai lệch hoàn toàn.
         \item Đạt được hiệu năng phân đoạn vượt trội so với các mô hình tự động truyền thống, với chỉ số Dice dự kiến trên 85\%.
     \end{itemize}
     
@@ -138,13 +136,13 @@
     Thực hiện tiền xử lý ảnh (loại bỏ ký tự nhiễu, cân bằng histogram). Huấn luyện mô hình phân lớp bệnh lý để sàng lọc ban đầu và mô hình PGA-UNet để phân đoạn. Câu nhắc trong giai đoạn này được sinh tự động từ nhãn gốc dưới dạng bản đồ nhiệt Gaussian (Gaussian Heatmap).
     
     \textbf{2. Giai đoạn suy luận tương tác (Online):} 
-    Tích hợp các mô hình vào giao diện phần mềm. Khi bác sĩ khoanh vùng (Bounding Box), hệ thống chuyển đổi thành câu nhắc trực quan để kích hoạt PGA-UNet. Kết quả sau đó đi qua module kiểm duyệt \textbf{IPR}: nếu câu nhắc bị lệch, thuật toán sẽ tự động dịch chuyển tâm để nắn sát lại mục tiêu. Nếu câu nhắc sai hoàn toàn, hệ thống sử dụng \textbf{GradCAM} để gợi ý lại vùng tổn thương cho bác sĩ.
+    Tích hợp các mô hình vào giao diện phần mềm. Khi bác sĩ khoanh vùng (Bounding Box), hệ thống chuyển đổi thành câu nhắc trực quan để kích hoạt PGA-UNet và trả về mặt nạ phân đoạn.
 
     \vspace{.5cm}
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.9\textwidth]{images/Overview.pdf}
-        \caption{Sơ đồ kiến trúc tổng thể của hệ thống đề xuất (PGA-UNet và IPR Pipeline)}
+        \caption{Sơ đồ kiến trúc tổng thể của hệ thống đề xuất (PGA-UNet Pipeline)}
         \label{fig:sodo_pga}
     \end{figure}
     \vspace{.5cm}
@@ -156,7 +154,7 @@
     Sản phẩm của đề tài bao gồm một hệ thống hoàn chỉnh với các kết quả định lượng và định tính như sau:
     \begin{itemize}
         \item \textbf{Định lượng:} Mô hình PGA-UNet đạt chỉ số Dice Similarity Coefficient (DSC) $\approx$ 86\% và IoU $\approx$ 76\%, vượt xa các Baseline U-Net ($\approx$ 38\%) trên cùng tập dữ liệu kiểm thử 248 ảnh.
-        \item \textbf{Định tính:} Khả năng chịu lỗi (fault tolerance) tốt trước các sai số của người dùng nhờ thuật toán IPR. Tốc độ suy luận đạt mức thời gian thực (< 1 giây/ảnh).
+        \item \textbf{Định tính:} Tính bền bỉ (robustness) tốt trước các sai số của người dùng. Tốc độ suy luận đạt mức thời gian thực (< 1 giây/ảnh).
         \item \textbf{Sản phẩm:} Bộ mã nguồn huấn luyện/suy luận ổn định, bộ trọng số mô hình đã tối ưu, và ứng dụng Demo cho phép bác sĩ tương tác trực tiếp bằng câu nhắc.
     \end{itemize}
 
@@ -181,8 +179,8 @@
     
     12/03 - 22/03/2026 & Huấn luyện mô hình phân lớp sàng lọc và PGA-UNet cơ bản. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
     
-    23/03 - 30/04/2026 & Phát triển module IPR và GradCAM để tăng tính bền bỉ cho hệ thống. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
-    
+    23/03 - 30/04/2026 & Thực nghiệm và đánh giá tính bền bỉ (robustness) của hệ thống. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
+
     01/05 - 20/05/2026 & Tinh chỉnh siêu tham số, huấn luyện với hàm mất mát kết hợp BCE-Dice. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
     
     21/05 - 05/06/2026 & Đánh giá hiệu năng trên 248 ảnh test, so sánh với Baseline U-Net. & Nguyễn Hữu Bình, Thông Lúc \\ \hline

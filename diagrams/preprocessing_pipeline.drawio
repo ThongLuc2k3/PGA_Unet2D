@@ -9,7 +9,7 @@
                     <mxGeometry x="225" y="20" width="250" height="48" as="geometry"/>
                 </mxCell>
 
-                <mxCell id="s1" value="&lt;b&gt;Bước 1&lt;/b&gt; — Chuyển JPEG → PNG&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;(Xóa ICC Profile)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="s1" value="&lt;b&gt;Bước 1&lt;/b&gt; — Chuyển JPEG → PNG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="225" y="98" width="250" height="55" as="geometry"/>
                 </mxCell>
 
@@ -17,7 +17,7 @@
                     <mxGeometry x="225" y="183" width="250" height="48" as="geometry"/>
                 </mxCell>
 
-                <mxCell id="s3" value="&lt;b&gt;Bước 3&lt;/b&gt; — Đánh nhãn Bounding Box thủ công&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;(2000 / 3746 ảnh)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="s3" value="&lt;b&gt;Bước 3&lt;/b&gt; — Đánh nhãn Bounding Box thủ công" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="225" y="261" width="250" height="55" as="geometry"/>
                 </mxCell>
 
@@ -33,7 +33,7 @@
                     <mxGeometry x="225" y="502" width="250" height="48" as="geometry"/>
                 </mxCell>
 
-                <mxCell id="s7" value="&lt;b&gt;Chuẩn hóa thang xám + Resize 512×512&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="s7" value="&lt;b&gt;Chuẩn hóa &amp; Resize&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="225" y="580" width="250" height="48" as="geometry"/>
                 </mxCell>
 

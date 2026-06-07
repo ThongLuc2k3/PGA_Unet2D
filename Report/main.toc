@@ -1,7 +1,7 @@
 \contentsline {chapter}{Lời cảm ơn}{i}{Doc-Start}%
 \contentsline {chapter}{Đề cương chi tiết}{ii}{chapter*.1}%
 \contentsline {chapter}{Mục lục}{iv}{section*.6}%
-\contentsline {chapter}{Tóm tắt}{xiv}{chapter*.9}%
+\contentsline {chapter}{Tóm tắt}{vi}{chapter*.9}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%
@@ -11,88 +11,73 @@
 \contentsline {subsection}{\numberline {1.3.1}Giai đoạn huấn luyện (Offline)}{3}{subsection.1.3.1}%
 \contentsline {subsection}{\numberline {1.3.2}Giai đoạn suy luận (Online)}{5}{subsection.1.3.2}%
 \contentsline {paragraph}{Kịch bản 1: Câu nhắc hợp lệ (Luồng bình thường)}{6}{section*.16}%
-\contentsline {paragraph}{Kịch bản 2: Câu nhắc sai lệch quá xa (Luồng cứu hộ thông minh)}{6}{section*.17}%
-\contentsline {subsection}{\numberline {1.3.3}Cấu trúc ngữ nghĩa của câu nhắc trực quan}{7}{subsection.1.3.3}%
-\contentsline {section}{\numberline {1.4}Thách thức của bài toán}{7}{section.1.4}%
-\contentsline {section}{\numberline {1.5}Quá trình phát triển hướng tiếp cận}{8}{section.1.5}%
-\contentsline {section}{\numberline {1.6}Đóng góp của khóa luận}{9}{section.1.6}%
-\contentsline {section}{\numberline {1.7}Bố cục của khóa luận}{10}{section.1.7}%
-\contentsline {chapter}{\numberline {2}CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{12}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Các công trình liên quan}{12}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Các phương pháp phân đoạn ảnh y khoa tự động}{12}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Phương pháp học máy tương tác trong y khoa}{13}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2}Cơ sở lý thuyết nền tảng}{15}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Mạng nơ-ron tích chập (CNN)}{15}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Kiến trúc U-Net}{15}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {1.3.3}Cấu trúc ngữ nghĩa của câu nhắc trực quan}{6}{subsection.1.3.3}%
+\contentsline {section}{\numberline {1.4}Thách thức của bài toán}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Quá trình phát triển hướng tiếp cận}{7}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Đóng góp của khóa luận}{8}{section.1.6}%
+\contentsline {section}{\numberline {1.7}Bố cục của khóa luận}{9}{section.1.7}%
+\contentsline {chapter}{\numberline {2}CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{10}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Các công trình liên quan}{10}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Các phương pháp phân đoạn ảnh y khoa tự động}{10}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Phương pháp học máy tương tác trong y khoa}{11}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Cơ sở lý thuyết nền tảng}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Mạng nơ-ron tích chập (CNN)}{13}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Kiến trúc U-Net}{14}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Cơ chế chú ý và kiến trúc Attention U-Net}{16}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3}Học máy dựa trên câu nhắc trong thị giác máy tính}{17}{section.2.3}%
+\contentsline {section}{\numberline {2.3}Học máy dựa trên câu nhắc trong thị giác máy tính}{18}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Biểu diễn không gian của câu nhắc trực quan}{18}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Cơ chế chú ý có điều kiện}{19}{subsection.2.3.2}%
-\contentsline {section}{\numberline {2.4}Phương pháp luận giải thích mô hình (Explainable AI - XAI)}{20}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Sự cần thiết của giải thích mô hình trong y tế}{20}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Bản đồ kích hoạt theo gradient (GradCAM)}{21}{subsection.2.4.2}%
-\contentsline {section}{\numberline {2.5}Các độ đo đánh giá hiệu năng}{22}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}Hệ số Dice và chỉ số IoU}{23}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}Độ chính xác (Precision) và Độ bao phủ (Recall)}{23}{subsection.2.5.2}%
-\contentsline {subsection}{\numberline {2.5.3}Khoảng cách Hausdorff 95\% (HD95)}{24}{subsection.2.5.3}%
-\contentsline {subsection}{\numberline {2.5.4}Độ chuẩn xác định vị tâm (CBL)}{25}{subsection.2.5.4}%
-\contentsline {section}{\numberline {2.6}Tổng kết chương}{25}{section.2.6}%
-\contentsline {chapter}{\numberline {3}MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{27}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Kiến trúc tổng thể của hệ thống}{27}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{29}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{29}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{31}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Quy trình tiền xử lý và loại bỏ nhiễu}{32}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Gán nhãn phân đoạn và định dạng dữ liệu}{35}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}Chuẩn hóa và tăng cường dữ liệu}{36}{subsection.3.2.5}%
-\contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{37}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{37}{subsection.3.3.1}%
-\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{38}{section*.19}%
-\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{38}{section*.20}%
-\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{39}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{40}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{42}{subsection.3.3.4}%
-\contentsline {section}{\numberline {3.4}Hệ thống phòng vệ và tinh chỉnh câu nhắc tự động (IPR)}{43}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Cơ chế kiểm duyệt câu nhắc và phát hiện lệch tâm}{44}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Giải pháp cứu hộ dự phòng bằng GradCAM}{45}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Thuật toán tinh chỉnh câu nhắc tuần tự (Iterative Prompt Refinement - IPR)}{45}{subsection.3.4.3}%
-\contentsline {section}{\numberline {3.5}Mô hình phân lớp bệnh lý (Gatekeeper)}{46}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}{46}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Kiến trúc và chiến lược tinh chỉnh}{47}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Vai trò trong hệ thống tổng thể}{48}{subsection.3.5.3}%
-\contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{51}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{51}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{52}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{53}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Chiến lược tái lấy mẫu và đánh giá độ ổn định (Cross-Validation)}{55}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{55}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs. Attention U-Net vs. PGA-UNet}{56}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{57}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{58}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{60}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}Đánh giá độ ổn định kết quả (Cross-Validation)}{61}{subsection.4.2.5}%
-\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{61}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Phân tích đóng góp kiến trúc và mã hóa câu nhắc}{61}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Ablation kiến trúc: Đóng góp của PSG và CAD}{63}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{63}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{66}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{66}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Trực quan hóa pipeline cứu hộ GradCAM + IPR}{69}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Trực quan hóa theo đặc tính tổn thương (Sub-Category)}{72}{subsection.4.4.3}%
-\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{72}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{72}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Tổng quan Đóng góp 2: Sản phẩm phần mềm lâm sàng}{73}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Đánh giá cơ chế phòng vệ câu nhắc (GradCAM + IPR Rescue)}{74}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Hiệu năng của hệ thống gợi ý cứu hộ GradCAM}{74}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Sự hội tụ của IPR trong pipeline cứu hộ GradCAM}{76}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Phân tích giới hạn GradCAM trong kịch bản câu nhắc sai hoàn toàn}{76}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}So sánh khả năng phòng vệ: PGA-UNet và SAM-Med2D}{77}{subsection.4.7.4}%
-\contentsline {section}{\numberline {4.8}Đánh giá mô hình phân lớp gác cổng (MobileNetV4)}{78}{section.4.8}%
-\contentsline {subsection}{\numberline {4.8.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{79}{subsection.4.8.1}%
-\contentsline {section}{\numberline {4.9}Tích hợp và đánh giá ứng dụng lâm sàng (app.py)}{81}{section.4.9}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{85}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{85}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{86}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{87}{section.5.3}%
-\contentsline {chapter}{Danh mục công trình của tác giả}{90}{equation.5.3.1}%
-\contentsline {chapter}{Tài liệu tham khảo}{91}{Item.36}%
+\contentsline {section}{\numberline {2.4}Các độ đo đánh giá hiệu năng}{20}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Hệ số Dice và chỉ số IoU}{20}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Độ chính xác (Precision) và Độ bao phủ (Recall)}{21}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Khoảng cách Hausdorff 95\% (HD95)}{22}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Độ chuẩn xác định vị tâm (CBL)}{23}{subsection.2.4.4}%
+\contentsline {section}{\numberline {2.5}Tổng kết chương}{23}{section.2.5}%
+\contentsline {chapter}{\numberline {3}MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{24}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Kiến trúc tổng thể của hệ thống}{24}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{27}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{27}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{28}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Quy trình tiền xử lý và loại bỏ nhiễu}{29}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Gán nhãn phân đoạn và định dạng dữ liệu}{31}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}Chuẩn hóa và tăng cường dữ liệu}{32}{subsection.3.2.5}%
+\contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{33}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{34}{subsection.3.3.1}%
+\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{34}{section*.17}%
+\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{35}{section*.18}%
+\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{36}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{37}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{38}{subsection.3.3.4}%
+\contentsline {section}{\numberline {3.4}Mô hình phân lớp bệnh lý (Gatekeeper)}{40}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}{40}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Kiến trúc và chiến lược tinh chỉnh}{41}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Vai trò trong hệ thống tổng thể}{42}{subsection.3.4.3}%
+\contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{45}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{45}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{46}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{47}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Chiến lược tái lấy mẫu và đánh giá độ ổn định (Cross-Validation)}{48}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{49}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs. Attention U-Net vs. PGA-UNet}{49}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{51}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{52}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{54}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Đánh giá độ ổn định kết quả (Cross-Validation)}{54}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{55}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{55}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Đánh giá theo đặc tính tổn thương (Sub-Category)}{56}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{58}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{58}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Trực quan hóa theo đặc tính tổn thương (Sub-Category)}{59}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{59}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{68}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Tổng quan Đóng góp 2: Sản phẩm phần mềm lâm sàng}{68}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng (MobileNetV4)}{69}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{72}{subsection.4.7.1}%
+\contentsline {section}{\numberline {4.8}Tích hợp và đánh giá ứng dụng lâm sàng (app.py)}{73}{section.4.8}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{76}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{76}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{77}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{78}{section.5.3}%
+\contentsline {chapter}{Danh mục công trình của tác giả}{80}{equation.5.3.1}%
+\contentsline {chapter}{Tài liệu tham khảo}{81}{Item.19}%

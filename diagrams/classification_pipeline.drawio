@@ -10,7 +10,7 @@
                 <mxCell id="pre" value="&lt;b&gt;Resize &amp; Chuẩn hóa&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="98" width="250" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="model" value="&lt;b&gt;MobileNetV4-Hybrid-Medium&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Pretrained ImageNet → Fine-tune 2 giai đoạn trên BTXRD&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="model" value="&lt;b&gt;MobileNetV4-Hybrid-Medium&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="275" y="176" width="250" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="head" value="&lt;b&gt;Lớp phân lớp + Sigmoid&lt;/b&gt; → &lt;i&gt;p&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
@@ -25,7 +25,7 @@
                 <mxCell id="no" value="&lt;b&gt;BÌNH THƯỜNG&lt;/b&gt;&lt;br&gt;Kết thúc" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="577.5" y="356.5" width="170" height="55" as="geometry"/>
                 </mxCell>
-                <mxCell id="ft" value="Giai đoạn 1: Warmup — đóng băng backbone&lt;br&gt;Giai đoạn 2: Full fine-tune toàn bộ mạng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=2;" parent="1" vertex="1">
+                <mxCell id="ft" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=2;" parent="1" vertex="1">
                     <mxGeometry x="570" y="176" width="185" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="e_ft" value="" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#d79b00;" parent="1" source="model" target="ft" edge="1">
