@@ -25,7 +25,6 @@
 | YOLOv11s | Phát hiện và xóa nhiễu R/L trong tiền xử lý | ultralytics v8 |
 | Google Colab | Môi trường huấn luyện (GPU T4/A100) | colab.research.google.com |
 | OpenCV | Xử lý ảnh, tạo Plateau Heatmap, inpainting | cv2 ≥ 4.5 |
-| Gradio | Giao diện demo ứng dụng app.py | gradio.app |
 
 ---
 

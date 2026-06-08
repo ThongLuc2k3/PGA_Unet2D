@@ -10,7 +10,7 @@
 | Nhóm | File | Số lượng |
 |---|---|---|
 | PGA-UNet kết quả chính | `pga-unet2d_01.png`, `vis_pga_01.png` | 2 |
-| U-Net kết quả | `unet2d_01-10.png`, `vis_unet2d_01.png` (tham khảo) | 10 |
+| U-Net kết quả | `unet2d_01-10.png` | 10 |
 | Attention U-Net | `attention-unet2d_01-10.png`, `vis_attunet_01.png` | 11 |
 | SAM-Med2D fine-tuned | `finetune-sammed2d-test-robust_01-10.png`, `vis_sam_ft_01.png` | 11 |
 | SAM-Med2D zero-shot | `sammed2d-zeroshot_01-10.png` | 10 |

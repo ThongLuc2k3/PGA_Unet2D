@@ -2,7 +2,7 @@
 
 > Toàn bộ số liệu được thực nghiệm trên Google Colab (GPU). Kết quả có thể xem lại trong các notebook tại `Result/`.  
 > **Đóng góp 1** đánh giá PGA-UNet thuần túy — số liệu sạch để so sánh công bằng với baseline.  
-> **Đóng góp 2** đánh giá pipeline lâm sàng hoàn chỉnh, thừa nhận sai số tích lũy từ bộ lọc sàng lọc.
+> **Đóng góp 2** đánh giá pipeline khi có EfficientNet_B3 hỗ trợ sàng lọc — thừa nhận sai số tích lũy từ bộ lọc.
 
 ---
 
