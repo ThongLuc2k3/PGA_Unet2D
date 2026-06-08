@@ -6,6 +6,6 @@ Khóa luận này nghiên cứu và phát triển một hệ thống hỗ trợ 
 
 \textbf{Giải pháp:} Khóa luận đề xuất kiến trúc PGA-UNet (Prompt-Guided Attention U-Net), tích hợp Cổng không gian (Prompt Spatial Gate) tại bộ mã hóa và Cơ chế chú ý có điều kiện (Conditioned Attention) tại bộ giải mã, cho phép mô hình CNN hạng nhẹ tiếp nhận và khai thác hiệu quả thông tin câu nhắc từ bác sĩ.
 
-\textbf{Kết quả:} Trên tập kiểm thử gồm 248 mẫu ảnh X-quang xương, PGA-UNet vượt trội so với U-Net gốc và Attention U-Net trong điều kiện so sánh khác paradigm (tương tác so với tự động). Mô hình thể hiện tính bền bỉ cao khi câu nhắc bị lệch (Dice giảm không đáng kể trong kịch bản 100\% Shift). Toàn bộ hệ thống được tích hợp vào ứng dụng phần mềm với thời gian phản hồi dưới 200ms.
+\textbf{Kết quả:} Trên tập kiểm thử 232~mẫu ảnh X-quang xương, PGA-UNet đạt Dice = 0.8524 (Zoom-out), vượt trội so với U-Net (0.4534) và SAM-Med2D fine-tuned (0.7350) trong điều kiện so sánh khác paradigm (tương tác so với tự động). Mô hình thể hiện tính bền bỉ cao khi câu nhắc bị lệch: Dice = 0.8382 ở kịch bản 100\% Shift, chênh lệch chỉ 0.0142 so với câu nhắc lý tưởng. Toàn bộ hệ thống được tích hợp vào ứng dụng phần mềm hỗ trợ chẩn đoán.
 
 \textbf{Từ khóa:} Phân đoạn ảnh y khoa, câu nhắc trực quan, X-quang xương, U-Net, phân đoạn tương tác.

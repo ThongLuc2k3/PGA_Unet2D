@@ -1,246 +1,239 @@
 # Minh Chứng Hình Ảnh
 
-> Đề tài có hai đóng góp tách biệt. Hình ảnh Đóng góp 1 minh họa kiến trúc PGA-UNet và kết quả phân đoạn thuần túy. Hình ảnh Đóng góp 2 minh họa pipeline lâm sàng hoàn chỉnh.  
-> Tất cả ảnh nằm trong thư mục `images/` (25 file PNG).
+> Tất cả ảnh được trích xuất từ notebook thực nghiệm trong `Result/` và lưu tại thư mục `images/` (68 file PNG).  
+> Xem số liệu chi tiết tương ứng tại **02_Minh_Chung_So_Lieu.md**.
 
 ---
 
-## Tổng Quan Ảnh
+## Tổng Quan Hình Ảnh (68 file)
 
-| File | Đóng góp | Nhóm | Nội dung |
-|---|---|---|---|
-| `diagram_pga.png` | 1 | Kiến trúc | PGA-UNet với PSG + CAD |
-| `diagram_unet.png` | 1 | Kiến trúc | U-Net baseline |
-| `diagram_attunet.png` | 1 | Kiến trúc | Attention U-Net |
-| `diagram_sammed2d.png` | 1 | Kiến trúc | SAM-Med2D (ViT-B + Adapter) |
-| `vis_pga_1.png` | 1 | Kết quả PGA | IMG001768 — Zoom-out vs Shift |
-| `vis_pga_2.png` | 1 | Kết quả PGA | IMG001538 — Pipeline cứu hộ GradCAM+IPR |
-| `vis_pga_3.png` | 1 | Kết quả PGA | IMG001100 — Tổn thương lớn |
-| `vis_sam_1.png` | 1 | So sánh SAM | IMG001768 — 3 kịch bản |
-| `vis_sam_2.png` | 1 | So sánh SAM | IMG001538 — hạn chế 256px |
-| `vis_unet_1.png` | 1 | So sánh baseline | U-Net — over-segmentation |
-| `vis_unet_2.png` | 1 | So sánh baseline | U-Net — mẫu bổ sung |
-| `vis_attunet_1.png` | 1 | So sánh baseline | Attention U-Net — attention khuếch đại nhiễu |
-| `vis_attunet_2.png` | 1 | So sánh baseline | Attention U-Net — mặt nạ lệch hoàn toàn |
-| `ablation_v1_visualization.png` | 1 | Ablation | V1 (Concat) — 10 mẫu test |
-| `ablation_v2_visualization.png` | 1 | Ablation | V2 (PSG only) — 10 mẫu test |
-| `ablation_v3_visualization.png` | 1 | Ablation | V3 (CAD only) — 10 mẫu test |
-| `ablation_v4_visualization.png` | 1 | Ablation | V4 (Full + Binary bbox) — 10 mẫu test |
-| `system_architecture.png` | 2 | Hệ thống | Sơ đồ tổng thể 4 giai đoạn pipeline |
-| `preprocessing_pipeline.png` | 2 | Hệ thống | Quy trình tiền xử lý 6 bước |
-| `classification_evaluation.png` | 2 | Phân lớp | Confusion matrix + ROC AUC=0.9514 |
-| `gradcam_ipr_rescue_1.png` | 2 | GradCAM Rescue | 174 mẫu câu nhắc sai — nhóm 1 |
-| `gradcam_ipr_rescue_2.png` | 2 | GradCAM Rescue | 174 mẫu câu nhắc sai — nhóm 2 |
-| `defense_pga_rescue_vis.png` | 2 | So sánh phòng vệ | PGA GradCAM rescue vs Ground Truth |
-| `defense_sam_dark_corner.png` | 2 | So sánh phòng vệ | SAM-Med2D câu nhắc góc tối — không có cứu hộ |
-| `app_interface.png` | 2 | Ứng dụng | Giao diện Gradio end-to-end |
+| Nhóm | File | Số lượng |
+|---|---|---|
+| PGA-UNet kết quả chính | `pga-unet2d_01.png`, `vis_pga_01.png` | 2 |
+| U-Net kết quả | `unet2d_01-10.png`, `vis_unet2d_01.png` (tham khảo) | 10 |
+| Attention U-Net | `attention-unet2d_01-10.png`, `vis_attunet_01.png` | 11 |
+| SAM-Med2D fine-tuned | `finetune-sammed2d-test-robust_01-10.png`, `vis_sam_ft_01.png` | 11 |
+| SAM-Med2D zero-shot | `sammed2d-zeroshot_01-10.png` | 10 |
+| Ablation V1–V4 | `ablation_v1..v4_01.png` | 4 |
+| Cross-validation 4 fold | `cross-validation_pga-dataset-1..4_01.png` | 4 |
+| Sub-category PGA vs Baseline | `subcat-pga-vs-baseline_01-07.png` | 7 |
+| Sub-category PGA vs SAM | `subcat-pga-vs-sam_01-07.png` | 7 |
+| EfficientNet_B3 phân lớp | `efficientnet_b3_01.png` | 1 |
+| Pipeline end-to-end | `pipeline-evaluation_01.png` | 1 |
 
 ---
 
-# PHẦN I — ĐÓNG GÓP 1: Kiến Trúc PGA-UNet
+# PHẦN I — ĐÓNG GÓP 1: Kết Quả PGA-UNet
 
-## A. Sơ Đồ Kiến Trúc
+## A. PGA-UNet — Kết Quả Phân Đoạn Chính
 
-### A.1 Kiến trúc PGA-UNet đề xuất
-**File:** `images/diagram_pga.png`
+### A.1 Kết quả tổng hợp trên tập test
+**File:** `images/pga-unet2d_01.png` *(trích xuất từ Result/pga-unet2d.ipynb)*
 
-Minh họa hai thành phần đóng góp chính:
-- **Prompt Spatial Gate (PSG):** tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa qua phép nhân có chọn lọc
-- **Conditioned Attention Decoder (CAD):** điều kiện hóa tín hiệu gating bằng câu nhắc tại từng tầng giải mã, trọng số giảm dần
+Biểu đồ / bảng tổng hợp kết quả PGA-UNet trên 3 kịch bản prompt (Zoom-out, Shift, Mixed 70/30).  
+Dice: 0.8524 / 0.8382 / 0.8496 — robustness cao, không sụt giảm đáng kể khi câu nhắc lệch.
 
-![Kiến trúc PGA-UNet](images/diagram_pga.png)
+![PGA-UNet kết quả tổng hợp](images/pga-unet2d_01.png)
 
-### A.2 Kiến trúc U-Net cơ sở
-**File:** `images/diagram_unet.png`
+### A.2 Minh họa trực quan định tính
+**File:** `images/vis_pga_01.png` *(từ Report/images — mẫu đại diện được chọn thủ công)*
 
-Nền tảng encoder-decoder đối xứng với kết nối tắt — cả 4 mô hình đều dựa trên kiến trúc này.
+Hiển thị: ảnh gốc | ground truth mask | mask dự đoán PGA (kịch bản Zoom-out). Đường biên bám sát GT nhờ PSG + CAD.
 
-![Kiến trúc U-Net](images/diagram_unet.png)
-
-### A.3 Kiến trúc Attention U-Net
-**File:** `images/diagram_attunet.png`
-
-Cổng chú ý (Attention Gate) tại kết nối tắt — tiền đề cho Conditioned Attention của PGA-UNet.
-
-![Kiến trúc Attention U-Net](images/diagram_attunet.png)
-
-### A.4 Kiến trúc SAM-Med2D (mô hình so sánh)
-**File:** `images/diagram_sammed2d.png`
-
-ViT-B Image Encoder + Adapter layers + Mask Decoder — ~100M tham số, fine-tune từ 4M+ ảnh y tế.
-
-![Kiến trúc SAM-Med2D](images/diagram_sammed2d.png)
+![PGA-UNet visualization](images/vis_pga_01.png)
 
 ---
 
-## B. Kết Quả Phân Đoạn — PGA-UNet
+## B. U-Net — Baseline Tự Động (Không Có Prompt)
 
-### B.1 Mẫu IMG001768 (Kịch bản Zoom-out và Shift)
-**File:** `images/vis_pga_1.png`
+**Files:** `images/unet2d_01.png` đến `images/unet2d_10.png` *(10 mẫu test, từ Result/unet2d.ipynb)*
 
-Hàng trên: Zoom-out (câu nhắc lý tưởng) — Hàng dưới: Shift (câu nhắc lệch tâm).  
-Các cột: Ảnh gốc | Prompt heatmap | Ground Truth | Dự đoán | Overlay.  
-Minh chứng tính bền bỉ: Dice giảm nhẹ từ 0.8606 (Zoom-out) xuống 0.8380 (Shift) — chỉ −2.6%.
+10 mẫu kiểm thử đại diện. Cột: ảnh gốc | ground truth | dự đoán | overlay.  
+Dice trung bình = 0.4534. Hiện tượng: over-segmentation, nhầm bờ khớp xương, bỏ sót tổn thương độ tương phản thấp.
 
-![PGA-UNet IMG001768](images/vis_pga_1.png)
-
-### B.2 Mẫu IMG001538 (Pipeline cứu hộ GradCAM + IPR)
-**File:** `images/vis_pga_2.png`
-
-Minh họa chuỗi hành động khi câu nhắc hoàn toàn sai vị trí:
-1. Phát hiện → từ chối → kích hoạt GradCAM
-2. GradCAM trích xuất điểm neo cứu hộ
-3. IPR vòng 1 → mặt nạ thô bám vùng tổn thương
-4. IPR vòng 2 → mặt nạ hội tụ, bám sát Ground Truth
-
-![PGA-UNet IMG001538 GradCAM+IPR](images/vis_pga_2.png)
-
-### B.3 Mẫu IMG001100 (Tổn thương lớn vùng đùi)
-**File:** `images/vis_pga_3.png`
-
-PGA-UNet phân đoạn chính xác tổn thương lớn ở cả kịch bản Zoom-out và Shift.
-
-![PGA-UNet IMG001100](images/vis_pga_3.png)
+![U-Net mẫu 01](images/unet2d_01.png)
+![U-Net mẫu 02](images/unet2d_02.png)
+![U-Net mẫu 03](images/unet2d_03.png)
+![U-Net mẫu 04](images/unet2d_04.png)
+![U-Net mẫu 05](images/unet2d_05.png)
+![U-Net mẫu 06](images/unet2d_06.png)
+![U-Net mẫu 07](images/unet2d_07.png)
+![U-Net mẫu 08](images/unet2d_08.png)
+![U-Net mẫu 09](images/unet2d_09.png)
+![U-Net mẫu 10](images/unet2d_10.png)
 
 ---
 
-## C. So Sánh Với SAM-Med2D
+## C. Attention U-Net — Baseline Tự Động
 
-### C.1 Mẫu IMG001768 — 3 kịch bản prompt
-**File:** `images/vis_sam_1.png`
+**Files:** `images/attention-unet2d_01.png` đến `images/attention-unet2d_10.png`  
+*(từ Result/attention-unet2d.ipynb)*
 
-3 hàng: Zoom-out / Shift / Mixed 70/30 — 4 cột: Bbox prompt | Ground Truth | SAM prediction | Overlay.  
-Dice(Zoom-out)=0.7624, Dice(Shift)=0.7273 — thấp hơn PGA ở cả 3 kịch bản.
+Dice trung bình = 0.4159 (thấp hơn cả U-Net). Attention Gate khuếch đại sai vùng (thiết bị cố định, bờ khớp) khi không có tín hiệu định hướng — thể hiện rõ ở các mẫu tổn thương mờ.
 
-![SAM-Med2D IMG001768](images/vis_sam_1.png)
+![Att-UNet mẫu 01](images/attention-unet2d_01.png)
+![Att-UNet mẫu 02](images/attention-unet2d_02.png)
+![Att-UNet mẫu 03](images/attention-unet2d_03.png)
+![Att-UNet mẫu 04](images/attention-unet2d_04.png)
+![Att-UNet mẫu 05](images/attention-unet2d_05.png)
+![Att-UNet mẫu 06](images/attention-unet2d_06.png)
+![Att-UNet mẫu 07](images/attention-unet2d_07.png)
+![Att-UNet mẫu 08](images/attention-unet2d_08.png)
+![Att-UNet mẫu 09](images/attention-unet2d_09.png)
+![Att-UNet mẫu 10](images/attention-unet2d_10.png)
 
-### C.2 Mẫu IMG001538 — Hạn chế độ phân giải 256×256
-**File:** `images/vis_sam_2.png`
+Minh họa định tính so sánh với PGA:
 
-Minh chứng hạn chế của SAM-Med2D trên cấu trúc xương nhỏ: tổn thương bị mờ, bỏ sót nhiều ở độ phân giải 256px.
-
-![SAM-Med2D IMG001538](images/vis_sam_2.png)
-
----
-
-## D. So Sánh Với Baseline (U-Net, Attention U-Net)
-
-### D.1 U-Net — Phân đoạn sai khi không có câu nhắc
-**File:** `images/vis_unet_1.png` và `images/vis_unet_2.png`
-
-Minh họa hiện tượng over-segmentation và nhầm lẫn cấu trúc xương khi mô hình tự tìm kiếm vùng tổn thương không có hướng dẫn.
-
-![U-Net visualization 1](images/vis_unet_1.png)
-
-![U-Net visualization 2](images/vis_unet_2.png)
-
-### D.2 Attention U-Net — Attention khuếch đại nhiễu
-**File:** `images/vis_attunet_1.png` và `images/vis_attunet_2.png`
-
-Attention Gate khuếch đại sai vùng (thiết bị cố định xương, bờ khớp) khi không có tín hiệu định hướng — dẫn đến Dice thấp hơn cả U-Net cơ sở.
-
-![Attention U-Net visualization 1](images/vis_attunet_1.png)
-
-![Attention U-Net visualization 2](images/vis_attunet_2.png)
+![Att-UNet vis](images/vis_attunet_01.png)
 
 ---
 
-## E. Ablation — Visualization Kiến Trúc V1–V4
+## D. SAM-Med2D Fine-Tuned — Mô Hình So Sánh
 
-> Mỗi ảnh hiển thị 10 mẫu test đầu (kịch bản Zoom-out). 5 cột: Ảnh gốc | Ảnh + Prompt | Dự đoán | Ground Truth | TP/FP/FN.  
-> Số liệu chi tiết tại **02_Minh_Chung_So_Lieu — Mục C**.
+**Files:** `images/finetune-sammed2d-test-robust_01.png` đến `_10.png`  
+*(từ Result/finetune-sammed2d-test-robust.ipynb — 3 kịch bản: Zoom-out, Shift, Mixed)*
 
-### E.1 V1 — Concat đơn giản (không PSG, không CAD)
-**File:** `images/ablation_v1_visualization.png`
+Dice: 0.7350 / 0.7097 / 0.7283 — thấp hơn PGA +0.1174 (Zoom-out). Hạn chế rõ nhất: độ phân giải 256×256 khiến tổn thương nhỏ bị mờ (Dice chỉ 0.3887 ở nhóm tổn thương nhỏ).
 
-Heatmap nối thêm kênh ảnh (2 kênh đầu vào), decoder U-Net thường. Dice zoom_out=0.8722 — baseline mạnh, cho thấy tín hiệu câu nhắc đơn giản đã giúp đáng kể.
+![SAM-Med2D FT mẫu 01](images/finetune-sammed2d-test-robust_01.png)
+![SAM-Med2D FT mẫu 02](images/finetune-sammed2d-test-robust_02.png)
+![SAM-Med2D FT mẫu 03](images/finetune-sammed2d-test-robust_03.png)
+![SAM-Med2D FT mẫu 04](images/finetune-sammed2d-test-robust_04.png)
+![SAM-Med2D FT mẫu 05](images/finetune-sammed2d-test-robust_05.png)
+![SAM-Med2D FT mẫu 06](images/finetune-sammed2d-test-robust_06.png)
+![SAM-Med2D FT mẫu 07](images/finetune-sammed2d-test-robust_07.png)
+![SAM-Med2D FT mẫu 08](images/finetune-sammed2d-test-robust_08.png)
+![SAM-Med2D FT mẫu 09](images/finetune-sammed2d-test-robust_09.png)
+![SAM-Med2D FT mẫu 10](images/finetune-sammed2d-test-robust_10.png)
 
-![V1 Ablation Visualization](images/ablation_v1_visualization.png)
+Minh họa định tính:
 
-### E.2 V2 — Chỉ PSG (không CAD)
-**File:** `images/ablation_v2_visualization.png`
+![SAM-Med2D FT vis](images/vis_sam_ft_01.png)
 
-PromptSpatialGate ở encoder, decoder U-Net thường. Dice zoom_out=0.8707 — PSG đơn lẻ nhỉnh hơn V1 không đáng kể, encoder dẫn hướng tốt nhưng decoder chưa được điều kiện hóa.
+---
 
-![V2 Ablation Visualization](images/ablation_v2_visualization.png)
+## E. SAM-Med2D Zero-Shot — Đánh Giá Không Fine-Tune
 
-### E.3 V3 — Chỉ CAD (không PSG)
-**File:** `images/ablation_v3_visualization.png`
+**Files:** `images/sammed2d-zeroshot_01.png` đến `_10.png`  
+*(từ Result/sammed2d-zeroshot.ipynb)*
 
-Encoder U-Net thường + ConditionedAttentionDecoder. Dice zoom_out=0.8864 — CAD đơn lẻ đạt cao nhất trong 4 biến thể ablation, attention decoder có tác động mạnh hơn PSG ở encoder.
+Dice: 0.5337 / 0.5184 / 0.5286 — không fine-tune trên BTXRD, hiệu năng thấp hơn đáng kể so với fine-tuned. Chứng minh fine-tuning trên dữ liệu domain đặc thù là cần thiết.
 
-![V3 Ablation Visualization](images/ablation_v3_visualization.png)
+![SAM-ZS mẫu 01](images/sammed2d-zeroshot_01.png)
+![SAM-ZS mẫu 02](images/sammed2d-zeroshot_02.png)
+![SAM-ZS mẫu 03](images/sammed2d-zeroshot_03.png)
+![SAM-ZS mẫu 04](images/sammed2d-zeroshot_04.png)
+![SAM-ZS mẫu 05](images/sammed2d-zeroshot_05.png)
+![SAM-ZS mẫu 06](images/sammed2d-zeroshot_06.png)
+![SAM-ZS mẫu 07](images/sammed2d-zeroshot_07.png)
+![SAM-ZS mẫu 08](images/sammed2d-zeroshot_08.png)
+![SAM-ZS mẫu 09](images/sammed2d-zeroshot_09.png)
+![SAM-ZS mẫu 10](images/sammed2d-zeroshot_10.png)
 
-### E.4 V4 — PSG + CAD, câu nhắc Binary bbox
-**File:** `images/ablation_v4_visualization.png`
+---
 
-Kiến trúc đầy đủ nhưng dùng bbox nhị phân thay heatmap. Dice zoom_out=0.8802 — kết hợp PSG+CAD tốt hơn từng thành phần riêng lẻ. Kém hơn V5 (Heatmap) ở kịch bản Shift (+5.6pp), chứng minh Plateau Heatmap giúp mô hình bền vững với prompt nhiễu.
+## F. Ablation — Đóng Góp Từng Thành Phần Kiến Trúc
 
-![V4 Ablation Visualization](images/ablation_v4_visualization.png)
+*Mỗi ảnh hiển thị kết quả trực quan của một biến thể trên tập test.*
+
+### F.1 V1 — Concat đơn giản (không PSG, không CAD)
+**File:** `images/ablation_v1-nopsg-nocad-concat_01.png`  
+Dice Zoom-out=0.8718, Shift=0.7201. Không có PSG/CAD, chỉ nối heatmap vào ảnh. Zoom-out tốt nhưng Shift giảm mạnh — không có cơ chế "soft guidance".
+
+![Ablation V1](images/ablation_v1-nopsg-nocad-concat_01.png)
+
+### F.2 V2 — Chỉ PSG (không CAD)
+**File:** `images/ablation_v2-psg-only_01.png`  
+Dice Zoom-out=0.8643, Shift=0.7291. PSG encoder giúp tập trung đặc trưng, nhưng decoder chưa được điều kiện hóa.
+
+![Ablation V2](images/ablation_v2-psg-only_01.png)
+
+### F.3 V3 — Chỉ CAD (không PSG)
+**File:** `images/ablation_v3-cad-only_01.png`  
+Dice Zoom-out=0.8827 (cao nhất ablation), Shift=0.7335. CAD đóng góp mạnh hơn PSG ở Zoom-out, nhưng Shift vẫn thấp khi thiếu PSG.
+
+![Ablation V3](images/ablation_v3-cad-only_01.png)
+
+### F.4 V4 — PSG + CAD, Binary bbox
+**File:** `images/ablation_v4-full-binaryprompt_01.png`  
+Dice Zoom-out=0.8800, Shift=0.7378. Kiến trúc đầy đủ nhưng câu nhắc nhị phân — Shift vẫn thấp hơn V5 (Gaussian) đến 0.1004.
+
+![Ablation V4](images/ablation_v4-full-binaryprompt_01.png)
+
+*(V5 = PGA-UNet đề xuất — xem mục A)*
+
+---
+
+## G. Cross-Validation — Kiểm Định Độ Ổn Định 4 Fold
+
+*Mỗi ảnh là kết quả của một fold phân chia dữ liệu khác nhau.*
+
+**Files:** `images/cross-validation_pga-dataset-1_01.png` đến `_4_01.png`  
+*(từ Result/Cross-validation/pga-dataset-1..4.ipynb)*
+
+Dice trung bình 4 fold: Zoom-out=0.8769, Shift=0.8422, Mixed=0.8686 — kết quả đồng nhất, không phụ thuộc cách chia.
+
+![CV Fold 1](images/cross-validation_pga-dataset-1_01.png)
+![CV Fold 2](images/cross-validation_pga-dataset-2_01.png)
+![CV Fold 3](images/cross-validation_pga-dataset-3_01.png)
+![CV Fold 4](images/cross-validation_pga-dataset-4_01.png)
+
+---
+
+## H. Sub-Category — PGA vs Baseline (Nhóm Dễ / Khó)
+
+**Files:** `images/subcat-pga-vs-baseline_01.png` đến `_07.png`  
+*(từ Result/subcat-pga-vs-baseline.ipynb)*
+
+Biểu đồ so sánh Dice, HD95, CBL theo nhóm Dễ (top-100) và Khó (bottom-100). Kết quả nổi bật: U-Net Dice=0.1539 ở nhóm Khó, PGA-UNet duy trì 0.8458.
+
+![SubCat Baseline 01](images/subcat-pga-vs-baseline_01.png)
+![SubCat Baseline 02](images/subcat-pga-vs-baseline_02.png)
+![SubCat Baseline 03](images/subcat-pga-vs-baseline_03.png)
+![SubCat Baseline 04](images/subcat-pga-vs-baseline_04.png)
+![SubCat Baseline 05](images/subcat-pga-vs-baseline_05.png)
+![SubCat Baseline 06](images/subcat-pga-vs-baseline_06.png)
+![SubCat Baseline 07](images/subcat-pga-vs-baseline_07.png)
+
+---
+
+## I. Sub-Category — PGA vs SAM-Med2D (3 Nhóm Đặc Tính Lâm Sàng)
+
+**Files:** `images/subcat-pga-vs-sam_01.png` đến `_07.png`  
+*(từ Result/subcat-pga-vs-sam.ipynb)*
+
+Biểu đồ so sánh 3 nhóm: Tổn thương nhỏ / Biên giới mờ / Tổn thương rõ nét. Khoảng cách lớn nhất ở nhóm nhỏ: PGA 0.7970 vs SAM 0.3887 (Δ+0.4083).
+
+![SubCat SAM 01](images/subcat-pga-vs-sam_01.png)
+![SubCat SAM 02](images/subcat-pga-vs-sam_02.png)
+![SubCat SAM 03](images/subcat-pga-vs-sam_03.png)
+![SubCat SAM 04](images/subcat-pga-vs-sam_04.png)
+![SubCat SAM 05](images/subcat-pga-vs-sam_05.png)
+![SubCat SAM 06](images/subcat-pga-vs-sam_06.png)
+![SubCat SAM 07](images/subcat-pga-vs-sam_07.png)
 
 ---
 
 # PHẦN II — ĐÓNG GÓP 2: Pipeline Lâm Sàng
 
-## F. Sơ Đồ Hệ Thống & Tiền Xử Lý
+## J. EfficientNet_B3 — Kết Quả Phân Lớp Sàng Lọc
 
-### F.1 Kiến trúc pipeline 4 giai đoạn
-**File:** `images/system_architecture.png`
+**File:** `images/efficientnet_b3_01.png`  
+*(từ Result/EfficientNet_B3.ipynb)*
 
-Luồng xử lý end-to-end: Tiền xử lý (YOLOv11 xóa nhiễu) → Sàng lọc (MobileNetV4) → Phân đoạn có hướng dẫn (PGA-UNet) → Thẩm định an toàn (GradCAM + IPR). Minh họa cả hai kịch bản: câu nhắc hợp lệ (luồng thường) và câu nhắc sai (luồng cứu hộ).
+Kết quả đánh giá EfficientNet_B3 trên tập test BTXRD: confusion matrix, đường cong ROC (AUC=0.9258), phân phối xác suất dự đoán. Accuracy=85.60%, Sensitivity=78.61%, Specificity=92.55%.
 
-![Kiến trúc pipeline 4 giai đoạn](images/system_architecture.png)
-
-### F.2 Quy trình tiền xử lý 6 bước
-**File:** `images/preprocessing_pipeline.png`
-
-Từ ảnh JPEG thô → xóa ICC Profile → gán nhãn nhiễu trên Roboflow → huấn luyện YOLOv11s → phát hiện và xóa nhiễu R/L bằng inpainting → chuẩn hóa thang xám → resize 512×512.
-
-![Quy trình tiền xử lý 6 bước](images/preprocessing_pipeline.png)
+![EfficientNet_B3 kết quả](images/efficientnet_b3_01.png)
 
 ---
 
-## G. Kết Quả Phân Loại Sàng Lọc (MobileNetV4)
+## K. Pipeline End-to-End — Đánh Giá Trên Dataset_Online
 
-**File:** `images/classification_evaluation.png`
+**File:** `images/pipeline-evaluation_01.png`  
+*(từ Result/pipeline-evaluation.ipynb)*
 
-Bao gồm: (a) Ma trận nhầm lẫn, (b) Đường cong ROC (AUC=0.9514), (c) Phân phối xác suất dự đoán.
+Kết quả pipeline đầy đủ trên 375 ảnh hỗn hợp (187 có bệnh + 188 bình thường):  
+- Phân loại: TP=181, FP=38, FN=6, TN=150 — Sensitivity=96.79%, Specificity=79.79%  
+- Phân đoạn: 181 TP → 226 polygon, 38 FP → Dice=0; **Pipeline Dice=0.7296, IoU=0.6430**
 
-![Kết quả phân loại MobileNetV4](images/classification_evaluation.png)
-
----
-
-## H. Cơ Chế Phòng Vệ GradCAM + IPR
-
-### H.1 GradCAM Rescue — Các mẫu thực nghiệm
-**File:** `images/gradcam_ipr_rescue_1.png` và `images/gradcam_ipr_rescue_2.png`
-
-Kết quả thực nghiệm trên 174 mẫu câu nhắc sai hoàn toàn (đặt vào góc tối ≥70% đen). Mỗi hàng là một mẫu, hiển thị: ảnh gốc + câu nhắc sai | bản đồ nhiệt GradCAM | mặt nạ sau IPR k=1 | Ground Truth. Minh chứng trực quan cho tỷ lệ phát hiện 100% và cơ chế cứu hộ bán tự động.
-
-![GradCAM IPR Rescue nhóm 1](images/gradcam_ipr_rescue_1.png)
-
-![GradCAM IPR Rescue nhóm 2](images/gradcam_ipr_rescue_2.png)
-
-### H.2 So sánh phòng vệ: PGA vs SAM-Med2D
-**File:** `images/defense_pga_rescue_vis.png`
-
-PGA-UNet khi nhận câu nhắc góc tối: từ chối → GradCAM → IPR → xuất mặt nạ gợi ý. Kết quả GradCAM CBL=0.298, cứu hộ thành công 21.8% ca.
-
-![PGA GradCAM Rescue](images/defense_pga_rescue_vis.png)
-
-**File:** `images/defense_sam_dark_corner.png`
-
-SAM-Med2D khi nhận **cùng câu nhắc góc tối**: không có kiểm duyệt, trả về mặt nạ sai im lặng. GradCAM CBL=0.497 (tốt hơn PGA về định vị) nhưng **không có pipeline cứu hộ tích hợp** — đây là khoảng trống mà Đóng góp 2 lấp đầy.
-
-![SAM-Med2D góc tối không có cứu hộ](images/defense_sam_dark_corner.png)
-
----
-
-## I. Ứng Dụng Tích Hợp
-
-### I.1 Giao diện Gradio (app.py)
-**File:** `images/app_interface.png`
-
-Giao diện end-to-end: bác sĩ tải ảnh X-quang → MobileNetV4 phân lớp tự động → vẽ hộp giới hạn → PGA-UNet phân đoạn → hiển thị mặt nạ kèm bản đồ nhiệt GradCAM. Kịch bản câu nhắc sai: hệ thống tự động hiển thị "Mặt nạ gợi ý" song song.
-
-![Giao diện Gradio](images/app_interface.png)
+![Pipeline evaluation](images/pipeline-evaluation_01.png)

@@ -1,7 +1,7 @@
 \contentsline {chapter}{Lời cảm ơn}{i}{Doc-Start}%
 \contentsline {chapter}{Đề cương chi tiết}{ii}{chapter*.1}%
 \contentsline {chapter}{Mục lục}{iv}{section*.6}%
-\contentsline {chapter}{Tóm tắt}{vi}{chapter*.9}%
+\contentsline {chapter}{Tóm tắt}{xii}{chapter*.9}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%
@@ -56,28 +56,26 @@
 \contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{45}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{46}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{47}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Chiến lược tái lấy mẫu và đánh giá độ ổn định (Cross-Validation)}{48}{subsection.4.1.3}%
 \contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{49}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs. Attention U-Net vs. PGA-UNet}{49}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{51}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{52}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{54}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}Đánh giá độ ổn định kết quả (Cross-Validation)}{54}{subsection.4.2.5}%
-\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{55}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{55}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Đánh giá theo đặc tính tổn thương (Sub-Category)}{56}{subsection.4.3.2}%
-\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{58}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{58}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Trực quan hóa theo đặc tính tổn thương (Sub-Category)}{59}{subsection.4.4.2}%
-\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{59}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{68}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Tổng quan Đóng góp 2: Sản phẩm phần mềm lâm sàng}{68}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng (MobileNetV4)}{69}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{72}{subsection.4.7.1}%
-\contentsline {section}{\numberline {4.8}Tích hợp và đánh giá ứng dụng lâm sàng (app.py)}{73}{section.4.8}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{76}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{76}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{77}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{78}{section.5.3}%
-\contentsline {chapter}{Danh mục công trình của tác giả}{80}{equation.5.3.1}%
-\contentsline {chapter}{Tài liệu tham khảo}{81}{Item.19}%
+\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{53}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{54}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{54}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Đánh giá theo đặc tính tổn thương (Sub-Category)}{55}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{57}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{57}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Trực quan hóa theo đặc tính tổn thương (Sub-Category)}{58}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{58}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{67}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Tổng quan Đóng góp 2: Sản phẩm phần mềm lâm sàng}{67}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng (MobileNetV4)}{68}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{71}{subsection.4.7.1}%
+\contentsline {section}{\numberline {4.8}Tích hợp và đánh giá ứng dụng lâm sàng (app.py)}{72}{section.4.8}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{75}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{75}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{76}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{77}{section.5.3}%
+\contentsline {chapter}{Danh mục công trình của tác giả}{79}{equation.5.3.1}%
+\contentsline {chapter}{Tài liệu tham khảo}{80}{Item.19}%

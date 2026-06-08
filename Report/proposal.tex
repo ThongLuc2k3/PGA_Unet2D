@@ -153,7 +153,7 @@
         
     Sản phẩm của đề tài bao gồm một hệ thống hoàn chỉnh với các kết quả định lượng và định tính như sau:
     \begin{itemize}
-        \item \textbf{Định lượng:} Mô hình PGA-UNet đạt chỉ số Dice Similarity Coefficient (DSC) $\approx$ 86\% và IoU $\approx$ 76\%, vượt xa các Baseline U-Net ($\approx$ 38\%) trên cùng tập dữ liệu kiểm thử 248 ảnh.
+        \item \textbf{Định lượng:} Mô hình PGA-UNet đạt Dice = 0.8524 (kịch bản Zoom-out) và Dice = 0.8382 (kịch bản Shift), vượt xa U-Net (0.4534) và SAM-Med2D fine-tuned (0.7350) trên tập kiểm thử 232~mẫu per-polygon.
         \item \textbf{Định tính:} Tính bền bỉ (robustness) tốt trước các sai số của người dùng. Tốc độ suy luận đạt mức thời gian thực (< 1 giây/ảnh).
         \item \textbf{Sản phẩm:} Bộ mã nguồn huấn luyện/suy luận ổn định, bộ trọng số mô hình đã tối ưu, và ứng dụng Demo cho phép bác sĩ tương tác trực tiếp bằng câu nhắc.
     \end{itemize}
@@ -183,7 +183,7 @@
 
     01/05 - 20/05/2026 & Tinh chỉnh siêu tham số, huấn luyện với hàm mất mát kết hợp BCE-Dice. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
     
-    21/05 - 05/06/2026 & Đánh giá hiệu năng trên 248 ảnh test, so sánh với Baseline U-Net. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
+    21/05 - 05/06/2026 & Đánh giá hiệu năng trên tập test, so sánh với Baseline U-Net. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
     
     06/06 - 15/06/2026 & Hoàn thiện báo cáo khóa luận (LaTeX) và đóng gói mã nguồn. & Nguyễn Hữu Bình, Thông Lúc \\ \hline
     

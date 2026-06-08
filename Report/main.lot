@@ -5,14 +5,13 @@
 \contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{40}{table.3.2}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố bộ dữ liệu thực nghiệm}}{47}{table.4.1}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Đánh giá độ ổn định PGA-UNet qua 2 lần phân chia ngẫu nhiên độc lập}}{49}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Bảng so sánh hiệu năng giữa các mô hình phân đoạn cơ sở và PGA-UNet}}{50}{table.4.3}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces Bảng đánh giá tính bền bỉ của PGA-UNet qua các kịch bản kiểm thử}}{51}{table.4.4}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh PGA-UNet và SAM-Med2D trên 3 kịch bản prompt (cùng dataset BTXRD)}}{53}{table.4.5}%
-\contentsline {table}{\numberline {4.6}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{54}{table.4.6}%
-\contentsline {table}{\numberline {4.7}{\ignorespaces Ablation kiến trúc: so sánh các biến thể PGA-UNet huấn luyện từ đầu}}{55}{table.4.7}%
-\contentsline {table}{\numberline {4.8}{\ignorespaces Hiệu năng PGA-UNet phân theo đặc tính tổn thương (Gaussian heatmap, zoom-out 30\%)}}{56}{table.4.8}%
-\contentsline {table}{\numberline {4.9}{\ignorespaces So sánh hiệu năng theo độ khó tổn thương: Nhóm \textit {Dễ} (top-100 U-Net Dice) và \textit {Khó} (bottom-100 U-Net Dice), đánh giá trên per-polygon samples}}{57}{table.4.9}%
-\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh PGA-UNet và SAM-Med2D (fine-tuned) theo đặc tính tổn thương: \textit {Tổn thương nhỏ} (50 mask nhỏ nhất), \textit {Biên giới mờ} (50 ca SAM tệ nhất), \textit {Tổn thương rõ nét} (50 mask lớn còn lại)}}{57}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{70}{table.4.11}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Bảng so sánh hiệu năng giữa các mô hình phân đoạn cơ sở và PGA-UNet}}{49}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Bảng đánh giá tính bền bỉ của PGA-UNet qua các kịch bản kiểm thử}}{51}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh PGA-UNet và SAM-Med2D trên 3 kịch bản prompt (cùng dataset BTXRD)}}{52}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{54}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Ablation kiến trúc: so sánh các biến thể PGA-UNet huấn luyện từ đầu}}{55}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Hiệu năng PGA-UNet phân theo đặc tính tổn thương (Gaussian heatmap, zoom-out 30\%)}}{55}{table.4.7}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces So sánh hiệu năng theo độ khó tổn thương: Nhóm \textit {Dễ} (top-100 U-Net Dice) và \textit {Khó} (bottom-100 U-Net Dice), đánh giá trên per-polygon samples}}{56}{table.4.8}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces So sánh PGA-UNet và SAM-Med2D (fine-tuned) theo đặc tính tổn thương: \textit {Tổn thương nhỏ} (50 mask nhỏ nhất), \textit {Biên giới mờ} (50 ca SAM tệ nhất), \textit {Tổn thương rõ nét} (50 mask lớn còn lại)}}{56}{table.4.9}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{69}{table.4.10}%
 \addvspace {10\p@ }
