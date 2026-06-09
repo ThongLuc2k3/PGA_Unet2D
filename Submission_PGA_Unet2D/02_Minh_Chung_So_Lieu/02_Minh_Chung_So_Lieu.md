@@ -28,9 +28,9 @@ U-Net và Att-UNet hoạt động tự động (merged mask per-ảnh, N=250 ả
 
 | Tham số | U-Net / Att-UNet / PGA-UNet | EfficientNet_B3 |
 |---|---|---|
-| Loss function | BCE + Dice Loss | CrossEntropy |
+| Loss function | BCE + Dice Loss | BCE |
 | Optimizer | AdamW (weight decay 1e-4) | AdamW |
-| Batch size | 4 | 32 |
+| Batch size | 4 | 16 |
 | Epoch tối đa | 100 | 25 (giai đoạn 1) + 75 (giai đoạn 2) |
 | Learning Rate | 1e-4, ReduceLROnPlateau (×0.5 sau 5 ep.) | 1e-4 → 1e-5, CosineAnnealingLR |
 | Early stopping | Patience = 15 | Patience = 15 |
@@ -69,22 +69,23 @@ U-Net và Att-UNet hoạt động tự động (merged mask per-ảnh, N=250 ả
 
 ## E. So Sánh Với SAM-Med2D (SOTA Prompt-Based)
 
-*N = 232 mẫu per-polygon. HD95* chuẩn hóa theo kích thước ảnh (÷512 với PGA, ÷256 với SAM)*
+*N = 232 mẫu per-polygon. **HD95 (norm)** = HD95 chuẩn hóa theo kích thước ảnh (÷512 với PGA, ÷256 với SAM) để so sánh công bằng giữa hai độ phân giải khác nhau.*  
+*Viết tắt: **FT** = Fine-Tuned (có fine-tune trên BTXRD), **ZS** = Zero-Shot (không fine-tune trên dữ liệu đích).*
 
-| Mô hình | Kịch bản | Dice ↑ | IoU ↑ | Pre ↑ | Rec ↑ | HD95*(norm) ↓ | CBL ↑ |
+| Mô hình | Kịch bản | Dice ↑ | IoU ↑ | Pre ↑ | Rec ↑ | HD95 (norm) ↓ | CBL ↑ |
 |---|---|---|---|---|---|---|---|
 | **PGA-UNet** | Zoom-out | **0.8524** | **0.7527** | **0.8505** | **0.8739** | **0.027** | **0.9451** |
 | **PGA-UNet** | Shift | **0.8382** | **0.7336** | **0.8434** | **0.8556** | **0.027** | **0.9379** |
 | **PGA-UNet** | Mixed | **0.8496** | **0.7486** | **0.8511** | **0.8689** | **0.028** | **0.9436** |
-| SAM-Med2D (fine-tuned) | Zoom-out | 0.7350 | 0.6130 | 0.7513 | 0.7478 | 0.207 | 0.8893 |
-| SAM-Med2D (fine-tuned) | Shift | 0.7097 | 0.5818 | 0.7385 | 0.7117 | 0.213 | 0.8767 |
-| SAM-Med2D (fine-tuned) | Mixed | 0.7283 | 0.6044 | 0.7491 | 0.7379 | 0.208 | 0.8863 |
-| SAM-Med2D (zero-shot) | Zoom-out | 0.5337 | 0.3924 | 0.4743 | 0.6776 | 0.374 | 0.8194 |
-| SAM-Med2D (zero-shot) | Shift | 0.5184 | 0.3775 | 0.4570 | 0.6559 | 0.403 | 0.7945 |
-| SAM-Med2D (zero-shot) | Mixed | 0.5286 | 0.3882 | 0.4700 | 0.6670 | 0.384 | 0.8093 |
+| SAM-Med2D (FT) | Zoom-out | 0.7350 | 0.6130 | 0.7513 | 0.7478 | 0.207 | 0.8893 |
+| SAM-Med2D (FT) | Shift | 0.7097 | 0.5818 | 0.7385 | 0.7117 | 0.213 | 0.8767 |
+| SAM-Med2D (FT) | Mixed | 0.7283 | 0.6044 | 0.7491 | 0.7379 | 0.208 | 0.8863 |
+| SAM-Med2D (ZS) | Zoom-out | 0.5337 | 0.3924 | 0.4743 | 0.6776 | 0.374 | 0.8194 |
+| SAM-Med2D (ZS) | Shift | 0.5184 | 0.3775 | 0.4570 | 0.6559 | 0.403 | 0.7945 |
+| SAM-Med2D (ZS) | Mixed | 0.5286 | 0.3882 | 0.4700 | 0.6670 | 0.384 | 0.8093 |
 
 **So sánh tham số:** PGA ~4M vs SAM ~100M (tổng) / ~15M (trainable).  
-**Điểm chính:** PGA vượt SAM fine-tuned +0.1174 Dice với 25× ít tham số hơn. HD95 chuẩn hóa của PGA (0.027) tốt hơn SAM (0.207) — bám biên chính xác hơn nhiều.
+**Điểm chính:** PGA vượt SAM FT +0.1174 Dice với 25× ít tham số hơn. HD95 (norm) của PGA (0.027) tốt hơn SAM (0.207) — bám biên chính xác hơn nhiều.
 
 ---
 
@@ -123,7 +124,7 @@ U-Net và Att-UNet hoạt động tự động (merged mask per-ảnh, N=250 ả
 
 ## H. Kiểm Định Độ Ổn Định — Cross-Validation 4-Fold
 
-*4 lần phân chia dữ liệu khác nhau, kết quả nhất quán xác nhận mô hình ổn định.*
+*4 lần phân chia dữ liệu khác nhau, kết quả nhất quán xác nhận mô hình ổn định. **TB** = Trung Bình (average over 4 folds).*
 
 | Kịch bản | Dice ↑ | IoU ↑ | Precision ↑ | Recall ↑ | HD95 ↓ (px) | CBL ↑ |
 |---|---|---|---|---|---|---|
@@ -137,18 +138,18 @@ U-Net và Att-UNet hoạt động tự động (merged mask per-ảnh, N=250 ả
 
 ## I. Đánh Giá Theo Đặc Tính Tổn Thương — Sub-Category
 
-### I.1 PGA vs Baseline — Nhóm Dễ / Khó (phân nhóm theo Dice của U-Net, N=250 ảnh)
+### I.1 PGA vs Baseline — Nhóm Dễ / Khó (phân nhóm theo Dice của U-Net, N=187 ảnh, 50 dễ nhất / 50 khó nhất)
 
 | Nhóm | Mô hình | Dice ↑ | IoU ↑ | Pre ↑ | Rec ↑ | HD95 ↓ (px) | CBL ↑ |
 |---|---|---|---|---|---|---|---|
-| Dễ (top-100 U-Net Dice) | U-Net | 0.7639 | 0.6346 | 0.8220 | 0.7685 | 34.95 | 0.9054 |
-| Dễ | Attention U-Net | 0.6397 | 0.5246 | 0.7377 | 0.6466 | 62.94 | 0.7870 |
-| **Dễ** | **PGA-UNet** | **0.8580** | **0.7617** | **0.8471** | **0.8900** | **15.54** | **0.9438** |
-| Khó (bottom-100 U-Net Dice) | U-Net | 0.1539 | 0.0998 | 0.4539 | 0.1522 | 212.95 | 0.3167 |
-| Khó | Attention U-Net | 0.2002 | 0.1388 | 0.4579 | 0.1968 | 195.74 | 0.3490 |
-| **Khó** | **PGA-UNet** | **0.8458** | **0.7431** | **0.8378** | **0.8726** | **12.04** | **0.9465** |
+| Dễ (top-50 U-Net Dice) | U-Net | 0.8691 | 0.7713 | 0.8711 | 0.8771 | 21.05 | 0.9510 |
+| Dễ | Attention U-Net | 0.7609 | 0.6539 | 0.8055 | 0.7797 | 34.48 | 0.8662 |
+| **Dễ** | **PGA-UNet** | **0.8938** | **0.8122** | **0.8704** | **0.9249** | **13.16** | **0.9588** |
+| Khó (bottom-50 U-Net Dice) | U-Net | 0.0000 | 0.0000 | 0.2200 | 0.0000 | 265.69 | 0.0243 |
+| Khó | Attention U-Net | 0.0929 | 0.0639 | 0.3397 | 0.1034 | 236.46 | 0.1551 |
+| **Khó** | **PGA-UNet** | **0.8181** | **0.7114** | **0.8446** | **0.8274** | **18.06** | **0.9247** |
 
-**Điểm quan trọng nhất:** Ở nhóm Khó, U-Net sụp đổ hoàn toàn (Dice 0.1539, HD95 212.95px). PGA-UNet **duy trì ổn định 0.8458** (Δ+0.6919). Đây là minh chứng mạnh nhất cho cơ chế PSG — thiếu tín hiệu định hướng, tự động hoàn toàn thất bại.
+**Điểm quan trọng nhất:** Ở nhóm Khó, U-Net sụp đổ hoàn toàn (Dice 0.0000, HD95 265.69px). PGA-UNet **duy trì ổn định 0.8181** (Δ+0.8181 = 0.8181 − 0.0000, chênh lệch Dice PGA so với U-Net tại nhóm Khó). Đây là minh chứng mạnh nhất cho cơ chế PSG — thiếu tín hiệu định hướng, tự động hoàn toàn thất bại.
 
 ### I.2 PGA vs SAM-Med2D — 3 Nhóm Đặc Tính Lâm Sàng (50 mẫu per-polygon mỗi nhóm)
 
@@ -167,9 +168,18 @@ U-Net và Att-UNet hoạt động tự động (merged mask per-ảnh, N=250 ả
 
 # PHẦN II — ĐÓNG GÓP 2: Pipeline Lâm Sàng
 
-## J. Mô Hình Phân Lớp Sàng Lọc — EfficientNet_B3 (Standalone BTXRD)
+## J. Mô Hình Phân Lớp Sàng Lọc — EfficientNet_B3 (Đánh Giá Độc Lập trên BTXRD)
 
-*Đánh giá trên tập test BTXRD (375 ảnh hỗn hợp)*
+*Đánh giá độc lập (standalone = chỉ đánh giá mô hình phân lớp riêng lẻ, chưa kết hợp vào pipeline) trên tập test BTXRD (375 ảnh hỗn hợp).*
+
+**Ý nghĩa từng chỉ số:**
+- **Accuracy**: tỉ lệ dự đoán đúng tổng thể (cả dương và âm)
+- **Precision (PPV — Positive Predictive Value)**: trong số ảnh mô hình dự đoán là có bệnh, bao nhiêu phần trăm thực sự có bệnh (đo mức độ sai dương — FP)
+- **Recall (Sensitivity)**: trong số ảnh thực sự có bệnh, bao nhiêu phần trăm được phát hiện đúng (đo mức độ bỏ sót — FN)
+- **Specificity**: trong số ảnh thực sự bình thường, bao nhiêu phần trăm được phân loại đúng là âm tính (đo mức độ sai dương với lớp âm)
+- **NPV (Negative Predictive Value)**: trong số ảnh mô hình dự đoán là bình thường, bao nhiêu phần trăm thực sự bình thường
+- **F1-Score**: trung bình điều hòa của Precision và Recall — cân bằng giữa độ chính xác dự đoán dương và khả năng phát hiện bệnh
+- **AUC-ROC**: diện tích dưới đường cong ROC, đo khả năng phân biệt hai lớp; 1.0 = phân biệt hoàn hảo, 0.5 = ngẫu nhiên
 
 | Độ đo | Giá trị |
 |---|---|

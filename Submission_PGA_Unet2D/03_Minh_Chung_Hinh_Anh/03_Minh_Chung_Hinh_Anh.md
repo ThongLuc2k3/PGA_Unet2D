@@ -33,12 +33,17 @@
 Biểu đồ / bảng tổng hợp kết quả PGA-UNet trên 3 kịch bản prompt (Zoom-out, Shift, Mixed 70/30).  
 Dice: 0.8524 / 0.8382 / 0.8496 — robustness cao, không sụt giảm đáng kể khi câu nhắc lệch.
 
+**Quy ước màu trong ảnh overlay phân đoạn:**
+- **TP (True Positive):** pixel dự đoán là tổn thương VÀ thực sự là tổn thương → màu **vàng** (intersection)
+- **FP (False Positive):** pixel dự đoán là tổn thương nhưng KHÔNG phải tổn thương → màu **đỏ** (dự đoán thừa)
+- **FN (False Negative):** pixel KHÔNG được dự đoán là tổn thương nhưng thực sự là tổn thương → màu **xanh lá** (bỏ sót)
+
 ![PGA-UNet kết quả tổng hợp](images/pga-unet2d_01.png)
 
 ### A.2 Minh họa trực quan định tính
 **File:** `images/vis_pga_01.png` *(từ Report/images — mẫu đại diện được chọn thủ công)*
 
-Hiển thị: ảnh gốc | ground truth mask | mask dự đoán PGA (kịch bản Zoom-out). Đường biên bám sát GT nhờ PSG + CAD.
+Hiển thị định tính side-by-side: ảnh gốc | ground truth mask | mask dự đoán PGA | overlay màu (TP/FP/FN như trên). Đường biên bám sát GT nhờ PSG + CAD. *(Lưu ý: nếu hình này trùng với A.1, cần cập nhật lại bằng ảnh định tính từ notebook.)*
 
 ![PGA-UNet visualization](images/vis_pga_01.png)
 
@@ -95,6 +100,8 @@ Minh họa định tính so sánh với PGA:
 
 Dice: 0.7350 / 0.7097 / 0.7283 — thấp hơn PGA +0.1174 (Zoom-out). Hạn chế rõ nhất: độ phân giải 256×256 khiến tổn thương nhỏ bị mờ (Dice chỉ 0.3887 ở nhóm tổn thương nhỏ).
 
+**Quy ước màu trong ảnh overlay:** màu **vàng** = vùng giao (TP), màu **đỏ** = dự đoán thừa (FP), màu **xanh lá** = bỏ sót GT (FN).
+
 ![SAM-Med2D FT mẫu 01](images/finetune-sammed2d-test-robust_01.png)
 ![SAM-Med2D FT mẫu 02](images/finetune-sammed2d-test-robust_02.png)
 ![SAM-Med2D FT mẫu 03](images/finetune-sammed2d-test-robust_03.png)
@@ -119,6 +126,8 @@ Minh họa định tính:
 
 Dice: 0.5337 / 0.5184 / 0.5286 — không fine-tune trên BTXRD, hiệu năng thấp hơn đáng kể so với fine-tuned. Chứng minh fine-tuning trên dữ liệu domain đặc thù là cần thiết.
 
+**Quy ước màu trong ảnh overlay:** màu **vàng** = vùng giao (TP), màu **đỏ** = dự đoán thừa (FP), màu **xanh lá** = bỏ sót GT (FN).
+
 ![SAM-ZS mẫu 01](images/sammed2d-zeroshot_01.png)
 ![SAM-ZS mẫu 02](images/sammed2d-zeroshot_02.png)
 ![SAM-ZS mẫu 03](images/sammed2d-zeroshot_03.png)
@@ -135,6 +144,11 @@ Dice: 0.5337 / 0.5184 / 0.5286 — không fine-tune trên BTXRD, hiệu năng th
 ## F. Ablation — Đóng Góp Từng Thành Phần Kiến Trúc
 
 *Mỗi ảnh hiển thị kết quả trực quan của một biến thể trên tập test.*
+
+**Quy ước màu trong ảnh overlay và định nghĩa TP/FP/FN:**
+- **TP (True Positive):** pixel được dự đoán là tổn thương VÀ thực sự là tổn thương → màu **vàng**
+- **FP (False Positive):** pixel được dự đoán là tổn thương nhưng KHÔNG phải tổn thương → màu **đỏ** (dự đoán thừa, sai dương)
+- **FN (False Negative):** pixel KHÔNG được dự đoán là tổn thương nhưng thực sự là tổn thương → màu **xanh lá** (bỏ sót, sai âm)
 
 ### F.1 V1 — Concat đơn giản (không PSG, không CAD)
 **File:** `images/ablation_v1-nopsg-nocad-concat_01.png`  
@@ -166,17 +180,14 @@ Dice Zoom-out=0.8800, Shift=0.7378. Kiến trúc đầy đủ nhưng câu nhắc
 
 ## G. Cross-Validation — Kiểm Định Độ Ổn Định 4 Fold
 
-*Mỗi ảnh là kết quả của một fold phân chia dữ liệu khác nhau.*
+*Mỗi fold là một lần phân chia dữ liệu khác nhau. Kết quả số liệu xem tại 02_Minh_Chung_So_Lieu.md mục H.*
 
 **Files:** `images/cross-validation_pga-dataset-1_01.png` đến `_4_01.png`  
 *(từ Result/Cross-validation/pga-dataset-1..4.ipynb)*
 
 Dice trung bình 4 fold: Zoom-out=0.8769, Shift=0.8422, Mixed=0.8686 — kết quả đồng nhất, không phụ thuộc cách chia.
 
-![CV Fold 1](images/cross-validation_pga-dataset-1_01.png)
-![CV Fold 2](images/cross-validation_pga-dataset-2_01.png)
-![CV Fold 3](images/cross-validation_pga-dataset-3_01.png)
-![CV Fold 4](images/cross-validation_pga-dataset-4_01.png)
+**Quy ước màu trong ảnh overlay:** TP = **vàng**, FP = **đỏ**, FN = **xanh lá** (định nghĩa như mục F).
 
 ---
 
@@ -185,7 +196,9 @@ Dice trung bình 4 fold: Zoom-out=0.8769, Shift=0.8422, Mixed=0.8686 — kết q
 **Files:** `images/subcat-pga-vs-baseline_01.png` đến `_07.png`  
 *(từ Result/subcat-pga-vs-baseline.ipynb)*
 
-Biểu đồ so sánh Dice, HD95, CBL theo nhóm Dễ (top-100) và Khó (bottom-100). Kết quả nổi bật: U-Net Dice=0.1539 ở nhóm Khó, PGA-UNet duy trì 0.8458.
+Biểu đồ so sánh Dice, HD95, CBL theo nhóm Dễ (top-50) và Khó (bottom-50). **Cả 3 mô hình (U-Net, Att-UNet, PGA-UNet) đánh giá trên cùng tập 50 ảnh dễ và 50 ảnh khó** — phân nhóm theo thứ hạng Dice của U-Net trên 187 ảnh test. PGA dùng cùng danh sách ảnh, mỗi ảnh có thể tạo nhiều polygon (mẫu) nếu có nhiều tổn thương (53 poly từ Easy, 56 poly từ Hard). Kết quả nổi bật: U-Net Dice=0.0000 ở nhóm Khó, PGA-UNet duy trì 0.8181 (Δ+0.8181).
+
+**Quy ước màu trong ảnh overlay:** màu **vàng** = vùng giao (TP), màu **đỏ** = dự đoán thừa (FP), màu **xanh lá** = bỏ sót GT (FN).
 
 ![SubCat Baseline 01](images/subcat-pga-vs-baseline_01.png)
 ![SubCat Baseline 02](images/subcat-pga-vs-baseline_02.png)
@@ -202,7 +215,9 @@ Biểu đồ so sánh Dice, HD95, CBL theo nhóm Dễ (top-100) và Khó (bottom
 **Files:** `images/subcat-pga-vs-sam_01.png` đến `_07.png`  
 *(từ Result/subcat-pga-vs-sam.ipynb)*
 
-Biểu đồ so sánh 3 nhóm: Tổn thương nhỏ / Biên giới mờ / Tổn thương rõ nét. Khoảng cách lớn nhất ở nhóm nhỏ: PGA 0.7970 vs SAM 0.3887 (Δ+0.4083).
+Biểu đồ so sánh 3 nhóm: Tổn thương nhỏ / Biên giới mờ / Tổn thương rõ nét. Khoảng cách lớn nhất ở nhóm nhỏ: PGA 0.7970 vs SAM 0.3887 (Δ+0.4083 = 0.7970 − 0.3887, chênh lệch Dice PGA so với SAM tại nhóm tổn thương nhỏ).
+
+**Quy ước màu trong ảnh overlay:** màu **vàng** = vùng giao (TP), màu **đỏ** = dự đoán thừa (FP), màu **xanh lá** = bỏ sót GT (FN).
 
 ![SubCat SAM 01](images/subcat-pga-vs-sam_01.png)
 ![SubCat SAM 02](images/subcat-pga-vs-sam_02.png)

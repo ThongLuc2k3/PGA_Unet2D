@@ -1,6 +1,3 @@
-update (xóa và thay thế lại ảnh) trong images của report và submission để nó lưu ảnh mới của 2file subcat (pga baseline và sam) trong resul. và cập nhật lại
-  định lượng của report và submission do 2 file này thay đổi.
-
 Submission folder 
 Phần README.md: Bỏ luôn mục tác giả
 

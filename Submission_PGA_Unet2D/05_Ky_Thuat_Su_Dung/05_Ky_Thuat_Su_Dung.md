@@ -31,7 +31,7 @@
 ## Phân Biệt Rõ: Kế Thừa vs Đề Xuất Mới
 
 ```
-KẾ THỪA NGUYÊN SẮC (cite bài báo gốc):
+KẾ THỪA TRỰC TIẾP (cite bài báo gốc):
   U-Net encoder-decoder architecture ─────────── [1]
   Attention Gate formula (α^l) ────────────────── [2]
   SAM-Med2D (dùng làm benchmark) ─────────────── [3]

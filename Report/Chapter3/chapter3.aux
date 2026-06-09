@@ -1,56 +1,48 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{24}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{21}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{Chapter3}{{3}{24}{MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Kiến trúc tổng thể của hệ thống}{24}{section.3.1}\protected@file@percent }
-\newlabel{sec:tong_the}{{3.1}{24}{Kiến trúc tổng thể của hệ thống}{section.3.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: ba giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý (MobileNetV4) đến phân đoạn có hướng dẫn (PGA-UNet)}}{26}{figure.3.1}\protected@file@percent }
-\newlabel{fig:system_architecture}{{3.1}{26}{Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: ba giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý (MobileNetV4) đến phân đoạn có hướng dẫn (PGA-UNet)}{figure.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{27}{section.3.2}\protected@file@percent }
-\newlabel{sec:tien_xu_ly}{{3.2}{27}{Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{section.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{27}{subsection.3.2.1}\protected@file@percent }
-\newlabel{subsec:dataset_btxrd}{{3.2.1}{27}{Bộ dữ liệu BTXRD}{subsection.3.2.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{28}{subsection.3.2.2}\protected@file@percent }
-\newlabel{subsec:noise_types}{{3.2.2}{28}{Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{subsection.3.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Quy trình tiền xử lý và loại bỏ nhiễu}{29}{subsection.3.2.3}\protected@file@percent }
-\newlabel{subsec:preprocessing_pipeline}{{3.2.3}{29}{Quy trình tiền xử lý và loại bỏ nhiễu}{subsection.3.2.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}}{30}{figure.3.2}\protected@file@percent }
-\newlabel{fig:preprocessing_pipeline}{{3.2}{30}{Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}{figure.3.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}}{31}{table.3.1}\protected@file@percent }
-\newlabel{tab:yolo_noise_detection}{{3.1}{31}{Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}{table.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Gán nhãn phân đoạn và định dạng dữ liệu}{31}{subsection.3.2.4}\protected@file@percent }
-\newlabel{subsec:annotation}{{3.2.4}{31}{Gán nhãn phân đoạn và định dạng dữ liệu}{subsection.3.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Chuẩn hóa và tăng cường dữ liệu}{32}{subsection.3.2.5}\protected@file@percent }
-\newlabel{subsec:augmentation}{{3.2.5}{32}{Chuẩn hóa và tăng cường dữ liệu}{subsection.3.2.5}{}}
-\newlabel{eq:normalization}{{3.1}{32}{Chuẩn hóa và tăng cường dữ liệu}{equation.3.2.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{33}{section.3.3}\protected@file@percent }
-\newlabel{sec:pga_unet}{{3.3}{33}{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{section.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{34}{subsection.3.3.1}\protected@file@percent }
-\newlabel{eq:plateau_heatmap}{{3.2}{34}{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{equation.3.3.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{34}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{35}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{36}{subsection.3.3.2}\protected@file@percent }
-\newlabel{eq:spatial_gate}{{3.3}{36}{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{equation.3.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{37}{subsection.3.3.3}\protected@file@percent }
-\newlabel{eq:prompt_confidence}{{3.4}{37}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.4}{}}
-\newlabel{eq:conditioned_gate}{{3.5}{37}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{38}{subsection.3.3.4}\protected@file@percent }
-\newlabel{subsec:training_strategy_pga}{{3.3.4}{38}{Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{subsection.3.3.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}}{39}{figure.3.3}\protected@file@percent }
-\newlabel{fig:pga_architecture}{{3.3}{39}{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}{figure.3.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{40}{table.3.2}\protected@file@percent }
-\newlabel{tab:training_strategy_compare}{{3.2}{40}{So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}{table.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Mô hình phân lớp bệnh lý (Gatekeeper)}{40}{section.3.4}\protected@file@percent }
-\newlabel{sec:phan_lop}{{3.4}{40}{Mô hình phân lớp bệnh lý (Gatekeeper)}{section.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}{40}{subsection.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Kiến trúc và chiến lược tinh chỉnh}{41}{subsection.3.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Vai trò trong hệ thống tổng thể}{42}{subsection.3.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Quy trình phân lớp nhị phân MobileNetV4 gác cổng: chuẩn hóa ảnh đầu vào, MobileNetV4-Hybrid-Medium được tinh chỉnh hai giai đoạn (khởi động đóng băng → tinh chỉnh toàn bộ), lớp phân lớp tuyến tính và Sigmoid với ngưỡng 0.5 quyết định CÓ/KHÔNG bệnh lý}}{43}{figure.3.4}\protected@file@percent }
-\newlabel{fig:classification_pipeline}{{3.4}{43}{Quy trình phân lớp nhị phân MobileNetV4 gác cổng: chuẩn hóa ảnh đầu vào, MobileNetV4-Hybrid-Medium được tinh chỉnh hai giai đoạn (khởi động đóng băng → tinh chỉnh toàn bộ), lớp phân lớp tuyến tính và Sigmoid với ngưỡng 0.5 quyết định CÓ/KHÔNG bệnh lý}{figure.3.4}{}}
+\newlabel{Chapter3}{{3}{21}{MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Kiến trúc tổng thể của hệ thống}{21}{section.3.1}\protected@file@percent }
+\newlabel{sec:tong_the}{{3.1}{21}{Kiến trúc tổng thể của hệ thống}{section.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{23}{section.3.2}\protected@file@percent }
+\newlabel{sec:tien_xu_ly}{{3.2}{23}{Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{section.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{23}{subsection.3.2.1}\protected@file@percent }
+\newlabel{subsec:dataset_btxrd}{{3.2.1}{23}{Bộ dữ liệu BTXRD}{subsection.3.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{24}{subsection.3.2.2}\protected@file@percent }
+\newlabel{subsec:noise_types}{{3.2.2}{24}{Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}{subsection.3.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Quy trình tiền xử lý và loại bỏ nhiễu}{25}{subsection.3.2.3}\protected@file@percent }
+\newlabel{subsec:preprocessing_pipeline}{{3.2.3}{25}{Quy trình tiền xử lý và loại bỏ nhiễu}{subsection.3.2.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}}{26}{table.3.1}\protected@file@percent }
+\newlabel{tab:yolo_noise_detection}{{3.1}{26}{Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}{table.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Gán nhãn phân đoạn và định dạng dữ liệu}{26}{subsection.3.2.4}\protected@file@percent }
+\newlabel{subsec:annotation}{{3.2.4}{26}{Gán nhãn phân đoạn và định dạng dữ liệu}{subsection.3.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Chuẩn hóa và tăng cường dữ liệu}{27}{subsection.3.2.5}\protected@file@percent }
+\newlabel{subsec:augmentation}{{3.2.5}{27}{Chuẩn hóa và tăng cường dữ liệu}{subsection.3.2.5}{}}
+\newlabel{eq:normalization}{{3.1}{27}{Chuẩn hóa và tăng cường dữ liệu}{equation.3.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{28}{section.3.3}\protected@file@percent }
+\newlabel{sec:pga_unet}{{3.3}{28}{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{section.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{29}{subsection.3.3.1}\protected@file@percent }
+\newlabel{eq:plateau_heatmap}{{3.2}{29}{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{equation.3.3.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{29}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{30}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{31}{subsection.3.3.2}\protected@file@percent }
+\newlabel{eq:spatial_gate}{{3.3}{31}{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{equation.3.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{31}{subsection.3.3.3}\protected@file@percent }
+\newlabel{eq:prompt_confidence}{{3.4}{32}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.4}{}}
+\newlabel{eq:conditioned_gate}{{3.5}{32}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{33}{subsection.3.3.4}\protected@file@percent }
+\newlabel{subsec:training_strategy_pga}{{3.3.4}{33}{Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{subsection.3.3.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{34}{table.3.2}\protected@file@percent }
+\newlabel{tab:training_strategy_compare}{{3.2}{34}{So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}{table.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Mô hình phân lớp bệnh lý (Gatekeeper)}{34}{section.3.4}\protected@file@percent }
+\newlabel{sec:phan_lop}{{3.4}{34}{Mô hình phân lớp bệnh lý (Gatekeeper)}{section.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Vấn đề: Khoảng trống giữa dữ liệu huấn luyện và thực tế triển khai}{34}{subsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Kiến trúc và chiến lược tinh chỉnh}{35}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Vai trò trong hệ thống tổng thể}{36}{subsection.3.4.3}\protected@file@percent }
 \@setckpt{Chapter3/chapter3}{
-\setcounter{page}{45}
+\setcounter{page}{37}
 \setcounter{equation}{5}
 \setcounter{enumi}{2}
 \setcounter{enumii}{0}
@@ -65,7 +57,7 @@
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{4}
+\setcounter{figure}{0}
 \setcounter{table}{2}
 \setcounter{tabx@nest}{0}
 \setcounter{listtotal}{0}
@@ -76,7 +68,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{0}
+\setcounter{instcount}{11}
 \setcounter{maxnames}{3}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{3}
@@ -184,7 +176,7 @@
 \setcounter{section@level}{2}
 \setcounter{Item}{12}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{51}
+\setcounter{bookmark@seq@number}{49}
 \setcounter{lstnumber}{1}
 \setcounter{parentequation}{0}
 \setcounter{float@type}{16}

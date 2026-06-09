@@ -320,7 +320,7 @@ Tất cả 4 fold cho kết quả đồng nhất, khẳng định mô hình hộ
 \label{subsec:subcategory}
 % ------------------------------------------------------------
 
-Để đánh giá sâu hơn khả năng tổng quát hóa của PGA-UNet, hai phân tích sub-category được thực hiện: \textbf{(1)}~so sánh PGA-UNet với U-Net/Att-UNet trên nhóm \textit{Dễ} (top-100 U-Net Dice) và \textit{Khó} (bottom-100 U-Net Dice), trên $N=\Ntestimg$~ảnh; \textbf{(2)}~so sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (Tổn thương nhỏ, Biên giới mờ, Tổn thương rõ nét), mỗi nhóm 50 mẫu per-polygon.
+Để đánh giá sâu hơn khả năng tổng quát hóa của PGA-UNet, hai phân tích sub-category được thực hiện: \textbf{(1)}~so sánh PGA-UNet với U-Net/Att-UNet trên nhóm \textit{Dễ} (top-50 U-Net Dice) và \textit{Khó} (bottom-50 U-Net Dice), trên $N=\Ntestimg$~ảnh (50 ảnh mỗi nhóm); \textbf{(2)}~so sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (Tổn thương nhỏ, Biên giới mờ, Tổn thương rõ nét), mỗi nhóm 50 mẫu per-polygon.
 
 \subsubsection*{PGA-UNet so với U-Net/Att-UNet theo độ khó tác vụ}
 
@@ -328,28 +328,28 @@ Tất cả 4 fold cho kết quả đồng nhất, khẳng định mô hình hộ
 
 \begin{table}[htbp]
     \centering
-    \caption{So sánh hiệu năng PGA-UNet với U-Net và Att-UNet theo độ khó tác vụ ($N=\Ntestimg$~ảnh, phân nhóm theo Dice của U-Net)}
+    \caption{So sánh hiệu năng PGA-UNet với U-Net và Att-UNet theo độ khó tác vụ ($N=\Ntestimg$~ảnh, phân nhóm 50 dễ nhất / 50 khó nhất theo Dice của U-Net; PGA tính trên polygon)}
     \label{tab:subcat_baseline}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{llcccccc}
         \hline
         \textbf{Nhóm} & \textbf{Mô hình} & \textbf{Dice} & \textbf{IoU} & \textbf{Pre} & \textbf{Rec} & \textbf{HD95 (px)} & \textbf{CBL} \\
         \hline
-        \multirow{3}{*}{Dễ (top-100)}
-            & U-Net       & 0.7639 & 0.6346 & 0.8220 & 0.7685 & 34.95  & 0.9054 \\
-            & Att-UNet    & 0.6397 & 0.5246 & 0.7377 & 0.6466 & 62.94  & 0.7870 \\
-            & PGA-UNet    & \textbf{0.8580} & \textbf{0.7617} & \textbf{0.8471} & \textbf{0.8900} & \textbf{15.54} & \textbf{0.9438} \\
+        \multirow{3}{*}{Dễ (top-50)}
+            & U-Net       & 0.8691 & 0.7713 & 0.8711 & 0.8771 & 21.05  & 0.9510 \\
+            & Att-UNet    & 0.7609 & 0.6539 & 0.8055 & 0.7797 & 34.48  & 0.8662 \\
+            & PGA-UNet    & \textbf{0.8938} & \textbf{0.8122} & \textbf{0.8704} & \textbf{0.9249} & \textbf{13.16} & \textbf{0.9588} \\
         \hline
-        \multirow{3}{*}{Khó (bottom-100)}
-            & U-Net       & 0.1539 & 0.0998 & 0.4539 & 0.1522 & 212.95 & 0.3167 \\
-            & Att-UNet    & 0.2002 & 0.1388 & 0.4579 & 0.1968 & 195.74 & 0.3490 \\
-            & PGA-UNet    & \textbf{0.8458} & \textbf{0.7431} & \textbf{0.8378} & \textbf{0.8726} & \textbf{12.04} & \textbf{0.9465} \\
+        \multirow{3}{*}{Khó (bottom-50)}
+            & U-Net       & 0.0000 & 0.0000 & 0.2200 & 0.0000 & 265.69 & 0.0243 \\
+            & Att-UNet    & 0.0929 & 0.0639 & 0.3397 & 0.1034 & 236.46 & 0.1551 \\
+            & PGA-UNet    & \textbf{0.8181} & \textbf{0.7114} & \textbf{0.8446} & \textbf{0.8274} & \textbf{18.06} & \textbf{0.9247} \\
         \hline
     \end{tabular}%
     }
 \end{table}
 
-Kết quả Bảng~\ref{tab:subcat_baseline} xác nhận rõ ràng giả thuyết lý thuyết. Ở nhóm \textit{Dễ}, U-Net đạt Dice~=~0.7639 trong khi PGA-UNet đạt 0.8580 ($\Delta=+0.0940$) — cải thiện có ý nghĩa nhưng không đột biến. Ở nhóm \textit{Khó}, U-Net sụp đổ hoàn toàn xuống Dice~=~0.1539 (HD95~=~212.95~px), Att-UNet cũng chỉ đạt 0.2002; trong khi đó PGA-UNet \textbf{duy trì ổn định ở 0.8458} ($\Delta=+0.6919$ so với U-Net). Điều này chứng minh rằng cơ chế prompt spatial gate là điều kiện cần thiết cho khả năng hoạt động nhất quán trên các ca bệnh phức tạp.
+Kết quả Bảng~\ref{tab:subcat_baseline} xác nhận rõ ràng giả thuyết lý thuyết. Ở nhóm \textit{Dễ} (top-50), U-Net đạt Dice~=~0.8691 trong khi PGA-UNet đạt 0.8938 ($\Delta=+0.0247$) — cải thiện có ý nghĩa nhưng không đột biến vì tổn thương đã rõ. Ở nhóm \textit{Khó} (bottom-50), U-Net sụp đổ hoàn toàn xuống Dice~=~0.0000 (HD95~=~265.69~px), Att-UNet cũng chỉ đạt 0.0929; trong khi đó PGA-UNet \textbf{duy trì ổn định ở 0.8181} ($\Delta=+0.8181$ so với U-Net). Điều này chứng minh rằng cơ chế prompt spatial gate là điều kiện cần thiết cho khả năng hoạt động nhất quán trên các ca bệnh phức tạp.
 
 \subsubsection*{PGA-UNet so với SAM-Med2D theo đặc tính lâm sàng}
 

@@ -1,7 +1,6 @@
 # Hồ Sơ Nộp Xét Duyệt — PGA-UNet
 
 **Đề tài:** Phát triển hệ thống phân đoạn ảnh X-quang xương dựa vào câu nhắc trực quan  
-**Tác giả:** Lục Tố Thông | **GVHD:** PGS.TS. Lý Quốc Ngọc & ThS. Đỗ Thị Thanh Hà | **Năm:** 2026  
 **Bộ dữ liệu:** BTXRD — Bone Tumor X-Ray Dataset (Nature Scientific Data, 2024)
 
 ---
