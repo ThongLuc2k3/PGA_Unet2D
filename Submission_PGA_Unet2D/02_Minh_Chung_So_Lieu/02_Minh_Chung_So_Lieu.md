@@ -216,7 +216,9 @@ U-Net và Att-UNet hoạt động tự động (merged mask per-ảnh, N=250 ả
 | **Pipeline IoU** | **0.6430** |
 
 **Công thức:**
-$$\text{Pipeline Dice} = \frac{\sum_{i \in \text{polygon(TP)}} \text{Dice}_i}{N_{\text{polygon(TP)}} + N_{\text{image(FP)}}} = \frac{\sum 226 \text{ Dice}}{226 + 38} = \frac{...}{264} = 0.7296$$
+$$
+\text{Pipeline Dice} = \frac{\displaystyle\sum_{i \in \text{polygon(TP)}} \text{Dice}_{i}}{N_{\text{polygon(TP)}} + N_{\text{image(FP)}}} = \frac{\sum 226 \text{ polygon Dice}}{226 + 38} = \frac{...}{264} = \mathbf{0.7296}
+$$
 
 **Phân tích:** Pipeline Dice (0.7296) thấp hơn PGA standalone (0.8524) vì 38 ảnh FP kéo điểm xuống. Bottleneck là Specificity dataset_online (79.79%) — mỗi ảnh bình thường bị sai → 1 đơn vị Dice=0 trong mẫu số. Cải thiện Specificity sẽ trực tiếp nâng Pipeline Dice.
 

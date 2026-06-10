@@ -67,7 +67,7 @@ $$\mathbf{H}_{prompt} = \text{GaussianBlur}(\mathbf{B}_{filled},\ k=31)$$
 - **Precision**: |P∩G| / |P| — trong vùng dự đoán là tổn thương, bao nhiêu thực sự là tổn thương (đo False Positive)
 - **Recall**: |P∩G| / |G| — trong vùng tổn thương thực tế, bao nhiêu được phát hiện (đo False Negative)
 - **HD95** (Hausdorff Distance 95th percentile, đơn vị pixel): khoảng cách tối đa (percentile 95) giữa đường biên P và G; giá trị thấp = đường biên bám sát GT
-- **CBL** (Contour-Based metric): đánh giá chất lượng đường biên, trọng số cao ở vùng viền; bổ sung Dice về độ chính xác đường viền
+- **CBL** (Centroid-Based Localization Score): Đánh giá khả năng định vị chính xác của vùng dự đoán so với ground truth dựa trên khoảng cách tâm điểm
 
 | Mô hình | Kịch bản | Dice ↑ | IoU ↑ | Precision ↑ | Recall ↑ | HD95 ↓ (px) | CBL ↑ |
 |---|---|---|---|---|---|---|---|
