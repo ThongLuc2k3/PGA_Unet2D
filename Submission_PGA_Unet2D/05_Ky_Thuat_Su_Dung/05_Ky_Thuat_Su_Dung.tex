@@ -17,13 +17,13 @@
 \hline
 \textbf{Kiến trúc U-Net} & Ronneberger 2015 [1] & Làm nền tảng encoder-decoder; không thay đổi cấu trúc cơ bản \\
 \hline
-\textbf{Attention Gate} & Oktay 2018 [2] & Kế thừa công thức tính hệ số chú ý $\alpha\^{}l$; mở rộng thành Conditioned Attention bằng cách thêm điều kiện hóa câu nhắc \\
+\textbf{Attention Gate} & Oktay 2018 [2] & Kế thừa công thức tính hệ số chú ý $\alpha^{l}$; mở rộng thành Conditioned Attention bằng cách thêm điều kiện hóa câu nhắc \\
 \hline
 \textbf{Kiến trúc SAM-Med2D} & Cheng 2023 [3] & Dùng làm mô hình đối sánh (benchmark); không tích hợp vào hệ thống đề xuất \\
 \hline
 \textbf{Backbone MobileNetV4} & Qin 2024 [4] & Dùng trọng số pretrained ImageNet-1K; fine-tune 2 giai đoạn trên BTXRD \\
 \hline
-\textbf{Thuật toán GradCAM} & Selvaraju 2019 [5] & Kế thừa công thức tính $\alpha\_k\^{}c$ và $L\_\text{GradCAM}$; ứng dụng vào cơ chế cứu hộ câu nhắc (ứng dụng mới) \\
+\textbf{Thuật toán GradCAM} & Selvaraju 2019 [5] & Kế thừa công thức tính $\alpha_k^{c}$ và $L_{\text{GradCAM}}$; ứng dụng vào cơ chế cứu hộ câu nhắc (ứng dụng mới) \\
 \hline
 \textbf{Dataset BTXRD} & Nguyen 2024 [6] & Toàn bộ dữ liệu huấn luyện và đánh giá \\
 \hline
@@ -49,7 +49,7 @@
 \hline
 \textbf{Prompt Spatial Gate (PSG)} & Tích hợp bản đồ nhiệt vào bộ mã hóa qua phép nhân tăng cường chọn lọc & Chưa có trong bài báo nào; lấy cảm hứng từ cơ chế gating nhưng thiết kế cho U-Net encoder \\
 \hline
-\textbf{Conditioned Attention Decoder (CAD)} & Điều kiện hóa tín hiệu gating bằng câu nhắc với trọng số tin cậy giảm dần theo tầng & Mở rộng Attention Gate [2]; thêm cơ chế fusion câu nhắc qua confidence score và trọng số w ∈ {1.0, 0.7, 0.4, 0.2} \\
+\textbf{Conditioned Attention Decoder (CAD)} & Điều kiện hóa tín hiệu gating bằng câu nhắc với trọng số tin cậy giảm dần theo tầng & Mở rộng Attention Gate [2]; thêm cơ chế fusion câu nhắc qua confidence score và trọng số $w \in \{1.0, 0.7, 0.4, 0.2\}$ \\
 \hline
 \textbf{Plateau Heatmap} & Gán 1.0 đồng đều bên trong box + Gaussian blur viền k=31 & Lấy cảm hứng từ Gaussian 2D [lý thuyết] và bản đồ nhiệt GradCAM [5]; biến thể thực tiễn phù hợp U-Net \\
 \hline
@@ -69,17 +69,18 @@
 \subsection{Phân Biệt Kế Thừa Vs Đề Xuất Mới}
 
 \begin{verbatim}
-Kế thừa nguyên si:
-  U-Net architecture ────────────────── [1]
-  Attention Gate formula ─────────────── [2]
-  GradCAM formula (α_k, L_GradCAM) ──── [5]
+KẾ THỪA TRỰC TIẾP (cite bài báo gốc):
+  U-Net encoder-decoder architecture ----------- [1]
+  Attention Gate formula (alpha^l) ------------- [2]
+  SAM-Med2D (dùng làm benchmark) --------------- [3]
+  EfficientNet_B3 backbone --------------------- [4]
 
-Kế thừa + mở rộng:
-  Attention Gate → Conditioned Attention (thêm câu nhắc) ── dựa trên [2]
-  Gaussian heatmap → Plateau Heatmap (biến thể thực tiễn) ── cảm hứng từ lý thuyết
+KẾ THỪA + MỞ RỘNG (dựa trên nhưng có sửa đổi):
+  Attention Gate -> Conditioned Attention
+    (thêm câu nhắc vào gating signal) ------ dựa trên [2]
 
-Đề xuất gốc (không kế thừa):
+ĐỀ XUẤT GỐC (không kế thừa từ bài báo nào):
   Prompt Spatial Gate (PSG)
-  IPR (Iterative Prompt Refinement)
-  Pipeline GradCAM Rescue (ứng dụng GradCAM vào sửa câu nhắc sai)
+  Plateau Heatmap (biến thể thực tiễn riêng)
+  Kiến trúc tổng thể PGA-UNet (PSG + CAD)
 \end{verbatim}

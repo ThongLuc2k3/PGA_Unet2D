@@ -1,17 +1,17 @@
 \documentclass[12pt,a4paper]{article}
 
-% ── Encoding & Language ──────────────────────────────────────────────────────
+% -- Encoding & Language ------------------------------------------------------
 \usepackage[T5]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[vietnamese,english]{babel}
+\usepackage[english]{babel}
 
-% ── Layout ───────────────────────────────────────────────────────────────────
+% -- Layout -------------------------------------------------------------------
 \usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2cm]{geometry}
 \usepackage{setspace}
 \onehalfspacing
 \usepackage{parskip}
 
-% ── Tables ───────────────────────────────────────────────────────────────────
+% -- Tables -------------------------------------------------------------------
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
@@ -19,37 +19,37 @@
 \usepackage{longtable}
 \usepackage{graphicx}   % for \resizebox
 
-% ── Math ─────────────────────────────────────────────────────────────────────
+% -- Math ---------------------------------------------------------------------
 \usepackage{amsmath}
 \usepackage{amssymb}
 
-% ── Colors ───────────────────────────────────────────────────────────────────
+% -- Colors -------------------------------------------------------------------
 \usepackage[dvipsnames]{xcolor}
 
-% ── Images ───────────────────────────────────────────────────────────────────
+% -- Images -------------------------------------------------------------------
 \usepackage{graphicx}
 \graphicspath{{03_Minh_Chung_Hinh_Anh/images/}}
 
-% ── Hyperlinks ───────────────────────────────────────────────────────────────
+% -- Hyperlinks ---------------------------------------------------------------
 \usepackage[hidelinks]{hyperref}
 
-% ── Misc ─────────────────────────────────────────────────────────────────────
+% -- Misc ---------------------------------------------------------------------
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 
-% ── Header/Footer ────────────────────────────────────────────────────────────
+% -- Header/Footer ------------------------------------------------------------
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small Khóa Luận Tốt Nghiệp — PGA-UNet}
-\fancyhead[R]{\small Lục Tố Thông}
+\fancyhead[R]{}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
-% ────────────────────────────────────────────────────────────────────────────
+% ----------------------------------------------------------------------------
 \begin{document}
 
-% ── Title page ───────────────────────────────────────────────────────────────
+% -- Title page ---------------------------------------------------------------
 \begin{titlepage}
     \centering
     \vspace*{2cm}
@@ -63,7 +63,6 @@
     \rule{\textwidth}{1.5pt}\\[1.5cm]
 
     \begin{tabular}{ll}
-        \textbf{Tác giả:}               & Lục Tố Thông \\[0.3cm]
         \textbf{GVHD:}                  & PGS.TS. Lý Quốc Ngọc \& ThS. Đỗ Thị Thanh Hà \\[0.3cm]
         \textbf{Năm:}                   & 2026 \\[0.3cm]
     \end{tabular}
@@ -75,7 +74,7 @@
 \tableofcontents
 \newpage
 
-% ── 5 phần chính ─────────────────────────────────────────────────────────────
+% -- 5 phần chính -------------------------------------------------------------
 \input{01_Dong_Gop_De_Tai/01_Dong_Gop_De_Tai}
 \newpage
 
