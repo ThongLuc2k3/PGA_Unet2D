@@ -8,7 +8,7 @@
 \label{sec:tong_the}
 % ------------------------------------------------------------
 
-Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline), kết hợp chặt chẽ giữa khả năng tự động hóa của mô hình học sâu và tri thức lâm sàng của chuyên gia y tế (bác sĩ). Kiến trúc tổng thể được chia thành các module hoạt động liên hoàn, phản ánh đúng quy trình làm việc thực tế tại các cơ sở y tế nhằm đảm bảo tính chính xác và an toàn cao. Luồng xử lý của hệ thống được vận hành qua ba giai đoạn cốt lõi:
+Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) hoàn toàn tự động. Đầu vào của hệ thống gồm ảnh X-quang và một bounding box do người dùng vẽ lên vùng nghi ngờ, người dùng không cần biết trước ảnh có bệnh hay không. Kiến trúc tổng thể được chia thành các module liên hoàn qua ba giai đoạn cốt lõi:
 
 \textbf{1. Giai đoạn tiền xử lý và làm sạch dữ liệu:} 
 Ảnh X-quang thô đầu vào trong thực tế thường chứa nhiều nhiễu kỹ thuật (như ký tự R/L đánh dấu hướng chụp) và độ tương phản kém do các cấu trúc mô mềm và xương chồng lấp. Module tiền xử lý đóng vai trò làm sạch các vùng nhiễu này, đồng thời cân bằng biểu đồ mức xám và chuẩn hóa giá trị pixel. Bước này nhằm cung cấp một đầu vào sạch, chuẩn mực và ổn định cho toàn bộ các mô hình học sâu phía sau.
@@ -16,18 +16,18 @@ Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luậ
 \textbf{2. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):} 
 Sau khi được làm sạch, ảnh tiếp tục đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống sẽ tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường. 
 \begin{itemize}
-    \item Nếu kết quả dự đoán là âm tính (bình thường) và chuyên gia đồng thuận, luồng chẩn đoán sẽ khép lại, giúp tiết kiệm thời gian khám chữa bệnh.
-    \item Nếu hệ thống đưa ra cảnh báo dương tính (có bệnh lý), quyền điều khiển được trao lại cho bác sĩ để chuyển sang bước bóc tách tổn thương chi tiết.
+    \item Nếu kết quả phân lớp là âm tính (bình thường), pipeline tự động dừng, bounding box không tạo ra sự khác biệt ở bước này.
+    \item Nếu kết quả là dương tính (có bệnh lý), pipeline tự động chuyển sang giai đoạn phân đoạn, sử dụng bounding box làm prompt hướng dẫn.
 \end{itemize}
 
 \textbf{3. Giai đoạn phân đoạn có hướng dẫn (PGA-UNet):} 
-Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác (Interactive Learning). Bác sĩ thực hiện thao tác khoanh một hộp giới hạn (Bounding Box) bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt không gian (Prompt Heatmap). Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
+Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác. Bác sĩ thực hiện thao tác khoanh một hộp giới hạn (Bounding Box) bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt không gian (Prompt Heatmap). Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.95\textwidth, height=0.85\textheight, keepaspectratio]{images/system_architecture.png}
-    \caption{Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: ba giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý đến phân đoạn có hướng dẫn (PGA-UNet)}
-    \label{fig:system_architecture}
+    \includegraphics[width=0.88\textwidth, keepaspectratio]{images/pipeline_pga_app_inference.png}
+    \caption{Pipeline tổng thể hệ thống: đầu vào gồm ảnh X-quang và bounding box, qua EfficientNet\_B3 sàng lọc tự động, âm tính dừng, dương tính chuyển sang PGA-UNet phân đoạn có hướng dẫn.}
+    \label{fig:pipeline_overview}
 \end{figure}
 
 \begin{sloppypar}
@@ -55,98 +55,28 @@ Bộ dữ liệu được sử dụng trong khóa luận là \textbf{BTXRD} (\te
 
 Bộ dữ liệu này phục vụ hai mục đích song song trong kiến trúc hệ thống: (1) toàn bộ ảnh (cả lành lặn và bệnh lý) được sử dụng để huấn luyện \textbf{mô hình phân lớp} sàng lọc ban đầu; (2) chỉ ảnh có bệnh lý kèm theo mặt nạ phân đoạn được sử dụng để huấn luyện \textbf{mô hình phân đoạn PGA-UNet}.
 
-\subsection{Các loại nhiễu đặc thù trong ảnh X-quang BTXRD}
-\label{subsec:noise_types}
-
-Ảnh X-quang trong bộ BTXRD, dù là dữ liệu lâm sàng thực tế, mang theo những loại nhiễu kỹ thuật phổ biến sau:
-
-\textbf{1. Ký tự chỉ hướng R/L:} Đây là loại nhiễu phổ biến nhất trong X-quang lâm sàng. Các ký tự kim loại hoặc dải nhựa cản quang ký hiệu bên Phải (R) hoặc bên Trái (L) được đặt lên tấm phim trước khi chụp nhằm xác định hướng giải phẫu. Trên ảnh X-quang số hóa, chúng xuất hiện dưới dạng các điểm sáng có độ tương phản cực cao. Nếu không được loại bỏ, các đốm sáng này có thể bị mạng nơ-ron nhận nhầm là tổn thương xương, dẫn đến kết quả phân đoạn sai hoàn toàn.
-
-\textbf{2. Metadata và nhãn kỹ thuật:} Một số ảnh chứa các chuỗi ký tự kỹ thuật (ngày tháng, mã bệnh viện, thông số máy) được nhúng trực tiếp vào ảnh. Mặc dù nhỏ hơn ký tự R/L, chúng vẫn tạo ra gradient bất thường trong bộ mã hóa (encoder) nếu không được xử lý.
-
-\textbf{3. ICC Profile trong tệp PNG:} Nhiều ảnh PNG thu thập từ thiết bị y tế có nhúng thông tin ICC Profile (International Color Consortium) vào metadata. Mặc dù không ảnh hưởng đến nội dung hình ảnh trực quan, ICC Profile bất hợp lệ gây lỗi khi đọc bằng thư viện OpenCV trong Python, khiến hình ảnh bị đọc sai kênh màu hoặc không thể đọc được. Đây là vấn đề kỹ thuật cần giải quyết trước bất kỳ bước tiền xử lý nào.
-
+\FloatBarrier
 \subsection{Quy trình tiền xử lý và loại bỏ nhiễu}
 \label{subsec:preprocessing_pipeline}
 
-Để giải quyết các vấn đề trên một cách có hệ thống, nhóm xây dựng một quy trình tiền xử lý đa bước gồm 6 bước tuần tự được mô tả dưới đây.
+Ảnh X-quang BTXRD trong thực tế chứa một số loại nhiễu kỹ thuật phổ biến như ký tự chỉ hướng R/L và nhãn kỹ thuật được nhúng trực tiếp vào ảnh, những vùng sáng bất thường này có thể bị mạng nơ-ron nhận nhầm là tổn thương nếu không được xử lý. Quy trình tiền xử lý được tóm tắt tại Hình~\ref{fig:preprocessing_pipeline}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth, height=0.82\textheight, keepaspectratio]{images/preprocessing_pipeline.png}
-    \caption{Quy trình tiền xử lý dữ liệu: chuyển JPEG → PNG (xóa ICC Profile), upload và gán nhãn bounding box thủ công trên Roboflow (2000/3746 ảnh), huấn luyện YOLOv11s, phát hiện vùng nhiễu R/L trên toàn bộ tập, xóa nhiễu bằng inpainting, chuẩn hóa thang xám và resize 512×512}
+    \caption{Quy trình tiền xử lý dữ liệu: gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua Roboflow, finetune YOLOv11s, detect nhiễu trên toàn bộ tập ảnh PNG, tô màu vùng nhiễu bằng màu nền được chọn.}
     \label{fig:preprocessing_pipeline}
 \end{figure}
 
-\textbf{Bước 1 — Xóa ICC Profile:} Toàn bộ các tệp PNG trong bộ dữ liệu được quét và xử lý bằng script \texttt{clean\_data.py}: hệ thống đọc từng ảnh vào bộ nhớ bằng \texttt{cv2.IMREAD\_UNCHANGED} rồi ghi lại ngay tại chỗ bằng \texttt{cv2.imwrite()}. Khi OpenCV ghi ảnh, thư viện chỉ lưu dữ liệu điểm ảnh thuần túy theo chuẩn PNG, tự động loại bỏ mọi khối metadata ngoại lai (bao gồm ICC Profile). Kết quả là toàn bộ tập ảnh được "rửa sạch" mà không làm biến đổi bất kỳ giá trị pixel nào.
+Để xóa nhiễu tự động, nhóm gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua nền tảng \textbf{Roboflow}~\cite{roboflow2023}, sau đó finetune \textbf{YOLOv11s}~\cite{yolov11} trên tập nhãn này. Mô hình sau khi huấn luyện được dùng để detect vùng nhiễu trên toàn bộ 3.746 ảnh PNG; các vùng phát hiện được xử lý bằng cách xác định giá trị màu xuất hiện nhiều nhất dọc theo biên hộp phát hiện; nếu giá trị đó nhỏ hơn 180 (không quá sáng) thì tô bằng màu đó, ngược lại tô bằng màu đen. Phương pháp này đảm bảo vùng được lấp đầy đồng nhất với nền xung quanh thay vì dùng màu cố định, loại bỏ hoàn toàn ký tự R/L và nhãn kỹ thuật.
 
-\textbf{Bước 2 — Phát hiện và xóa ký tự nhiễu bằng YOLOv11s:} Đây là bước xử lý cốt lõi và phức tạp nhất của quy trình. Nhóm sử dụng mô hình phát hiện đối tượng \textbf{YOLOv11s}~\cite{yolov11} (phiên bản nhỏ gọn của họ YOLO thế hệ 11) để xác định chính xác tọa độ (hộp giới hạn) của từng vùng nhiễu trên ảnh. Sau khi xác định được vùng nhiễu, các vùng này được xóa và phục hồi bằng kỹ thuật nội suy (inpainting).
-
-Quy trình xây dựng và huấn luyện mô hình phát hiện nhiễu gồm các bước sau:
-\begin{enumerate}
-    \item \textbf{Gán nhãn dữ liệu (Annotation):} Nền tảng \textbf{Roboflow}~\cite{roboflow2023} được sử dụng để vẽ thủ công hộp giới hạn cho tất cả các vùng nhiễu (ký tự R/L, nhãn kỹ thuật) trên toàn bộ tập ảnh BTXRD. Tập dữ liệu đã gán nhãn được phân chia theo tỷ lệ 90/10 cho huấn luyện và đánh giá.
-    \item \textbf{Cấu hình huấn luyện:} Mô hình \texttt{yolo11s} được khởi tạo với trọng số tiền huấn luyện trên tập COCO. Ảnh đầu vào được đệm thêm (padding) về tỷ lệ vuông rồi thay đổi kích thước về $1024 \times 1024$ pixel. Quá trình huấn luyện chạy tối đa 100 epoch với cơ chế dừng sớm (patience = 10) và thuật toán tối ưu AdamW (tốc độ học $10^{-3}$), mỗi lô gồm 8 ảnh.
-    \item \textbf{Suy luận và xóa nhiễu:} Sau khi huấn luyện, mô hình YOLO duyệt qua toàn bộ tập ảnh, xuất ra danh sách Bounding Box cho các vùng nhiễu. Mỗi vùng được xóa và lấp đầy bằng giá trị lân cận phù hợp, đảm bảo bề mặt ảnh liền mạch tự nhiên.
-\end{enumerate}
-
-Hiệu năng của mô hình phát hiện nhiễu trên tập đánh giá được tổng hợp tại Bảng~\ref{tab:yolo_noise_detection}.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Kết quả của mô hình YOLOv11s trong bài toán phát hiện và định vị nhiễu ảnh X-quang}
-    \label{tab:yolo_noise_detection}
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabular}{|p{9.5cm}|c|}
-        \hline
-        \textbf{Chỉ số đánh giá} & \textbf{Kết quả} \\
-        \hline
-        Độ chính xác (Precision -- P) & 99.6\% \\
-        \hline
-        Độ nhạy (Recall -- R) & 96.2\% \\
-        \hline
-        Độ chính xác vùng phát hiện (mAP$_{50}$) & 98.6\% \\
-        \hline
-        Độ chính xác đa ngưỡng (mAP$_{50\text{-}95}$) & 66.2\% \\
-        \hline
-    \end{tabular}
-\end{table}
-
-Độ chính xác Precision 99.6\% đặc biệt quan trọng trong ngữ cảnh y tế: nó đảm bảo mô hình gần như không bao giờ nhầm cấu trúc xương giải phẫu thành nhiễu và xóa nhầm, một lỗi có hậu quả nghiêm trọng cho chất lượng dữ liệu huấn luyện phân đoạn. Recall 96.2\% cho thấy hệ thống quét sạch được phần lớn nhiễu, chỉ bỏ sót một tỷ lệ nhỏ các ký tự quá mờ hoặc quá nhỏ.
-
-\textbf{Bước 3 — Chuẩn hóa thang xám:} Ảnh X-quang sau khi làm sạch được chuyển về định dạng thang xám (\textit{Grayscale}) 8-bit chuẩn nếu chưa ở định dạng đó, đảm bảo tính đồng nhất cho toàn bộ pipeline nhập liệu.
-
-\subsection{Gán nhãn phân đoạn và định dạng dữ liệu}
+\FloatBarrier
+\subsection{Gán nhãn và chuẩn bị dữ liệu}
 \label{subsec:annotation}
 
-Sau khi ảnh được làm sạch, nhóm tiến hành gán nhãn phân đoạn thủ công ở cấp độ điểm ảnh (pixel-level) cho tập ảnh có bệnh lý:
+Sau khi ảnh được làm sạch, nhóm gán nhãn phân đoạn thủ công bằng phần mềm \textbf{LabelMe} ở dạng đa giác. Mỗi polygon trên một ảnh được xử lý như một mẫu huấn luyện độc lập, kèm mặt nạ và bounding box prompt tương ứng, cơ chế này tăng hiệu quả sử dụng dữ liệu tự nhiên mà không cần augmentation nhân tạo. Toàn bộ ảnh và mask được chuẩn hóa pixel về $[-1, 1]$ và resize về $512 \times 512$.
 
-\textbf{Công cụ và định dạng:} Nhóm sử dụng phần mềm \textbf{LabelMe} để vẽ trực tiếp đường viền đa giác (Polygon) bao quanh từng vùng khối u/tổn thương xương. Mỗi ảnh có thể chứa một hoặc nhiều polygon tương ứng với nhiều tổn thương khác nhau. Dữ liệu gán nhãn được xuất ra định dạng \textbf{JSON} theo cấu trúc chuẩn của LabelMe, trong đó mỗi polygon được lưu dưới dạng danh sách tọa độ điểm đỉnh.
-
-\textbf{Cơ chế mở rộng dữ liệu từ polygon:} Một điểm quan trọng trong pipeline dữ liệu của PGA-UNet là mỗi polygon được xử lý như một \textit{training sample độc lập}. Nếu một ảnh chứa $k$ polygon (tương ứng $k$ tổn thương khác nhau), hệ thống sẽ sinh ra $k$ mẫu huấn luyện riêng biệt, mỗi mẫu bao gồm ảnh đầy đủ, mặt nạ của đúng polygon đó, và câu nhắc được tạo từ Bounding Box bao quanh polygon đó. Cơ chế này tự nhiên làm tăng hiệu quả sử dụng dữ liệu mà không cần augmentation nhân tạo.
-
-\textbf{Hai định dạng dữ liệu song song:} Để phục vụ cả mô hình đề xuất và các mô hình cơ sở, dữ liệu được chuẩn bị ở hai dạng:
-\begin{itemize}
-    \item \textbf{Định dạng JSON Polygon} (dành cho PGA-UNet): Ảnh gốc cùng tệp JSON annotation được resize về $512 \times 512$. Mặt nạ được sinh ra ngay trong \textit{DataLoader} bằng hàm \texttt{cv2.fillPoly()} từ tọa độ polygon, đảm bảo độ chính xác tối đa khi resize.
-    \item \textbf{Định dạng PNG Mask} (dành cho U-Net, Attention U-Net cơ sở): Mặt nạ được xuất trước thành ảnh PNG nhị phân, lưu cùng thư mục với ảnh gốc, resize về $512 \times 512$.
-\end{itemize}
-
-\subsection{Chuẩn hóa và tăng cường dữ liệu}
-\label{subsec:augmentation}
-
-\textbf{Chuẩn hóa pixel (Normalization):} Toàn bộ ảnh thang xám sau resize được chuẩn hóa về khoảng $[-1, 1]$ theo công thức:
-\begin{equation}
-    x_{\text{norm}} = \frac{x/255 - 0.5}{0.5}
-    \label{eq:normalization}
-\end{equation}
-Cách chuẩn hóa này ($\mu = 0.5$, $\sigma = 0.5$) đưa phân phối pixel về trung tâm, giúp thuật toán tối ưu AdamW hội tụ nhanh hơn và ổn định hơn trong giai đoạn đầu huấn luyện.
-
-\textbf{Tăng cường dữ liệu đồng bộ (Synchronized Augmentation):} Do PGA-UNet nhận đồng thời ba đầu vào (ảnh, mặt nạ, bản đồ nhiệt câu nhắc), mọi phép biến đổi hình học phải được áp dụng \textit{đồng bộ hoàn toàn} trên cả ba thành phần. Nếu ảnh bị lật ngang, mặt nạ và câu nhắc cũng phải lật ngang tương ứng — một sự không khớp không gian giữa câu nhắc và mặt nạ sẽ dạy mạng sai chiều hoàn toàn. Hai phép biến đổi hình học được áp dụng trong quá trình huấn luyện:
-\begin{itemize}
-    \item \textbf{Lật ngang ngẫu nhiên (Random Horizontal Flip):} Xác suất 50\%, áp dụng đồng thời cho cả ba tensor.
-    \item \textbf{Xoay ngẫu nhiên (Random Rotation $\pm 15^{\circ}$):} Góc xoay lấy đều trong khoảng $[-15^{\circ}, +15^{\circ}]$. Ảnh và câu nhắc sử dụng nội suy song tuyến (bilinear), mặt nạ sử dụng nội suy láng giềng gần nhất (nearest-neighbor) để bảo toàn giá trị nhị phân.
-\end{itemize}
-
-Trong quá trình huấn luyện PGA-UNet, để tăng tính bền bỉ (robustness) của mô hình trước các câu nhắc không hoàn hảo, 15\% số mẫu ngẫu nhiên được thay thế câu nhắc bằng bản đồ nhiệt zero (câu nhắc rỗng), và 15\% khác được thêm nhiễu Gaussian vào câu nhắc. Chiến lược này buộc mô hình không được phụ thuộc mù quáng vào câu nhắc mà phải kết hợp với đặc trưng hình ảnh để đưa ra quyết định.
+Tăng cường dữ liệu được áp dụng \textit{đồng bộ} trên cả ba đầu vào (ảnh, mặt nạ, bản đồ nhiệt câu nhắc): lật ngang ngẫu nhiên (50\%) và xoay ngẫu nhiên $\pm 15^{\circ}$. Ngoài ra, 15\% mẫu được thay prompt bằng bản đồ nhiệt rỗng và 15\% thêm nhiễu vào prompt, buộc mô hình không phụ thuộc mù quáng vào câu nhắc.
 
 
 % ------------------------------------------------------------
@@ -154,11 +84,11 @@ Trong quá trình huấn luyện PGA-UNet, để tăng tính bền bỉ (robustn
 \label{sec:pga_unet}
 % ------------------------------------------------------------
 
-Kiến trúc mạng PGA-UNet được đề xuất trong khóa luận không sử dụng cách tiếp cận nối kênh tĩnh (static concatenation) truyền thống. Thay vào đó, mạng được thiết kế để tích hợp tri thức định hướng từ chuyên gia một cách linh hoạt và sâu sát vào cả hai tiến trình: mã hóa (rút trích đặc trưng) và giải mã (khôi phục hình dáng). Sự cải tiến này được thực hiện thông qua ba thành phần cấu trúc cốt lõi dưới đây.
+Kiến trúc mạng PGA-UNet được đề xuất trong khóa luận không sử dụng cách tiếp cận nối kênh tĩnh truyền thống. Thay vào đó, mạng được thiết kế để tích hợp tri thức định hướng từ chuyên gia một cách linh hoạt và sâu sát vào cả hai tiến trình: mã hóa (rút trích đặc trưng) và giải mã (khôi phục hình dáng). Sự cải tiến này được thực hiện thông qua ba thành phần cấu trúc cốt lõi dưới đây.
 
 \subsection{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}
 
-Nhằm chuyển đổi thao tác không gian của người dùng thành một định dạng số học mang tính chất dẫn đường mềm dẻo (soft guidance), tọa độ hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ cung cấp sẽ được biểu diễn dưới dạng Bản đồ nhiệt câu nhắc $\mathbf{H}_{prompt} \in [0, 1]^{H \times W}$. 
+Nhằm chuyển đổi thao tác không gian của người dùng thành một định dạng số học mang tính chất dẫn đường mềm dẻo, tọa độ hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ cung cấp sẽ được biểu diễn dưới dạng Bản đồ nhiệt câu nhắc $\mathbf{H}_{prompt} \in [0, 1]^{H \times W}$. 
 
 Trong thiết kế lý thuyết, bản đồ nhiệt câu nhắc có thể xây dựng theo phân phối Gaussian 2D thuần túy như đã trình bày tại Phương trình~\eqref{eq:gaussian_heatmap}, với cường độ đạt cực đại tại tâm và phân rã dần về biên. Tuy nhiên, trong thực tế triển khai, nhóm sử dụng phương pháp \textbf{Plateau Heatmap}: vùng bên trong hộp giới hạn được gán đồng nhất giá trị $1.0$ (tạo vùng cao nguyên phẳng - plateau), sau đó làm mềm đường biên bằng bộ lọc Gaussian (kernel $31 \times 31$):
 \begin{equation}
@@ -167,11 +97,11 @@ Trong thiết kế lý thuyết, bản đồ nhiệt câu nhắc có thể xây 
 \end{equation}
 trong đó $\mathbf{B}_{\text{mask}} \in \{0, 1\}^{H \times W}$ là mặt nạ nhị phân của hộp giới hạn (có đệm 5 px mỗi phía). Cách tiếp cận này giữ được tín hiệu dẫn đường mạnh và đồng đều bên trong vùng câu nhắc (không bị suy giảm về phía tâm như Gaussian thuần), đồng thời tạo ra đường chuyển tiếp mượt mà ở viền hộp để mạng không học các gradient giả tạo từ đường viền sắc nét. Bản đồ nhiệt $\mathbf{H}_{prompt}$ này đóng vai trò như một kênh dữ liệu độc lập, song hành cùng ảnh X-quang đi vào mạng.
 
-\textbf{Lý do chọn $k=31$:} Kích thước kernel được lựa chọn để cân bằng hai yêu cầu đối lập: đủ lớn để tạo vùng chuyển tiếp mịn kéo dài $\approx15$ px mỗi bên — phủ vùng biên tổn thương điển hình trên ảnh $512\times512$, đồng thời đủ nhỏ để tín hiệu câu nhắc không "tràn" sang các cấu trúc xương lân cận. Thực nghiệm với $k \in \{15, 21, 31, 51\}$ cho thấy $k < 21$ tạo đường chuyển tiếp quá đột ngột (gần mặt nạ nhị phân), trong khi $k > 51$ làm tín hiệu lan quá rộng ra ngoài vùng tổn thương. $k=31$ (số lẻ, đảm bảo tâm kernel đối xứng) cho kết quả Dice tốt nhất trên tập xác thực và được giữ cố định trong toàn bộ thực nghiệm.
+\textbf{Lý do chọn $k=31$:} Kích thước kernel được lựa chọn để cân bằng hai yêu cầu đối lập: đủ lớn để tạo vùng chuyển tiếp mịn kéo dài $\approx15$ px mỗi bên, phủ vùng biên tổn thương điển hình trên ảnh $512\times512$, đồng thời đủ nhỏ để tín hiệu câu nhắc không "tràn" sang các cấu trúc xương lân cận. Thực nghiệm với $k \in \{15, 21, 31, 51\}$ cho thấy $k < 21$ tạo đường chuyển tiếp quá đột ngột (gần mặt nạ nhị phân), trong khi $k > 51$ làm tín hiệu lan quá rộng ra ngoài vùng tổn thương. $k=31$ (số lẻ, đảm bảo tâm kernel đối xứng) cho kết quả Dice tốt nhất trên tập xác thực và được giữ cố định trong toàn bộ thực nghiệm.
 
 \paragraph{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}
 
-Câu hỏi đặt ra là tại sao không dùng mặt nạ nhị phân phẳng — trong đó mọi điểm ảnh bên trong hộp giới hạn nhận giá trị $1$ và bên ngoài là $0$ — thay vì bản đồ nhiệt liên tục. Câu trả lời nằm ở bản chất của phép tích chập và cơ chế dung hợp đặc trưng trong U-Net. Khi một mặt nạ nhị phân đi qua tầng tích chập, đường biên sắc nét tại viền hộp giới hạn tạo ra các gradient giả tạo (pseudo-gradients) — mạng có thể học cạnh của hộp bao thay vì đặc trưng thực của tổn thương. Ngược lại, Plateau Heatmap cung cấp tín hiệu mạnh và đồng đều bên trong (đảm bảo câu nhắc rõ nét), nhưng chuyển tiếp mượt mà ở viền thông qua bộ lọc Gaussian. Thiết kế này phù hợp với bản chất tự nhiên của attention bias: cổng không gian tại phương trình~\eqref{eq:spatial_gate} cần một tín hiệu liên tục để thực hiện phép nhân theo phần tử trên feature map mà không tạo ra hiệu ứng ringing.
+Câu hỏi đặt ra là tại sao không dùng mặt nạ nhị phân phẳng, trong đó mọi điểm ảnh bên trong hộp giới hạn nhận giá trị $1$ và bên ngoài là $0$, thay vì bản đồ nhiệt liên tục. Câu trả lời nằm ở bản chất của phép tích chập và cơ chế dung hợp đặc trưng trong U-Net. Khi một mặt nạ nhị phân đi qua tầng tích chập, đường biên sắc nét tại viền hộp giới hạn tạo ra các gradient giả tạo (pseudo-gradients), mạng có thể học cạnh của hộp bao thay vì đặc trưng thực của tổn thương. Ngược lại, Plateau Heatmap cung cấp tín hiệu mạnh và đồng đều bên trong (đảm bảo câu nhắc rõ nét), nhưng chuyển tiếp mượt mà ở viền thông qua bộ lọc Gaussian. Thiết kế này phù hợp với bản chất tự nhiên của attention bias: cổng không gian tại phương trình~\eqref{eq:spatial_gate} cần một tín hiệu liên tục để thực hiện phép nhân theo phần tử trên feature map mà không tạo ra hiệu ứng ringing.
 
 Ngoài ra, các nghiên cứu về cơ chế chú ý trong học sâu cho thấy mạng nơ-ron tự nhiên tạo ra các vùng kích hoạt có dạng phân phối liên tục, với cường độ cao nhất tại vùng trung tâm đặc trưng nhất và giảm dần ra biên. Biểu diễn Plateau Heatmap của câu nhắc bắt chước đặc tính này, tạo ra sự tương thích tự nhiên với cơ chế học của mạng.
 
@@ -179,13 +109,14 @@ Ngoài ra, các nghiên cứu về cơ chế chú ý trong học sâu cho thấy
 
 SAM và SAM-Med2D~\cite{2023-SAMMed2D-Cheng} mã hóa hộp giới hạn dưới dạng \textit{positional embedding rời rạc}: tọa độ hai góc của hộp (trên-trái và dưới-phải) được ánh xạ thành hai vector nhúng 256 chiều thông qua bảng tra vị trí sinusoidal. Cách tiếp cận này phù hợp với kiến trúc Transformer của SAM vì Transformer xử lý một tập token rời rạc và tích hợp thông tin vị trí qua phép cộng vector embedding. Tuy nhiên, PGA-UNet sử dụng kiến trúc U-Net với feature map 2D liên tục có cùng cấu trúc không gian $H \times W$ với ảnh đầu vào.
 
-Việc kết hợp một vector embedding rời rạc (256 chiều, không có cấu trúc không gian) vào feature map 2D đòi hỏi phép chiếu phức tạp và dễ mất thông tin vị trí. Biểu diễn bản đồ nhiệt 2D ($H \times W$, cùng không gian với feature map) cho phép Cổng không gian thực hiện phép nhân theo phần tử trực tiếp tại phương trình~\eqref{eq:spatial_gate} — một phép toán đơn giản, hiệu quả về tính toán và bảo toàn toàn vẹn thông tin vị trí không gian. Đây là lý do cốt lõi nhóm chọn biểu diễn heatmap 2D thay vì vector embedding rời rạc theo cách SAM: hai kiến trúc khác nhau đòi hỏi hai cách mã hóa prompt khác nhau để phù hợp nhất với cơ chế dung hợp đặc trưng nội tại.
+Việc kết hợp một vector embedding rời rạc (256 chiều, không có cấu trúc không gian) vào feature map 2D đòi hỏi phép chiếu phức tạp và dễ mất thông tin vị trí. Biểu diễn bản đồ nhiệt 2D ($H \times W$, cùng không gian với feature map) cho phép Cổng không gian thực hiện phép nhân theo phần tử trực tiếp tại phương trình~\eqref{eq:spatial_gate}, một phép toán đơn giản, hiệu quả về tính toán và bảo toàn toàn vẹn thông tin vị trí không gian. Đây là lý do cốt lõi nhóm chọn biểu diễn heatmap 2D thay vì vector embedding rời rạc theo cách SAM: hai kiến trúc khác nhau đòi hỏi hai cách mã hóa prompt khác nhau để phù hợp nhất với cơ chế dung hợp đặc trưng nội tại.
 
+\FloatBarrier
 \subsection{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}
 
 Trong kiến trúc U-Net truyền thống, bộ mã hóa (Encoder) chịu trách nhiệm trích xuất các đặc trưng ngữ nghĩa. Tuy nhiên, nếu thiếu định hướng, nó có xu hướng học mọi thứ xuất hiện trên ảnh X-quang, dẫn đến việc lãng phí tài nguyên tính toán vào các vùng nền không liên quan. 
 
-PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (Prompt Spatial Gate)} trực tiếp vào nhánh mã hóa. Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng (gate filter) để sinh ra tín hiệu khuếch đại không gian:
+PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (Prompt Spatial Gate)} trực tiếp vào nhánh mã hóa. Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
 \begin{equation}
     \tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \left(1 + \alpha \cdot \sigma\!\left(\mathbf{W}_{gate} \ast \mathbf{H}^l\right)\right)
     \label{eq:spatial_gate}
@@ -194,6 +125,7 @@ trong đó $\mathbf{W}_{gate}$ là phép tích chập $1\!\times\!1$ ánh xạ b
 
 Thiết kế này hoạt động theo nguyên lý \textit{tăng cường có chọn lọc} (selective enhancement) thay vì ức chế: các đặc trưng nằm trong vùng câu nhắc được nhân thêm một hệ số $> 1$ (tăng lên), trong khi các đặc trưng ngoài vùng câu nhắc (nơi $\mathbf{H}^l \approx 0$) vẫn giữ nguyên giá trị ban đầu (nhân với $\approx 1$). Nhờ đó, bộ mã hóa không bị mất thông tin toàn cục nhưng vẫn ưu tiên truyền tải các đặc trưng trong vùng mục tiêu xuống các tầng sâu hơn.
 
+\FloatBarrier
 \subsection{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}
 
 Dù Cổng không gian ở bộ mã hóa đã giúp loại bỏ nhiễu nền đáng kể, nhưng tại bộ giải mã (Decoder) – nơi mạng thực hiện phép tăng mẫu để khôi phục ranh giới xương – tín hiệu định vị vẫn có nguy cơ bị phân tán. Để thiết lập sự dẫn đường xuyên suốt, khóa luận đề xuất thay đổi cấu trúc của \textit{Attention U-Net} thông qua \textbf{Cơ chế chú ý có điều kiện}.
@@ -209,9 +141,9 @@ Tín hiệu gating được điều kiện hóa bằng phép cộng có trọng 
     \mathbf{g}' = \mathbf{g} + c \cdot \alpha \cdot w \cdot \mathbf{p}_{\text{enc}}
     \label{eq:conditioned_gate}
 \end{equation}
-trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là tham số học được (blend weight), và $w$ là hệ số prompt cố định theo từng tầng giải mã (giảm dần: $1.0 \to 0.7 \to 0.4 \to 0.2$) nhằm suy giảm dần ảnh hưởng của câu nhắc ở các tầng phân giải cao — nơi mạng cần tự do tái tạo chi tiết đường biên.
+trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là tham số học được (blend weight), và $w$ là hệ số prompt cố định theo từng tầng giải mã (giảm dần: $1.0 \to 0.7 \to 0.4 \to 0.2$) nhằm suy giảm dần ảnh hưởng của câu nhắc ở các tầng phân giải cao, nơi mạng cần tự do tái tạo chi tiết đường biên.
 
-\textbf{Lý do lịch trình giảm dần $\{1.0, 0.7, 0.4, 0.2\}$:} Bộ giải mã U-Net gồm 4 tầng từ phân giải thấp (ngữ nghĩa cao) đến phân giải cao (chi tiết biên). Tại tầng 1 (phân giải thấp nhất), câu nhắc đóng vai trò định hướng vùng tổn thương — cần ảnh hưởng mạnh ($w=1.0$). Tại tầng 4 (phân giải cao nhất), mạng tái tạo đường viền pixel-level dựa trên gradient ảnh thực — câu nhắc thô (Bounding Box) không còn chứa thông tin chi tiết hữu ích và có thể gây thiên lệch nếu quá mạnh ($w=0.2$). Lịch trình xấp xỉ tuyến tính $\Delta w \approx -0.27$/tầng được khảo sát qua lưới thô trên tập xác thực; ablation study V1–V5 xác nhận rằng CAD có điều kiện hóa câu nhắc (dù với trọng số cụ thể nào) đều vượt trội so với không có điều kiện hóa, cho thấy hướng giảm dần quan trọng hơn các giá trị tuyệt đối cụ thể.
+\textbf{Lý do lịch trình giảm dần $\{1.0, 0.7, 0.4, 0.2\}$:} Bộ giải mã U-Net gồm 4 tầng từ phân giải thấp (ngữ nghĩa cao) đến phân giải cao (chi tiết biên). Tại tầng 1 (phân giải thấp nhất), câu nhắc đóng vai trò định hướng vùng tổn thương, cần ảnh hưởng mạnh ($w=1.0$). Tại tầng 4 (phân giải cao nhất), mạng tái tạo đường viền pixel-level dựa trên gradient ảnh thực, câu nhắc thô (Bounding Box) không còn chứa thông tin chi tiết hữu ích và có thể gây thiên lệch nếu quá mạnh ($w=0.2$). Lịch trình xấp xỉ tuyến tính $\Delta w \approx -0.27$/tầng được khảo sát qua lưới thô trên tập xác thực; ablation study V1–V5 xác nhận rằng CAD có điều kiện hóa câu nhắc (dù với trọng số cụ thể nào) đều vượt trội so với không có điều kiện hóa, cho thấy hướng giảm dần quan trọng hơn các giá trị tuyệt đối cụ thể.
 
 Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng skip connection $\mathbf{x}^l$, kết hợp cùng kết nối tắt dư ($+0.3 \cdot \mathbf{x}^l$) và thêm tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$). Thiết kế đa lớp này đảm bảo câu nhắc không chỉ ảnh hưởng qua một điểm duy nhất mà được duy trì xuyên suốt toàn bộ bộ giải mã ở cường độ giảm dần, phù hợp với vai trò hướng dẫn từ ngữ nghĩa đến chi tiết. Sự kết hợp giữa ``Cổng không gian tại bộ mã hóa'' và ``Cơ chế chú ý có điều kiện tại bộ giải mã'' là yếu tố chính mang lại sự cải thiện đáng kể về hiệu năng Dice so với các mạng cơ sở hoạt động theo hướng tiếp cận tự động (chi tiết tại Chương~\ref{Chapter4}).
 
@@ -222,16 +154,24 @@ Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAtten
     \label{fig:pga_architecture}
 \end{figure}
 
+\FloatBarrier
 \subsection{Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}
 \label{subsec:training_strategy_pga}
 
+Hàm mất mát huấn luyện PGA-UNet kết hợp Dice Loss và Binary Cross-Entropy với trọng số bằng nhau:
+\begin{equation}
+    \mathcal{L}_{\text{seg}} = \mathcal{L}_{\text{Dice}} + \mathcal{L}_{\text{BCE}}
+    \label{eq:loss_seg}
+\end{equation}
+Dice Loss tối ưu trực tiếp độ tương đồng vùng giữa mặt nạ dự đoán và nhãn gốc; BCE phạt sai lệch tại từng điểm ảnh riêng lẻ và ổn định gradient. Hai thành phần bổ sung cho nhau, giúp mô hình cân bằng giữa hình dạng tổng thể và độ chính xác đường biên.
+
 Để tránh hiểu nhầm khi so sánh kết quả thực nghiệm, cần làm rõ sự khác biệt căn bản về chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D.
 
-\textbf{PGA-UNet — Huấn luyện từ đầu hoàn toàn:}
-Toàn bộ kiến trúc PGA-UNet — bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện — được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$3 triệu tham số (đo từ kiến trúc thực nghiệm với \texttt{feature\_scale=4}, bộ lọc $[16,32,64,128,256]$) đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên domain data cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp (low-level features) như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ domain khác.
+\textbf{PGA-UNet, Huấn luyện từ đầu hoàn toàn:}
+Toàn bộ kiến trúc PGA-UNet, bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện, được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$3 triệu tham số (đo từ kiến trúc thực nghiệm với \texttt{feature\_scale=4}, bộ lọc $[16,32,64,128,256]$) đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên domain data cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp (low-level features) như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ domain khác.
 
-\textbf{SAM-Med2D — Tinh chỉnh từ mô hình nền tảng:}
-SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 12 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất — nhanh hơn đáng kể so với PGA-UNet (60 vòng lặp). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp Adapter) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
+\textbf{SAM-Med2D, Tinh chỉnh từ mô hình nền tảng:}
+SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 12 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất, nhanh hơn đáng kể so với PGA-UNet (60 vòng lặp). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp Adapter) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
 
 \begin{table}[htbp]
     \centering
@@ -244,7 +184,7 @@ SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền 
         \hline
         Chiến lược & Huấn luyện từ đầu (từ ngẫu nhiên) & Tinh chỉnh từ pretrained ViT-B \\
         \hline
-        Bộ mã hóa & U-Net CNN — học toàn bộ từ đầu & ViT-B — pretrained trên 4.6M ảnh y tế 2D \\
+        Bộ mã hóa & U-Net CNN, học toàn bộ từ đầu & ViT-B, pretrained trên 4.6M ảnh y tế 2D \\
         \hline
         Thành phần bị đóng băng & Không có & ViT-B backbone (cập nhật qua Adapter) \\
         \hline
@@ -262,8 +202,15 @@ Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễ
 \label{sec:phan_lop}
 % ------------------------------------------------------------
 
-Mô hình PGA-UNet được huấn luyện hoàn toàn trên tập ảnh \textbf{chỉ chứa các ca bệnh lý}. Trong môi trường lâm sàng thực tế, luồng đầu vào hỗn hợp cả ảnh bình thường lẫn bệnh lý. Nếu đưa trực tiếp ảnh xương bình thường vào PGA-UNet, mô hình sẽ tạo ra mặt nạ sai lệch (False Positive) — gây hiểu nhầm nghiêm trọng cho bác sĩ và lãng phí tài nguyên tính toán.
+Mô hình PGA-UNet được huấn luyện hoàn toàn trên tập ảnh \textbf{chỉ chứa các ca bệnh lý}. Trong môi trường lâm sàng thực tế, luồng đầu vào hỗn hợp cả ảnh bình thường lẫn bệnh lý. Nếu đưa trực tiếp ảnh xương bình thường vào PGA-UNet, mô hình sẽ tạo ra mặt nạ sai lệch (False Positive), gây hiểu nhầm nghiêm trọng cho bác sĩ và lãng phí tài nguyên tính toán.
 
 \textbf{Giải pháp:} Một module phân lớp nhị phân (\textbf{Gatekeeper}) đặt trước pipeline phân đoạn, sàng lọc tự động: ảnh bình thường → dừng sớm; ảnh dương tính → chuyển sang PGA-UNet. Module này \textbf{không phải đóng góp kỹ thuật trọng tâm} của khóa luận mà là thành phần hỗ trợ lấp đầy khoảng trống giữa điều kiện huấn luyện và triển khai thực tế. Kiến trúc cụ thể (EfficientNet\_B3, chiến lược tinh chỉnh hai giai đoạn) và kết quả định lượng được trình bày đầy đủ tại Mục~\ref{sec:danh_gia_phan_lop} (Chương~\ref{Chapter4}).
 
-Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy ngầm tự động ngay khi ảnh được tải lên; kết quả và điểm tin cậy được hiển thị để bác sĩ tham khảo, nhưng \textit{quyết định cuối cùng luôn thuộc về bác sĩ}. Khi bác sĩ xác nhận dương tính, hệ thống chuyển sang Giai đoạn 3 (PGA-UNet phân đoạn có hướng dẫn).
+Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
+\begin{equation}
+    \mathcal{L}_{\text{cls}} = -\frac{1}{N}\sum_{i=1}^{N} \Big[y_i \log \hat{p}_i + (1 - y_i)\log(1 - \hat{p}_i)\Big]
+    \label{eq:loss_cls}
+\end{equation}
+trong đó $y_i \in \{0, 1\}$ là nhãn thực và $\hat{p}_i \in [0, 1]$ là xác suất dự đoán của ảnh thứ $i$.
+
+Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên: kết quả âm tính → pipeline dừng; kết quả dương tính → hệ thống tự động chuyển sang Giai đoạn 3 (PGA-UNet phân đoạn với prompt bounding box).

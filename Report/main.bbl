@@ -37,6 +37,18 @@
          given={Zhongying},
          giveni={Z\bibinitperiod},
       }}%
+      {{hash=CJ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Jianpin},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=LT}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Tianbin},
+         giveni={T\bibinitperiod},
+      }}%
       {{hash=WH}{%
          family={Wang},
          familyi={W\bibinitperiod},
@@ -54,6 +66,18 @@
          familyi={H\bibinitperiod},
          given={Ziyan},
          giveni={Z\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Jilong},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=JL}{%
+         family={Jiang},
+         familyi={J\bibinitperiod},
+         given={Lei},
+         giveni={L\bibinitperiod},
       }}%
       {{hash=SH}{%
          family={Sun},
@@ -73,35 +97,11 @@
          given={Shaoting},
          giveni={S\bibinitperiod},
       }}%
-      {{hash=CJ}{%
-         family={Chen},
-         familyi={C\bibinitperiod},
-         given={Jianpin},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=CJ}{%
-         family={Chen},
-         familyi={C\bibinitperiod},
-         given={Jilong},
-         giveni={J\bibinitperiod},
-      }}%
       {{hash=ZM}{%
          family={Zhu},
          familyi={Z\bibinitperiod},
          given={Min},
          giveni={M\bibinitperiod},
-      }}%
-      {{hash=LT}{%
-         family={Li},
-         familyi={L\bibinitperiod},
-         given={Tianbin},
-         giveni={T\bibinitperiod},
-      }}%
-      {{hash=JL}{%
-         family={Jiang},
-         familyi={J\bibinitperiod},
-         given={Lei},
-         giveni={L\bibinitperiod},
       }}%
       {{hash=QY}{%
          family={Qiao},
@@ -111,7 +111,7 @@
       }}%
     }
     \strng{namehash}{CJ+1}
-    \strng{fullhash}{CJYJDZWHSYHZSHHJZSCJCJZMLTJLQY1}
+    \strng{fullhash}{CJYJDZCJLTWHSYHZCJJLSHHJZSZMQY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{sortinit}{C}
