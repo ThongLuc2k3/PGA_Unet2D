@@ -228,10 +228,10 @@ Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAtten
 Để tránh hiểu nhầm khi so sánh kết quả thực nghiệm, cần làm rõ sự khác biệt căn bản về chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D.
 
 \textbf{PGA-UNet — Huấn luyện từ đầu hoàn toàn:}
-Toàn bộ kiến trúc PGA-UNet — bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện — được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$4 triệu tham số đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên domain data cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp (low-level features) như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ domain khác.
+Toàn bộ kiến trúc PGA-UNet — bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện — được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$3 triệu tham số (đo từ kiến trúc thực nghiệm với \texttt{feature\_scale=4}, bộ lọc $[16,32,64,128,256]$) đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên domain data cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp (low-level features) như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ domain khác.
 
 \textbf{SAM-Med2D — Tinh chỉnh từ mô hình nền tảng:}
-SAM-Med2D kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên hơn 4 triệu ảnh y tế đa dạng (SA-Med2D-20M dataset). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 12 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất — nhanh hơn đáng kể so với PGA-UNet (60 vòng lặp). Tuy nhiên, quy mô tham số của SAM-Med2D lớn hơn PGA-UNet khoảng 25 lần ($\sim$100 triệu so với $\sim$4 triệu).
+SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 12 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất — nhanh hơn đáng kể so với PGA-UNet (60 vòng lặp). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp Adapter) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
 
 \begin{table}[htbp]
     \centering
@@ -244,18 +244,18 @@ SAM-Med2D kế thừa toàn bộ trọng số tiền huấn luyện của bộ m
         \hline
         Chiến lược & Huấn luyện từ đầu (từ ngẫu nhiên) & Tinh chỉnh từ pretrained ViT-B \\
         \hline
-        Bộ mã hóa & U-Net CNN — học toàn bộ từ đầu & ViT-B — pretrained trên 4M+ ảnh y tế \\
+        Bộ mã hóa & U-Net CNN — học toàn bộ từ đầu & ViT-B — pretrained trên 4.6M ảnh y tế 2D \\
         \hline
         Thành phần bị đóng băng & Không có & ViT-B backbone (cập nhật qua Adapter) \\
         \hline
-        Tổng tham số & $\sim$4 triệu & $\sim$100 triệu \\
+        Tổng tham số & $\sim$3 triệu & $\sim$91 triệu (ViT-B gốc) + Adapter \\
         \hline
         Số epoch hội tụ & 60 & 12 \\
         \hline
     \end{tabular}
 \end{table}
 
-Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễn giải kết quả ở Chương~\ref{Chapter4}: PGA-UNet đạt hiệu năng Dice cao hơn SAM-Med2D mặc dù nhỏ hơn 25 lần về tham số và không có bất kỳ trọng số tiền huấn luyện nào. Kết quả này phản ánh hiệu quả của cơ chế tích hợp câu nhắc sâu sát vào kiến trúc nhẹ, chứ không phải ưu thế từ quy mô mô hình hay dữ liệu tiền huấn luyện.
+Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễn giải kết quả ở Chương~\ref{Chapter4}: PGA-UNet đạt hiệu năng Dice cao hơn SAM-Med2D mặc dù nhỏ hơn $\sim$30 lần về tổng tham số ($\sim$3 triệu so với $\sim$91 triệu của ViT-B) và không có bất kỳ trọng số tiền huấn luyện nào. Kết quả này phản ánh hiệu quả của cơ chế tích hợp câu nhắc sâu sát vào kiến trúc nhẹ, chứ không phải ưu thế từ quy mô mô hình hay dữ liệu tiền huấn luyện.
 
 % ------------------------------------------------------------
 \section{Module gác cổng sàng lọc (Gatekeeper)}

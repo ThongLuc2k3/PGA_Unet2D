@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUN 2026 14:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUN 2026 16:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1304,12 +1304,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 249--249
 []|\T5/cmr/m/n/14.4 Th nh ph¦n bà
  []
 
-[36]) [37
+[36] [37
 pdfTeX warning (ext4): destination with the same identifier (name{table.3.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.152 \include{Chapter3/chapter3}
-                                 ] [38]
+l.268 
+      ]) [38]
 \openout2 = `Chapter4/chapter4.aux'.
 
  (./Chapter4/chapter4.tex
@@ -1385,7 +1385,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.4.9}) ha
                                                   \__shipout_drop_firstpage_...
 l.374 
       ]
-<images/subcat-pga-vs-baseline_01.png, id=868, 1368.7938pt x 3271.6629pt>
+<images/subcat-pga-vs-baseline_01.png, id=871, 1368.7938pt x 3271.6629pt>
 File: images/subcat-pga-vs-baseline_01.png Graphic file (type png)
 <use images/subcat-pga-vs-baseline_01.png>
 Package pdftex.def Info: images/subcat-pga-vs-baseline_01.png  used on input line 379.
@@ -1405,7 +1405,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) h
                                                   \__shipout_drop_firstpage_...
 l.414 
        <./images/subcat-pga-vs-baseline_01.png>]
-<images/subcat-pga-vs-sam_01.png, id=881, 1368.7938pt x 3271.6629pt>
+<images/subcat-pga-vs-sam_01.png, id=884, 1368.7938pt x 3271.6629pt>
 File: images/subcat-pga-vs-sam_01.png Graphic file (type png)
 <use images/subcat-pga-vs-sam_01.png>
 Package pdftex.def Info: images/subcat-pga-vs-sam_01.png  used on input line 419.
@@ -1414,7 +1414,7 @@ Package pdftex.def Info: images/subcat-pga-vs-sam_01.png  used on input line 419
 
 LaTeX Warning: Float too large for page by 455.91702pt on input line 422.
 
-<images/vis_pga_01.png, id=883, 1424.4417pt x 2931.9939pt>
+<images/vis_pga_01.png, id=886, 1424.4417pt x 2931.9939pt>
 File: images/vis_pga_01.png Graphic file (type png)
 <use images/vis_pga_01.png>
 Package pdftex.def Info: images/vis_pga_01.png  used on input line 437.
@@ -1422,12 +1422,12 @@ Package pdftex.def Info: images/vis_pga_01.png  used on input line 437.
 
 LaTeX Warning: Float too large for page by 309.60658pt on input line 440.
 
-<images/vis_attunet_01.png, id=886, 1394.0883pt x 357.7365pt>
+<images/vis_attunet_01.png, id=889, 1394.0883pt x 357.7365pt>
 File: images/vis_attunet_01.png Graphic file (type png)
 <use images/vis_attunet_01.png>
 Package pdftex.def Info: images/vis_attunet_01.png  used on input line 446.
 (pdftex.def)             Requested size: 432.48051pt x 110.97903pt.
-<images/vis_sam_ft_01.png, id=887, 1226.4219pt x 879.5259pt>
+<images/vis_sam_ft_01.png, id=890, 1226.4219pt x 879.5259pt>
 File: images/vis_sam_ft_01.png Graphic file (type png)
 <use images/vis_sam_ft_01.png>
 Package pdftex.def Info: images/vis_sam_ft_01.png  used on input line 453.
@@ -1540,10 +1540,10 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  84i,15n,93p,1969b,1408s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vncsc10.864pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1440.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vntt12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr10.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnti12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1493pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1440.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1792pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.864pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr17.610pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1037pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr12.720pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (84 pages, 10498880 bytes).
+Output written on main.pdf (84 pages, 10499715 bytes).
 PDF statistics:
- 2014 PDF objects out of 2073 (max. 8388607)
- 1010 compressed objects within 11 object streams
+ 2018 PDF objects out of 2073 (max. 8388607)
+ 1013 compressed objects within 11 object streams
  241 named destinations out of 1000 (max. 500000)
  11901 words of extra memory for PDF output out of 12000 (max. 10000000)
 
