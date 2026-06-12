@@ -8,7 +8,6 @@
 | | **Đóng góp 1 — Nghiên cứu** | **Đóng góp 2 — Sản phẩm** |
 |---|---|---|
 | **Nội dung** | PGA-UNet: kiến trúc phân đoạn mới dùng Gaussian heatmap prompt | Pipeline lâm sàng hoàn chỉnh end-to-end |
-| **Thành phần** | U-Net + Prompt Spatial Gate + Conditioned Attention Decoder | MobileNetV4 + PGA-UNet + IPR + GradCAM Rescue |
 | **Kết quả chính** | Dice=0.8558 > SAM-Med2D Dice=0.7554 (+13.3%), 25× ít tham số | App hỗ trợ bác sĩ: sàng lọc → phân đoạn → tự sửa lỗi prompt |
 | **Đánh giá** | 248 test samples, 3 kịch bản prompt, so sánh SAM fine-tuned + zero-shot | Hệ thống bán tự động, bác sĩ xác nhận trước khi phân đoạn |
 | **Hạn chế thừa nhận** | Chỉ test trên 1 dataset (BTXRD) | Cascading error: MobileNet 88% × PGA 86% ≈ 66% tổng thể |
@@ -25,7 +24,6 @@
 Đã bổ sung vào Chapter 3 (sec 3.3.1) hai đoạn:
 - **Lý thuyết:** Binary mask tạo step edge → gradient giả tạo → mạng học cạnh hộp, không học đặc trưng tổn thương. Plateau Heatmap tạo transition mượt → phù hợp cơ chế tích chập.
 - **So sánh SAM:** SAM dùng positional embedding rời rạc (2 vector 256d) → phù hợp Transformer. PGA dùng heatmap 2D → phù hợp U-Net feature map (nhân theo phần tử trực tiếp, không mất thông tin không gian).
-- **Dẫn chứng:** Grad-CAM saliency map tự nhiên có dạng phân phối liên tục → heatmap tương thích cơ chế học của mạng.
 
 ---
 
@@ -62,7 +60,6 @@
 Giải pháp áp dụng:
 - **Chapter 4 (Đóng góp 1):** Đánh giá PGA-UNet độc lập trên 248 mẫu *đã có bệnh* → Dice=0.8558 (không qua MobileNet, số sạch).
 - **Chapter 4 (Đóng góp 2):** MobileNetV4 đạt AUC-ROC=0.9514, Accuracy=85.77%. Ghi nhận giới hạn pipeline và đề xuất cải thiện classifier là hướng phát triển tương lai.
-- **Điểm mạnh sản phẩm:** IPR + GradCAM Rescue là cơ chế SAM-Med2D không có — tự sửa prompt sai mà không cần bác sĩ can thiệp thêm.
 
 ---
 
@@ -81,7 +78,6 @@ Giải pháp áp dụng:
 | Nộp hồ sơ GV | 01/06/2026 |
 | Số liệu 4 mô hình | Dice/IoU/HD95/CBL đầy đủ |
 | SAM zero-shot comparison | 248 samples, 3 modes |
-| GradCAM defense | 174/174 = 100%, CBL số thật |
 | MobileNetV4 evaluation | AUC-ROC=0.9514, ảnh confusion matrix có sẵn |
 | Lý thuyết heatmap (Chapter 3) | Cơ sở + so sánh SAM — sec 3.3.1 |
 | Fine-tune clarity (Chapter 3) | Subsection 3.3.4 + bảng chiến lược |
@@ -95,10 +91,7 @@ Giải pháp áp dụng:
 ### ✅ Mới hoàn thành (03/06/2026)
 | Nhiệm vụ | Ghi chú |
 |---|---|
-| `sec:product_overview` — Tổng quan Đóng góp 2 | Viết rõ 3 lớp pipeline, so sánh SAM không có GradCAM+IPR — chapter4.tex |
 | `subsec:cascading_error` — Phân tích sai số tích lũy | Lý thuyết: 89.64%×85.58%≈76.7%; thực nghiệm đang chuẩn bị — chapter4.tex |
-| `tab:ipr_convergence` — Một phần | k=0 (CBL=0.298), k=1 (Dice=0.260); k=2,k=3 chờ PGA_Ablation.ipynb |
-| Làm rõ IPR chỉ kích hoạt sau GradCAM rescue | Không chạy trong luồng phân đoạn thông thường — chapter4.tex |
 | Chapter 5 — Viết lại toàn bộ kết luận + hướng phát triển | 4 hướng cụ thể: cải thiện gác cổng, Unified Model, Multi-prompt, đa tập — chapter5.tex |
 | Extract + đặt tên ảnh từ Result notebooks | 41 ảnh → Report/images/, xóa trùng/orphaned, còn 54 files sạch |
 | Fix 5 ablation notebooks | Xóa `verbose` (PyTorch≥2.2), `leave=True`, print mỗi epoch, lưu Drive, visualization cell 5 cột |
@@ -106,13 +99,11 @@ Giải pháp áp dụng:
 ### 🖼️ Chính sách ảnh trong báo cáo (chốt 03/06)
 - **KHÔNG thêm ảnh minh chứng mới** vào report — đã đủ `vis_pga/attunet/unet/sam` hiện có
 - **CHỈ thêm** sơ đồ kiến trúc hoặc workflow mới nếu cần giải thích kỹ thuật
-- Ảnh trong `Report/images/` còn lại (subcat, gradcam, defense, ablation) dùng cho **slide + bằng chứng hội đồng**
 - Report dùng khoảng **15–20 ảnh** (số liệu + 2–3 vis đại diện mỗi mô hình + biểu đồ tổng hợp)
 
 ### 📚 Bổ sung tài liệu tham khảo (chờ bạn cung cấp PDF/link)
 | Tên | Trạng thái | Ghi chú |
 |---|---|---|
-| **GradCAM** | ✅ Xong | Đã thêm vào bib (`selvaraju2019gradcam`) |
 | **SAM** — Segment Anything, Kirillov 2023 | ⏳ Chờ PDF | Nhắc tên trong Ch.1, Ch.3 chưa có cite |
 | **YOLOv11** — Ultralytics 2024 | ⏳ Chờ link | Dùng Ch.3, Ch.4 chưa có cite |
 | **Roboflow** | ⏳ Chờ link | Dùng Ch.3 chưa có cite |
@@ -169,7 +160,6 @@ Giải pháp áp dụng:
 | # | Notebook | Mục đích | Phụ thuộc |
 |---|---|---|---|
 | 11 | `PGA_Ablation.ipynb` | Ablation loại câu nhắc: empty / noise / hard bbox / plateau heatmap / oracle GT | PGA checkpoint (#3) |
-| 12 | `PGA_GradCAM_IPR.ipynb` | Cơ chế phòng vệ: 174 mẫu prompt sai → GradCAM → IPR cứu hộ k=1,2,3 | PGA checkpoint (#3) |
 
 > `PGA_Extended_Test.ipynb` — load checkpoint PGA và chạy test + visualization bổ sung. Chạy sau #3 nếu cần ảnh minh chứng thêm, **không bắt buộc** cho số liệu báo cáo.
 
@@ -181,7 +171,6 @@ Giải pháp áp dụng:
 |---|---|---|---|
 | 13 | `SubCat_PGA_vs_Baseline.ipynb` | So sánh PGA vs U-Net/AttUNet theo nhóm dễ/khó | PGA (#3) + UNet (#1) + AttUNet (#2) ckpt |
 | 14 | `SubCat_PGA_vs_SAM.ipynb` | So sánh PGA vs SAM theo nhóm nhỏ/mờ/rõ nét | PGA (#3) + SAM (#4) ckpt |
-| 15 | `Defense_Comparison_SAM_vs_PGA.ipynb` | So sánh cơ chế phòng vệ: PGA có GradCAM+IPR vs SAM không có | PGA (#3) + SAM (#4) ckpt |
 
 > `Test_app.ipynb` — test end-to-end app.py Gradio với tất cả checkpoints. Chạy **sau cùng** khi đã có đủ mọi checkpoint, mục đích demo sản phẩm, không lấy số liệu báo cáo.
 

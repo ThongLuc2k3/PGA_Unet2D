@@ -317,59 +317,33 @@
     \field{year}{2015}
   \endentry
 
-  \entry{selvaraju2019gradcam}{article}{}{}
-    \name{author}{6}{}{%
-      {{hash=SRR}{%
-         family={Selvaraju},
-         familyi={S\bibinitperiod},
-         given={Ramprasaath\bibnamedelima R.},
-         giveni={R\bibinitperiod\bibinitdelim R\bibinitperiod},
-      }}%
-      {{hash=CM}{%
-         family={Cogswell},
-         familyi={C\bibinitperiod},
-         given={Michael},
+  \entry{tan2019efficientnet}{inproceedings}{}{}
+    \name{author}{2}{}{%
+      {{hash=TM}{%
+         family={Tan},
+         familyi={T\bibinitperiod},
+         given={Mingxing},
          giveni={M\bibinitperiod},
       }}%
-      {{hash=DA}{%
-         family={Das},
-         familyi={D\bibinitperiod},
-         given={Abhishek},
-         giveni={A\bibinitperiod},
-      }}%
-      {{hash=VR}{%
-         family={Vedantam},
-         familyi={V\bibinitperiod},
-         given={Ramakrishna},
-         giveni={R\bibinitperiod},
-      }}%
-      {{hash=PD}{%
-         family={Parikh},
-         familyi={P\bibinitperiod},
-         given={Devi},
-         giveni={D\bibinitperiod},
-      }}%
-      {{hash=BD}{%
-         family={Batra},
-         familyi={B\bibinitperiod},
-         given={Dhruv},
-         giveni={D\bibinitperiod},
+      {{hash=LQV}{%
+         family={Le},
+         familyi={L\bibinitperiod},
+         given={Quoc\bibnamedelima V.},
+         giveni={Q\bibinitperiod\bibinitdelim V\bibinitperiod},
       }}%
     }
-    \strng{namehash}{SRR+1}
-    \strng{fullhash}{SRRCMDAVRPDBD1}
+    \strng{namehash}{TMLQV1}
+    \strng{fullhash}{TMLQV1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{sortinit}{S}
-    \field{sortinithash}{S}
-    \verb{doi}
-    \verb 10.1007/s11263-019-01228-7
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{booktitle}{International Conference on Machine Learning (ICML)}
+    \field{pages}{6105\bibrangedash 6114}
+    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1905.11946
     \endverb
-    \field{number}{2}
-    \field{pages}{336\bibrangedash 359}
-    \field{title}{{Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization}}
-    \field{volume}{128}
-    \field{journaltitle}{International Journal of Computer Vision}
     \field{year}{2019}
   \endentry
 

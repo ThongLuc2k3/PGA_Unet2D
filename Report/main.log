@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  10 JUN 2026 00:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUN 2026 14:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1133,27 +1133,32 @@ Underfull \hbox (badness 1540) in paragraph at lines 16--16
 \tf@toc=\write6
 \openout6 = `main.toc'.
 
- [7] (./main.lof)
+ [7] (./main.lof
+Underfull \hbox (badness 4647) in paragraph at lines 8--8
+ [][] [][]\T5/cmr/m/n/14.4 Minh hÂa ^^_‡nh tΩnh Sub-Category: PGA-UNet vs 
+ []
+
+[8
+
+])
 \tf@lof=\write7
 \openout7 = `main.lof'.
 
- [8
-
-] (./main.lot
+ [9] (./main.lot
 Underfull \hbox (badness 4391) in paragraph at lines 10--10
  \T5/cmr/m/n/14.4 v† SAM-Med2D zero-shot tr∂n 3 k‡ch b£n prompt 
  []
 
-[9
+[10
 
 ])
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
- [10]
+ [11]
 \openout2 = `Appendix/tomtat.aux'.
 
- (./Appendix/tomtat.tex) [11
+ (./Appendix/tomtat.tex) [12
 
 
 ]
@@ -1211,76 +1216,105 @@ Ch∆∞∆°ng 3.
 
 
 
-] [22] [23] [24]
-LaTeX Font Info:    Trying to load font information for T5+cmtt on input line 85.
+]
+<images/system_architecture.png, id=690, 457.71pt x 809.0225pt>
+File: images/system_architecture.png Graphic file (type png)
+<use images/system_architecture.png>
+Package pdftex.def Info: images/system_architecture.png  used on input line 28.
+(pdftex.def)             Requested size: 316.70024pt x 559.78157pt.
+ [22] [23
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.43 
+      <./images/system_architecture.png>] [24]
+<images/preprocessing_pipeline.png, id=708, 251.94125pt x 689.57625pt>
+File: images/preprocessing_pipeline.png Graphic file (type png)
+<use images/preprocessing_pipeline.png>
+Package pdftex.def Info: images/preprocessing_pipeline.png  used on input line 76.
+(pdftex.def)             Requested size: 197.30145pt x 540.02432pt.
+ [25]
+LaTeX Font Info:    Trying to load font information for T5+cmtt on input line 81.
  (/home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
 File: t5cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 
 Package microtype Warning: I cannot find a protrusion list for font
 (microtype)                `T5/cmtt/m/n/14.4'. Switching off
-(microtype)                protrusion for this font on input line 85.
+(microtype)                protrusion for this font on input line 81.
 
-[25] [26
+[26] [27
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.90 \end{enumerate}
+                     <./images/preprocessing_pipeline.png>] [28
 pdfTeX warning (ext4): destination with the same identifier (name{table.3.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.128 
-      ] [27]
-Underfull \hbox (badness 10000) in paragraph at lines 157--157
+l.124 
+      ] [29]
+Underfull \hbox (badness 10000) in paragraph at lines 153--153
 []\T5/cmr/bx/n/20.74 MÊ hºnh ph•n ^^_o§n PGA-UNet
  []
 
 
-Underfull \hbox (badness 3724) in paragraph at lines 163--163
+Underfull \hbox (badness 3724) in paragraph at lines 159--159
 []\T5/cmr/bx/n/17.28 Bi∫u diπn c•u nh≠c tr¸c quan (Prompt
  []
 
-[28] [29] [30] [31] [32]
-Underfull \hbox (badness 10000) in paragraph at lines 245--245
+[30] [31] [32] [33] [34]
+<images/arch_pga_unet2d.png, id=773, 1180.41pt x 329.23pt>
+File: images/arch_pga_unet2d.png Graphic file (type png)
+<use images/arch_pga_unet2d.png>
+Package pdftex.def Info: images/arch_pga_unet2d.png  used on input line 220.
+(pdftex.def)             Requested size: 455.24411pt x 126.97246pt.
+ [35
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.225 \subsection
+                 {Chi·∫øn l∆∞·ª£c hu·∫•n luy·ªán v√† so s√°nh v·ªõi m√¥ h√¨n... <./images/arch_pga_unet2d.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 243--243
 []|\T5/cmr/bx/n/14.4 PGA-UNet (^^_∑
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 245--246
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
 []|\T5/cmr/bx/n/14.4 SAM-Med2D (so
  []
 
 
-Underfull \hbox (badness 7613) in paragraph at lines 247--248
+Underfull \hbox (badness 7613) in paragraph at lines 245--246
 []|\T5/cmr/m/n/14.4 Tinh chønh t¯ pre-
  []
 
 
-Underfull \hbox (badness 3769) in paragraph at lines 249--249
+Underfull \hbox (badness 3769) in paragraph at lines 247--247
 []|\T5/cmr/m/n/14.4 U-Net CNN ^^V hÂc
  []
 
 
-Underfull \hbox (badness 3942) in paragraph at lines 249--250
+Underfull \hbox (badness 3942) in paragraph at lines 247--248
 []|\T5/cmr/m/n/14.4 ViT-B ^^V pre-trained
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 251--251
+Underfull \hbox (badness 10000) in paragraph at lines 249--249
 []|\T5/cmr/m/n/14.4 Th†nh ph¶n b‡
  []
 
-[33] [34
+[36]) [37
 pdfTeX warning (ext4): destination with the same identifier (name{table.3.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.275     \item \textbf
-                       {L√£ng ph√≠ t√†i nguy√™n t√≠nh to√°n:} To√†n b·ªô pip...]
-
-LaTeX Warning: Citation 'tan2019efficientnet' on page 35 undefined on input line 282.
-
-[35]) [36]
+l.152 \include{Chapter3/chapter3}
+                                 ] [38]
 \openout2 = `Chapter4/chapter4.aux'.
 
  (./Chapter4/chapter4.tex
 Ch∆∞∆°ng 4.
-[37
+[39
 
 
 
@@ -1290,145 +1324,173 @@ Overfull \hbox (90.186pt too wide) in paragraph at lines 47--58
  [][] 
  []
 
-[38
+[40
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.61 
-     ] [39] [40] [41
+     ] [41] [42] [43
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.133 \begin{enumerate}
-                       ] [42
+l.133     \item \textbf
+                       {Mixed (70\% Zoom-out - 30\% Shift):} Pha tr·ªôn theo...] [44
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.164 
+l.163 
       ]
-Underfull \hbox (badness 1297) in paragraph at lines 165--165
+Underfull \hbox (badness 1297) in paragraph at lines 164--164
 []\T5/cmr/bx/n/17.28 So s°nh vÓi SAM-Med2D (SOTA Prompt-
  []
 
-[43
+[45
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.199     \item \textbf
-                       {L·ª£i th·∫ø HD95 tuy·ªát ƒë·ªëi:} Sau chu·∫©n h√≥a t...] [44] [45
+l.198     \item \textbf
+                       {L·ª£i th·∫ø HD95 tuy·ªát ƒë·ªëi:} Sau chu·∫©n h√≥a t...] [46] [47
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.285 \textbf{(1) ƒê√≥ng g√≥p c·ªßa PSG v√† CAD:}
-                                                  V3 (CAD only, Zoom=0.8827)...] [46
+l.284 \textbf{(1) ƒê√≥ng g√≥p c·ªßa PSG v√† CAD:}
+                                                  V3 (CAD only, Zoom=0.8827)...] [48
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.295 
+l.294 
       ]
-Underfull \hbox (badness 1005) in paragraph at lines 319--319
-[]\T5/cmr/bx/n/17.28 ^^^°nh gi° theo ^^_∞c tΩnh tÍn th˜Ïng (Sub-
- []
-
-[47
-pdfTeX warning (ext4): destination with the same identifier (name{table.4.7}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.350 \end{table}
-                 ] [48
-pdfTeX warning (ext4): destination with the same identifier (name{table.4.8}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.384 
-      ]
-<images/vis_pga_01.png, id=844, 1424.4417pt x 2931.9939pt>
-File: images/vis_pga_01.png Graphic file (type png)
-<use images/vis_pga_01.png>
-Package pdftex.def Info: images/vis_pga_01.png  used on input line 398.
-(pdftex.def)             Requested size: 432.48051pt x 890.16328pt.
-
-
-LaTeX Warning: Float too large for page by 309.60658pt on input line 401.
-
-[49
-pdfTeX warning (ext4): destination with the same identifier (name{table.4.9}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.401 \end{figure}
-                  ]
-<images/vis_attunet_01.png, id=852, 1394.0883pt x 357.7365pt>
-File: images/vis_attunet_01.png Graphic file (type png)
-<use images/vis_attunet_01.png>
-Package pdftex.def Info: images/vis_attunet_01.png  used on input line 407.
-(pdftex.def)             Requested size: 432.48051pt x 110.97903pt.
-<images/vis_sam_ft_01.png, id=853, 1226.4219pt x 879.5259pt>
-File: images/vis_sam_ft_01.png Graphic file (type png)
-<use images/vis_sam_ft_01.png>
-Package pdftex.def Info: images/vis_sam_ft_01.png  used on input line 414.
-(pdftex.def)             Requested size: 432.48051pt x 310.147pt.
- [50] [51
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.437 \end{itemize}
-                    <./images/vis_pga_01.png>] [52
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.437 \end{itemize}
-                   
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.437 \end{itemize}
-                    <./images/vis_attunet_01.png> <./images/vis_sam_ft_01.png>]
-LaTeX Font Info:    Font shape `T5/cmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `T5/cmtt/m/n' tried instead on input line 450.
-
-
-Package microtype Warning: I cannot find a protrusion list for font
-(microtype)                `T5/cmtt/m/n/14.4'. Switching off
-(microtype)                protrusion for this font on input line 450.
-
-[53] [54
-pdfTeX warning (ext4): destination with the same identifier (name{table.4.10}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.500     \item \textbf
-                       {Specificity 92.55\%:} Lo·∫°i ƒë√∫ng $\approx$93\% ca...]
-Overfull \hbox (99.13445pt too wide) detected at line 513
-[][][][] \OMS/cmsy/m/n/14.4 ^^Y [][] ^^B [][] \OT1/cmr/m/n/14.4 = 78\OML/cmm/m/it/14.4 :\OT1/cmr/m/n/14.4 61% \OMS/cmsy/m/n/14.4 ^^B \OT1/cmr/m/n/14.4 85\OML/cmm/m/it/14.4 :\OT1/cmr/m/n/14.4 24% \OMS/cmsy/m/n/14.4 ^^Y []
- []
-
-[55]
-Overfull \hbox (111.27975pt too wide) in paragraph at lines 543--574
+Overfull \hbox (40.9773pt too wide) in paragraph at lines 320--335
  [][] 
  []
 
-[56] [57
+
+Underfull \hbox (badness 1005) in paragraph at lines 340--340
+[]\T5/cmr/bx/n/17.28 ^^^°nh gi° theo ^^_∞c tΩnh tÍn th˜Ïng (Sub-
+ []
+
+[49
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.7}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.345 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.8}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.345 
+      ] [50
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.9}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.374 
+      ]
+<images/subcat-pga-vs-baseline_01.png, id=868, 1368.7938pt x 3271.6629pt>
+File: images/subcat-pga-vs-baseline_01.png Graphic file (type png)
+<use images/subcat-pga-vs-baseline_01.png>
+Package pdftex.def Info: images/subcat-pga-vs-baseline_01.png  used on input line 379.
+(pdftex.def)             Requested size: 432.48051pt x 1033.67442pt.
+
+
+LaTeX Warning: Float too large for page by 439.71683pt on input line 382.
+
+[51
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.10}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.414 
+      ] [52
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.414 
+       <./images/subcat-pga-vs-baseline_01.png>]
+<images/subcat-pga-vs-sam_01.png, id=881, 1368.7938pt x 3271.6629pt>
+File: images/subcat-pga-vs-sam_01.png Graphic file (type png)
+<use images/subcat-pga-vs-sam_01.png>
+Package pdftex.def Info: images/subcat-pga-vs-sam_01.png  used on input line 419.
+(pdftex.def)             Requested size: 432.48051pt x 1033.67442pt.
+
+
+LaTeX Warning: Float too large for page by 455.91702pt on input line 422.
+
+<images/vis_pga_01.png, id=883, 1424.4417pt x 2931.9939pt>
+File: images/vis_pga_01.png Graphic file (type png)
+<use images/vis_pga_01.png>
+Package pdftex.def Info: images/vis_pga_01.png  used on input line 437.
+(pdftex.def)             Requested size: 432.48051pt x 890.16328pt.
+
+LaTeX Warning: Float too large for page by 309.60658pt on input line 440.
+
+<images/vis_attunet_01.png, id=886, 1394.0883pt x 357.7365pt>
+File: images/vis_attunet_01.png Graphic file (type png)
+<use images/vis_attunet_01.png>
+Package pdftex.def Info: images/vis_attunet_01.png  used on input line 446.
+(pdftex.def)             Requested size: 432.48051pt x 110.97903pt.
+<images/vis_sam_ft_01.png, id=887, 1226.4219pt x 879.5259pt>
+File: images/vis_sam_ft_01.png Graphic file (type png)
+<use images/vis_sam_ft_01.png>
+Package pdftex.def Info: images/vis_sam_ft_01.png  used on input line 453.
+(pdftex.def)             Requested size: 432.48051pt x 310.147pt.
+[53] [54
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+       <./images/subcat-pga-vs-sam_01.png>] [55
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+       <./images/vis_pga_01.png>] [56
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+       <./images/vis_attunet_01.png> <./images/vis_sam_ft_01.png>] [57] [58] [59
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.11}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.577 
-      ] [58]) [59]
+l.537     \item \textbf
+                       {Precision 91.30\%:} Khi m√¥ h√¨nh b√°o d∆∞∆°ng t√≠nh...] [60]
+Overfull \hbox (182.7078pt too wide) detected at line 559
+[][][][] \OMS/cmsy/m/n/14.4 ^^Y [][] ^^B [][] \OT1/cmr/m/n/14.4 = 96\OML/cmm/m/it/14.4 :\OT1/cmr/m/n/14.4 79% \OMS/cmsy/m/n/14.4 ^^B \OT1/cmr/m/n/14.4 85\OML/cmm/m/it/14.4 :\OT1/cmr/m/n/14.4 24% \OMS/cmsy/m/n/14.4 ^^Y []
+ []
+
+[61]
+Overfull \hbox (111.27975pt too wide) in paragraph at lines 586--617
+ [][] 
+ []
+
+[62
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.12}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.620 
+      ]) [63]
 \openout2 = `Chapter5/chapter5.aux'.
 
  (./Chapter5/chapter5.tex
 Ch∆∞∆°ng 5.
-[60
+[64
 
 
 
 
-] [61] [62]
+] [65] [66]
 Underfull \hbox (badness 1189) in paragraph at lines 46--47
 []\T5/cmr/bx/n/14.4 H˜Óng 3 ^^V M rÎng ph˜Ïng th˘c c•u nh≠c (Multi-
  []
 
-) [63]
+) [67]
 \openout2 = `Appendix/publish.aux'.
 
- (./Appendix/publish.tex) [64
+ (./Appendix/publish.tex) [68
 
 
 
@@ -1450,11 +1512,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 171--171
 []\T5/cmr/m/n/14.4 Cheng, Jun-long et al. ``SAM-Med2D''. In: \T5/cmr/m/it/14.4 arXiv preprint
  []
 
-[65
+[69
 
 
 
-] [66] (./main.aux (./Appendix/thanks.aux) (./Appendix/decuong.aux) (./Appendix/tomtat.aux) (./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux) (./Chapter3/chapter3.aux) (./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux) (./Appendix/publish.aux))
+] [70] (./main.aux (./Appendix/thanks.aux) (./Appendix/decuong.aux) (./Appendix/tomtat.aux) (./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux) (./Chapter3/chapter3.aux) (./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux) (./Appendix/publish.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -1464,29 +1526,24 @@ L3 programming layer <2024-01-22>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D8B8F149429D69197FE92DCF92B2B1CF;21180.
-
-Package biblatex Warning: Please (re)run BibTeX on the file(s):
-(biblatex)                main
-(biblatex)                and rerun LaTeX afterwards.
-
+(rerunfilecheck)             Checksum: 366CBC739CC9C5CDE1F54E92EA0A36E3;19824.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 34285 strings out of 476182
- 644876 string characters out of 5795595
+ 34324 strings out of 476182
+ 646202 string characters out of 5795595
  1942975 words of memory out of 5000000
- 55478 multiletter control sequences out of 15000+600000
+ 55511 multiletter control sequences out of 15000+600000
  577769 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,15n,93p,1969b,1408s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vncsc10.864pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1440.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vntt12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr10.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnti12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1493pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1440.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1792pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.864pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr17.610pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1037pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr12.720pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (79 pages, 5064302 bytes).
+Output written on main.pdf (84 pages, 10498880 bytes).
 PDF statistics:
- 1977 PDF objects out of 2073 (max. 8388607)
- 980 compressed objects within 10 object streams
- 235 named destinations out of 1000 (max. 500000)
- 11908 words of extra memory for PDF output out of 12000 (max. 10000000)
+ 2014 PDF objects out of 2073 (max. 8388607)
+ 1010 compressed objects within 11 object streams
+ 241 named destinations out of 1000 (max. 500000)
+ 11901 words of extra memory for PDF output out of 12000 (max. 10000000)
 

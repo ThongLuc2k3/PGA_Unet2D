@@ -28,49 +28,47 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: main-blx.bib
 Database file #2: References/references.bib
-Warning--I didn't find a database entry for "tan2019efficientnet"
 Biblatex version: 3.21
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 You've used 8 entries,
             6402 wiz_defined-function locations,
-            1260 strings with 11143 characters,
-and the built_in function-call counts, 123634 in all, are:
-= -- 11430
-> -- 1179
-< -- 232
-+ -- 4752
-- -- 535
-* -- 8719
-:= -- 16794
+            1258 strings with 11039 characters,
+and the built_in function-call counts, 116299 in all, are:
+= -- 10648
+> -- 1170
+< -- 240
++ -- 4437
+- -- 529
+* -- 8195
+:= -- 15694
 add.period$ -- 0
 call.type$ -- 8
-change.case$ -- 98
+change.case$ -- 97
 chr.to.int$ -- 42
 cite$ -- 14
-duplicate$ -- 13810
-empty$ -- 9429
-format.name$ -- 924
-if$ -- 23222
+duplicate$ -- 12983
+empty$ -- 8892
+format.name$ -- 889
+if$ -- 21919
 int.to.chr$ -- 0
 int.to.str$ -- 16
 missing$ -- 0
-newline$ -- 482
+newline$ -- 456
 num.names$ -- 324
-pop$ -- 3382
+pop$ -- 3303
 preamble$ -- 1
-purify$ -- 216
+purify$ -- 208
 quote$ -- 0
-skip$ -- 1536
+skip$ -- 1542
 stack$ -- 0
-substring$ -- 21660
-swap$ -- 1613
-text.length$ -- 269
+substring$ -- 20089
+swap$ -- 1553
+text.length$ -- 273
 text.prefix$ -- 7
 top$ -- 1
 type$ -- 260
 warning$ -- 0
-while$ -- 2204
+while$ -- 2060
 width$ -- 0
-write$ -- 475
-(There was 1 warning)
+write$ -- 449

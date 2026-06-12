@@ -23,8 +23,6 @@
 \hline
 \textbf{Backbone EfficientNet\_B3} & Tan \& Le 2019 [4] & Dùng trọng số pretrained ImageNet; fine-tune 2 giai đoạn trên BTXRD làm gatekeeper phân lớp \\
 \hline
-\textbf{Thuật toán GradCAM} & Selvaraju 2019 [5] & Kế thừa công thức tính $\alpha_k^{c}$ và $L_{\text{GradCAM}}$; ứng dụng vào cơ chế cứu hộ câu nhắc (ứng dụng mới) \\
-\hline
 \textbf{Dataset BTXRD} & Nguyen 2024 [6] & Toàn bộ dữ liệu huấn luyện và đánh giá \\
 \hline
 \textbf{YOLOv11s} & Ultralytics 2024 & Dùng pretrained COCO; fine-tune trên annotations nhiễu R/L của BTXRD \\
@@ -51,7 +49,7 @@
 \hline
 \textbf{Conditioned Attention Decoder (CAD)} & Điều kiện hóa tín hiệu gating bằng câu nhắc với trọng số tin cậy giảm dần theo tầng & Mở rộng Attention Gate [2]; thêm cơ chế fusion câu nhắc qua confidence score và trọng số $w \in \{1.0, 0.7, 0.4, 0.2\}$ \\
 \hline
-\textbf{Plateau Heatmap} & Gán 1.0 đồng đều bên trong box + Gaussian blur viền k=31 & Lấy cảm hứng từ Gaussian 2D [lý thuyết] và bản đồ nhiệt GradCAM [5]; biến thể thực tiễn phù hợp U-Net \\
+\textbf{Plateau Heatmap} & Gán 1.0 đồng đều bên trong box + Gaussian blur viền k=31 & Lấy cảm hứng từ Gaussian 2D; biến thể thực tiễn phù hợp kiến trúc U-Net với feature map 2D liên tục \\
 \hline
 \textbf{Fine-tune 2 giai đoạn EfficientNet\_B3} & Giai đoạn 1 (25 ep): đóng băng backbone, LR=1e-4; Giai đoạn 2 (75 ep): mở khóa, LR=1e-5, CosineAnnealingLR & Chiến lược fine-tuning tiêu chuẩn; áp dụng cụ thể cho bài toán phân lớp X-quang xương BTXRD \\
 \hline
