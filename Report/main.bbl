@@ -17,6 +17,25 @@
 \endgroup
 
 \datalist[entry]{nty/global//global/global/global}
+  \entry{cuh2024xray}{misc}{}{}
+    \name{author}{1}{}{%
+      {{hash=C}{%
+         family={{Cambridge University Hospitals NHS Foundation Trust}},
+         familyi={C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{C1}
+    \strng{fullhash}{C1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{howpublished}{\url{https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/}}
+    \field{note}{Truy cập năm 2025}
+    \field{title}{{X-ray -- Imaging \& Radiology}}
+    \field{year}{2024}
+  \endentry
+
   \entry{2023-SAMMed2D-Cheng}{article}{}{}
     \name{author}{15}{}{%
       {{hash=CJ}{%

@@ -485,11 +485,11 @@ OUTPUT Chapter3/chapter3.aux
 INPUT ./Chapter3/chapter3.tex
 INPUT ./Chapter3/chapter3.tex
 INPUT Chapter3/chapter3.tex
-INPUT ./images/system_architecture.png
-INPUT ./images/system_architecture.png
-INPUT ./images/system_architecture.png
-INPUT ./images/system_architecture.png
-INPUT ./images/system_architecture.png
+INPUT ./images/pipeline_pga_app_inference.png
+INPUT ./images/pipeline_pga_app_inference.png
+INPUT ./images/pipeline_pga_app_inference.png
+INPUT ./images/pipeline_pga_app_inference.png
+INPUT ./images/pipeline_pga_app_inference.png
 INPUT ./images/preprocessing_pipeline.png
 INPUT ./images/preprocessing_pipeline.png
 INPUT ./images/preprocessing_pipeline.png

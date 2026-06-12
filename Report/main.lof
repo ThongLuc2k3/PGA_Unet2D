@@ -4,9 +4,9 @@
 \contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc mạng U-Net với 4 cấp độ phân giải: nhánh mã hóa (trái) giảm mẫu dần qua Max Pooling; nhánh giải mã (phải) khôi phục độ phân giải qua UpConv; các kết nối tắt nối đặc trưng cùng cấp từ encoder sang decoder để bù thông tin vị trí không gian bị mất.}}{13}{figure.2.2}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net: các Cổng chú ý (Attention Gates) được chèn tại các kết nối tắt, sử dụng tín hiệu gating $\mathbf {g}$ từ bộ giải mã để lọc bỏ nhiễu nền trước khi truyền đặc trưng sang tầng giải mã tương ứng.}}{15}{figure.2.3}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc tổng thể hệ thống hỗ trợ chẩn đoán: ba giai đoạn liên hoàn từ tiền xử lý ảnh, sàng lọc bệnh lý đến phân đoạn có hướng dẫn (PGA-UNet)}}{24}{figure.3.1}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Pipeline tổng thể hệ thống: đầu vào gồm ảnh X-quang và bounding box, qua EfficientNet\_B3 sàng lọc tự động, âm tính dừng, dương tính chuyển sang PGA-UNet phân đoạn có hướng dẫn.}}{24}{figure.3.1}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Quy trình tiền xử lý dữ liệu: gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua Roboflow, finetune YOLOv11s, detect nhiễu trên toàn bộ tập ảnh PNG, tô màu vùng nhiễu bằng màu nền được chọn.}}{27}{figure.3.2}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}}{33}{figure.3.3}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải). Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention.}}{50}{figure.4.1}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải). Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention.}}{51}{figure.4.1}%
 \addvspace {10\p@ }
