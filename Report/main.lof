@@ -8,5 +8,5 @@
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Quy trình tiền xử lý dữ liệu: gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua Roboflow, finetune YOLOv11s, detect nhiễu trên toàn bộ tập ảnh PNG, tô màu vùng nhiễu bằng màu nền được chọn.}}{27}{figure.3.2}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}}{33}{figure.3.3}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải). Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention.}}{51}{figure.4.1}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải). Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention.}}{50}{figure.4.1}%
 \addvspace {10\p@ }

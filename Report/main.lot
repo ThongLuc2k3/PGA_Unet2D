@@ -13,6 +13,6 @@
 \contentsline {table}{\numberline {4.8}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{47}{table.4.8}%
 \contentsline {table}{\numberline {4.9}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net và Att-UNet theo độ khó tác vụ ($N=187$~ảnh, phân nhóm 50 dễ nhất / 50 khó nhất theo Dice của U-Net; PGA tính trên polygon)}}{48}{table.4.9}%
 \contentsline {table}{\numberline {4.10}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 mẫu per-polygon mỗi nhóm)}}{49}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{54}{table.4.11}%
-\contentsline {table}{\numberline {4.12}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{57}{table.4.12}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{53}{table.4.11}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{56}{table.4.12}%
 \addvspace {10\p@ }

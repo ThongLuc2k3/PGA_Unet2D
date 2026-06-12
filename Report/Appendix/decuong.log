@@ -1,0 +1,3186 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUN 2026 23:14
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex"
+(/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-22>
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:5: LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.5     \begin{center}
+                      
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 5--5
+[] 
+ []
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:7: Undefined control sequence.
+l.7             \includegraphics
+                                [scale=0.4]{images/logo.png}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no [ in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no = in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 4 in font nullfont!
+Missing character: There is no ] in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no / in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 8.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 8.
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ư (U+01AF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ờ (U+1EDC)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Command \DJ unavailable in encoding OT1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ạ (U+1EA0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ọ (U+1ECC)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ọ (U+1ECC)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ự (U+1EF0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:12: LaTeX Error: Unicode character Ệ (U+1EC6)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 ...�� NHIÊN \\ KHOA CÔNG NGHỆ THÔNG TIN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Overfull \hbox (1474.49998pt too wide) in paragraph at lines 6--14
+ []$ 
+ []
+
+
+Overfull \hbox (6143.99998pt too wide) in paragraph at lines 6--14
+ []$ 
+ []
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 16--16
+[] 
+ []
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: Undefined control sequence.
+<recently read> \Large 
+                       
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Command \DJ unavailable in encoding OT1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Unicode character Ề (U+1EC0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Unicode character Ư (U+01AF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Unicode character Ơ (U+01A0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Unicode character Ậ (U+1EAC)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Unicode character Ố (U+1ED0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:17: LaTeX Error: Unicode character Ệ (U+1EC6)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 ...ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP}
+                                                   \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Overfull \hbox (26.34708pt too wide) in paragraph at lines 17--17
+ \OT1/cmr/bx/n/10 CNG 
+ []
+
+
+Overfull \hbox (35.34703pt too wide) in paragraph at lines 17--17
+ \OT1/cmr/bx/n/10 KHO[]A 
+ []
+
+
+Overfull \hbox (24.76375pt too wide) in paragraph at lines 17--17
+ \OT1/cmr/bx/n/10 LUN 
+ []
+
+
+Overfull \hbox (15.99991pt too wide) in paragraph at lines 17--17
+ \OT1/cmr/bx/n/10 TT 
+ []
+
+
+Overfull \hbox (39.26367pt too wide) in paragraph at lines 17--17
+ \OT1/cmr/bx/n/10 NGHIP 
+ []
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 20--20
+[] 
+ []
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: Undefined control sequence.
+<recently read> \huge 
+                      
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ể (U+1EC2)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ệ (U+1EC6)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ố (U+1ED0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Command \DJ unavailable in encoding OT1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ạ (U+1EA0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ả (U+1EA2)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ề (U+1EC0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ư (U+01AF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ơ (U+01A0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ự (U+1EF0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ắ (U+1EAE)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:21: LaTeX Error: Unicode character Ự (U+1EF0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...ƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Overfull \hbox (33.55537pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 PH[]AT 
+ []
+
+
+Overfull \hbox (29.98595pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 TRIN 
+ []
+
+
+Overfull \hbox (8.99995pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 H 
+ []
+
+
+Overfull \hbox (35.04147pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 THNG 
+ []
+
+
+Overfull \hbox (34.55537pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 PH[]AN 
+ []
+
+
+Overfull \hbox (17.6388pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 ON 
+ []
+
+
+Overfull \hbox (17.99991pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 NH 
+ []
+
+
+Overfull \hbox (12.52771pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 X- 
+ []
+
+
+Overfull \hbox (44.22197pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 QUANG 
+ []
+
+
+Overfull \hbox (8.6944pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 V 
+ []
+
+
+Overfull \hbox (26.73596pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 XNG 
+ []
+
+
+Overfull \hbox (17.5138pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 DA 
+ []
+
+
+Overfull \hbox (26.02763pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 V[]AO 
+ []
+
+
+Overfull \hbox (25.84708pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 C[]AU 
+ []
+
+
+Overfull \hbox (26.30542pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 NHC 
+ []
+
+
+Overfull \hbox (24.93042pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 TRC 
+ []
+
+
+Overfull \hbox (35.18036pt too wide) in paragraph at lines 21--22
+ \OT1/cmr/bx/n/10 QUAN 
+ []
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:24: Undefined control sequence.
+<recently read> \Large 
+                       
+l.24 ...entation system based on visual prompts)}}
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (59.62157pt too wide) in paragraph at lines 24--25
+ []\OT1/cmr/bx/it/10 (Developing 
+ []
+
+
+Overfull \hbox (5.91104pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 a 
+ []
+
+
+Overfull \hbox (22.4664pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 bone 
+ []
+
+
+Overfull \hbox (12.79988pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 X- 
+ []
+
+
+Overfull \hbox (15.95541pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 ray 
+ []
+
+
+Overfull \hbox (17.14429pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 im- 
+ []
+
+
+Overfull \hbox (16.55536pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 age 
+ []
+
+
+Overfull \hbox (19.06923pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 seg- 
+ []
+
+
+Overfull \hbox (25.41086pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 men- 
+ []
+
+
+Overfull \hbox (13.90541pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 ta- 
+ []
+
+
+Overfull \hbox (19.81647pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 tion 
+ []
+
+
+Overfull \hbox (19.49983pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 sys- 
+ []
+
+
+Overfull \hbox (18.61647pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 tem 
+ []
+
+
+Overfull \hbox (26.158pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 based 
+ []
+
+
+Overfull \hbox (12.41098pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 on 
+ []
+
+
+Overfull \hbox (13.0221pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 vi- 
+ []
+
+
+Overfull \hbox (19.95256pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 sual 
+ []
+
+
+Overfull \hbox (45.38843pt too wide) in paragraph at lines 24--25
+ \OT1/cmr/bx/it/10 prompts) 
+ []
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:29: Undefined control sequence.
+l.29     \Large
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:30: Undefined control sequence.
+l.30     \section
+                 *{THÔNG TIN CHUNG}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no * in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no H in font nullfont!
+LaTeX Font Info:    Trying to load font information for +cmr on input line 30.
+LaTeX Font Info:    No file cmr.fd. on input line 30.
+
+LaTeX Font Warning: Font shape `/cmr/m/n' undefined
+(Font)              using `/cmr/m/n' instead on input line 30.
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:30: Corrupted NFSS tables.
+wrong@fontshape ...message {Corrupted NFSS tables}
+                                                  error@fontshape else let f...
+l.30     \section*{THÔ
+                       NG TIN CHUNG}
+This error message was generated by an \errmessage
+command, so I can't give any explicit help.
+Pretend that you're Hercule Poirot: Examine all clues,
+and deduce the truth by order and method.
+
+
+LaTeX Font Warning: Font shape `/cmr/m/n' undefined
+(Font)              using `OT1/cmr/m/n' instead on input line 30.
+
+Missing character: There is no N in font nullfont!
+Missing character: There is no G in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no I in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no H in font nullfont!
+Missing character: There is no U in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no G in font nullfont!
+
+Overfull \hbox (32.77782pt too wide) in paragraph at lines 30--31
+[]\/cmr/m/n/10 ^O
+ []
+
+Missing character: There is no [ in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no = in font nullfont!
+Missing character: There is no ] in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33         \item \textbf
+                          {Người hướng dẫn:}
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33         \item \textbf
+                          {Người hướng dẫn:}
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33         \item \textbf
+                          {Người hướng dẫn:}
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33 ...   \item \textbf{Người hướng dẫn:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Unicode character ờ (U+1EDD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33 ...   \item \textbf{Người hướng dẫn:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33 ...   \item \textbf{Người hướng dẫn:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Unicode character ớ (U+1EDB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33 ...   \item \textbf{Người hướng dẫn:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:33: LaTeX Error: Unicode character ẫ (U+1EAB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33 ...   \item \textbf{Người hướng dẫn:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:35: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.35             \item P
+                        GS.TS. Lý Quốc Ngọc (Khoa Công nghệ Thông tin)
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (17.94435pt too wide) in paragraph at lines 31--35
+\OT1/cmr/bx/n/10 Ngi
+ []
+
+
+Overfull \hbox (18.52768pt too wide) in paragraph at lines 31--35
+\OT1/cmr/bx/n/10 hng
+ []
+
+
+Overfull \hbox (15.97214pt too wide) in paragraph at lines 31--35
+\OT1/cmr/bx/n/10 dn: 
+ []
+
+Missing character: There is no P in font nullfont!
+Missing character: There is no G in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no L in font nullfont!
+Missing character: There is no Q in font nullfont!
+Missing character: There is no u in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:35: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.35             \item PGS.TS. Lý Quố
+                                        c Ngọc (Khoa Công nghệ Thông tin)
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no g in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:35: LaTeX Error: Unicode character ọ (U+1ECD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.35             \item PGS.TS. Lý Quốc Ngọ
+                                               c (Khoa Công nghệ Thông tin)
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no K in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:35: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.35 ...S.TS. Lý Quốc Ngọc (Khoa Công nghệ
+                                                   Thông tin)
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no ) in font nullfont!
+
+Overfull \hbox (5.2778pt too wide) in paragraph at lines 35--36
+\/cmr/m/n/10 ^^Sy
+ []
+
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 35--36
+\/cmr/m/n/10 ^o
+ []
+
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 35--36
+\/cmr/m/n/10 ^o 
+ []
+
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no . in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:36: LaTeX Error: Command \DJ unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.36             \item ThS. Đ
+                              ỗ Thị Thanh Hà (Khoa Công nghệ Thông ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:36: LaTeX Error: Unicode character ỗ (U+1ED7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.36             \item ThS. Đỗ
+                                  Thị Thanh Hà (Khoa Công nghệ Thông ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:36: LaTeX Error: Unicode character ị (U+1ECB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.36             \item ThS. Đỗ Thị
+                                        Thanh Hà (Khoa Công nghệ Thông ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no H in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no K in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:36: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.36 .... Đỗ Thị Thanh Hà (Khoa Công nghệ
+                                                   Thông tin)
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no ) in font nullfont!
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 36--37
+\/cmr/m/n/10 ^^Ra
+ []
+
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 36--37
+\/cmr/m/n/10 ^o
+ []
+
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 36--37
+\/cmr/m/n/10 ^o 
+ []
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:39: LaTeX Error: Unicode character ự (U+1EF1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.39 ...m \textbf{Nhóm sinh viên thực hiện:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:39: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.39 ...m \textbf{Nhóm sinh viên thực hiện:}
+                                                  
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Overfull \hbox (30.72206pt too wide) in paragraph at lines 39--40
+\OT1/cmr/bx/n/10 Nh^^Som
+ []
+
+
+Overfull \hbox (20.50821pt too wide) in paragraph at lines 39--40
+\OT1/cmr/bx/n/10 sinh
+ []
+
+
+Overfull \hbox (20.92351pt too wide) in paragraph at lines 39--40
+\OT1/cmr/bx/n/10 vi^en
+ []
+
+
+Overfull \hbox (15.97214pt too wide) in paragraph at lines 39--40
+\OT1/cmr/bx/n/10 thc
+ []
+
+
+Overfull \hbox (19.16656pt too wide) in paragraph at lines 39--40
+\OT1/cmr/bx/n/10 hin: 
+ []
+
+Missing character: There is no N in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no y in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:41: LaTeX Error: Unicode character ễ (U+1EC5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.41             \item Nguyễ
+                              n Hữu Bình (MSSV: 22120031)
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no H in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:41: LaTeX Error: Unicode character ữ (U+1EEF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.41             \item Nguyễn Hữ
+                                    u Bình (MSSV: 22120031)
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no u in font nullfont!
+Missing character: There is no B in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no M in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no V in font nullfont!
+Missing character: There is no : in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 3 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no ) in font nullfont!
+
+Overfull \hbox (2.77779pt too wide) in paragraph at lines 41--42
+\/cmr/m/n/10 ^^R^^P 
+ []
+
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no L in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no M in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no V in font nullfont!
+Missing character: There is no : in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 9 in font nullfont!
+Missing character: There is no 6 in font nullfont!
+Missing character: There is no ) in font nullfont!
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 42--43
+\/cmr/m/n/10 ^o
+ []
+
+
+Overfull \hbox (5.55557pt too wide) in paragraph at lines 42--43
+\/cmr/m/n/10 ^^Su
+ []
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:45: LaTeX Error: Unicode character ạ (U+1EA1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.45         \item \textbf{Loại đề tài:}
+                                               Nghiên cứu
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:45: LaTeX Error: Command \dj unavailable in encoding OT1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.45         \item \textbf{Loại đề tài:}
+                                               Nghiên cứu
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:45: LaTeX Error: Unicode character ề (U+1EC1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.45         \item \textbf{Loại đề tài:}
+                                               Nghiên cứu
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no N in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:45: LaTeX Error: Unicode character ứ (U+1EE9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.45 ...m \textbf{Loại đề tài:} Nghiên cứ
+                                                  u
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no u in font nullfont!
+
+Overfull \hbox (15.86102pt too wide) in paragraph at lines 45--46
+\OT1/cmr/bx/n/10 Loi
+ []
+
+
+Overfull \hbox (16.45128pt too wide) in paragraph at lines 45--46
+\OT1/cmr/bx/n/10 t^^Rai:
+ []
+
+
+Overfull \hbox (4.44444pt too wide) in paragraph at lines 45--46
+\/cmr/m/n/10 ^e
+ []
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:47: LaTeX Error: Unicode character ờ (U+1EDD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 ... \item \textbf{Thời gian thực hiện:}
+                                                   Từ \textit{01/2026} đ�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:47: LaTeX Error: Unicode character ự (U+1EF1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 ... \item \textbf{Thời gian thực hiện:}
+                                                   Từ \textit{01/2026} đ�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:47: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 ... \item \textbf{Thời gian thực hiện:}
+                                                   Từ \textit{01/2026} đ�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no T in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:47: LaTeX Error: Unicode character ừ (U+1EEB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 ...m \textbf{Thời gian thực hiện:} Từ
+                                                   \textit{01/2026} đến \...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:47: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 ...n thực hiện:} Từ \textit{01/2026} đ
+                                                  ến \textit{07/2026}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:47: LaTeX Error: Unicode character ế (U+1EBF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 ...hực hiện:} Từ \textit{01/2026} đế
+                                                  n \textit{07/2026}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+
+Overfull \hbox (17.58324pt too wide) in paragraph at lines 47--48
+\OT1/cmr/bx/n/10 Thi
+ []
+
+
+Overfull \hbox (20.92348pt too wide) in paragraph at lines 47--48
+\OT1/cmr/bx/n/10 gian
+ []
+
+
+Overfull \hbox (15.97214pt too wide) in paragraph at lines 47--48
+\OT1/cmr/bx/n/10 thc
+ []
+
+
+Overfull \hbox (19.16656pt too wide) in paragraph at lines 47--48
+\OT1/cmr/bx/n/10 hin:
+ []
+
+
+Overfull \hbox (35.77759pt too wide) in paragraph at lines 47--48
+\OT1/cmr/m/it/10 01/2026
+ []
+
+
+Overfull \hbox (37.13315pt too wide) in paragraph at lines 47--48
+\OT1/cmr/m/it/10 07/2026 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:52: LaTeX Error: The font size command \normalsize is not defined:
+               there is probably something wrong with the class file.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.52 
+     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:53: Undefined control sequence.
+l.53     \section
+                 *{NỘI DUNG THỰC HIỆN}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no * in font nullfont!
+Missing character: There is no N in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:53: LaTeX Error: Unicode character Ộ (U+1ED8)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.53     \section*{NỘ
+                       I DUNG THỰC HIỆN}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no I in font nullfont!
+Missing character: There is no D in font nullfont!
+Missing character: There is no U in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no G in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no H in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:53: LaTeX Error: Unicode character Ự (U+1EF0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.53     \section*{NỘI DUNG THỰ
+                                   C HIỆN}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no C in font nullfont!
+Missing character: There is no H in font nullfont!
+Missing character: There is no I in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:53: LaTeX Error: Unicode character Ệ (U+1EC6)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.53     \section*{NỘI DUNG THỰC HIỆ
+                                          N}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no N in font nullfont!
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 53--54
+[]
+ []
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:55: Undefined control sequence.
+l.55     \subsection
+                    *{Giới thiệu về đề tài}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no * in font nullfont!
+Missing character: There is no G in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:55: LaTeX Error: Unicode character ớ (U+1EDB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.55     \subsection*{Giớ
+                           i thiệu về đề tài}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:55: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.55     \subsection*{Giới thiệ
+                                   u về đề tài}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no u in font nullfont!
+Missing character: There is no v in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:55: LaTeX Error: Unicode character ề (U+1EC1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.55     \subsection*{Giới thiệu về
+                                          đề tài}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:55: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.55     \subsection*{Giới thiệu về đ
+                                            ề tài}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:55: LaTeX Error: Unicode character ề (U+1EC1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.55     \subsection*{Giới thiệu về đề
+                                                tài}
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 55--56
+[]
+ []
+
+
+Overfull \hbox (5.00002pt too wide) in paragraph at lines 55--56
+\/cmr/m/n/10 ^^Ra 
+ []
+
+Missing character: There is no C in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ẩ (U+1EA9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57     Chẩ
+              n đoán hình ảnh qua X-quang là phương thức cận lâ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57     Chẩn đ
+                  oán hình ảnh qua X-quang là phương thức cận lâ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ả (U+1EA3)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57     Chẩn đoán hình ả
+                                nh qua X-quang là phương thức cận lâ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no X in font nullfont!
+Missing character: There is no - in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�n đoán hình ảnh qua X-quang là phư
+                                                  ơng thức cận lâm sà...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... đoán hình ảnh qua X-quang là phươ
+                                                  ng thức cận lâm sàng...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ứ (U+1EE9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...hình ảnh qua X-quang là phương thứ
+                                                  c cận lâm sàng phổ b...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ậ (U+1EAD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ảnh qua X-quang là phương thức cậ
+                                                  n lâm sàng phổ biến ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ổ (U+1ED5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...là phương thức cận lâm sàng phổ
+                                                   biến và quan trọng t...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no b in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ế (U+1EBF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ương thức cận lâm sàng phổ biế
+                                                  n và quan trọng trong p...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no r in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ọ (U+1ECD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...��n lâm sàng phổ biến và quan trọ
+                                                  ng trong phát hiện các...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... biến và quan trọng trong phát hiệ
+                                                  n các tổn thương xư�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no t in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ổ (U+1ED5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... quan trọng trong phát hiện các tổ
+                                                  n thương xương như g�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...trọng trong phát hiện các tổn thư
+                                                  ơng xương như gãy xư...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ọng trong phát hiện các tổn thươ
+                                                  ng xương như gãy xươ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no x in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...trong phát hiện các tổn thương xư
+                                                  ơng như gãy xương, r�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ong phát hiện các tổn thương xươ
+                                                  ng như gãy xương, rạ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�t hiện các tổn thương xương như
+                                                   gãy xương, rạn xươ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no g in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no x in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... các tổn thương xương như gãy xư
+                                                  ơng, rạn xương và kh...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ác tổn thương xương như gãy xươ
+                                                  ng, rạn xương và kh�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no r in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ạ (U+1EA1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...n thương xương như gãy xương, rạ
+                                                  n xương và khối u xư...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no x in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�ơng xương như gãy xương, rạn xư
+                                                  ơng và khối u xương ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�ng xương như gãy xương, rạn xươ
+                                                  ng và khối u xương ng...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...như gãy xương, rạn xương và khố
+                                                  i u xương nguyên phát....
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no x in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�y xương, rạn xương và khối u xư
+                                                  ơng nguyên phát. Tại ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... xương, rạn xương và khối u xươ
+                                                  ng nguyên phát. Tại c�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no T in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ạ (U+1EA1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...g và khối u xương nguyên phát. Tạ
+                                                  i các cơ sở y tế l�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�i u xương nguyên phát. Tại các cơ
+                                                   sở y tế lớn, số l...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no s in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ở (U+1EDF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...xương nguyên phát. Tại các cơ sở
+                                                   y tế lớn, số lượ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no y in font nullfont!
+Missing character: There is no t in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ế (U+1EBF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... nguyên phát. Tại các cơ sở y tế
+                                                   lớn, số lượng ca c...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no l in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ớ (U+1EDB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ên phát. Tại các cơ sở y tế lớ
+                                                  n, số lượng ca chụp...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no s in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�t. Tại các cơ sở y tế lớn, số
+                                                   lượng ca chụp X-quan...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no l in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...Tại các cơ sở y tế lớn, số lư
+                                                  ợng ca chụp X-quang m�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ợ (U+1EE3)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�i các cơ sở y tế lớn, số lượ
+                                                  ng ca chụp X-quang mỗi...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ụ (U+1EE5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... sở y tế lớn, số lượng ca chụ
+                                                  p X-quang mỗi ngày lên...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no p in font nullfont!
+Missing character: There is no X in font nullfont!
+Missing character: There is no - in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no m in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ỗ (U+1ED7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ớn, số lượng ca chụp X-quang mỗ
+                                                  i ngày lên đến hàng ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...��ng ca chụp X-quang mỗi ngày lên đ
+                                                  ến hàng trăm ca, đặ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ế (U+1EBF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...g ca chụp X-quang mỗi ngày lên đế
+                                                  n hàng trăm ca, đặt �...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no , in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...mỗi ngày lên đến hàng trăm ca, đ
+                                                  ặt áp lực đáng kể...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ặ (U+1EB7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�i ngày lên đến hàng trăm ca, đặ
+                                                  t áp lực đáng kể l�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no t in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ự (U+1EF1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ên đến hàng trăm ca, đặt áp lự
+                                                  c đáng kể lên đội ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...đến hàng trăm ca, đặt áp lực đ
+                                                  áng kể lên đội ngũ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no k in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ể (U+1EC3)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�ng trăm ca, đặt áp lực đáng kể
+                                                   lên đội ngũ bác sĩ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no l in font nullfont!
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...m ca, đặt áp lực đáng kể lên đ
+                                                  ội ngũ bác sĩ về t�...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ộ (U+1ED9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...a, đặt áp lực đáng kể lên độ
+                                                  i ngũ bác sĩ về tốc...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no v in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ề (U+1EC1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...đáng kể lên đội ngũ bác sĩ về
+                                                   tốc độ đọc phim v...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no t in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...g kể lên đội ngũ bác sĩ về tố
+                                                  c độ đọc phim và đ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�� lên đội ngũ bác sĩ về tốc đ
+                                                  ộ đọc phim và độ ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ộ (U+1ED9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...lên đội ngũ bác sĩ về tốc độ
+                                                   đọc phim và độ ch�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...n đội ngũ bác sĩ về tốc độ đ
+                                                  ọc phim và độ chính...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ọ (U+1ECD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�ội ngũ bác sĩ về tốc độ đọ
+                                                  c phim và độ chính x�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no v in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�c sĩ về tốc độ đọc phim và đ
+                                                  ộ chính xác chẩn đo...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ộ (U+1ED9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...sĩ về tốc độ đọc phim và độ
+                                                   chính xác chẩn đoán...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no x in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ẩ (U+1EA9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�� đọc phim và độ chính xác chẩ
+                                                  n đoán. Bước xác đ�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�ọc phim và độ chính xác chẩn đ
+                                                  oán. Bước xác định...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no B in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...m và độ chính xác chẩn đoán. Bư
+                                                  ớc xác định và khoa...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ớ (U+1EDB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...à độ chính xác chẩn đoán. Bướ
+                                                  c xác định và khoanh ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no x in font nullfont!
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...chính xác chẩn đoán. Bước xác đ
+                                                  ịnh và khoanh vùng t�...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ị (U+1ECB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�nh xác chẩn đoán. Bước xác đị
+                                                  nh và khoanh vùng tổn ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ổ (U+1ED5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...Bước xác định và khoanh vùng tổ
+                                                  n thương (phân đoạn ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...c xác định và khoanh vùng tổn thư
+                                                  ơng (phân đoạn ảnh)...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...xác định và khoanh vùng tổn thươ
+                                                  ng (phân đoạn ảnh) l...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... và khoanh vùng tổn thương (phân đ
+                                                  oạn ảnh) là cơ sở ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no o in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ạ (U+1EA1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... khoanh vùng tổn thương (phân đoạ
+                                                  n ảnh) là cơ sở đ�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ả (U+1EA3)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...nh vùng tổn thương (phân đoạn ả
+                                                  nh) là cơ sở để đo...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no c in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ơ (U+01A1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...��n thương (phân đoạn ảnh) là cơ
+                                                   sở để đo lường k...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no s in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ở (U+1EDF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...hương (phân đoạn ảnh) là cơ sở
+                                                   để đo lường kích ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ơng (phân đoạn ảnh) là cơ sở đ
+                                                  ể đo lường kích th�...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ể (U+1EC3)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...g (phân đoạn ảnh) là cơ sở để
+                                                   đo lường kích thư�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...phân đoạn ảnh) là cơ sở để đ
+                                                  o lường kích thước ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no o in font nullfont!
+Missing character: There is no l in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... đoạn ảnh) là cơ sở để đo lư
+                                                  ờng kích thước khố...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ờ (U+1EDD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...oạn ảnh) là cơ sở để đo lườ
+                                                  ng kích thước khối u...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...là cơ sở để đo lường kích thư
+                                                  ớc khối u, theo dõi d...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ớ (U+1EDB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... cơ sở để đo lường kích thướ
+                                                  c khối u, theo dõi di�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�� để đo lường kích thước khố
+                                                  i u, theo dõi diễn ti�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ễ (U+1EC5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...g kích thước khối u, theo dõi diễ
+                                                  n tiến bệnh và lập ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ế (U+1EBF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... thước khối u, theo dõi diễn tiế
+                                                  n bệnh và lập kế ho...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no b in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...��c khối u, theo dõi diễn tiến bệ
+                                                  nh và lập kế hoạch ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no l in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ậ (U+1EAD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...u, theo dõi diễn tiến bệnh và lậ
+                                                  p kế hoạch điều tr�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no p in font nullfont!
+Missing character: There is no k in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ế (U+1EBF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...o dõi diễn tiến bệnh và lập kế
+                                                   hoạch điều trị; tu...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ạ (U+1EA1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... diễn tiến bệnh và lập kế hoạ
+                                                  ch điều trị; tuy nhi�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�n tiến bệnh và lập kế hoạch đ
+                                                  iều trị; tuy nhiên hi...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ề (U+1EC1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...iến bệnh và lập kế hoạch điề
+                                                  u trị; tuy nhiên hiện...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no u in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no r in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ị (U+1ECB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ệnh và lập kế hoạch điều trị
+                                                  ; tuy nhiên hiện tại ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no ; in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�� hoạch điều trị; tuy nhiên hiệ
+                                                  n tại vẫn được th�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ạ (U+1EA1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...��ch điều trị; tuy nhiên hiện tạ
+                                                  i vẫn được thực hi...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no v in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ẫ (U+1EAB)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�iều trị; tuy nhiên hiện tại vẫ
+                                                  n được thực hiện t...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Command \dj unavailable in encoding .
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�u trị; tuy nhiên hiện tại vẫn đ
+                                                  ược thực hiện thủ...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ư (U+01B0)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... trị; tuy nhiên hiện tại vẫn đư
+                                                  ợc thực hiện thủ c...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ợ (U+1EE3)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...ị; tuy nhiên hiện tại vẫn đượ
+                                                  c thực hiện thủ côn...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ự (U+1EF1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...y nhiên hiện tại vẫn được thự
+                                                  c hiện thủ công trên...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...n hiện tại vẫn được thực hiệ
+                                                  n thủ công trên hệ t...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ủ (U+1EE7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...n tại vẫn được thực hiện thủ
+                                                   công trên hệ thống ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�ợc thực hiện thủ công trên hệ
+                                                   thống PACS, tiêu tốn...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...thực hiện thủ công trên hệ thố
+                                                  ng PACS, tiêu tốn nhi�...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no P in font nullfont!
+Missing character: There is no A in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no t in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ố (U+1ED1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... công trên hệ thống PACS, tiêu tố
+                                                  n nhiều thời gian và ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no n in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ề (U+1EC1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...rên hệ thống PACS, tiêu tốn nhiề
+                                                  u thời gian và phụ th...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no u in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ờ (U+1EDD)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...�� thống PACS, tiêu tốn nhiều thờ
+                                                  i gian và phụ thuộc v...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no i in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ụ (U+1EE5)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ... tiêu tốn nhiều thời gian và phụ
+                                                   thuộc vào kinh nghiệ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no u in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ộ (U+1ED9)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...tốn nhiều thời gian và phụ thuộ
+                                                  c vào kinh nghiệm cá n...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+Missing character: There is no c in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no i in font nullfont!
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57: LaTeX Error: Unicode character ệ (U+1EC7)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.57 ...i gian và phụ thuộc vào kinh nghiệ
+                                                  m cá nhân.
+(That makes 100 errors; please try again.) 
+Here is how much of TeX's memory you used:
+ 115 strings out of 476182
+ 1668 string characters out of 5795595
+ 1929975 words of memory out of 5000000
+ 22209 multiletter control sequences out of 15000+600000
+ 559082 words of font info for 39 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 24i,5n,32p,941b,205s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/Appendix/decuong.tex:57:  ==> Fatal error occurred, no output PDF file produced!

@@ -1,7 +1,7 @@
 \contentsline {chapter}{Lời cảm ơn}{i}{Doc-Start}%
 \contentsline {chapter}{Đề cương chi tiết}{ii}{chapter*.1}%
-\contentsline {chapter}{Mục lục}{iv}{section*.6}%
-\contentsline {chapter}{Tóm tắt}{xi}{chapter*.9}%
+\contentsline {chapter}{Mục lục}{vii}{Item.6}%
+\contentsline {chapter}{Tóm tắt}{xiv}{chapter*.4}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%
@@ -12,7 +12,7 @@
 \contentsline {subsection}{\numberline {1.3.2}Giai đoạn suy luận (Online)}{5}{subsection.1.3.2}%
 \contentsline {section}{\numberline {1.4}Thách thức của bài toán}{6}{section.1.4}%
 \contentsline {section}{\numberline {1.5}Đóng góp của khóa luận}{7}{section.1.5}%
-\contentsline {section}{\numberline {1.6}Bố cục của khóa luận}{8}{section.1.6}%
+\contentsline {section}{\numberline {1.6}Bố cục của khóa luận}{7}{section.1.6}%
 \contentsline {chapter}{\numberline {2}CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{9}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Các công trình liên quan}{9}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Các phương pháp phân đoạn ảnh y khoa tự động}{9}{subsection.2.1.1}%
@@ -35,12 +35,11 @@
 \contentsline {section}{\numberline {3.2}Tiền xử lý dữ liệu và loại bỏ nhiễu ảnh X-quang}{25}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Bộ dữ liệu BTXRD}{25}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Quy trình tiền xử lý và loại bỏ nhiễu}{26}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Gán nhãn và chuẩn bị dữ liệu}{28}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{28}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{28}{subsection.3.3.1}%
-\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{29}{section*.15}%
-\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{30}{section*.16}%
-\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{31}{subsection.3.3.2}%
+\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{29}{section*.10}%
+\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{30}{section*.11}%
+\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{30}{subsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{31}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{33}{subsection.3.3.4}%
 \contentsline {section}{\numberline {3.4}Module gác cổng sàng lọc (Gatekeeper)}{35}{section.3.4}%
@@ -59,15 +58,14 @@
 \contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{48}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{50}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{50}{subsection.4.4.1}%
-\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{52}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{52}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Đánh giá pipeline end-to-end với module Gatekeeper hỗ trợ}{53}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng}{53}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{55}{subsection.4.7.1}%
-\contentsline {section}{\numberline {4.8}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{56}{section.4.8}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{59}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{59}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{60}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{61}{section.5.3}%
-\contentsline {chapter}{Danh mục công trình của tác giả}{63}{equation.5.3.1}%
-\contentsline {chapter}{Tài liệu tham khảo}{64}{Item.15}%
+\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{51}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{51}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Đánh giá pipeline end-to-end với module Gatekeeper hỗ trợ}{52}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng}{52}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{54}{subsection.4.7.1}%
+\contentsline {section}{\numberline {4.8}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{55}{section.4.8}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{58}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{58}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{59}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{60}{section.5.3}%
+\contentsline {chapter}{Tài liệu tham khảo}{62}{equation.5.3.1}%

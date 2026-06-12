@@ -70,14 +70,6 @@ Bộ dữ liệu này phục vụ hai mục đích song song trong kiến trúc 
 
 Để xóa nhiễu tự động, nhóm gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua nền tảng \textbf{Roboflow}~\cite{roboflow2023}, sau đó finetune \textbf{YOLOv11s}~\cite{yolov11} trên tập nhãn này. Mô hình sau khi huấn luyện được dùng để detect vùng nhiễu trên toàn bộ 3.746 ảnh PNG; các vùng phát hiện được xử lý bằng cách xác định giá trị màu xuất hiện nhiều nhất dọc theo biên hộp phát hiện; nếu giá trị đó nhỏ hơn 180 (không quá sáng) thì tô bằng màu đó, ngược lại tô bằng màu đen. Phương pháp này đảm bảo vùng được lấp đầy đồng nhất với nền xung quanh thay vì dùng màu cố định, loại bỏ hoàn toàn ký tự R/L và nhãn kỹ thuật.
 
-\FloatBarrier
-\subsection{Gán nhãn và chuẩn bị dữ liệu}
-\label{subsec:annotation}
-
-Sau khi ảnh được làm sạch, nhóm gán nhãn phân đoạn thủ công bằng phần mềm \textbf{LabelMe} ở dạng đa giác. Mỗi polygon trên một ảnh được xử lý như một mẫu huấn luyện độc lập, kèm mặt nạ và bounding box prompt tương ứng, cơ chế này tăng hiệu quả sử dụng dữ liệu tự nhiên mà không cần augmentation nhân tạo. Toàn bộ ảnh và mask được chuẩn hóa pixel về $[-1, 1]$ và resize về $512 \times 512$.
-
-Tăng cường dữ liệu được áp dụng \textit{đồng bộ} trên cả ba đầu vào (ảnh, mặt nạ, bản đồ nhiệt câu nhắc): lật ngang ngẫu nhiên (50\%) và xoay ngẫu nhiên $\pm 15^{\circ}$. Ngoài ra, 15\% mẫu được thay prompt bằng bản đồ nhiệt rỗng và 15\% thêm nhiễu vào prompt, buộc mô hình không phụ thuộc mù quáng vào câu nhắc.
-
 
 % ------------------------------------------------------------
 \section{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}
