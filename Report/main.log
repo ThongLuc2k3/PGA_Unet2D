@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUN 2026 23:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUN 2026 23:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1134,65 +1134,50 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 
 
- <./images/logo.png>] [3] [4] [5]
-Underfull \hbox (badness 10000) in paragraph at lines 141--142
-[]|\T5/cmr/m/n/14.4 Tu¶n 8--14 (03--
+ <./images/logo.png>] [3] [4]
+Underfull \hbox (badness 1043) in paragraph at lines 113--114
+\T5/cmr/m/n/14.4 Dice/IoU/-Pre-ci-sion/Re-cal-l/HD95 vÓi c°c mÊ hºnh base-line; ab-la-tion
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 143--144
-[]|\T5/cmr/m/n/14.4 Tu¶n 15--18 (04--
+[5]
+Overfull \hbox (2.83765pt too wide) in paragraph at lines 134--151
+ [][] 
  []
 
-
-Underfull \hbox (badness 2158) in paragraph at lines 145--145
-[]|\T5/cmr/m/n/14.4 ^^^°nh gi° pipeline end-to-end
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 145--146
-[]|\T5/cmr/m/n/14.4 Tu¶n 19--21
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 147--148
-[]|\T5/cmr/m/n/14.4 Tu¶n 22--26 (06--
- []
-
-) [6] (./main.toc
+) [6] [7] (./main.toc
 Underfull \hbox (badness 1540) in paragraph at lines 16--16
  [] [][]\T5/cmr/bx/n/14.4 CÅC C∆NG TRúNH LIñN QUAN VÄ CÃ S– Lﬁ 
  []
 
-[7
+[8
 
 
 
-] [8] [9])
+] [9] [10])
 \tf@toc=\write6
 \openout6 = `main.toc'.
 
- [10] (./main.lof [11
+ [11] (./main.lof [12
 
 ])
 \tf@lof=\write7
 \openout7 = `main.lof'.
 
- [12] (./main.lot
+ [13] (./main.lot
 Underfull \hbox (badness 4391) in paragraph at lines 9--9
  \T5/cmr/m/n/14.4 v† SAM-Med2D zero-shot tr∂n 3 k‡ch b£n prompt 
  []
 
-[13
+[14
 
 ])
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
- [14]
+ [15]
 \openout2 = `Appendix/tomtat.aux'.
 
- (./Appendix/tomtat.tex) [15
+ (./Appendix/tomtat.tex) [16
 
 
 ]
@@ -1232,7 +1217,7 @@ Ch∆∞∆°ng 2.
 
 
 ] [10]
-<images/arch_sammed2d.png, id=615, 1155.31625pt x 415.5525pt>
+<images/arch_sammed2d.png, id=619, 1155.31625pt x 415.5525pt>
 File: images/arch_sammed2d.png Graphic file (type png)
 <use images/arch_sammed2d.png>
 Package pdftex.def Info: images/arch_sammed2d.png  used on input line 31.
@@ -1243,7 +1228,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1}) h
                                                   \__shipout_drop_firstpage_...
 l.41 \section
              {C∆° s·ªü l√Ω thuy·∫øt n·ªÅn t·∫£ng} <./images/arch_sammed2d.png>] [12]
-<images/arch_unet2d.png, id=633, 864.22874pt x 124.465pt>
+<images/arch_unet2d.png, id=637, 864.22874pt x 124.465pt>
 File: images/arch_unet2d.png Graphic file (type png)
 <use images/arch_unet2d.png>
 Package pdftex.def Info: images/arch_unet2d.png  used on input line 69.
@@ -1258,7 +1243,7 @@ Underfull \hbox (badness 3000) in paragraph at lines 86--88
 \T5/cmr/m/n/14.4 trong ^^_‚ $\OML/cmm/m/it/14.4 ^^[[]$ \T5/cmr/m/n/14.4 l† h†m kΩch ho§t ReLU, $\OML/cmm/m/it/14.4 ^^[[]$ \T5/cmr/m/n/14.4 l† h†m Sig-moid, v†
  []
 
-<images/arch_attention_unet2d.png, id=641, 924.45375pt x 299.1175pt>
+<images/arch_attention_unet2d.png, id=646, 924.45375pt x 299.1175pt>
 File: images/arch_attention_unet2d.png Graphic file (type png)
 <use images/arch_attention_unet2d.png>
 Package pdftex.def Info: images/arch_attention_unet2d.png  used on input line 93.
@@ -1279,7 +1264,7 @@ Ch∆∞∆°ng 3.
 
 
 ]
-<images/pipeline_pga_app_inference.png, id=694, 653.44125pt x 598.235pt>
+<images/pipeline_pga_app_inference.png, id=698, 653.44125pt x 598.235pt>
 File: images/pipeline_pga_app_inference.png Graphic file (type png)
 <use images/pipeline_pga_app_inference.png>
 Package pdftex.def Info: images/pipeline_pga_app_inference.png  used on input line 28.
@@ -1290,7 +1275,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1}) h
                                                   \__shipout_drop_firstpage_...
 l.38 \section
              {Ti·ªÅn x·ª≠ l√Ω d·ªØ li·ªáu v√† lo·∫°i b·ªè nhi·ªÖu ·∫£nh X-qu... <./images/pipeline_pga_app_inference.png>] [25]
-<images/preprocessing_pipeline.png, id=711, 251.94125pt x 547.04375pt>
+<images/preprocessing_pipeline.png, id=716, 251.94125pt x 547.04375pt>
 File: images/preprocessing_pipeline.png Graphic file (type png)
 <use images/preprocessing_pipeline.png>
 Package pdftex.def Info: images/preprocessing_pipeline.png  used on input line 66.
@@ -1321,7 +1306,7 @@ Package microtype Warning: I cannot find a protrusion list for font
 (microtype)                protrusion for this font on input line 125.
 
 [31]
-<images/arch_pga_unet2d.png, id=754, 1180.41pt x 329.23pt>
+<images/arch_pga_unet2d.png, id=759, 1180.41pt x 329.23pt>
 File: images/arch_pga_unet2d.png Graphic file (type png)
 <use images/arch_pga_unet2d.png>
 Package pdftex.def Info: images/arch_pga_unet2d.png  used on input line 144.
@@ -1437,7 +1422,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.4.10}) h
                                                   \__shipout_drop_firstpage_...
 l.414 
       ]
-<images/vis_pga_01.png, id=865, 1424.4417pt x 616.4631pt>
+<images/vis_pga_01.png, id=870, 1424.4417pt x 616.4631pt>
 File: images/vis_pga_01.png Graphic file (type png)
 <use images/vis_pga_01.png>
 Package pdftex.def Info: images/vis_pga_01.png  used on input line 422.
@@ -1499,18 +1484,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 34646 strings out of 476182
- 651857 string characters out of 5795595
+ 34647 strings out of 476182
+ 651865 string characters out of 5795595
  1942975 words of memory out of 5000000
  55851 multiletter control sequences out of 15000+600000
  579722 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,11n,93p,1969b,1390s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vncsc10.864pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1440.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vntt12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr10.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1493pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1440.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx8.600pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnti12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1792pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.864pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr17.610pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.1037pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnbx12.720pk> </home/thongluc/texmf/fonts/pk/ljfour/vntex/vnr/vnr12.720pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (80 pages, 1489117 bytes).
+Output written on main.pdf (81 pages, 1489359 bytes).
 PDF statistics:
- 1986 PDF objects out of 2073 (max. 8388607)
- 969 compressed objects within 10 object streams
- 220 named destinations out of 1000 (max. 500000)
+ 1989 PDF objects out of 2073 (max. 8388607)
+ 972 compressed objects within 10 object streams
+ 221 named destinations out of 1000 (max. 500000)
  12893 words of extra memory for PDF output out of 14400 (max. 10000000)
 

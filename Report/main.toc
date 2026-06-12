@@ -1,7 +1,7 @@
 \contentsline {chapter}{Lời cảm ơn}{i}{Doc-Start}%
 \contentsline {chapter}{Đề cương chi tiết}{ii}{chapter*.1}%
-\contentsline {chapter}{Mục lục}{vii}{Item.6}%
-\contentsline {chapter}{Tóm tắt}{xiv}{chapter*.4}%
+\contentsline {chapter}{Mục lục}{viii}{Item.6}%
+\contentsline {chapter}{Tóm tắt}{xv}{chapter*.4}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%

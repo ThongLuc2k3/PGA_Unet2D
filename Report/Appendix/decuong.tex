@@ -98,11 +98,11 @@ Các mô hình học sâu tự động như U-Net đã đạt kết quả khả 
 \noindent{\bfseries 2.4\quad Cách tiếp cận thực hiện}
 
 \medskip
-\textbf{Giai đoạn 1 --- Nghiên cứu tài liệu:} Khảo sát kiến trúc U-Net, Attention U-Net, SAM-Med2D; tìm hiểu cơ chế tích hợp câu nhắc không gian vào mạng tích chập; phân tích đặc điểm bộ dữ liệu BTXRD.
+\textbf{Giai đoạn 1:Nghiên cứu tài liệu:} Khảo sát kiến trúc U-Net, Attention U-Net, SAM-Med2D; tìm hiểu cơ chế tích hợp câu nhắc không gian vào mạng tích chập; phân tích đặc điểm bộ dữ liệu BTXRD.
 
-\textbf{Giai đoạn 2 --- Chuẩn bị dữ liệu:} Gán nhãn bounding box nhiễu qua Roboflow, finetune YOLOv11s để phát hiện và xóa nhiễu tự động trên toàn tập ảnh. Gán nhãn phân đoạn polygon bằng LabelMe; chuyển đổi sang mặt nạ nhị phân và chia tập huấn luyện/xác thực/kiểm tra.
+\textbf{Giai đoạn 2:Chuẩn bị dữ liệu:} Gán nhãn bounding box nhiễu qua Roboflow, finetune YOLOv11s để phát hiện và xóa nhiễu tự động trên toàn tập ảnh. Gán nhãn phân đoạn polygon bằng LabelMe; chuyển đổi sang mặt nạ nhị phân và chia tập huấn luyện/xác thực/kiểm tra.
 
-\textbf{Giai đoạn 3 --- Thiết kế và huấn luyện mô hình:}
+\textbf{Giai đoạn 3:Thiết kế và huấn luyện mô hình:}
 \begin{itemize}
     \item Biểu diễn câu nhắc hộp giới hạn dưới dạng Plateau Heatmap (vùng trong bbox gán giá trị 1, làm mịn biên bằng Gaussian $31\times31$).
     \item PGA-UNet: Cổng không gian tăng cường đặc trưng vùng câu nhắc tại bộ mã hóa; Cơ chế chú ý có điều kiện điều chỉnh attention gate bằng đặc trưng câu nhắc với trọng số giảm dần tại bộ giải mã.
@@ -110,7 +110,7 @@ Các mô hình học sâu tự động như U-Net đã đạt kết quả khả 
     \item EfficientNet\_B3 tinh chỉnh hai giai đoạn (đóng băng backbone rồi mở toàn bộ) cho bài toán phân lớp sàng lọc.
 \end{itemize}
 
-\textbf{Giai đoạn 4 --- Thực nghiệm và đánh giá:} So sánh định lượng Dice/IoU/Precision/Recall/HD95 với các mô hình baseline; ablation study từng thành phần kiến trúc; đánh giá tính bền bỉ kịch bản prompt lệch tâm; đánh giá pipeline toàn hệ thống trên tập hỗn hợp bình thường và bệnh lý.
+\textbf{Giai đoạn 4:Thực nghiệm và đánh giá:} So sánh định lượng Dice/IoU/Precision/Recall/HD95 với các mô hình baseline; ablation study từng thành phần kiến trúc; đánh giá tính bền bỉ kịch bản prompt lệch tâm; đánh giá pipeline toàn hệ thống trên tập hỗn hợp bình thường và bệnh lý.
 
 \medskip
 \noindent{\bfseries 2.5\quad Kết quả dự kiến của đề tài}
@@ -130,7 +130,8 @@ Các mô hình học sâu tự động như U-Net đã đạt kết quả khả 
 \begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{|c|p{7cm}|p{4.5cm}|}
+{\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|>{\centering\arraybackslash}p{1.8cm}|p{8.5cm}|>{\raggedright\arraybackslash}p{4.9cm}|}
 \hline
 \textbf{Giai đoạn} & \textbf{Nội dung} & \textbf{Thời gian} \\
 \hline
@@ -146,5 +147,5 @@ Các mô hình học sâu tự động như U-Net đã đạt kết quả khả 
 \hline
 6 & Viết báo cáo khóa luận; chuẩn bị bảo vệ & Tuần 22--26 (06--07/2026) \\
 \hline
-\end{tabular}
+\end{tabular}}
 \end{table}
