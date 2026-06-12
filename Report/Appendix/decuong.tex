@@ -1,10 +1,12 @@
 \chapter*{Đề cương chi tiết}
 
+% ────────────────────────────────────────────────────────────────
 \section*{Thông tin chung}
+% ────────────────────────────────────────────────────────────────
 
 \begin{itemize}
-    \item \textbf{Tên đề tài:} Phát triển hệ thống phân đoạn ảnh X-quang về xương dựa vào câu nhắc trực quan
-    \item \textbf{Tên tiếng Anh:} Developing a bone X-ray image segmentation system based on visual prompts
+    \item \textbf{Tên đề tài:} Phát triển hệ thống phân đoạn ảnh X-quang xương dựa vào câu nhắc trực quan
+    \item \textbf{Tên tiếng Anh:} Developing a Bone X-Ray Image Segmentation System Based on Visual Prompts
     \item \textbf{Người hướng dẫn:} PGS.TS. Lý Quốc Ngọc, ThS. Đỗ Thị Thanh Hà (Khoa Công nghệ Thông tin)
     \item \textbf{Nhóm sinh viên thực hiện:}
     \begin{enumerate}
@@ -15,22 +17,133 @@
     \item \textbf{Thời gian thực hiện:} Từ 01/2026 đến 07/2026
 \end{itemize}
 
-\section*{Giới thiệu về đề tài}
+% ────────────────────────────────────────────────────────────────
+\section*{1. Đặt vấn đề}
+% ────────────────────────────────────────────────────────────────
 
-Trong lĩnh vực chẩn đoán hình ảnh y tế hiện nay, việc phân đoạn chính xác cấu trúc giải phẫu xương trên ảnh X-quang là nhiệm vụ nền tảng giúp hỗ trợ bác sĩ xác định các bất thường hình thái và lập kế hoạch điều trị. Tuy nhiên, việc xây dựng các mô hình học sâu truyền thống thường yêu cầu một lượng lớn dữ liệu được gán nhãn ở mức độ điểm ảnh bởi các chuyên gia, điều vốn gây tốn kém về chi phí và thời gian trong thực tiễn.
+Chẩn đoán hình ảnh qua X-quang là một trong những phương thức cận lâm sàng phổ biến và quan trọng nhất trong y khoa hiện đại, đặc biệt trong phát hiện sớm các tổn thương xương như gãy xương, rạn xương và khối u xương nguyên phát. Tại các cơ sở y tế lớn, số lượng ca chụp X-quang mỗi ngày lên đến hàng trăm ca, đặt áp lực đáng kể lên đội ngũ bác sĩ chẩn đoán hình ảnh về tốc độ đọc phim và độ chính xác trong chẩn đoán.
 
-Đề tài hướng đến xây dựng một hệ thống phân đoạn ảnh X-quang xương tương tác, trong đó bác sĩ cung cấp câu nhắc trực quan (hộp giới hạn) để định hướng mô hình học sâu tập trung vào vùng tổn thương mục tiêu. Hệ thống tích hợp cơ chế phòng vệ thông minh nhằm đảm bảo an toàn khi triển khai trong môi trường lâm sàng.
+Trong quy trình đọc phim, bước xác định và khoanh vùng tổn thương (phân đoạn ảnh) đóng vai trò nền tảng: kết quả phân đoạn là cơ sở để đo lường kích thước khối u, theo dõi diễn tiến bệnh theo thời gian và lập kế hoạch điều trị phẫu thuật hay xạ trị. Hiện tại, quy trình này vẫn được thực hiện thủ công trên hệ thống PACS (Picture Archiving and Communication System), tiêu tốn nhiều thời gian, phụ thuộc lớn vào kinh nghiệm cá nhân và tiềm ẩn nguy cơ sai sót do mỏi mắt hoặc quá tải công việc.
 
-\section*{Mục tiêu đề tài}
+Những tiến bộ gần đây trong học sâu, đặc biệt là kiến trúc U-Net và các mô hình nền tảng dạng câu nhắc (prompt-based foundation models) như SAM (Segment Anything Model), đã mở ra khả năng tự động hóa bước phân đoạn. Tuy nhiên, các mô hình phân đoạn hoàn toàn tự động gặp khó khăn đặc thù trên ảnh X-quang xương: độ tương phản thấp, cấu trúc giải phẫu chồng lấp phức tạp khiến vùng tổn thương dễ bị nhầm với mô xương lành lân cận. Trong khi đó, các mô hình nền tảng quy mô lớn như SAM-Med2D tuy mạnh nhưng có số lượng tham số rất lớn ($\sim$91 triệu), chi phí tính toán cao, không phù hợp cho triển khai trên phần cứng y tế thông thường.
+
+Đề tài đặt ra hướng tiếp cận mới: kết hợp sự hướng dẫn định hướng của bác sĩ qua câu nhắc hộp giới hạn (bounding box) với kiến trúc mạng tích chập nhẹ, nhằm đạt độ chính xác phân đoạn cao hơn so với mô hình tự động thuần túy trong khi vẫn đảm bảo tốc độ suy luận đủ nhanh và tài nguyên tính toán hợp lý cho môi trường lâm sàng thực tế.
+
+% ────────────────────────────────────────────────────────────────
+\section*{2. Tổng quan tình hình nghiên cứu}
+% ────────────────────────────────────────────────────────────────
+
+\textbf{Phân đoạn ảnh y khoa tự động:} Kiến trúc U-Net là nền tảng phổ biến nhất cho phân đoạn ảnh y khoa nhờ cơ chế skip connection bảo toàn thông tin không gian trong quá trình giảm mẫu. Attention U-Net bổ sung cổng chú ý (attention gate) để lọc đặc trưng không liên quan, cải thiện độ chính xác đường biên. Tuy nhiên, cả hai kiến trúc đều hoạt động theo phương thức hoàn toàn tự động, thiếu cơ chế tiếp nhận thông tin định hướng từ bác sĩ, dẫn đến tỉ lệ dương tính giả cao trên ảnh X-quang xương.
+
+\textbf{Phân đoạn tương tác với câu nhắc:} SAM-Med2D tinh chỉnh SAM trên hơn 4,6 triệu ảnh y tế 2D đa dạng, cho phép sử dụng hộp giới hạn hoặc điểm làm câu nhắc định hướng phân đoạn. Đây là hướng tiếp cận đầy tiềm năng nhưng kiến trúc ViT-B ($\sim$91M tham số) cùng chi phí tính toán lớn hạn chế khả năng triển khai thực tế tại tuyến cơ sở.
+
+\textbf{Khoảng trống nghiên cứu:} Hiện chưa có nghiên cứu nào đề xuất kiến trúc nhẹ tích hợp câu nhắc trực quan sâu sát vào từng tầng của U-Net (cả bộ mã hóa và bộ giải mã) cho bài toán phân đoạn khối u xương trên X-quang 2D. Đặc biệt, tính bền bỉ của mô hình khi câu nhắc không hoàn hảo (lệch tâm, mở rộng quá mức) là vấn đề thực tiễn quan trọng chưa được nghiên cứu đầy đủ trong bối cảnh lâm sàng.
+
+% ────────────────────────────────────────────────────────────────
+\section*{3. Mục tiêu nghiên cứu}
+% ────────────────────────────────────────────────────────────────
 
 \begin{enumerate}
-    \item Xây dựng kiến trúc mạng PGA-UNet (Prompt-Guided Attention U-Net) tích hợp câu nhắc trực quan vào quá trình phân đoạn.
-    \item Tích hợp toàn bộ thành phần vào một ứng dụng phần mềm hoàn chỉnh phục vụ hỗ trợ chẩn đoán lâm sàng.
+    \item \textbf{Xây dựng pipeline tiền xử lý dữ liệu tự động:} Phát hiện và loại bỏ nhiễu kỹ thuật đặc thù của ảnh X-quang (ký tự chỉ hướng R/L, nhãn metadata) bằng cách finetune mô hình phát hiện vật thể YOLOv11 kết hợp công cụ gán nhãn Roboflow, áp dụng cho toàn bộ tập ảnh BTXRD.
+
+    \item \textbf{Đề xuất và xây dựng kiến trúc PGA-UNet:} Thiết kế kiến trúc U-Net nhẹ tích hợp câu nhắc hộp giới hạn qua hai cơ chế mới: (a) Cổng không gian (Prompt Spatial Gate) tại mỗi tầng bộ mã hóa để tăng cường đặc trưng trong vùng câu nhắc một cách có chọn lọc; (b) Cơ chế chú ý có điều kiện (Conditioned Attention Decoder) tại bộ giải mã để duy trì tín hiệu định hướng câu nhắc xuyên suốt quá trình khôi phục hình dáng. Mục tiêu đạt hệ số Dice $\geq 80\%$ với số lượng tham số dưới 5 triệu.
+
+    \item \textbf{Phát triển module sàng lọc tự động (Gatekeeper):} Xây dựng mô hình phân lớp nhị phân trên nền EfficientNet\_B3 để phân biệt ảnh X-quang bình thường và ảnh có bệnh lý, sàng lọc tự động trước khi đưa vào phân đoạn, tạo thành pipeline xử lý đầu cuối hoàn chỉnh an toàn cho môi trường lâm sàng.
+
+    \item \textbf{Đánh giá và phân tích hệ thống:} So sánh định lượng PGA-UNet với các phương pháp nền tảng (U-Net, Attention U-Net) và mô hình tương tác hiện đại (SAM-Med2D) trên bộ dữ liệu BTXRD; đánh giá tính bền bỉ với câu nhắc không hoàn hảo; thực hiện ablation study để phân tích đóng góp từng thành phần kiến trúc.
+
+    \item \textbf{Xây dựng ứng dụng phần mềm:} Phát triển giao diện web tương tác cho phép bác sĩ tải ảnh, vẽ bounding box trực tiếp và nhận kết quả phân đoạn hiển thị trực quan, minh chứng tính khả thi triển khai của toàn bộ hệ thống.
 \end{enumerate}
 
-\section*{Kết quả dự kiến}
+% ────────────────────────────────────────────────────────────────
+\section*{4. Phạm vi và giới hạn nghiên cứu}
+% ────────────────────────────────────────────────────────────────
+
+\textbf{Phạm vi:}
+\begin{itemize}
+    \item \textbf{Dữ liệu:} Bộ dữ liệu BTXRD (Bone Tumor X-Ray Dataset) gồm ảnh X-quang xương 2D thực tế, được công bố dưới dạng tài nguyên khoa học mở trên tạp chí Nature Scientific Data.
+    \item \textbf{Bài toán phân đoạn:} Phân đoạn nhị phân vùng khối u xương ở cấp độ điểm ảnh, kết hợp câu nhắc hộp giới hạn từ người dùng.
+    \item \textbf{Bài toán phân lớp:} Phân lớp nhị phân (bình thường / có bệnh lý) để sàng lọc đầu vào cho pipeline phân đoạn.
+    \item \textbf{Nền tảng triển khai:} Ứng dụng web chạy cục bộ, hỗ trợ suy luận trên cả GPU và CPU thông dụng.
+\end{itemize}
+
+\textbf{Giới hạn:}
+\begin{itemize}
+    \item Đề tài chỉ xử lý ảnh X-quang 2D (không bao gồm ảnh CT 3D hay MRI).
+    \item Câu nhắc đầu vào là hộp giới hạn; chưa hỗ trợ câu nhắc dạng điểm hoặc văn bản.
+    \item Hệ thống đóng vai trò hỗ trợ ra quyết định, không thay thế chẩn đoán lâm sàng của bác sĩ.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────────
+\section*{5. Hướng tiếp cận và phương pháp nghiên cứu}
+% ────────────────────────────────────────────────────────────────
+
+\textbf{Giai đoạn 1 — Nghiên cứu và khảo sát:}
+Nghiên cứu tài liệu về kiến trúc U-Net, cơ chế chú ý (Attention Gate), biểu diễn câu nhắc không gian và các phương pháp phân đoạn tương tác. Khảo sát bộ dữ liệu BTXRD về phân phối nhãn, đặc điểm nhiễu và cấu trúc annotation.
+
+\textbf{Giai đoạn 2 — Chuẩn bị dữ liệu:}
+\begin{itemize}
+    \item Xây dựng pipeline loại bỏ nhiễu kỹ thuật bằng cách gán nhãn bán tự động qua Roboflow và finetune YOLOv11s. Điền màu vùng nhiễu dựa trên màu nền thống kê quanh hộp phát hiện.
+    \item Gán nhãn phân đoạn thủ công dạng polygon bằng phần mềm LabelMe; chuyển đổi sang mặt nạ nhị phân và bounding box prompt.
+    \item Chia tập dữ liệu theo tỉ lệ huấn luyện / xác thực / kiểm tra, đảm bảo phân tầng theo nhãn phân lớp.
+\end{itemize}
+
+\textbf{Giai đoạn 3 — Thiết kế và huấn luyện mô hình:}
+\begin{itemize}
+    \item Biểu diễn câu nhắc hộp giới hạn dưới dạng Plateau Heatmap (vùng bên trong bbox gán giá trị 1, làm mịn biên bằng bộ lọc Gaussian $31 \times 31$).
+    \item Thiết kế Cổng không gian: tích hợp bản đồ nhiệt vào feature map bộ mã hóa qua phép nhân có trọng số học được, tăng cường đặc trưng vùng câu nhắc mà không ức chế vùng nền.
+    \item Thiết kế Cơ chế chú ý có điều kiện: điều kiện hóa tín hiệu gating của Attention Gate bằng đặc trưng câu nhắc mã hóa, với trọng số giảm dần qua các tầng giải mã ($\{1.0,\,0.7,\,0.4,\,0.2\}$).
+    \item Huấn luyện từ đầu với hàm mất mát kết hợp Dice + BCE, tăng cường câu nhắc ngẫu nhiên (15\% prompt rỗng, 15\% prompt nhiễu) và tăng cường ảnh đồng bộ (lật ngang, xoay $\pm 15^\circ$).
+    \item Huấn luyện EfficientNet\_B3 làm module phân lớp sàng lọc với chiến lược tinh chỉnh hai giai đoạn (đóng băng backbone rồi mở toàn bộ).
+\end{itemize}
+
+\textbf{Giai đoạn 4 — Thực nghiệm và đánh giá:}
+\begin{itemize}
+    \item Đánh giá định lượng theo các chỉ số: Dice Coefficient, IoU (Intersection over Union), Precision, Recall, HD95 (Hausdorff Distance 95th percentile).
+    \item So sánh với các mô hình nền tảng: U-Net, Attention U-Net (phân đoạn tự động), SAM-Med2D (phân đoạn tương tác).
+    \item Ablation study: đánh giá riêng lẻ đóng góp của Cổng không gian và Cơ chế chú ý có điều kiện.
+    \item Đánh giá tính bền bỉ với câu nhắc không hoàn hảo: prompt mở rộng (zoom\_out) và prompt dịch tâm (shift).
+\end{itemize}
+
+\textbf{Giai đoạn 5 — Xây dựng ứng dụng:}
+Tích hợp module phân lớp (EfficientNet\_B3) và phân đoạn (PGA-UNet) thành pipeline hoàn chỉnh. Xây dựng giao diện web cho phép bác sĩ tải ảnh, vẽ bounding box tương tác và xem kết quả phân đoạn trực quan với overlay màu sắc.
+
+% ────────────────────────────────────────────────────────────────
+\section*{6. Kết quả dự kiến}
+% ────────────────────────────────────────────────────────────────
 
 \begin{itemize}
-    \item Mô hình phân đoạn PGA-UNet đạt hệ số Dice trên 80\% trong kịch bản câu nhắc hợp lệ.
-    \item Ứng dụng phần mềm với thời gian phản hồi dưới 200ms, đáp ứng yêu cầu tương tác thời gian thực.
+    \item \textbf{Bộ dữ liệu đã xử lý:} Tập ảnh BTXRD sạch nhiễu kỹ thuật, kèm nhãn phân đoạn polygon và bounding box prompt, chia sẵn tập huấn luyện/xác thực/kiểm tra.
+    \item \textbf{Mô hình PGA-UNet:} Kiến trúc đề xuất với $\sim$3 triệu tham số, dự kiến đạt Dice $\geq 80\%$ và IoU $\geq 70\%$ trên tập kiểm tra với câu nhắc hợp lệ, vượt trội so với U-Net và Attention U-Net cùng kích thước.
+    \item \textbf{Module phân lớp sàng lọc:} EfficientNet\_B3 đạt Accuracy $\geq 90\%$ và AUC-ROC $\geq 0{,}95$ trên tập kiểm tra phân lớp.
+    \item \textbf{Ứng dụng web:} Pipeline đầu cuối hoạt động ổn định, thời gian phản hồi dưới 2 giây trên GPU thông dụng, giao diện trực quan phù hợp môi trường lâm sàng.
+    \item \textbf{Báo cáo khóa luận và source code:} Tài liệu hoàn chỉnh mô tả chi tiết kiến trúc, thực nghiệm và phân tích kết quả; bộ mã nguồn có chú thích đầy đủ.
 \end{itemize}
+
+% ────────────────────────────────────────────────────────────────
+\section*{7. Kế hoạch thực hiện}
+% ────────────────────────────────────────────────────────────────
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|c|p{6.5cm}|p{4.5cm}|}
+\hline
+\textbf{Giai đoạn} & \textbf{Nội dung công việc} & \textbf{Thời gian dự kiến} \\
+\hline
+1 & Nghiên cứu tài liệu; khảo sát bộ dữ liệu BTXRD và xác định hướng tiếp cận & Tuần 1--3 (01/2026) \\
+\hline
+2 & Xây dựng pipeline loại bỏ nhiễu; gán nhãn phân đoạn; chia tập dữ liệu & Tuần 4--7 (02/2026) \\
+\hline
+3 & Thiết kế kiến trúc PGA-UNet; huấn luyện và tối ưu mô hình phân đoạn & Tuần 8--13 (03--04/2026) \\
+\hline
+4 & Huấn luyện module phân lớp EfficientNet\_B3; xây dựng pipeline đầu cuối & Tuần 14--16 (04/2026) \\
+\hline
+5 & Thực nghiệm so sánh, ablation study, đánh giá tính bền bỉ & Tuần 17--20 (05/2026) \\
+\hline
+6 & Xây dựng ứng dụng web tương tác; kiểm thử & Tuần 21--23 (06/2026) \\
+\hline
+7 & Viết báo cáo khóa luận; chuẩn bị bảo vệ & Tuần 24--26 (06--07/2026) \\
+\hline
+\end{tabular}
+\end{table}

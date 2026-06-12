@@ -588,8 +588,3 @@ Dice pipeline được tính trên \textit{toàn bộ đơn vị classifier gử
 
 Mô hình phân lớp gác cổng đạt AUC-ROC~=~0.9258 (standalone BTXRD) / 0.9688 (dataset\_online) là bản lề để toàn bộ hệ thống vận hành ổn định. Cải thiện Specificity (hiện 79.79\%) nhằm giảm FP là hướng ưu tiên phát triển tiếp theo (xem Chương~\ref{Chapter5}).
 
-% ------------------------------------------------------------
-\section*{Ứng dụng tích hợp (app.py)}
-% ------------------------------------------------------------
-
-Toàn bộ pipeline (Gatekeeper → PGA-UNet) được đóng gói vào ứng dụng demo \texttt{app.py} sử dụng Gradio, cho phép minh họa trực quan luồng chẩn đoán end-to-end tự động trong buổi thuyết trình. Tối ưu hóa hiệu năng thời gian phản hồi cho triển khai thực tế là định hướng phát triển tiếp theo (xem Chương~\ref{Chapter5}).
