@@ -88,6 +88,15 @@ Tất cả mô hình (U-Net, Attention U-Net, PGA-UNet) được huấn luyện 
     \item \textbf{Learning Rate:} Khởi điểm $10^{-4}$, bộ lập lịch \texttt{ReduceLROnPlateau} (giảm 0.5× sau 5 epoch không cải thiện Dice xác thực).
 \end{itemize}
 
+\textbf{Siêu tham số kiến trúc PGA-UNet (chi tiết triển khai):}
+Các giá trị dưới đây là tham số cấu hình được xác định qua thực nghiệm trên tập xác thực; chúng là chi tiết triển khai, không phải đóng góp kỹ thuật cần kiểm chứng độc lập.
+\begin{itemize}
+    \item \textbf{Lịch trình trọng số CAD} $w_l$: $\{1.0,\ 0.7,\ 0.4,\ 0.2\}$ từ tầng giải mã 1 đến 4 (từ phân giải thấp đến cao).
+    \item \textbf{Hệ số kết nối dư (skip residual)} $\lambda = 0.3$ trong khối Conditioned Attention.
+    \item \textbf{Kernel Gaussian Heatmap:} $k = 31$, padding 5~px mỗi cạnh hộp giới hạn.
+    \item \textbf{Khởi tạo $\alpha_{gate}$:} $0.1$ (Prompt Spatial Gate), giúp ổn định huấn luyện giai đoạn đầu.
+\end{itemize}
+
 % ============================================================
 \section{Đánh giá hiệu năng kiến trúc PGA-UNet}
 \label{sec:danh_gia_hieu_nang}
