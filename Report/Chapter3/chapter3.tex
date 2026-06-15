@@ -10,17 +10,14 @@
 
 Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) hoàn toàn tự động. Đầu vào của hệ thống gồm ảnh X-quang và một bounding box do người dùng vẽ lên vùng nghi ngờ, người dùng không cần biết trước ảnh có bệnh hay không. Kiến trúc tổng thể được chia thành các module liên hoàn qua ba giai đoạn cốt lõi:
 
-\textbf{1. Giai đoạn tiền xử lý và làm sạch dữ liệu:} 
-Ảnh X-quang thô đầu vào trong thực tế thường chứa nhiều nhiễu kỹ thuật (như ký tự R/L đánh dấu hướng chụp) và độ tương phản kém do các cấu trúc mô mềm và xương chồng lấp. Module tiền xử lý đóng vai trò làm sạch các vùng nhiễu này, đồng thời cân bằng biểu đồ mức xám và chuẩn hóa giá trị pixel. Bước này nhằm cung cấp một đầu vào sạch, chuẩn mực và ổn định cho toàn bộ các mô hình học sâu phía sau.
-
-\textbf{2. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):} 
-Sau khi được làm sạch, ảnh tiếp tục đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống sẽ tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường. 
+\textbf{1. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):} 
+Ảnh X-quang đầu vào đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống sẽ tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường. 
 \begin{itemize}
     \item Nếu kết quả phân lớp là âm tính (bình thường), pipeline tự động dừng, bounding box không tạo ra sự khác biệt ở bước này.
     \item Nếu kết quả là dương tính (có bệnh lý), pipeline tự động chuyển sang giai đoạn phân đoạn, sử dụng bounding box làm prompt hướng dẫn.
 \end{itemize}
 
-\textbf{3. Giai đoạn phân đoạn có hướng dẫn (PGA-UNet):} 
+\textbf{2. Giai đoạn phân đoạn có hướng dẫn (PGA-UNet):} 
 Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác. Bác sĩ thực hiện thao tác khoanh một hộp giới hạn (Bounding Box) bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt không gian (Prompt Heatmap). Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
 
 \begin{figure}[htbp]
