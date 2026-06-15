@@ -111,9 +111,13 @@ class PGA_UNet(nn.Module):
     """
 
     def __init__(self, feature_scale=4, n_classes=1, in_channels=1,
-                 is_batchnorm=True, use_encoder_prompt=True):
+                 is_batchnorm=True, use_encoder_prompt=True,
+                 prompt_weights=(1.0, 0.7, 0.4, 0.2)):
         super().__init__()
         self.use_encoder_prompt = use_encoder_prompt
+
+        w = list(prompt_weights)
+        assert len(w) == 4, "prompt_weights phải có đúng 4 phần tử (4 tầng decoder)"
 
         filters = [int(x / feature_scale) for x in [64, 128, 256, 512, 1024]]
         # filters = [16, 32, 64, 128, 256]
@@ -137,10 +141,10 @@ class PGA_UNet(nn.Module):
             self.pg4 = PromptSpatialGate(filters[3])
 
         # Decoder với Prompt Guided Attention
-        self.up_concat4 = unetUp_PromptAttention(filters[3], filters[4], filters[3], prompt_weight=1.0)
-        self.up_concat3 = unetUp_PromptAttention(filters[2], filters[3], filters[2], prompt_weight=0.7)
-        self.up_concat2 = unetUp_PromptAttention(filters[1], filters[2], filters[1], prompt_weight=0.4)
-        self.up_concat1 = unetUp_PromptAttention(filters[0], filters[1], filters[0], prompt_weight=0.2)
+        self.up_concat4 = unetUp_PromptAttention(filters[3], filters[4], filters[3], prompt_weight=w[0])
+        self.up_concat3 = unetUp_PromptAttention(filters[2], filters[3], filters[2], prompt_weight=w[1])
+        self.up_concat2 = unetUp_PromptAttention(filters[1], filters[2], filters[1], prompt_weight=w[2])
+        self.up_concat1 = unetUp_PromptAttention(filters[0], filters[1], filters[0], prompt_weight=w[3])
 
         self.final = nn.Conv2d(filters[0], n_classes, 1)
 
