@@ -49,11 +49,11 @@
 \contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ Attention U-Net vs.\ PGA-UNet}{38}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{39}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{41}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{42}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{43}{subsection.4.2.4}%
 \contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{43}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{43}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{44}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{45}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{45}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{46}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{48}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{48}{subsection.4.4.1}%
 \contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{49}{section.4.5}%
