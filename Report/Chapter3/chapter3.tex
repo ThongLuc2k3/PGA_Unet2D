@@ -8,7 +8,7 @@
 \label{sec:tong_the}
 % ------------------------------------------------------------
 
-Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) hoàn toàn tự động. Đầu vào của hệ thống gồm ảnh X-quang và một bounding box do người dùng vẽ lên vùng nghi ngờ, người dùng không cần biết trước ảnh có bệnh hay không. Kiến trúc tổng thể được chia thành các module liên hoàn qua ba giai đoạn cốt lõi:
+Hệ thống hỗ trợ chẩn đoán hình ảnh đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) hoàn toàn tự động. Đầu vào của hệ thống gồm ảnh X-quang và một bounding box do người dùng vẽ lên vùng nghi ngờ, người dùng không cần biết trước ảnh có bệnh hay không. Kiến trúc tổng thể được chia thành các module liên hoàn qua hai giai đoạn cốt lõi:
 
 \textbf{1. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):} 
 Ảnh X-quang đầu vào đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống sẽ tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường. 
@@ -130,14 +130,14 @@ Tín hiệu gating được điều kiện hóa bằng phép cộng có trọng 
     \mathbf{g}' = \mathbf{g} + c \cdot \alpha \cdot w_l \cdot \mathbf{p}_{\text{enc}}
     \label{eq:conditioned_gate}
 \end{equation}
-trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là tham số học được (blend weight), và $w_l$ là hệ số tỷ lệ giảm dần theo độ sâu tầng giải mã $l$ — lớn ở tầng phân giải thấp (định hướng ngữ nghĩa) và nhỏ dần ở tầng phân giải cao (tái tạo chi tiết biên), cho phép câu nhắc thô dạng hộp giới hạn tham gia định hướng mà không can thiệp quá mức vào quá trình phục hồi đường viền.
+trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là tham số học được (blend weight), và $w_l$ là hệ số tỷ lệ theo tầng giải mã $l$, được xác định qua thực nghiệm trên tập xác thực (lịch trình cụ thể tại Chương~\ref{Chapter4}), điều tiết mức độ ảnh hưởng của câu nhắc tại mỗi tầng.
 
-Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng skip connection $\mathbf{x}^l$, kết hợp cùng kết nối dư tắt và tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$, $\beta$ học được). Thiết kế đa lớp này đảm bảo câu nhắc không chỉ ảnh hưởng qua một điểm duy nhất mà được duy trì xuyên suốt toàn bộ bộ giải mã ở cường độ giảm dần, phù hợp với vai trò hướng dẫn từ ngữ nghĩa đến chi tiết. Các siêu tham số cụ thể của PSG và CAD (lịch trình $w_l$, hệ số kết nối dư) là chi tiết triển khai được xác định qua thực nghiệm trên tập xác thực, không phải đóng góp kỹ thuật cốt lõi; giá trị chi tiết được liệt kê tại Bảng thiết lập thực nghiệm (Chương~\ref{Chapter4}). Sự kết hợp giữa ``Cổng không gian tại bộ mã hóa'' và ``Cơ chế chú ý có điều kiện tại bộ giải mã'' là yếu tố chính mang lại sự cải thiện đáng kể về hiệu năng Dice so với các mạng cơ sở hoạt động theo hướng tiếp cận tự động (chi tiết tại Chương~\ref{Chapter4}).
+Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng skip connection $\mathbf{x}^l$, kết hợp cùng kết nối dư tắt và tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$, $\beta$ học được). Thiết kế đa lớp này đảm bảo câu nhắc không chỉ ảnh hưởng qua một điểm duy nhất mà được duy trì xuyên suốt toàn bộ bộ giải mã thông qua hệ số $w_l$ theo từng tầng. Các siêu tham số cụ thể của PSG và CAD (lịch trình $w_l$, hệ số kết nối dư) là chi tiết triển khai được xác định qua thực nghiệm trên tập xác thực, không phải đóng góp kỹ thuật cốt lõi; giá trị chi tiết được liệt kê tại Bảng thiết lập thực nghiệm (Chương~\ref{Chapter4}). Sự kết hợp giữa ``Cổng không gian tại bộ mã hóa'' và ``Cơ chế chú ý có điều kiện tại bộ giải mã'' là yếu tố chính mang lại sự cải thiện đáng kể về hiệu năng Dice so với các mạng cơ sở hoạt động theo hướng tiếp cận tự động (chi tiết tại Chương~\ref{Chapter4}).
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{images/arch_pga_unet2d.png}
-    \caption{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}
+    \caption{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với hệ số $w_l$ theo từng tầng}
     \label{fig:pga_architecture}
 \end{figure}
 
@@ -158,7 +158,7 @@ Dice Loss tối ưu trực tiếp độ tương đồng vùng giữa mặt nạ 
 Toàn bộ kiến trúc PGA-UNet, bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện, được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$3 triệu tham số (đo từ kiến trúc thực nghiệm với \texttt{feature\_scale=4}, bộ lọc $[16,32,64,128,256]$) đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên domain data cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp (low-level features) như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ domain khác.
 
 \textbf{SAM-Med2D, Tinh chỉnh từ mô hình nền tảng:}
-SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 12 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất, nhanh hơn đáng kể so với PGA-UNet (60 vòng lặp). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp Adapter) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
+SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 4 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất (dừng sớm tại epoch 14), nhanh hơn đáng kể so với PGA-UNet (best epoch 79, dừng sớm tại epoch 94). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp Adapter) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
 
 \begin{table}[htbp]
     \centering
@@ -177,7 +177,7 @@ SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền 
         \hline
         Tổng tham số & $\sim$3 triệu & $\sim$91 triệu (ViT-B gốc) + Adapter \\
         \hline
-        Số epoch hội tụ & 60 & 12 \\
+        Số epoch hội tụ (best val) & 79 & 4 \\
         \hline
     \end{tabular}
 \end{table}
@@ -200,4 +200,4 @@ Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
 \end{equation}
 trong đó $y_i \in \{0, 1\}$ là nhãn thực và $\hat{p}_i \in [0, 1]$ là xác suất dự đoán của ảnh thứ $i$.
 
-Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên: kết quả âm tính → pipeline dừng; kết quả dương tính → hệ thống tự động chuyển sang Giai đoạn 3 (PGA-UNet phân đoạn với prompt bounding box).
+Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên: kết quả âm tính → pipeline dừng; kết quả dương tính → hệ thống tự động chuyển sang Giai đoạn 2 (PGA-UNet phân đoạn với prompt bounding box).
