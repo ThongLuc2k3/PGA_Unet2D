@@ -20,15 +20,15 @@
 \newlabel{sec:pga_unet}{{3.3}{26}{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{section.3.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{26}{subsection.3.3.1}\protected@file@percent }
 \newlabel{eq:plateau_heatmap}{{3.1}{26}{Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{equation.3.3.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{27}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{28}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{27}{equation.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{28}{equation.3.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{28}{subsection.3.3.2}\protected@file@percent }
-\newlabel{eq:spatial_gate}{{3.2}{29}{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{equation.3.3.2}{}}
+\newlabel{eq:spatial_gate}{{3.2}{28}{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{equation.3.3.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{29}{subsection.3.3.3}\protected@file@percent }
 \newlabel{eq:prompt_confidence}{{3.3}{29}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.3}{}}
 \newlabel{eq:conditioned_gate}{{3.4}{30}{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{equation.3.3.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}}{31}{figure.3.3}\protected@file@percent }
-\newlabel{fig:pga_architecture}{{3.3}{31}{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với trọng số giảm dần}{figure.3.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với hệ số $w_l$ theo từng tầng}}{31}{figure.3.3}\protected@file@percent }
+\newlabel{fig:pga_architecture}{{3.3}{31}{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với hệ số $w_l$ theo từng tầng}{figure.3.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{31}{subsection.3.3.4}\protected@file@percent }
 \newlabel{subsec:training_strategy_pga}{{3.3.4}{31}{Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{subsection.3.3.4}{}}
 \newlabel{eq:loss_seg}{{3.5}{31}{Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{equation.3.3.5}{}}
@@ -64,7 +64,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{16}
+\setcounter{instcount}{33}
 \setcounter{maxnames}{3}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{3}
@@ -169,8 +169,8 @@
 \setcounter{smartand}{1}
 \setcounter{bbx:relatedcount}{0}
 \setcounter{bbx:relatedtotal}{0}
-\setcounter{section@level}{1}
-\setcounter{Item}{7}
+\setcounter{section@level}{0}
+\setcounter{Item}{11}
 \setcounter{Hfootnote}{0}
 \setcounter{bookmark@seq@number}{41}
 \setcounter{lstnumber}{1}

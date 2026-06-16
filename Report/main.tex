@@ -68,6 +68,28 @@
 % Ngăn float tràn sang subsection/section khác
 \usepackage[section]{placeins}
 
+% Định dạng tiêu đề chương/mục
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{%
+  \vspace*{10pt}
+  {\parindent \z@ \centering \normalfont
+    \large\bfseries \MakeUppercase{\@chapapp}\space\thechapter
+    \par\nobreak\vskip 8\p@
+    \large\bfseries \MakeUppercase{#1}
+    \par\nobreak\vskip 16\p@
+  }}
+\renewcommand{\@makeschapterhead}[1]{%
+  \vspace*{10pt}
+  {\parindent \z@ \centering \normalfont
+    \large\bfseries \MakeUppercase{#1}
+    \par\nobreak\vskip 16\p@
+  }}
+\makeatother
+
 % Bảng biểu
 \usepackage{multirow}
 \usepackage{array}
@@ -147,7 +169,9 @@
 
 \clearpage
 
+\hypersetup{pageanchor=false}
 \pagenumbering{arabic} % Đánh số 1, 2, 3, ...
+\hypersetup{pageanchor=true}
 
 % Các chương nội dung
 \include{Chapter1/chapter1}
@@ -164,8 +188,8 @@
 \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
 \printbibheading[title={Tài liệu tham khảo}]
 
-\DeclareNameAlias{sortname}{last-first}
-\DeclareNameAlias{default}{last-first}
+\DeclareNameAlias{sortname}{family-given}
+\DeclareNameAlias{default}{family-given}
 
 \printbibliography[heading=none]
 
