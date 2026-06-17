@@ -67,6 +67,8 @@ Bộ dữ liệu này phục vụ hai mục đích song song trong kiến trúc 
 
 Để xóa nhiễu tự động, nhóm gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua nền tảng \textbf{Roboflow}~\cite{roboflow2023}, sau đó finetune \textbf{YOLOv11s}~\cite{yolov11} trên tập nhãn này. Mô hình sau khi huấn luyện được dùng để detect vùng nhiễu trên toàn bộ 3.746 ảnh PNG; các vùng phát hiện được xử lý bằng cách xác định giá trị màu xuất hiện nhiều nhất dọc theo biên hộp phát hiện; nếu giá trị đó nhỏ hơn 180 (không quá sáng) thì tô bằng màu đó, ngược lại tô bằng màu đen. Phương pháp này đảm bảo vùng được lấp đầy đồng nhất với nền xung quanh thay vì dùng màu cố định, loại bỏ hoàn toàn ký tự R/L và nhãn kỹ thuật.
 
+\textbf{Lưu ý về ký hiệu R/L trong triển khai:} Bước xóa R/L chỉ áp dụng cho bản sao ảnh đưa vào mô hình học máy, không áp dụng lên ảnh hiển thị. Trong hệ thống triển khai thực tế, giao diện người dùng hiển thị \textit{ảnh gốc còn ký hiệu R/L} để bác sĩ tra cứu thông tin định hướng trái/phải --- thông tin có ý nghĩa lâm sàng quan trọng (nhầm bên là nguy hiểm tính mạng). Mặt nạ phân đoạn từ PGA-UNet sau đó được chồng lên ảnh gốc này để bác sĩ đọc kết quả trong đúng ngữ cảnh định hướng. Lý do loại bỏ R/L khỏi đầu vào mô hình là để tránh mạng nơ-ron nhận nhầm các vùng sáng của ký tự R/L là tổn thương xương.
+
 
 % ------------------------------------------------------------
 \section{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}
@@ -152,6 +154,8 @@ Hàm mất mát huấn luyện PGA-UNet kết hợp Dice Loss và Binary Cross-E
 \end{equation}
 Dice Loss tối ưu trực tiếp độ tương đồng vùng giữa mặt nạ dự đoán và nhãn gốc; BCE phạt sai lệch tại từng điểm ảnh riêng lẻ và ổn định gradient. Hai thành phần bổ sung cho nhau, giúp mô hình cân bằng giữa hình dạng tổng thể và độ chính xác đường biên.
 
+\textbf{Vai trò của câu nhắc đối với hàm mất mát:} Việc tích hợp câu nhắc trực quan được thực hiện hoàn toàn ở \textit{cấp độ kiến trúc} --- thông qua Cổng không gian (PSG) và Cơ chế chú ý có điều kiện (CAD) --- chứ \textit{không} thay đổi cấu trúc hàm mất mát. $\mathcal{L}_{\text{seg}}$ vẫn giữ nguyên dạng BCE~+~Dice tính trên mặt nạ đầu ra $\hat{\mathbf{y}}$ so với nhãn ground-truth $\mathbf{M}$, bất kể câu nhắc đầu vào là heatmap Gaussian, mặt nạ nhị phân hay bất kỳ dạng biểu diễn nào. Ảnh hưởng của câu nhắc lên quá trình học được truyền ngầm qua gradient của PSG và CAD trong lan truyền ngược (backpropagation), không cần thêm số hạng phạt hay trọng số nào vào $\mathcal{L}_{\text{seg}}$.
+
 Để tránh hiểu nhầm khi so sánh kết quả thực nghiệm, cần làm rõ sự khác biệt căn bản về chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D.
 
 \textbf{PGA-UNet, Huấn luyện từ đầu hoàn toàn:}
@@ -201,3 +205,61 @@ Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
 trong đó $y_i \in \{0, 1\}$ là nhãn thực và $\hat{p}_i \in [0, 1]$ là xác suất dự đoán của ảnh thứ $i$.
 
 Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên: kết quả âm tính → pipeline dừng; kết quả dương tính → hệ thống tự động chuyển sang Giai đoạn 2 (PGA-UNet phân đoạn với prompt bounding box).
+
+% ------------------------------------------------------------
+\section{Tóm tắt giải thuật hệ thống: Huấn luyện và Suy luận}
+\label{sec:algorithm_summary}
+% ------------------------------------------------------------
+
+Để làm rõ toàn bộ thiết kế đã trình bày trong chương này, mục này phát biểu chính thức hai giải thuật cốt lõi của hệ thống: quy trình huấn luyện ngoại tuyến (Algorithm~\ref{alg:offline}) và quy trình suy luận trực tuyến (Algorithm~\ref{alg:online}). Hai giải thuật này làm rõ sự phân tách giữa \textbf{giai đoạn ngoại tuyến} (tiền xử lý dữ liệu, sinh heatmap từ ground-truth mask, tối ưu tham số) và \textbf{giai đoạn trực tuyến} (nhận đầu vào từ bác sĩ, sinh heatmap từ bounding box người dùng vẽ, trả mặt nạ phân đoạn), tương ứng với hai sơ đồ ngoại tuyến/trực tuyến của hệ thống.
+
+\begin{algorithm}[htbp]
+\caption{Quy trình huấn luyện ngoại tuyến (Offline Training)}
+\label{alg:offline}
+\begin{algorithmic}[1]
+\Require Tập dữ liệu $\mathcal{D} = \{(\mathbf{I}_i, \mathbf{M}_i)\}_{i=1}^{N}$ (ảnh X-quang và mặt nạ phân đoạn pixel-level)
+\Ensure Bộ tham số $\boldsymbol{\theta}^*$ của PGA-UNet đã hội tụ
+
+\State \textbf{Tiền xử lý:} Dùng YOLOv11s xóa ký hiệu R/L và nhiễu kỹ thuật khỏi toàn bộ ảnh trong $\mathcal{D}$; resize về $512 \times 512$
+\For{mỗi epoch $e = 1, 2, \ldots, E_{\max}$}
+    \For{mỗi mini-batch $(\mathbf{I}_i, \mathbf{M}_i)$}
+        \State Trích hộp giới hạn $\mathbf{B}_i$ từ $\mathbf{M}_i$ (bounding box bao sát mask + đệm 5~px)
+        \State Chọn kịch bản câu nhắc ngẫu nhiên: \textit{zoom-out} (70\%) hoặc \textit{shift} (30\%)
+        \State Sinh bản đồ nhiệt: $\mathbf{H}_i = \text{GaussianBlur}(\mathbf{B}_{i,\text{mask}},\; k{=}31)$ \hfill (Phương trình~\eqref{eq:plateau_heatmap})
+        \State Tính đầu ra dự đoán: $\hat{\mathbf{y}}_i = f_{\text{PGA}}(\mathbf{I}_i, \mathbf{H}_i;\; \boldsymbol{\theta})$
+        \State Tính hàm mất mát: $\mathcal{L} = \mathcal{L}_{\text{BCE}} + \mathcal{L}_{\text{Dice}}$ \hfill (Phương trình~\eqref{eq:loss_seg})
+        \State Cập nhật: $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta \nabla_{\boldsymbol{\theta}} \mathcal{L}$ \hfill (AdamW, gradient clip $\leq 1.0$)
+    \EndFor
+    \State Tính Dice xác thực trên tập val; cập nhật \texttt{ReduceLROnPlateau}
+    \If{Dice xác thực không cải thiện sau 15 epoch liên tiếp}
+        \State \textbf{break} \hfill (Early Stopping)
+    \EndIf
+\EndFor
+\State \Return $\boldsymbol{\theta}^* \leftarrow$ tham số tại epoch có Dice xác thực cao nhất
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+\caption{Quy trình suy luận trực tuyến (Online Inference)}
+\label{alg:online}
+\begin{algorithmic}[1]
+\Require Ảnh X-quang đầu vào $\mathbf{I}$; hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ vẽ (có thể rỗng)
+\Ensure Mặt nạ phân đoạn $\hat{\mathbf{M}}$, hoặc thông báo phù hợp
+
+\State \textbf{Tiền xử lý:} Loại bỏ R/L và nhiễu từ bản sao $\mathbf{I}'$ của $\mathbf{I}$ (giữ $\mathbf{I}$ gốc để hiển thị)
+\State \textbf{Sàng lọc bệnh lý:} $p \leftarrow f_{\text{cls}}(\mathbf{I}';\; \boldsymbol{\theta}_{\text{cls}})$
+\If{$p < 0.5$}
+    \State \Return \textit{``Không phát hiện bệnh lý --- không cần phân đoạn''}
+\EndIf
+\If{$\mathbf{B} = \emptyset$ \textbf{(bác sĩ không cung cấp câu nhắc)}}
+    \State \Return \textit{``Vui lòng khoanh hộp giới hạn lên vùng nghi ngờ''}
+    \Comment{Heatmap zero không xác định hành vi phân đoạn}
+\EndIf
+\State Sinh bản đồ nhiệt: $\mathbf{H} \leftarrow \text{GaussianBlur}(\mathbf{B}_{\text{mask}},\; k{=}31)$
+\State Tính xác suất phân đoạn: $\hat{\mathbf{y}} \leftarrow f_{\text{PGA}}(\mathbf{I}', \mathbf{H};\; \boldsymbol{\theta}^*)$
+\State Tạo mặt nạ nhị phân: $\hat{\mathbf{M}} \leftarrow \mathbf{1}[\hat{\mathbf{y}} \geq 0.5]$
+\State \Return $\hat{\mathbf{M}}$ (hiển thị chồng lên ảnh gốc $\mathbf{I}$ \textbf{có} ký hiệu R/L)
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Xử lý câu nhắc rỗng (Bước 5--6 của Algorithm~\ref{alg:online}):} Khi bác sĩ không vẽ bounding box (câu nhắc rỗng $\mathbf{B} = \emptyset$), hệ thống từ chối thực hiện phân đoạn và yêu cầu người dùng cung cấp vùng nghi ngờ. Lý do: bản đồ nhiệt tương ứng sẽ là ma trận không ($\mathbf{H} = \mathbf{0}$), không mang thông tin định hướng nào; Cổng không gian tại bộ mã hóa (Phương trình~\eqref{eq:spatial_gate}) sẽ không khuếch đại vùng nào, và Cơ chế chú ý có điều kiện (Phương trình~\eqref{eq:conditioned_gate}) sẽ dựa hoàn toàn vào tín hiệu decoder mà không có ràng buộc không gian, dẫn đến mặt nạ đầu ra thiếu độ tin cậy. Thiết kế từ chối tường minh (explicit rejection) này ưu tiên an toàn lâm sàng hơn là cố gắng phân đoạn với đầu vào không đủ thông tin.
