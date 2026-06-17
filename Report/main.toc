@@ -51,20 +51,20 @@
 \contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{41}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{43}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{45}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{45}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{45}{subsection.4.3.1}%
+\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{46}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{46}{subsection.4.3.1}%
 \contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{47}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{48}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{50}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{50}{subsection.4.4.1}%
-\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{51}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{51}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Đánh giá pipeline end-to-end với module Gatekeeper hỗ trợ}{51}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng}{52}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{54}{subsection.4.7.1}%
-\contentsline {section}{\numberline {4.8}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{55}{section.4.8}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{58}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{58}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{59}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{60}{section.5.3}%
-\contentsline {chapter}{Tài liệu tham khảo}{63}{equation.5.3.1}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{49}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{51}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{51}{subsection.4.4.1}%
+\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{52}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{52}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Đánh giá pipeline end-to-end với module Gatekeeper hỗ trợ}{52}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Đánh giá mô hình phân lớp gác cổng}{53}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Phân tích sai số tích lũy của pipeline (Cascading Error)}{55}{subsection.4.7.1}%
+\contentsline {section}{\numberline {4.8}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{56}{section.4.8}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{59}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{59}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{60}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{61}{section.5.3}%
+\contentsline {chapter}{Tài liệu tham khảo}{64}{equation.5.3.1}%
