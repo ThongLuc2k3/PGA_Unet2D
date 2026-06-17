@@ -3,16 +3,16 @@
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {3.1}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{33}{table.3.1}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố bộ dữ liệu thực nghiệm}}{36}{table.4.1}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net, Attention U-Net (tự động, N=187~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (prompt-guided, N=232~mẫu per-polygon)}}{39}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản prompt (N=232~mẫu per-polygon)}}{40}{table.4.3}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh toàn diện PGA-UNet với SAM-Med2D fine-tuned và SAM-Med2D zero-shot trên 3 kịch bản prompt (N=232~mẫu per-polygon). HD95* chuẩn hóa theo kích thước ảnh: PGA÷512, SAM÷256.}}{41}{table.4.4}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{43}{table.4.5}%
-\contentsline {table}{\numberline {4.6}{\ignorespaces Ablation study: Dice Score trên 3 kịch bản prompt của 5 biến thể kiến trúc PGA-UNet (N=232~mẫu per-polygon). V5 là mô hình đề xuất.}}{44}{table.4.6}%
-\contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản prompt (trung bình 4 fold)}}{45}{table.4.7}%
-\contentsline {table}{\numberline {4.8}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{45}{table.4.8}%
-\contentsline {table}{\numberline {4.9}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net và Att-UNet theo độ khó tác vụ ($N=187$~ảnh, phân nhóm 50 dễ nhất / 50 khó nhất theo Dice của U-Net; PGA tính trên polygon)}}{46}{table.4.9}%
-\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 mẫu per-polygon mỗi nhóm)}}{47}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{51}{table.4.11}%
-\contentsline {table}{\numberline {4.12}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{54}{table.4.12}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố bộ dữ liệu thực nghiệm}}{38}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net, Attention U-Net (tự động, N=187~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (prompt-guided, N=232~mẫu per-polygon)}}{41}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản prompt (N=232~mẫu per-polygon)}}{42}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh toàn diện PGA-UNet với SAM-Med2D fine-tuned và SAM-Med2D zero-shot trên 3 kịch bản prompt (N=232~mẫu per-polygon). HD95* chuẩn hóa theo kích thước ảnh: PGA÷512, SAM÷256.}}{43}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{45}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Ablation study: Dice Score trên 3 kịch bản prompt của 5 biến thể kiến trúc PGA-UNet (N=232~mẫu per-polygon). V5 là mô hình đề xuất.}}{46}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản prompt (trung bình 4 fold)}}{47}{table.4.7}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{47}{table.4.8}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net và Att-UNet theo độ khó tác vụ ($N=187$~ảnh, phân nhóm 50 dễ nhất / 50 khó nhất theo Dice của U-Net; PGA tính trên polygon)}}{48}{table.4.9}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 mẫu per-polygon mỗi nhóm)}}{49}{table.4.10}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{53}{table.4.11}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{56}{table.4.12}%
 \addvspace {10\p@ }
