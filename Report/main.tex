@@ -76,7 +76,7 @@
 \makeatletter
 \renewcommand{\@makechapterhead}[1]{%
   \vspace*{10pt}
-  {\parindent \z@ \centering \normalfont
+  {\parindent \z@ \raggedright \normalfont
     \large\bfseries \MakeUppercase{\@chapapp}\space\thechapter
     \par\nobreak\vskip 8\p@
     \large\bfseries \MakeUppercase{#1}
@@ -84,7 +84,7 @@
   }}
 \renewcommand{\@makeschapterhead}[1]{%
   \vspace*{10pt}
-  {\parindent \z@ \centering \normalfont
+  {\parindent \z@ \raggedright \normalfont
     \large\bfseries \MakeUppercase{#1}
     \par\nobreak\vskip 16\p@
   }}

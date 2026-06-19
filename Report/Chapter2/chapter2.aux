@@ -1,54 +1,54 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{8}{chapter.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{9}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{Chapter2}{{2}{8}{CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{chapter.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Các công trình liên quan}{8}{section.2.1}\protected@file@percent }
-\newlabel{sec:related_work}{{2.1}{8}{Các công trình liên quan}{section.2.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Các phương pháp phân đoạn ảnh y khoa tự động}{8}{subsection.2.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Phương pháp học máy tương tác trong y khoa}{9}{subsection.2.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Kiến trúc SAM-Med2D~\blx@tocontentsinit {0}\cite {2023-SAMMed2D-Cheng}: Bộ mã hóa ảnh ViT-B (tham số đóng băng {\color  {cyan}$\bullet $}) được chèn thêm các lớp Adapter nhỏ gọn (tham số học được {\color  {orange}$\bullet $}) vào sau mỗi khối Transformer. Câu nhắc bounding box đi qua Prompt Encoder để tạo positional embedding; Mask Decoder kết hợp đặc trưng ảnh và embedding câu nhắc để xuất mặt nạ phân đoạn. Toàn bộ mô hình được tinh chỉnh trên SA-Med2D-20M (khoảng 4,6 triệu ảnh y tế 2D đa phương thức).}}{10}{figure.2.1}\protected@file@percent }
-\newlabel{fig:sammed2d_architecture}{{2.1}{10}{Kiến trúc SAM-Med2D~\cite {2023-SAMMed2D-Cheng}: Bộ mã hóa ảnh ViT-B (tham số đóng băng {\color {cyan}$\bullet $}) được chèn thêm các lớp Adapter nhỏ gọn (tham số học được {\color {orange}$\bullet $}) vào sau mỗi khối Transformer. Câu nhắc bounding box đi qua Prompt Encoder để tạo positional embedding; Mask Decoder kết hợp đặc trưng ảnh và embedding câu nhắc để xuất mặt nạ phân đoạn. Toàn bộ mô hình được tinh chỉnh trên SA-Med2D-20M (khoảng 4,6 triệu ảnh y tế 2D đa phương thức)}{figure.2.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Cơ sở lý thuyết nền tảng}{10}{section.2.2}\protected@file@percent }
-\newlabel{sec:cnn}{{2.2}{10}{Cơ sở lý thuyết nền tảng}{section.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Mạng nơ-ron tích chập (CNN)}{10}{subsection.2.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Kiến trúc U-Net}{11}{subsection.2.2.2}\protected@file@percent }
-\newlabel{subsec:unet}{{2.2.2}{11}{Kiến trúc U-Net}{subsection.2.2.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc mạng U-Net với 4 cấp độ phân giải: nhánh mã hóa (trái) giảm mẫu dần qua Max Pooling; nhánh giải mã (phải) khôi phục độ phân giải qua UpConv; các kết nối tắt nối đặc trưng cùng cấp từ encoder sang decoder để bù thông tin vị trí không gian bị mất.}}{12}{figure.2.2}\protected@file@percent }
-\newlabel{fig:unet_architecture}{{2.2}{12}{Kiến trúc mạng U-Net với 4 cấp độ phân giải: nhánh mã hóa (trái) giảm mẫu dần qua Max Pooling; nhánh giải mã (phải) khôi phục độ phân giải qua UpConv; các kết nối tắt nối đặc trưng cùng cấp từ encoder sang decoder để bù thông tin vị trí không gian bị mất}{figure.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Cơ chế chú ý và kiến trúc Attention U-Net}{12}{subsection.2.2.3}\protected@file@percent }
-\newlabel{subsec:attention_unet}{{2.2.3}{12}{Cơ chế chú ý và kiến trúc Attention U-Net}{subsection.2.2.3}{}}
-\newlabel{eq:attention_gate}{{2.2}{13}{Cơ chế chú ý và kiến trúc Attention U-Net}{equation.2.2.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net: các Cổng chú ý (Attention Gates) được chèn tại các kết nối tắt, sử dụng tín hiệu gating $\mathbf  {g}$ từ bộ giải mã để lọc bỏ nhiễu nền trước khi truyền đặc trưng sang tầng giải mã tương ứng.}}{13}{figure.2.3}\protected@file@percent }
-\newlabel{fig:attunet_architecture}{{2.3}{13}{Kiến trúc Attention U-Net: các Cổng chú ý (Attention Gates) được chèn tại các kết nối tắt, sử dụng tín hiệu gating $\mathbf {g}$ từ bộ giải mã để lọc bỏ nhiễu nền trước khi truyền đặc trưng sang tầng giải mã tương ứng}{figure.2.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Học máy dựa trên câu nhắc trong thị giác máy tính}{14}{section.2.3}\protected@file@percent }
-\newlabel{sec:prompt}{{2.3}{14}{Học máy dựa trên câu nhắc trong thị giác máy tính}{section.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Biểu diễn không gian của câu nhắc trực quan}{14}{subsection.2.3.1}\protected@file@percent }
-\newlabel{subsec:heatmap}{{2.3.1}{14}{Biểu diễn không gian của câu nhắc trực quan}{subsection.2.3.1}{}}
-\newlabel{eq:gaussian_heatmap}{{2.3}{14}{Biểu diễn không gian của câu nhắc trực quan}{equation.2.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Cơ chế chú ý có điều kiện}{15}{subsection.2.3.2}\protected@file@percent }
-\newlabel{subsec:conditioned_attention}{{2.3.2}{15}{Cơ chế chú ý có điều kiện}{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Các độ đo đánh giá hiệu năng}{16}{section.2.4}\protected@file@percent }
-\newlabel{sec:metrics}{{2.4}{16}{Các độ đo đánh giá hiệu năng}{section.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Hệ số Dice và chỉ số IoU}{16}{subsection.2.4.1}\protected@file@percent }
-\newlabel{subsec:dice_iou}{{2.4.1}{16}{Hệ số Dice và chỉ số IoU}{subsection.2.4.1}{}}
-\newlabel{eq:dice}{{2.4}{17}{Hệ số Dice và chỉ số IoU}{equation.2.4.4}{}}
-\newlabel{eq:iou}{{2.5}{17}{Hệ số Dice và chỉ số IoU}{equation.2.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Độ chính xác (Precision) và Độ bao phủ (Recall)}{17}{subsection.2.4.2}\protected@file@percent }
-\newlabel{subsec:precision_recall}{{2.4.2}{17}{Độ chính xác (Precision) và Độ bao phủ (Recall)}{subsection.2.4.2}{}}
-\newlabel{eq:precision}{{2.6}{17}{Độ chính xác (Precision) và Độ bao phủ (Recall)}{equation.2.4.6}{}}
-\newlabel{eq:recall}{{2.7}{18}{Độ chính xác (Precision) và Độ bao phủ (Recall)}{equation.2.4.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Khoảng cách Hausdorff 95\% (HD95)}{18}{subsection.2.4.3}\protected@file@percent }
-\newlabel{subsec:hd95}{{2.4.3}{18}{Khoảng cách Hausdorff 95\% (HD95)}{subsection.2.4.3}{}}
-\newlabel{eq:hd}{{2.8}{18}{Khoảng cách Hausdorff 95\% (HD95)}{equation.2.4.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Độ chuẩn xác định vị tâm (CBL)}{19}{subsection.2.4.4}\protected@file@percent }
-\newlabel{subsec:cbl}{{2.4.4}{19}{Độ chuẩn xác định vị tâm (CBL)}{subsection.2.4.4}{}}
-\newlabel{eq:cbl}{{2.9}{19}{Độ chuẩn xác định vị tâm (CBL)}{equation.2.4.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Tổng kết chương}{19}{section.2.5}\protected@file@percent }
-\newlabel{sec:summary_ch2}{{2.5}{19}{Tổng kết chương}{section.2.5}{}}
+\newlabel{Chapter2}{{2}{9}{CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}{chapter.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Các công trình liên quan}{9}{section.2.1}\protected@file@percent }
+\newlabel{sec:related_work}{{2.1}{9}{Các công trình liên quan}{section.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Các phương pháp phân đoạn ảnh y khoa tự động}{9}{subsection.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Phương pháp học máy tương tác trong y khoa}{10}{subsection.2.1.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Kiến trúc SAM-Med2D~\blx@tocontentsinit {0}\cite {2023-SAMMed2D-Cheng}: Bộ mã hóa ảnh ViT-B (tham số đóng băng {\color  {cyan}$\bullet $}) được chèn thêm các lớp Adapter nhỏ gọn (tham số học được {\color  {orange}$\bullet $}) vào sau mỗi khối Transformer. Câu nhắc bounding box đi qua Prompt Encoder để tạo positional embedding; Mask Decoder kết hợp đặc trưng ảnh và embedding câu nhắc để xuất mặt nạ phân đoạn. Toàn bộ mô hình được tinh chỉnh trên SA-Med2D-20M (khoảng 4,6 triệu ảnh y tế 2D đa phương thức).}}{11}{figure.2.1}\protected@file@percent }
+\newlabel{fig:sammed2d_architecture}{{2.1}{11}{Kiến trúc SAM-Med2D~\cite {2023-SAMMed2D-Cheng}: Bộ mã hóa ảnh ViT-B (tham số đóng băng {\color {cyan}$\bullet $}) được chèn thêm các lớp Adapter nhỏ gọn (tham số học được {\color {orange}$\bullet $}) vào sau mỗi khối Transformer. Câu nhắc bounding box đi qua Prompt Encoder để tạo positional embedding; Mask Decoder kết hợp đặc trưng ảnh và embedding câu nhắc để xuất mặt nạ phân đoạn. Toàn bộ mô hình được tinh chỉnh trên SA-Med2D-20M (khoảng 4,6 triệu ảnh y tế 2D đa phương thức)}{figure.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Cơ sở lý thuyết nền tảng}{11}{section.2.2}\protected@file@percent }
+\newlabel{sec:cnn}{{2.2}{11}{Cơ sở lý thuyết nền tảng}{section.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Mạng nơ-ron tích chập (CNN)}{11}{subsection.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Kiến trúc U-Net}{12}{subsection.2.2.2}\protected@file@percent }
+\newlabel{subsec:unet}{{2.2.2}{12}{Kiến trúc U-Net}{subsection.2.2.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc mạng U-Net với 4 cấp độ phân giải: nhánh mã hóa (trái) giảm mẫu dần qua Max Pooling; nhánh giải mã (phải) khôi phục độ phân giải qua UpConv; các kết nối tắt nối đặc trưng cùng cấp từ encoder sang decoder để bù thông tin vị trí không gian bị mất.}}{13}{figure.2.2}\protected@file@percent }
+\newlabel{fig:unet_architecture}{{2.2}{13}{Kiến trúc mạng U-Net với 4 cấp độ phân giải: nhánh mã hóa (trái) giảm mẫu dần qua Max Pooling; nhánh giải mã (phải) khôi phục độ phân giải qua UpConv; các kết nối tắt nối đặc trưng cùng cấp từ encoder sang decoder để bù thông tin vị trí không gian bị mất}{figure.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Cơ chế chú ý và kiến trúc Attention U-Net}{13}{subsection.2.2.3}\protected@file@percent }
+\newlabel{subsec:attention_unet}{{2.2.3}{13}{Cơ chế chú ý và kiến trúc Attention U-Net}{subsection.2.2.3}{}}
+\newlabel{eq:attention_gate}{{2.2}{14}{Cơ chế chú ý và kiến trúc Attention U-Net}{equation.2.2.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net: các Cổng chú ý (Attention Gates) được chèn tại các kết nối tắt, sử dụng tín hiệu gating $\mathbf  {g}$ từ bộ giải mã để lọc bỏ nhiễu nền trước khi truyền đặc trưng sang tầng giải mã tương ứng.}}{14}{figure.2.3}\protected@file@percent }
+\newlabel{fig:attunet_architecture}{{2.3}{14}{Kiến trúc Attention U-Net: các Cổng chú ý (Attention Gates) được chèn tại các kết nối tắt, sử dụng tín hiệu gating $\mathbf {g}$ từ bộ giải mã để lọc bỏ nhiễu nền trước khi truyền đặc trưng sang tầng giải mã tương ứng}{figure.2.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Học máy dựa trên câu nhắc trong thị giác máy tính}{15}{section.2.3}\protected@file@percent }
+\newlabel{sec:prompt}{{2.3}{15}{Học máy dựa trên câu nhắc trong thị giác máy tính}{section.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Biểu diễn không gian của câu nhắc trực quan}{15}{subsection.2.3.1}\protected@file@percent }
+\newlabel{subsec:heatmap}{{2.3.1}{15}{Biểu diễn không gian của câu nhắc trực quan}{subsection.2.3.1}{}}
+\newlabel{eq:gaussian_heatmap}{{2.3}{15}{Biểu diễn không gian của câu nhắc trực quan}{equation.2.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Cơ chế chú ý có điều kiện}{16}{subsection.2.3.2}\protected@file@percent }
+\newlabel{subsec:conditioned_attention}{{2.3.2}{16}{Cơ chế chú ý có điều kiện}{subsection.2.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Các độ đo đánh giá hiệu năng}{17}{section.2.4}\protected@file@percent }
+\newlabel{sec:metrics}{{2.4}{17}{Các độ đo đánh giá hiệu năng}{section.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Hệ số Dice và chỉ số IoU}{17}{subsection.2.4.1}\protected@file@percent }
+\newlabel{subsec:dice_iou}{{2.4.1}{17}{Hệ số Dice và chỉ số IoU}{subsection.2.4.1}{}}
+\newlabel{eq:dice}{{2.4}{18}{Hệ số Dice và chỉ số IoU}{equation.2.4.4}{}}
+\newlabel{eq:iou}{{2.5}{18}{Hệ số Dice và chỉ số IoU}{equation.2.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Độ chính xác (Precision) và Độ bao phủ (Recall)}{18}{subsection.2.4.2}\protected@file@percent }
+\newlabel{subsec:precision_recall}{{2.4.2}{18}{Độ chính xác (Precision) và Độ bao phủ (Recall)}{subsection.2.4.2}{}}
+\newlabel{eq:precision}{{2.6}{18}{Độ chính xác (Precision) và Độ bao phủ (Recall)}{equation.2.4.6}{}}
+\newlabel{eq:recall}{{2.7}{19}{Độ chính xác (Precision) và Độ bao phủ (Recall)}{equation.2.4.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Khoảng cách Hausdorff 95\% (HD95)}{19}{subsection.2.4.3}\protected@file@percent }
+\newlabel{subsec:hd95}{{2.4.3}{19}{Khoảng cách Hausdorff 95\% (HD95)}{subsection.2.4.3}{}}
+\newlabel{eq:hd}{{2.8}{19}{Khoảng cách Hausdorff 95\% (HD95)}{equation.2.4.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Độ chuẩn xác định vị tâm (CBL)}{20}{subsection.2.4.4}\protected@file@percent }
+\newlabel{subsec:cbl}{{2.4.4}{20}{Độ chuẩn xác định vị tâm (CBL)}{subsection.2.4.4}{}}
+\newlabel{eq:cbl}{{2.9}{20}{Độ chuẩn xác định vị tâm (CBL)}{equation.2.4.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Tổng kết chương}{20}{section.2.5}\protected@file@percent }
+\newlabel{sec:summary_ch2}{{2.5}{20}{Tổng kết chương}{section.2.5}{}}
 \@setckpt{Chapter2/chapter2}{
-\setcounter{page}{21}
+\setcounter{page}{22}
 \setcounter{equation}{9}
 \setcounter{enumi}{2}
 \setcounter{enumii}{0}
