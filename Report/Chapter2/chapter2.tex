@@ -44,7 +44,7 @@ Tuy nhiên, SAM-Med2D vẫn tồn tại giới hạn về khả năng triển kh
  
 \subsection{Mạng nơ-ron tích chập (CNN)}
  
-Mạng nơ-ron tích chập (Convolutional Neural Network - CNN) là nền tảng cốt lõi của hầu hết các mô hình học sâu hiện đại trong lĩnh vực thị giác máy tính. Khác với mạng nơ-ron truyền thống kết nối đầy đủ vốn dễ bị bùng nổ số lượng tham số khi xử lý dữ liệu ảnh, CNN sử dụng cơ chế chia sẻ trọng số và kết nối cục bộ thông qua các phép toán tích chập. Đặc tính này giúp mô hình trích xuất hiệu quả các đặc trưng không gian (như cạnh, góc và họa tiết), đồng thời tăng mức độ bền vững đối với các dịch chuyển nhỏ của đối tượng trong ảnh.
+Mạng nơ-ron tích chập (Convolutional Neural Network - CNN) là nền tảng cốt lõi của hầu hết các mô hình học sâu hiện đại trong lĩnh vực thị giác máy tính. Khác với mạng nơ-ron kết nối đầy đủ truyền thống, vốn dễ dẫn đến bùng nổ số lượng tham số khi áp dụng cho dữ liệu ảnh, CNN sử dụng cơ chế chia sẻ trọng số và kết nối cục bộ thông qua các phép toán tích chập. Đặc tính này giúp mô hình trích xuất hiệu quả các đặc trưng không gian (như cạnh, góc và họa tiết), đồng thời tăng mức độ bền vững đối với các dịch chuyển nhỏ của đối tượng trong ảnh.
  
 Tại một tầng tích chập thứ $l$, đầu vào là bản đồ đặc trưng $\mathbf{F}^{l} \in \mathbb{R}^{H \times W \times C_{in}}$ sẽ được nhân chập với một tập hợp các bộ lọc $\mathbf{W} \in \mathbb{R}^{k \times k \times C_{in} \times C_{out}}$. Đầu ra của một điểm ảnh trên bản đồ đặc trưng tiếp theo được tính theo công thức tích chập rời rạc:
 \begin{equation}
