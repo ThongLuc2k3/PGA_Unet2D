@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  19 JUN 2026 23:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  20 JUN 2026 20:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1215,7 +1215,7 @@ Ch∆∞∆°ng 2.
 
 
 ]
-<images/arch_sammed2d.png, id=639, 1155.31625pt x 415.5525pt>
+<images/arch_sammed2d.png, id=637, 1155.31625pt x 415.5525pt>
 File: images/arch_sammed2d.png Graphic file (type png)
 <use images/arch_sammed2d.png>
 Package pdftex.def Info: images/arch_sammed2d.png  used on input line 31.
@@ -1226,7 +1226,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1}) h
                                                   \__shipout_drop_firstpage_...
 l.48 
       <./images/arch_sammed2d.png>] [12]
-<images/arch_unet2d.png, id=661, 864.22874pt x 124.465pt>
+<images/arch_unet2d.png, id=659, 864.22874pt x 124.465pt>
 File: images/arch_unet2d.png Graphic file (type png)
 <use images/arch_unet2d.png>
 Package pdftex.def Info: images/arch_unet2d.png  used on input line 69.
@@ -1241,7 +1241,7 @@ Underfull \hbox (badness 3000) in paragraph at lines 86--88
 \T5/cmr/m/n/14.4 trong ^^_‚ $\OML/cmm/m/it/14.4 ^^[[]$ \T5/cmr/m/n/14.4 l† h†m kΩch ho§t ReLU, $\OML/cmm/m/it/14.4 ^^[[]$ \T5/cmr/m/n/14.4 l† h†m Sig-moid, v†
  []
 
-<images/arch_attention_unet2d.png, id=669, 924.45375pt x 299.1175pt>
+<images/arch_attention_unet2d.png, id=667, 924.45375pt x 299.1175pt>
 File: images/arch_attention_unet2d.png Graphic file (type png)
 <use images/arch_attention_unet2d.png>
 Package pdftex.def Info: images/arch_attention_unet2d.png  used on input line 93.
@@ -1256,7 +1256,7 @@ l.104
 
  (./Chapter3/chapter3.tex
 Ch∆∞∆°ng 3.
-<images/pipeline_pga_app_inference.png, id=718, 653.44125pt x 598.235pt>
+<images/pipeline_pga_app_inference.png, id=716, 653.44125pt x 598.235pt>
 File: images/pipeline_pga_app_inference.png Graphic file (type png)
 <use images/pipeline_pga_app_inference.png>
 Package pdftex.def Info: images/pipeline_pga_app_inference.png  used on input line 25.
@@ -1272,7 +1272,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1}) h
                                                   \__shipout_drop_firstpage_...
 l.40 
       <./images/pipeline_pga_app_inference.png>] [24]
-<images/preprocessing_pipeline.png, id=735, 251.94125pt x 547.04375pt>
+<images/preprocessing_pipeline.png, id=733, 251.94125pt x 547.04375pt>
 File: images/preprocessing_pipeline.png Graphic file (type png)
 <use images/preprocessing_pipeline.png>
 Package pdftex.def Info: images/preprocessing_pipeline.png  used on input line 63.
@@ -1363,7 +1363,7 @@ Package microtype Warning: I cannot find a protrusion list for font
 (microtype)                protrusion for this font on input line 149.
 
 [32]
-<images/arch_pga_unet2d.png, id=791, 1180.41pt x 329.23pt>
+<images/arch_pga_unet2d.png, id=789, 1180.41pt x 329.23pt>
 File: images/arch_pga_unet2d.png Graphic file (type png)
 <use images/arch_pga_unet2d.png>
 Package pdftex.def Info: images/arch_pga_unet2d.png  used on input line 166.
@@ -1509,7 +1509,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.4.11}) h
                                                   \__shipout_drop_firstpage_...
 l.482 
       ]
-<images/vis_pga_01.png, id=937, 1424.4417pt x 616.4631pt>
+<images/vis_pga_01.png, id=935, 1424.4417pt x 616.4631pt>
 File: images/vis_pga_01.png Graphic file (type png)
 <use images/vis_pga_01.png>
 Package pdftex.def Info: images/vis_pga_01.png  used on input line 497.
@@ -1588,10 +1588,10 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  84i,12n,93p,1969b,1414s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1440.600pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1440.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnbx10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnbx12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnbx8.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vncsc10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr17.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnti10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnti12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (87 pages, 1328381 bytes).
+Output written on main.pdf (87 pages, 1328268 bytes).
 PDF statistics:
- 1190 PDF objects out of 1200 (max. 8388607)
- 1020 compressed objects within 11 object streams
+ 1188 PDF objects out of 1200 (max. 8388607)
+ 1018 compressed objects within 11 object streams
  225 named destinations out of 1000 (max. 500000)
  11869 words of extra memory for PDF output out of 12000 (max. 10000000)
 
