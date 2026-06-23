@@ -5,17 +5,17 @@
 \contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{36}{table.3.2}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố bộ dữ liệu thực nghiệm}}{41}{table.4.1}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net (tự động, N=187~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (prompt-guided, N=232~mẫu per-polygon)}}{44}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản prompt (N=232~mẫu per-polygon)}}{46}{table.4.3}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh toàn diện PGA-UNet với SAM-Med2D fine-tuned và SAM-Med2D zero-shot trên 3 kịch bản prompt (N=232~mẫu per-polygon). HD95* chuẩn hóa theo kích thước ảnh: PGA÷512, SAM÷256.}}{47}{table.4.4}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh công bằng PGA-UNet (256×256) vs SAM-Med2D (256×256) trên 3 kịch bản prompt (N=232~mẫu per-polygon).}}{49}{table.4.5}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net (tự động, N=187~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (prompt-guided, N=187~ảnh, image-level)}}{44}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản prompt (N=187~ảnh, image-level)}}{46}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh toàn diện PGA-UNet với SAM-Med2D fine-tuned và SAM-Med2D zero-shot trên 3 kịch bản prompt. PGA-UNet: image-level (N=187~ảnh); SAM-Med2D: per-polygon (N=232~mẫu). HD95* chuẩn hóa theo kích thước ảnh: PGA÷512, SAM÷256.}}{47}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh công bằng PGA-UNet (256×256) vs SAM-Med2D (256×256) trên 3 kịch bản prompt. PGA-UNet (256): image-level (N=187~ảnh); SAM-Med2D: per-polygon (N=232~mẫu).}}{49}{table.4.5}%
 \contentsline {table}{\numberline {4.6}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{50}{table.4.6}%
-\contentsline {table}{\numberline {4.7}{\ignorespaces Ablation study: Dice Score trên 3 kịch bản prompt của 5 biến thể kiến trúc PGA-UNet (N=232~mẫu per-polygon). V5 là mô hình đề xuất.}}{51}{table.4.7}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Ablation study: Dice Score trên 3 kịch bản prompt của 5 biến thể kiến trúc PGA-UNet (N=187~ảnh, image-level). V5 là mô hình đề xuất.}}{51}{table.4.7}%
 \contentsline {table}{\numberline {4.8}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản prompt (trung bình 4 fold)}}{52}{table.4.8}%
-\contentsline {table}{\numberline {4.9}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{52}{table.4.9}%
-\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ ($N=187$~ảnh, phân nhóm 50 dễ nhất / 50 khó nhất theo Dice của U-Net; PGA-UNet tính trên mẫu per-polygon)}}{54}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 mẫu per-polygon mỗi nhóm)}}{55}{table.4.11}%
-\contentsline {table}{\numberline {4.12}{\ignorespaces So sánh công bằng PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng (kịch bản Zoom-out, 50 mẫu per-polygon mỗi nhóm, cùng 256×256)}}{56}{table.4.12}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{53}{table.4.9}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ (50 ảnh mỗi nhóm, image-level; phân nhóm dễ nhất / khó nhất theo Dice của U-Net)}}{54}{table.4.10}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh mỗi nhóm, image-level)}}{55}{table.4.11}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces So sánh công bằng PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh image-level mỗi nhóm, cùng 256×256)}}{56}{table.4.12}%
 \contentsline {table}{\numberline {4.13}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{60}{table.4.13}%
-\contentsline {table}{\numberline {4.14}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{62}{table.4.14}%
+\contentsline {table}{\numberline {4.14}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{63}{table.4.14}%
 \addvspace {10\p@ }

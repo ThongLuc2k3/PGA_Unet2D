@@ -51,7 +51,7 @@
 \contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{45}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{46}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}Kiểm chứng công bằng tại cùng độ phân giải 256$\times $256}{49}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{49}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{50}{subsection.4.2.5}%
 \contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{50}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{50}{subsection.4.3.1}%
 \contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{52}{subsection.4.3.2}%
