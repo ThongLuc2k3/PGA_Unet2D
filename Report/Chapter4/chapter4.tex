@@ -91,6 +91,41 @@ Các giá trị dưới đây là tham số cấu hình được xác định qu
     \item \textbf{Khởi tạo $\alpha_{gate}$:} $0.1$ (Prompt Spatial Gate), giúp ổn định huấn luyện giai đoạn đầu.
 \end{itemize}
 
+% ------------------------------------------------------------
+\subsection{Phương pháp đánh giá image-level}
+\label{subsec:image_level_eval}
+% ------------------------------------------------------------
+
+\textbf{Đặc điểm annotation của tập BTXRD.}
+Trong tập kiểm thử, nhiều ảnh X-quang chứa \textit{nhiều hơn một vùng tổn thương}: bác sĩ vẽ từng polygon riêng biệt cho mỗi tổn thương, dẫn đến tổng số \Ntest~mẫu polygon trên \Ntestimg~ảnh (trung bình $\sim$1.24 polygon/ảnh). Nếu tính Dice riêng cho từng polygon, một ảnh có hai tổn thương sẽ đóng góp hai mẫu vào tập đánh giá, làm méo phân phối kết quả và tính nhiều lần trên cùng một bệnh nhân.
+
+\textbf{Cách tính image-level (đánh giá theo ảnh).}
+Để khắc phục vấn đề trên và phản ánh trung thực hơn hiệu năng lâm sàng (một điểm số trên mỗi ảnh bệnh nhân), luận văn áp dụng phương pháp \textit{image-level evaluation} sau cho PGA-UNet:
+
+\begin{enumerate}
+    \item \textbf{Hợp nhất ground-truth (Union GT):} Với mỗi ảnh chứa $K \geq 1$ polygon, tất cả mask nhị phân GT $\{G_1, G_2, \ldots, G_K\}$ được \textit{hợp nhất} thành một mask GT duy nhất theo phép hợp tập:
+    \begin{equation}
+        M_{\text{GT}} = G_1 \cup G_2 \cup \cdots \cup G_K
+    \end{equation}
+
+    \item \textbf{Kết hợp dự đoán (Max-Merge Prediction):} Mô hình được chạy suy luận riêng cho từng bbox $\mathbf{B}_k$ tương ứng, sinh ra $K$ mask xác suất $\{\hat{P}_1, \hat{P}_2, \ldots, \hat{P}_K\}$ (giá trị $[0,1]$ mỗi pixel). Các mask xác suất được kết hợp bằng phép lấy \textit{giá trị lớn nhất theo pixel} (pixel-wise maximum):
+    \begin{equation}
+        \hat{M}_{\text{max}}(x,y) = \max_{k=1}^{K}\,\hat{P}_k(x,y)
+    \end{equation}
+    Sau đó ngưỡng hóa tại $0.5$ để thu mặt nạ nhị phân cuối cùng $\hat{M}_{\text{pred}} = \mathbf{1}[\hat{M}_{\text{max}} \geq 0.5]$.
+
+    \item \textbf{Tính Dice image-level:} Chỉ số Dice được tính một lần duy nhất giữa $\hat{M}_{\text{pred}}$ và $M_{\text{GT}}$:
+    \begin{equation}
+        \text{Dice}_{\text{img}} = \frac{2\,|M_{\text{GT}} \cap \hat{M}_{\text{pred}}|}{|M_{\text{GT}}| + |\hat{M}_{\text{pred}}|}
+        \label{eq:dice_img}
+    \end{equation}
+\end{enumerate}
+
+Metric cuối cùng được tính trung bình trên toàn bộ \Ntestimg~ảnh kiểm thử. Phương pháp này đảm bảo mỗi ảnh bệnh nhân chỉ đóng góp \textbf{một điểm số}, tránh hiện tượng ảnh có nhiều tổn thương bị đếm nhiều lần và phản ánh trung thực hơn trải nghiệm đánh giá lâm sàng thực tế.
+
+\textbf{Ghi chú so sánh với SAM-Med2D.}
+Do giới hạn kỹ thuật của cách triển khai SAM-Med2D (mỗi lần chạy nhận một bbox duy nhất), mô hình này được đánh giá theo cơ chế \textit{per-polygon} (N=\Ntest~mẫu), tức là tính Dice riêng biệt cho từng polygon. Sự khác biệt về đơn vị đánh giá (image-level vs.\ per-polygon) cần được lưu ý khi so sánh hai mô hình.
+
 % ============================================================
 \section{Đánh giá hiệu năng kiến trúc PGA-UNet}
 \label{sec:danh_gia_hieu_nang}
@@ -381,7 +416,7 @@ Thiết kế năm biến thể này cho phép cô lập đóng góp riêng lẻ 
 
 Bảng~\ref{tab:cross_validation_per_fold} cho thấy Dice Score dao động rất nhỏ giữa các fold: độ lệch chuẩn thấp nhất ở kịch bản Zoom-out ($\pm0.0021$) và lớn nhất ở Shift ($\pm0.0085$), biên độ hoàn toàn chấp nhận được trong nghiên cứu y tế. Kết quả này xác nhận mô hình hội tụ ổn định trên các phân vùng dữ liệu khác nhau, không bị phụ thuộc vào một cách chia cụ thể. Các chỉ số cross-validation nhỉnh hơn tập test chính một chút (Dice Zoom-out: 0.8809 vs 0.8584) phản ánh sự khác biệt tự nhiên giữa dữ liệu huấn luyện và tập kiểm thử độc lập được giữ lại hoàn toàn từ đầu.
 
-\textbf{Tính ổn định thống kê và độ tin cậy kết quả:} Hai bằng chứng hỗ trợ tính tin cậy của các số liệu đã báo cáo. Thứ nhất, độ lệch chuẩn Dice qua 4 fold rất thấp ($\pm0.0021$ ở Zoom-out, $\pm0.0085$ ở Shift), cho thấy kết quả không phụ thuộc vào một cách phân chia dữ liệu cụ thể. Thứ hai, biên độ chênh lệch giữa các mô hình rất lớn so với độ lệch chuẩn: ví dụ, V5 cải thiện Shift Dice lên $+0.1021$ so với V4 (0.8454 vs 0.7433) trong khi std chỉ $\pm0.0085$, tỷ lệ signal-to-noise $> 12$. Để xác nhận ý nghĩa thống kê một cách chính thức, kiểm định Wilcoxon signed-rank (phi tham số, phù hợp vì phân phối Dice không đảm bảo chuẩn) trên \Ntest~cặp Dice per-polygon là bước kiểm định được khuyến nghị, đặc biệt cho cặp so sánh V4~vs~V5 và PGA~vs~SAM-Med2D.
+\textbf{Tính ổn định thống kê và độ tin cậy kết quả:} Hai bằng chứng hỗ trợ tính tin cậy của các số liệu đã báo cáo. Thứ nhất, độ lệch chuẩn Dice qua 4 fold rất thấp ($\pm0.0021$ ở Zoom-out, $\pm0.0085$ ở Shift), cho thấy kết quả không phụ thuộc vào một cách phân chia dữ liệu cụ thể. Thứ hai, biên độ chênh lệch giữa các mô hình rất lớn so với độ lệch chuẩn: ví dụ, V5 cải thiện Shift Dice lên $+0.1021$ so với V4 (0.8454 vs 0.7433) trong khi std chỉ $\pm0.0085$, tỷ lệ signal-to-noise $> 12$. Để xác nhận ý nghĩa thống kê một cách chính thức, kiểm định Wilcoxon signed-rank (phi tham số, phù hợp vì phân phối Dice không đảm bảo chuẩn) trên \Ntestimg~cặp Dice image-level là bước kiểm định được khuyến nghị cho cặp so sánh V4~vs~V5 (cùng paradigm image-level); với cặp PGA~vs~SAM-Med2D, do hai mô hình có đơn vị đánh giá khác nhau (image-level vs.\ per-polygon), cần tái tính Dice trên cùng đơn vị trước khi kiểm định.
 
 % ------------------------------------------------------------
 \subsection{Đánh giá theo đặc tính tổn thương (Sub-Category)}

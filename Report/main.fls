@@ -3,7 +3,7 @@ INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT main.tex
+INPUT /home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/Report/main.tex
 OUTPUT main.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/extsizes/extreport.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/extsizes/extreport.cls
@@ -322,6 +322,9 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries
 INPUT ./main.aux
 INPUT ./main.aux
 INPUT main.aux
+INPUT ./Appendix/reassurances.aux
+INPUT ./Appendix/reassurances.aux
+INPUT Appendix/reassurances.aux
 INPUT ./Appendix/thanks.aux
 INPUT ./Appendix/thanks.aux
 INPUT Appendix/thanks.aux
@@ -384,6 +387,12 @@ INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vnbx12.tfm
 INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vnr17.tfm
 INPUT /home/thongluc/.texlive2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vnbx12.tfm
+INPUT ./Appendix/reassurances.tex
+INPUT ./Appendix/reassurances.tex
+OUTPUT Appendix/reassurances.aux
+INPUT ./Appendix/reassurances.tex
+INPUT ./Appendix/reassurances.tex
+INPUT Appendix/reassurances.tex
 INPUT ./Appendix/thanks.tex
 INPUT ./Appendix/thanks.tex
 OUTPUT Appendix/thanks.aux
@@ -530,6 +539,9 @@ INPUT ./Chapter5/chapter5.tex
 INPUT Chapter5/chapter5.tex
 INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vncsc10.tfm
 INPUT main.aux
+INPUT ./Appendix/reassurances.aux
+INPUT ./Appendix/reassurances.aux
+INPUT Appendix/reassurances.aux
 INPUT ./Appendix/thanks.aux
 INPUT ./Appendix/thanks.aux
 INPUT Appendix/thanks.aux

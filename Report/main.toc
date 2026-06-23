@@ -1,7 +1,8 @@
-\contentsline {chapter}{Lời cảm ơn}{i}{Doc-Start}%
-\contentsline {chapter}{Đề cương chi tiết}{ii}{chapter*.1}%
-\contentsline {chapter}{Mục lục}{viii}{Item.9}%
-\contentsline {chapter}{Tóm tắt}{xiv}{chapter*.4}%
+\contentsline {chapter}{Lời cam đoan}{i}{Doc-Start}%
+\contentsline {chapter}{Lời cảm ơn}{ii}{chapter*.1}%
+\contentsline {chapter}{Đề cương chi tiết}{iii}{chapter*.2}%
+\contentsline {chapter}{Mục lục}{ix}{Item.9}%
+\contentsline {chapter}{Tóm tắt}{xv}{chapter*.5}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%
@@ -46,26 +47,27 @@
 \contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{40}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{40}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{42}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{43}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{43}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{45}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{46}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Kiểm chứng công bằng tại cùng độ phân giải 256$\times $256}{49}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{50}{subsection.4.2.5}%
-\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{50}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{50}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{52}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{53}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{56}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{56}{subsection.4.4.1}%
-\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{57}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{57}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Đánh giá module Gatekeeper và pipeline end-to-end}{58}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{58}{subsection.4.6.1}%
-\contentsline {subsection}{\numberline {4.6.2}Phân tích sai số tích lũy (Cascading Error)}{60}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{61}{subsection.4.6.3}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{64}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{64}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{65}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{66}{section.5.3}%
-\contentsline {chapter}{Tài liệu tham khảo}{70}{equation.5.3.1}%
+\contentsline {subsection}{\numberline {4.1.3}Phương pháp đánh giá image-level}{43}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{44}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{45}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{46}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{48}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Kiểm chứng công bằng tại cùng độ phân giải 256$\times $256}{50}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{51}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{51}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{52}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{53}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{55}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Trực quan hóa kết quả (Qualitative Results)}{58}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{58}{subsection.4.4.1}%
+\contentsline {section}{\numberline {4.5}Giới hạn kiến trúc và phân tích trường hợp thất bại}{59}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trường hợp PGA-UNet dự đoán kém}{59}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Đánh giá module Gatekeeper và pipeline end-to-end}{59}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{60}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Phân tích sai số tích lũy (Cascading Error)}{62}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{63}{subsection.4.6.3}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{66}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{66}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{67}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{68}{section.5.3}%
+\contentsline {chapter}{Tài liệu tham khảo}{71}{section.5.3}%

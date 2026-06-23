@@ -2,6 +2,7 @@ This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: biblatex.bst
+A level-1 auxiliary file: Appendix/reassurances.aux
 A level-1 auxiliary file: Appendix/thanks.aux
 A level-1 auxiliary file: Appendix/decuong.aux
 A level-1 auxiliary file: Appendix/tomtat.aux
@@ -32,7 +33,7 @@ Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 You've used 9 entries,
             6402 wiz_defined-function locations,
-            1262 strings with 11200 characters,
+            1263 strings with 11225 characters,
 and the built_in function-call counts, 120891 in all, are:
 = -- 10954
 > -- 1248
