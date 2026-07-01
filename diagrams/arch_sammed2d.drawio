@@ -1,51 +1,33 @@
 <mxfile host="65bd71144e">
     <diagram name="5. SAM-Med2D" id="sammed2d">
-        <mxGraphModel dx="1100" dy="380" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="480" math="0" shadow="0">
+        <mxGraphModel dx="1394" dy="331" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="480" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-
-                <!-- TITLE -->
                 <mxCell id="title" value="SAM-Med2D Fine-tuning Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=20;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="250" y="15" width="800" height="35" as="geometry"/>
                 </mxCell>
-
-                <!-- INPUT IMAGE -->
                 <mxCell id="img_in" value="&lt;b&gt;Input Image&lt;/b&gt;&lt;br&gt;256×256×3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="145" width="130" height="50" as="geometry"/>
+                    <mxGeometry x="40" y="142.5" width="130" height="50" as="geometry"/>
                 </mxCell>
-
-                <!-- NOISY BBOX -->
                 <mxCell id="bbox_in" value="&lt;b&gt;Noisy BBox&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="305" width="130" height="60" as="geometry"/>
+                    <mxGeometry x="40" y="295" width="130" height="60" as="geometry"/>
                 </mxCell>
-
-                <!-- IMAGE ENCODER -->
                 <mxCell id="img_enc" value="&lt;b&gt;Image Encoder (ViT-B)&lt;/b&gt;&lt;br&gt;Trainable Adapters" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="220" y="120" width="180" height="95" as="geometry"/>
                 </mxCell>
-
-                <!-- PROMPT ENCODER -->
                 <mxCell id="prompt_enc" value="&lt;b&gt;Prompt Encoder&lt;/b&gt;&lt;br&gt;Box → embeddings&lt;br&gt;🔒 Frozen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="220" y="290" width="180" height="70" as="geometry"/>
                 </mxCell>
-
-                <!-- MASK DECODER -->
                 <mxCell id="mask_dec" value="&lt;b&gt;Mask Decoder&lt;/b&gt;&lt;br&gt;2-way Transformer&lt;br&gt;✏️ Trainable" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="530" y="180" width="180" height="90" as="geometry"/>
                 </mxCell>
-
-                <!-- OUTPUT -->
                 <mxCell id="output" value="&lt;b&gt;3 Masks + IoU&lt;/b&gt;&lt;br&gt;→ argmax IoU&lt;br&gt;→ LCC extract" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="800" y="190" width="150" height="70" as="geometry"/>
                 </mxCell>
-
-                <!-- LOSS -->
                 <mxCell id="loss" value="&lt;b&gt;Loss&lt;/b&gt;&lt;br&gt;FocalDice + IoU" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="1030" y="190" width="150" height="70" as="geometry"/>
                 </mxCell>
-
-                <!-- EDGES -->
                 <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="img_in" target="img_enc" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
@@ -64,8 +46,6 @@
                 <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="output" target="loss" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-
-                <!-- BACKPROP arrow -->
                 <mxCell id="e7" value="backprop → update&lt;br&gt;Adapter + Decoder" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#b85450;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="loss" target="mask_dec" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
@@ -74,12 +54,14 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-
-                <!-- ITER POINT note (small) -->
-                <mxCell id="iter_note" value="Iterative Point Refinement" style="text;html=1;strokeColor=#d6b656;fillColor=#fffde7;align=center;fontSize=11;rounded=1;" parent="1" vertex="1">
-                    <mxGeometry x="460" y="360" width="360" height="40" as="geometry"/>
+                <mxCell id="iter_loop" value="Iterative Point Refinement (lặp N lần)" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#9673a6;strokeWidth=2;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=#fffde7;" parent="1" source="output" target="prompt_enc" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="875" y="390"/>
+                            <mxPoint x="310" y="390"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
-
             </root>
         </mxGraphModel>
     </diagram>

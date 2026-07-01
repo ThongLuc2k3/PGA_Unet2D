@@ -53,7 +53,7 @@
                 <mxCell id="gating" value="gating" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#999999;strokeWidth=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" parent="1" source="bn" target="ag" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="leg1" value="" style="text;html=1;align=left;fontSize=11;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                <mxCell id="leg1" value="&lt;b&gt;AG (Attention Gate):&lt;/b&gt; lọc skip connection theo tín hiệu gating từ tầng sâu hơn, chỉ dựa vào đặc trưng ảnh." style="text;html=1;align=left;fontSize=11;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="20" y="322" width="700" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="leg2" value="&lt;b&gt;Lưu ý:&lt;/b&gt; Mô hình này &lt;u&gt;không có prompt&lt;/u&gt; — phân biệt với PGA-UNet (Sơ đồ 3)." style="text;html=1;align=left;fontSize=11;strokeColor=none;fillColor=none;" parent="1" vertex="1">
