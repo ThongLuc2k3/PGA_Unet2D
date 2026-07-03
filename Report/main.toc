@@ -51,7 +51,7 @@
 \contentsline {subsection}{\numberline {4.1.2}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{43}{subsection.4.1.2}%
 \contentsline {subsection}{\numberline {4.1.3}Phương pháp đánh giá image-level}{44}{subsection.4.1.3}%
 \contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{45}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{46}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{45}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{47}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{49}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}Kiểm chứng công bằng tại cùng độ phân giải 256$\times $256}{51}{subsection.4.2.4}%
@@ -59,16 +59,16 @@
 \contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{53}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{53}{subsection.4.3.1}%
 \contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{55}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{57}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{56}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Đánh giá khả năng tổng quát hóa liên miền dữ liệu (Cross-dataset: FracAtlas)}{60}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{60}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản prompt)}{62}{subsection.4.4.2}%
 \contentsline {subsection}{\numberline {4.4.3}So sánh cơ sở (Baseline): PGA-UNet vs U-Net trên FracAtlas}{63}{subsection.4.4.3}%
 \contentsline {subsection}{\numberline {4.4.4}So sánh với SAM-Med2D (Fine-tuned và Zero-shot) trên FracAtlas}{64}{subsection.4.4.4}%
 \contentsline {subsection}{\numberline {4.4.5}Đánh giá theo đặc tính tổn thương (Sub-Category) trên FracAtlas}{66}{subsection.4.4.5}%
-\contentsline {subsection}{\numberline {4.4.6}Thảo luận: khả năng tổng quát hóa liên miền dữ liệu}{68}{subsection.4.4.6}%
+\contentsline {subsection}{\numberline {4.4.6}Thảo luận: khả năng tổng quát hóa liên miền dữ liệu}{69}{subsection.4.4.6}%
 \contentsline {section}{\numberline {4.5}Trực quan hóa kết quả (Qualitative Results)}{70}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{70}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{71}{subsection.4.5.1}%
 \contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{71}{section.4.6}%
 \contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{71}{subsection.4.6.1}%
 \contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và pipeline end-to-end}{72}{section.4.7}%
