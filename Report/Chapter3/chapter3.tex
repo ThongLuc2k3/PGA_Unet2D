@@ -288,3 +288,10 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeepe
 \end{algorithm}
 
 \textbf{Xử lý câu nhắc rỗng (Bước 5--6 của Algorithm~\ref{alg:online}):} Khi bác sĩ không vẽ bounding box (câu nhắc rỗng $\mathbf{B} = \emptyset$), hệ thống từ chối thực hiện phân đoạn và yêu cầu người dùng cung cấp vùng nghi ngờ. Lý do: bản đồ nhiệt tương ứng sẽ là ma trận không ($\mathbf{H} = \mathbf{0}$), không mang thông tin định hướng nào; Cổng không gian tại bộ mã hóa (Phương trình~\eqref{eq:spatial_gate}) sẽ không khuếch đại vùng nào, và Cơ chế chú ý có điều kiện (Phương trình~\eqref{eq:conditioned_gate}) sẽ dựa hoàn toàn vào tín hiệu decoder mà không có ràng buộc không gian, dẫn đến mặt nạ đầu ra thiếu độ tin cậy. Thiết kế từ chối tường minh (explicit rejection) này ưu tiên an toàn lâm sàng hơn là cố gắng phân đoạn với đầu vào không đủ thông tin.
+
+% ------------------------------------------------------------
+\section{Tổng kết chương}
+\label{sec:summary_ch3}
+% ------------------------------------------------------------
+
+Chương này đã trình bày đầy đủ kiến trúc và quy trình vận hành của hệ thống đề xuất: từ bước tiền xử lý loại bỏ nhiễu kỹ thuật trên BTXRD, đến ba thành phần cốt lõi của PGA-UNet (biểu diễn câu nhắc dạng Plateau Heatmap, Cổng không gian tại bộ mã hóa, và Cơ chế chú ý có điều kiện tại bộ giải mã), module gác cổng sàng lọc, và hai giải thuật hình thức hóa toàn bộ luồng huấn luyện ngoại tuyến lẫn suy luận trực tuyến. Bảng~\ref{tab:inheritance_contribution} đã phân định rõ ranh giới giữa phần kế thừa (khung U-Net, Attention Gate) và phần đóng góp mới (PSG, CAD, biểu diễn heatmap liên tục). Đây là cơ sở kỹ thuật để Chương~\ref{Chapter4} tiến hành đo lường định lượng mức độ hiệu quả của từng đóng góp thông qua thực nghiệm baseline, ablation study và các phân tích so sánh chi tiết.

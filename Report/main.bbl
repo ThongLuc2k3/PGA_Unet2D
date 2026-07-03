@@ -17,6 +17,65 @@
 \endgroup
 
 \datalist[entry]{nty/global//global/global/global}
+  \entry{fracatlas2023}{article}{}{}
+    \name{author}{6}{}{%
+      {{hash=AI}{%
+         family={Abedeen},
+         familyi={A\bibinitperiod},
+         given={Iftekharul},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RMA}{%
+         family={Rahman},
+         familyi={R\bibinitperiod},
+         given={Md.\bibnamedelima Ashiqur},
+         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=ZPF}{%
+         family={Zohra\bibnamedelima Prottyasha},
+         familyi={Z\bibinitperiod\bibinitdelim P\bibinitperiod},
+         given={Fatema},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=AT}{%
+         family={Ahmed},
+         familyi={A\bibinitperiod},
+         given={Tasnim},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=CTM}{%
+         family={Chowdhury},
+         familyi={C\bibinitperiod},
+         given={Tareque\bibnamedelima Mohmud},
+         giveni={T\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shatabda},
+         familyi={S\bibinitperiod},
+         given={Swakkhar},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{AI+1}
+    \strng{fullhash}{AIRMAZPFATCTMSS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \verb{doi}
+    \verb 10.1038/s41597-023-02432-4
+    \endverb
+    \field{pages}{521}
+    \field{title}{{FracAtlas: A Dataset for Fracture Classification,
+  Localization and Segmentation of Musculoskeletal Radiographs}}
+    \field{volume}{10}
+    \field{journaltitle}{Scientific Data}
+    \field{year}{2023}
+  \endentry
+
   \entry{cuh2024xray}{misc}{}{}
     \name{author}{1}{}{%
       {{hash=C}{%
@@ -30,7 +89,7 @@
     \field{labeltitlesource}{title}
     \field{sortinit}{C}
     \field{sortinithash}{C}
-    \field{howpublished}{\url{https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/}}
+  \field{howpublished}{\url{https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/}}
     \field{note}{Truy cập năm 2025}
     \field{title}{{X-ray -- Imaging \& Radiology}}
     \field{year}{2024}
@@ -327,12 +386,14 @@
     \field{labeltitlesource}{title}
     \field{sortinit}{R}
     \field{sortinithash}{R}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention (MICCAI)}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted
+  Intervention (MICCAI)}
     \verb{doi}
     \verb 10.1007/978-3-319-24574-4_28
     \endverb
     \field{pages}{234\bibrangedash 241}
-    \field{title}{{U-Net: Convolutional Networks for Biomedical Image Segmentation}}
+    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
+  Segmentation}}
     \field{year}{2015}
   \endentry
 
@@ -359,7 +420,8 @@
     \field{sortinithash}{T}
     \field{booktitle}{International Conference on Machine Learning (ICML)}
     \field{pages}{6105\bibrangedash 6114}
-    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}}
+    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional
+  Neural Networks}}
     \verb{url}
     \verb https://arxiv.org/abs/1905.11946
     \endverb
@@ -466,7 +528,8 @@
     \verb 10.1038/s41597-024-04311-y
     \endverb
     \field{pages}{88}
-    \field{title}{{A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}}
+    \field{title}{{A Radiograph Dataset for the Classification, Localization,
+  and Segmentation of Primary Bone Tumors}}
     \field{volume}{12}
     \field{journaltitle}{Scientific Data}
     \field{year}{2025}

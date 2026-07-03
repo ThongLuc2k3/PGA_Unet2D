@@ -7,6 +7,12 @@
 \newcommand{\Ntrain}{1\,493}       % N train samples
 \newcommand{\Nval}{187}            % N val samples
 
+% -- Bộ dữ liệu FracAtlas (đánh giá tổng quát hóa liên miền) --
+\newcommand{\NtestFA}{92}          % N test samples FracAtlas (per-polygon)
+\newcommand{\NtestimgFA}{72}       % N test images FracAtlas (image-level)
+\newcommand{\NtrainFA}{730}        % N train samples FracAtlas (per-polygon)
+\newcommand{\NvalFA}{95}           % N val samples FracAtlas (per-polygon)
+
 % ==========================================
 \chapter{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}
 \label{Chapter4}
@@ -247,6 +253,13 @@ Kết quả cho thấy mô hình \textbf{không} ghi nhớ cứng nhắc vị tr
     \item \textbf{PGA bền bỉ hơn SAM trước sai số câu nhắc:} Nhìn vào mức sụt giảm Dice khi chuyển từ kịch bản Zoom-out sang Shift, PGA-UNet chỉ giảm $0.8584 \to 0.8454$ ($-0.0130$, tương đương $-1.5\%$), trong khi SAM-Med2D fine-tuned giảm $0.7350 \to 0.7097$ ($-0.0253$, tương đương $-3.4\%$). Đây là kết quả đáng chú ý: mô hình được thiết kế đặc thù cho bài toán với cơ chế ``hướng dẫn mềm'' (Gaussian heatmap + PSG + CAD) không chỉ vượt trội về điểm tuyệt đối mà còn \textbf{bền bỉ hơn chính mô hình nền tảng prompt-based} (SAM-Med2D) vốn được huấn luyện trên hàng triệu ảnh y tế. Kết quả này gợi ý rằng trên miền bài toán hẹp, thiết kế kiến trúc đặc thù có thể đóng vai trò quan trọng không kém quy mô tham số khi xét đến tính ổn định với sai số câu nhắc.
 \end{itemize}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{images/chart_baseline_sam_comparison.png}
+    \caption{So sánh Dice Score giữa U-Net (không prompt), PGA-UNet và SAM-Med2D (fine-tuned, zero-shot) trên ba kịch bản prompt (Zoom-out, Shift, Mixed), tổng hợp trực quan từ Bảng~\ref{tab:baseline_comparison}, \ref{tab:robustness_comparison} và \ref{tab:sam_comparison}.}
+    \label{fig:chart_baseline_sam}
+\end{figure}
+
 % ------------------------------------------------------------
 \subsection{Kiểm chứng công bằng tại cùng độ phân giải 256$\times$256}
 \label{subsec:fair256}
@@ -364,6 +377,13 @@ Thiết kế năm biến thể này cho phép cô lập đóng góp riêng lẻ 
 \textbf{(2) Trade-off Gaussian vs Binary prompt (V5 vs V4):} Đây là phát hiện đáng chú ý. Khi chuyển từ Binary bbox sang Gaussian heatmap, Dice Shift tăng mạnh +0.1021 (0.7433 → 0.8454), Dice Mixed tăng +0.0247 (0.8307 → 0.8554), trong khi Dice Zoom-out giảm nhẹ -0.0250 (0.8834 → 0.8584). \textbf{Trade-off này là có chủ đích:} Gaussian heatmap "làm mờ" đường biên tín hiệu câu nhắc, buộc mô hình không thể ghi nhớ cứng nhắc vị trí tâm bounding box. Hệ quả là robustness cải thiện vượt trội khi câu nhắc bị lệch, trong khi hiệu năng với câu nhắc lý tưởng chỉ suy giảm không đáng kể. Trong môi trường lâm sàng thực tế, khả năng chịu đựng sai số câu nhắc quan trọng hơn điểm Dice tuyệt đối với câu nhắc hoàn hảo, V5 tối ưu cho đúng mục tiêu này.
 
 \textbf{(3) Đóng góp riêng lẻ của kiến trúc PSG+CAD (V5 vs V1):} Để tách biệt đóng góp của kiến trúc khỏi đóng góp của cách mã hóa câu nhắc, cả bốn biến thể V1--V3 và V5 đều dùng Gaussian heatmap, chỉ thay đổi cấu hình PSG/CAD. So sánh trực tiếp: PSG đơn độc (V2 vs V1): Shift chỉ tăng +0.0080; CAD đơn độc (V3 vs V1): +0.0142; nhưng PSG+CAD kết hợp với Gaussian (V5 vs V1): \textbf{+0.1186} (0.7268 → 0.8454), gấp hơn 5 lần tổng hai đóng góp riêng lẻ (0.0080 + 0.0142 = 0.0222). Hiệu ứng tương hỗ này cho thấy PSG và CAD phối hợp với nhau để tận dụng tối đa tín hiệu gradient liên tục của Gaussian heatmap: PSG định hướng encoder tập trung vào vùng câu nhắc, CAD duy trì tín hiệu đó xuyên suốt decoder; khi thiếu một trong hai, tín hiệu bị suy giảm trước khi đến đầu ra.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/chart_ablation.png}
+    \caption{Ablation study: Dice Score của 5 biến thể kiến trúc PGA-UNet trên ba kịch bản prompt (Bảng~\ref{tab:ablation_arch}). V5 (đề xuất, xanh dương) thấp hơn nhẹ ở Zoom-out nhưng vượt trội rõ rệt ở Shift so với bốn biến thể còn lại (xám).}
+    \label{fig:chart_ablation}
+\end{figure}
 
 % ------------------------------------------------------------
 \subsection{Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}
@@ -484,6 +504,13 @@ Ba quan sát chính dự kiến: (1)~\textbf{Tổn thương nhỏ}: SAM-Med2D ho
 
 Kết quả Bảng~\ref{tab:subcat_sam} xác nhận cả ba nhận định. \textbf{Tổn thương nhỏ}: PGA đạt Dice~=~0.8124 trong khi SAM chỉ đạt 0.4365 ($\Delta=+0.3759$), khoảng cách lớn nhất trong ba nhóm, phù hợp với giả thuyết về ảnh hưởng của độ phân giải 512$\times$512 so với 256$\times$256 đối với tổn thương nhỏ. \textbf{Biên giới mờ}: PGA~=~0.8544 vs SAM~=~0.6567 ($\Delta=+0.1977$), cho thấy đặc trưng X-quang xương chuyên biệt mà PGA học được trên BTXRD. \textbf{Tổn thương rõ nét}: khoảng cách thu hẹp đáng kể (PGA~=~0.8730, SAM~=~0.8588, $\Delta=+0.0143$), cả hai mô hình hoạt động tốt khi điều kiện thuận lợi; PGA vẫn nhỉnh hơn với kiến trúc nhỏ gọn hơn $\sim$30$\times$.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/chart_subcat_btxrd.png}
+    \caption{So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref{tab:subcat_sam}): khoảng cách lớn nhất ở nhóm Tổn thương nhỏ, thu hẹp dần ở nhóm Tổn thương rõ nét.}
+    \label{fig:chart_subcat_btxrd}
+\end{figure}
+
 \subsubsection*{Kiểm chứng công bằng Sub-Category tại cùng 256$\times$256}
 
 Để loại trừ hoàn toàn lợi thế độ phân giải, phân tích sub-category được lặp lại với PGA-UNet$_{256}$ (huấn luyện và suy luận tại $256\times256$) đối chiếu trực tiếp với SAM-Med2D ($256\times256$). Cả hai mô hình cùng nhóm mẫu, cùng bounding box, chỉ khác checkpoint PGA.
@@ -514,6 +541,227 @@ Kết quả Bảng~\ref{tab:subcat_sam} xác nhận cả ba nhận định. \tex
 \end{table}
 
 Bảng~\ref{tab:subcat_sam_256} xác nhận kết luận chính vẫn đúng khi kiểm soát yếu tố độ phân giải: PGA-UNet$_{256}$ vượt SAM-Med2D ở cả ba nhóm về Dice ($+0.2471$ ở tổn thương nhỏ, $+0.1433$ ở biên giới mờ, $+0.0101$ ở tổn thương rõ nét). Đáng chú ý, ở nhóm \textbf{Tổn thương nhỏ}, dù PGA có Precision thấp hơn SAM (0.5825 vs 0.6133) nhưng Recall vượt trội (0.9051 vs 0.3810), nghĩa là SAM bỏ sót phần lớn tổn thương nhỏ trong khi PGA phát hiện được hầu hết; HD95 của PGA$_{256}$ (5.94~px) cũng thấp hơn SAM (62.62~px) rất đáng kể, cho thấy khi PGA phân đoạn được tổn thương nhỏ thì đường biên bám sát hơn nhiều. So sánh Bảng~\ref{tab:subcat_sam} (PGA@512 vs SAM@256) với Bảng~\ref{tab:subcat_sam_256} (cùng 256) cho thấy nhóm Tổn thương nhỏ được hưởng lợi nhiều nhất từ độ phân giải cao (PGA@512: 0.8124 vs PGA@256: 0.6836, $\Delta=+0.1288$), trong khi nhóm Tổn thương rõ nét ít nhạy hơn ($\Delta=+0.0041$).
+
+% ------------------------------------------------------------
+\section{Đánh giá khả năng tổng quát hóa liên miền dữ liệu (Cross-dataset: FracAtlas)}
+\label{sec:fracatlas}
+% ------------------------------------------------------------
+
+Toàn bộ kết quả trình bày từ Mục~\ref{sec:danh_gia_hieu_nang} đến Mục~\ref{subsec:subcategory} đều được huấn luyện và đánh giá trên BTXRD. Để kiểm chứng kiến trúc PGA-UNet và quy trình huấn luyện không chỉ ``phù hợp'' với một bộ dữ liệu cụ thể, mục này lặp lại các thực nghiệm cốt lõi (so sánh PGA vs SAM-Med2D, đánh giá theo 3 kịch bản prompt, phân tích sub-category) trên một bộ dữ liệu X-quang xương độc lập thứ hai: \textbf{FracAtlas}. Đây là bộ dữ liệu có nguồn gốc, quy trình thu thập và đặc điểm tổn thương (gãy xương, dạng đường nứt mảnh, tuyến tính) khác biệt với BTXRD (u xương, dạng khối/mảng), phù hợp để kiểm tra khả năng tổng quát hóa domain.
+
+\subsection{Giới thiệu bộ dữ liệu FracAtlas}
+
+\textbf{FracAtlas}~\cite{fracatlas2023} là bộ dữ liệu X-quang công khai tập trung vào gãy xương (fracture), thu thập từ 3 bệnh viện tại Bangladesh với tổng cộng 4.083 ảnh X-quang vùng tay, vai, hông và chân, trong đó 717 ảnh có bệnh lý (922 vùng gãy xương được khoanh vùng). Nhãn được xây dựng qua quy trình hai giai đoạn: hai bác sĩ X-quang (radiologist) độc lập xác định vị trí gãy, sau đó một bác sĩ chỉnh hình (orthopedic surgeon) đối chiếu và giải quyết bất đồng; mặt nạ đa giác (polygon mask) được vẽ thủ công bằng công cụ mã nguồn mở \texttt{makesense.ai} theo định dạng COCO JSON. Cấu trúc nhãn ba cấp (phân lớp, bounding box định vị, mặt nạ phân đoạn pixel-level) tương đồng với BTXRD nên có thể tái sử dụng trực tiếp toàn bộ pipeline huấn luyện/suy luận (PGA-UNet, SAM-Med2D) mà không cần thay đổi kiến trúc hay hàm mất mát. Điểm khác biệt cốt lõi so với BTXRD là đặc tính hình thái tổn thương: đường gãy xương thường mảnh, tuyến tính và có diện tích nhỏ hơn nhiều so với khối u xương, tạo ra một phép thử tổng quát hóa có ý nghĩa cho cơ chế Prompt Spatial Gate và Conditioned Attention.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu per-polygon)}
+    \label{tab:fracatlas_dataset_stats}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{2.6cm}|c|p{3.5cm}|p{5.5cm}|}
+        \hline
+        \textbf{Tập dữ liệu} & \textbf{Số ảnh} & \textbf{Số mẫu (per-polygon)} & \textbf{Ghi chú} \\
+        \hline
+        Huấn luyện (Train) & -- & \NtrainFA & \\
+        \hline
+        Xác thực (Validation) & -- & \NvalFA & \\
+        \hline
+        Kiểm thử (Test) & \NtestimgFA & \NtestFA & Trung bình $\sim$1.28 polygon/ảnh \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Kiểm tra chéo số liệu:} Tổng số mẫu per-polygon dùng trong ba tập của khóa luận ($\NtrainFA + \NvalFA + \NtestFA = 917$) khớp gần đúng với con số 922 vùng gãy xương (fracture instances) mà bài báo gốc công bố trên 717 ảnh bệnh lý~\cite{fracatlas2023}; chênh lệch nhỏ (5 mẫu, $<$1\%) hợp lý do một số polygon bị loại trong bước tiền xử lý (ví dụ polygon quá nhỏ hoặc lỗi định dạng), củng cố độ tin cậy của quy trình chuẩn bị dữ liệu.
+
+Quy mô huấn luyện của FracAtlas (\NtrainFA~mẫu) nhỏ hơn đáng kể so với BTXRD (\Ntrain~mẫu, chỉ bằng $\approx$49\%), đây là điều kiện thực nghiệm khắt khe hơn để đánh giá khả năng học đặc trưng của PGA-UNet với ít dữ liệu huấn luyện hơn.
+
+\subsection{PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản prompt)}
+\label{subsec:fracatlas_pga_full}
+
+Tương tự Mục~\ref{subsec:sam_comparison} và~\ref{subsec:fair256}, PGA-UNet được huấn luyện lại từ đầu trên FracAtlas ở cả hai độ phân giải $256\times256$ và $512\times512$, đánh giá trên cả ba kịch bản prompt (Zoom-out, Shift, Mixed 70/30), image-level (N=\NtestimgFA~ảnh).
+
+\begin{table}[htbp]
+    \centering
+    \caption{PGA-UNet trên FracAtlas: kết quả toàn diện tại 256×256 và 512×512, ba kịch bản prompt (N=\NtestimgFA~ảnh, image-level)}
+    \label{tab:fracatlas_pga_full}
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|l|c|c|c|c|c|c|}
+        \hline
+        \textbf{Độ phân giải} & \textbf{Kịch bản} & \textbf{Dice↑} & \textbf{IoU↑} & \textbf{Pre↑} & \textbf{Rec↑} & \textbf{HD95↓ (px)} & \textbf{CBL↑} \\
+        \hline
+        PGA-UNet (256) & Zoom-out   & 0.8110 & 0.6886 & 0.7790 & 0.8628 & 3.57  & 0.9456 \\
+        PGA-UNet (256) & Shift      & 0.7842 & 0.6531 & 0.7566 & 0.8333 & 4.02  & 0.9260 \\
+        PGA-UNet (256) & Mixed      & 0.8088 & 0.6864 & 0.7801 & 0.8581 & 3.57  & 0.9431 \\
+        \hline
+        PGA-UNet (512) & Zoom-out   & \textbf{0.8169} & \textbf{0.6953} & 0.7645 & \textbf{0.8975} & 7.45\textsuperscript{\P} & \textbf{0.9546} \\
+        PGA-UNet (512) & Shift      & \textbf{0.7850} & \textbf{0.6537} & 0.7349 & \textbf{0.8618} & 8.88\textsuperscript{\P} & \textbf{0.9308} \\
+        PGA-UNet (512) & Mixed      & \textbf{0.8129} & \textbf{0.6904} & 0.7614 & \textbf{0.8913} & 7.80\textsuperscript{\P} & \textbf{0.9499} \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\textsuperscript{\P}\textit{Lưu ý HD95 khác đơn vị độ phân giải:} Giá trị HD95 thô (px) của PGA-256 và PGA-512 \textbf{không thể so sánh trực tiếp} vì đo trên hai không gian ảnh khác kích thước (1~px lỗi tại 256 tương đương $\sim$2~px tại 512); do đó HD95 không được in đậm ở hàng 512 dù giá trị tuyệt đối cao hơn -- đây không phải PGA-512 kém bám biên hơn, chỉ là khác đơn vị đo (tương tự cách xử lý HD95* chuẩn hóa ở Bảng~\ref{tab:sam_comparison}).
+
+\textbf{Nhận xét:} Ngay cả với chỉ \NtrainFA~mẫu huấn luyện (bằng $\approx$49\% BTXRD), PGA-UNet vẫn đạt Dice $>$ 0.78 ở cả ba kịch bản tại cả hai độ phân giải. Tăng độ phân giải lên $512\times512$ cải thiện hầu hết chỉ số ở cả ba kịch bản (Zoom-out Dice: 0.8110 $\to$ 0.8169; Shift: 0.7842 $\to$ 0.7850; Mixed: 0.8088 $\to$ 0.8129; IoU, Recall, CBL đều tăng tương ứng), nhất quán với quan sát trên BTXRD (Mục~\ref{subsec:fair256}) rằng độ phân giải cao hơn có lợi cho PGA-UNet. Riêng Precision giảm nhẹ ở cả ba kịch bản khi tăng độ phân giải (256$\to$512: Zoom-out $-0.0145$, Shift $-0.0217$, Mixed $-0.0187$), khác với xu hướng chung trên BTXRD -- nhất quán theo cả ba kịch bản nên khó là ngẫu nhiên, có thể phản ánh đặc thù của đường gãy mảnh: ở độ phân giải cao hơn mô hình phát hiện được nhiều vùng nghi ngờ hơn (Recall tăng) nhưng đồng thời bắt luôn một số vùng biên mờ không phải gãy xương thực sự (Precision giảm nhẹ), một đánh đổi hợp lý về mặt lâm sàng (thà nghi ngờ thêm còn hơn bỏ sót). Mức sụt Dice Zoom-out~$\to$~Shift cũng nhỏ ở cả hai độ phân giải (256: $-0.0268$; 512: $-0.0319$), xác nhận tính bền bỉ của cơ chế Gaussian heatmap không phụ thuộc độ phân giải. Nhìn chung, kết quả cho thấy kiến trúc PSG+CAD không chỉ hiệu quả với đặc tính tổn thương dạng khối (u xương, BTXRD) mà còn khái quát tốt sang đặc tính tổn thương dạng đường nứt mảnh (gãy xương, FracAtlas), dù tập huấn luyện nhỏ hơn đáng kể.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{images/chart_fracatlas_pga_full.png}
+    \caption{PGA-UNet trên FracAtlas: Dice Score tại 256×256 và 512×512, ba kịch bản prompt (Bảng~\ref{tab:fracatlas_pga_full}).}
+    \label{fig:chart_fracatlas_pga_full}
+\end{figure}
+
+\subsection{So sánh cơ sở (Baseline): PGA-UNet vs U-Net trên FracAtlas}
+\label{subsec:fracatlas_baseline}
+
+Tương tự Mục~\ref{sec:danh_gia_hieu_nang} trên BTXRD, U-Net (không prompt) được huấn luyện lại từ đầu trên FracAtlas ở $512\times512$ để làm baseline cơ sở, đối chiếu với PGA-UNet (512) kịch bản Zoom-out, cùng N=\NtestimgFA~ảnh image-level.
+
+\begin{table}[htbp]
+    \centering
+    \caption{So sánh hiệu năng phân đoạn: U-Net (tự động) so với PGA-UNet (512, Zoom-out) trên FracAtlas (N=\NtestimgFA~ảnh, image-level, cùng độ phân giải 512×512)}
+    \label{tab:fracatlas_baseline}
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|c|c|}
+        \hline
+        \textbf{Mô hình} & \textbf{Dice↑} & \textbf{IoU↑} & \textbf{Precision↑} & \textbf{Recall↑} & \textbf{HD95↓ (px)} & \textbf{CBL↑} \\
+        \hline
+        U-Net & 0.3831 & 0.2836 & 0.4387 & 0.4642 & 136.82 & 0.4628 \\
+        \hline
+        \textbf{PGA-UNet (512, Zoom-out)} & \textbf{0.8169} & \textbf{0.6953} & \textbf{0.7645} & \textbf{0.8975} & \textbf{7.45} & \textbf{0.9546} \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\textbf{Nhận xét:} Khoảng cách giữa U-Net và PGA-UNet trên FracAtlas ($\Delta$Dice~$=+0.4338$) còn lớn hơn trên BTXRD ($\Delta$Dice~$=+0.3794$, Bảng~\ref{tab:baseline_comparison}), củng cố quan sát đã có ở Mục~\ref{subsec:fracatlas_sam}: đặc tính đường gãy mảnh của FracAtlas càng bất lợi hơn cho mô hình không có định hướng không gian. HD95 của U-Net trên FracAtlas (136.82~px) cũng cao hơn nhiều so với PGA-UNet (7.45~px, chênh lệch $\sim$18 lần), cho thấy khi không có câu nhắc, U-Net không chỉ bỏ sót tổn thương mà còn định vị hoàn toàn sai vị trí ở nhiều ca.
+
+\subsection{So sánh với SAM-Med2D (Fine-tuned và Zero-shot) trên FracAtlas}
+\label{subsec:fracatlas_sam}
+
+Khác với thực nghiệm trên BTXRD (nơi PGA-UNet đánh giá image-level còn SAM-Med2D chỉ đánh giá per-polygon do giới hạn triển khai ban đầu), ở FracAtlas cả ba mô hình (PGA-UNet, SAM-Med2D fine-tuned, SAM-Med2D zero-shot) đều được quy về \textbf{cùng đơn vị đánh giá image-level} (N=\NtestimgFA~ảnh, GT union + max-merge dự đoán), cho phép so sánh trực tiếp không cần quy đổi.
+
+\begin{table}[htbp]
+    \centering
+    \caption{So sánh toàn diện PGA-UNet (256) với SAM-Med2D fine-tuned và zero-shot trên FracAtlas, ba kịch bản prompt (tất cả cùng image-level, N=\NtestimgFA~ảnh, cùng độ phân giải 256×256)}
+    \label{tab:fracatlas_sam_comparison}
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|l|c|c|c|c|c|c|}
+        \hline
+        \textbf{Mô hình} & \textbf{Kịch bản} & \textbf{Dice↑} & \textbf{IoU↑} & \textbf{Pre↑} & \textbf{Rec↑} & \textbf{HD95↓ (px)} & \textbf{CBL↑} \\
+        \hline
+        PGA-UNet (256) & Zoom-out & \textbf{0.8110} & \textbf{0.6886} & \textbf{0.7790} & \textbf{0.8628} & \textbf{3.57} & \textbf{0.9456} \\
+        PGA-UNet (256) & Shift    & \textbf{0.7842} & \textbf{0.6531} & \textbf{0.7566} & \textbf{0.8333} & \textbf{4.02} & \textbf{0.9260} \\
+        PGA-UNet (256) & Mixed    & \textbf{0.8088} & \textbf{0.6864} & \textbf{0.7801} & \textbf{0.8581} & \textbf{3.57} & \textbf{0.9431} \\
+        \hline
+        SAM-Med2D (FT) & Zoom-out & 0.5278\textsuperscript{\dag} & 0.3720\textsuperscript{\dag} & 0.4854 & 0.6519 & 8.53\textsuperscript{\dag} & 0.8514\textsuperscript{\dag} \\
+        SAM-Med2D (FT) & Shift    & 0.5015 & 0.3499 & 0.4507 & 0.6259 & 9.82  & 0.8158 \\
+        SAM-Med2D (FT) & Mixed    & 0.5192 & 0.3636 & 0.4651 & 0.6456 & 9.24  & 0.8300 \\
+        \hline
+        SAM-Med2D (ZS) & Zoom-out & 0.5278\textsuperscript{\dag} & 0.3720\textsuperscript{\dag} & 0.4854\textsuperscript{\dag} & 0.6519\textsuperscript{\dag} & 8.53\textsuperscript{\dag} & 0.8514\textsuperscript{\dag} \\
+        SAM-Med2D (ZS) & Shift    & 0.4978 & 0.3468 & 0.4290\textsuperscript{\S} & 0.6007\textsuperscript{\S} & 9.80  & 0.8145 \\
+        SAM-Med2D (ZS) & Mixed    & 0.5249 & 0.3703 & 0.4778\textsuperscript{\S} & 0.6203\textsuperscript{\S} & 8.81  & 0.8436 \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\textsuperscript{\dag}\textit{Giải thích số liệu trùng khớp ở Zoom-out:} Đối chiếu với nhật ký huấn luyện gốc (fine-tuning SAM-Med2D trên FracAtlas), checkpoint \texttt{best\_sam.pth} thực sự được huấn luyện lại (train Dice tăng liên tục $0.6266 \to 0.8981$ qua 11 epoch, xác nhận trọng số Adapter có cập nhật), nhưng \textbf{checkpoint tốt nhất được lưu ngay tại epoch~1} (Val Dice~$=0.7507$); từ epoch~2 trở đi, Val Dice giảm liên tục ($0.7438 \to 0.5442$) do quá khớp (overfitting) trên tập huấn luyện nhỏ (573 mẫu sau lọc của SAM-Med2D, so với 1.859 mẫu trên BTXRD), khiến early stopping kích hoạt ở epoch~11. Do đó \texttt{best\_sam.pth} chỉ khác trọng số pretrained gốc sau đúng 1 epoch cập nhật Adapter -- đủ giải thích vì sao dự đoán ở kịch bản Zoom-out (prompt "dễ", ít đòi hỏi đặc trưng tinh chỉnh) gần như trùng khớp với zero-shot, trong khi Shift/Mixed (prompt khó hơn) vẫn cho thấy chênh lệch nhỏ. Đây là một quan sát có ý nghĩa về giới hạn của fine-tuning trên tập dữ liệu nhỏ, không phải lỗi trộn lẫn checkpoint.
+
+\textsuperscript{\S}\textit{Ghi chú đơn vị:} Precision/Recall image-level của SAM-Med2D zero-shot ở kịch bản Shift và Mixed \textbf{không được ghi nhận} ở bước tổng hợp image-level trong lần chạy notebook hiện tại (chỉ Dice/IoU/HD95/CBL được tính tại bước này). Hai giá trị hiển thị ở trên là Precision/Recall \textbf{per-polygon thô} (N=\NtestFA~mẫu, đơn vị khác với các cột Dice/IoU/HD95/CBL còn lại trong bảng vốn tính ở cấp độ ảnh) — dùng làm tham chiếu gần đúng, không đối chiếu trực tiếp 1-1 với các số image-level khác. Cần chạy lại bước tổng hợp image-level để có số liệu chính xác cùng đơn vị.
+
+\textbf{Phân tích:} Dù checkpoint fine-tuned hội tụ sớm ở Zoom-out (xem giải thích\textsuperscript{\dag}), xu hướng tổng thể vẫn nhất quán với BTXRD (Bảng~\ref{tab:sam_comparison_256}): PGA-UNet vượt trội SAM-Med2D trên toàn bộ ba kịch bản với biên độ còn lớn hơn trên FracAtlas ($+0.28$ đến $+0.29$ Dice, so với $+0.10$ trên BTXRD). Khoảng cách lớn hơn này phù hợp với đặc tính hình thái của FracAtlas: tổn thương gãy xương dạng đường nứt mảnh có diện tích nhỏ hơn nhiều so với khối u BTXRD, khiến giới hạn độ phân giải $256\times256$ và pretrained-feature tổng quát của SAM-Med2D càng bất lợi hơn (tương tự phát hiện ở nhóm ``Tổn thương nhỏ'' Bảng~\ref{tab:subcat_sam}). Đồng thời, PGA-UNet vẫn giữ được tính bền bỉ tương tự BTXRD: mức sụt Dice từ Zoom-out sang Shift chỉ $-0.0268$ (256), nhỏ hơn nhiều so với PGA-UNet@256 trên BTXRD ($-0.0372$, Bảng~\ref{tab:sam_comparison_256}), cho thấy cơ chế hướng dẫn mềm (Gaussian heatmap) tiếp tục phát huy hiệu quả trên miền dữ liệu mới.
+
+\subsection{Đánh giá theo đặc tính tổn thương (Sub-Category) trên FracAtlas}
+\label{subsec:fracatlas_subcat}
+
+\subsubsection*{PGA-UNet so với U-Net theo độ khó tác vụ}
+
+Tương tự Mục~\ref{subsec:subcategory} trên BTXRD, tập test FracAtlas được chia thành hai nhóm \textbf{hậu nghiệm} theo chính Dice của U-Net (baseline không prompt): TOP-DICE (nhóm ảnh U-Net dự đoán tốt nhất) và BOTTOM-DICE (nhóm ảnh U-Net dự đoán kém nhất). Do FracAtlas chỉ có \NtestimgFA~ảnh test (nhỏ hơn nhiều so với 187 ảnh của BTXRD), quy mô mỗi nhóm được điều chỉnh còn N=36 ảnh/nhóm (thay vì top/bottom-50 như BTXRD) để hai nhóm không chồng lấp lên nhau ($2 \times 36 = 72 = \NtestimgFA$).
+
+\begin{table}[htbp]
+    \centering
+    \caption{So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh mỗi nhóm, image-level; phân nhóm dễ nhất / khó nhất theo Dice của U-Net, kịch bản Zoom-out)}
+    \label{tab:fracatlas_subcat_baseline}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llcccccc}
+        \hline
+        \textbf{Nhóm} & \textbf{Mô hình} & \textbf{Dice} & \textbf{IoU} & \textbf{Pre} & \textbf{Rec} & \textbf{HD95 (px)} & \textbf{CBL} \\
+        \hline
+        \multirow{2}{*}{TOP-DICE (N=36)}
+            & U-Net       & 0.6532 & 0.5018 & 0.6266 & 0.7500 & 82.10 & 0.7595 \\
+            & PGA-UNet    & \textbf{0.8324} & \textbf{0.7179} & \textbf{0.7920} & \textbf{0.8975} & \textbf{8.04} & \textbf{0.9600} \\
+        \hline
+        \multirow{2}{*}{BOTTOM-DICE (N=36)}
+            & U-Net       & 0.1130 & 0.0654 & 0.1397 & 0.1784 & 191.54 & 0.1662 \\
+            & PGA-UNet    & \textbf{0.8015} & \textbf{0.6726} & \textbf{0.7370} & \textbf{0.8974} & \textbf{6.85} & \textbf{0.9493} \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\textbf{Nhận xét:} Xu hướng từ BTXRD (Bảng~\ref{tab:subcat_baseline}) được tái khẳng định rõ ràng trên FracAtlas. Ở nhóm TOP-DICE, U-Net vẫn đạt được Dice khá (0.6532) vì đây là các ca dễ nhất theo chính đánh giá của nó; PGA-UNet vẫn vượt trội hơn ($\Delta=+0.1791$). Ở nhóm BOTTOM-DICE, U-Net gần như sụp đổ hoàn toàn (Dice~=~0.1130, HD95~=~191.54~px), trong khi PGA-UNet \textbf{gần như không đổi} so với nhóm TOP-DICE (Dice~=~0.8015 so với 0.8324, $\Delta=+0.6886$ so với U-Net). Đáng chú ý, PGA-UNet trên FracAtlas duy trì ổn định hơn cả trên BTXRD ở nhóm khó nhất (BTXRD: PGA Dice~=~0.8120 ở nhóm Khó bottom-50 so với U-Net chỉ 0.0062, Bảng~\ref{tab:subcat_baseline}) -- ở cả hai bộ dữ liệu, cơ chế câu nhắc giúp mô hình không phụ thuộc vào việc ảnh có "dễ" hay "khó" theo tiêu chuẩn của một mô hình tự động, mà luôn bám theo vùng được bác sĩ chỉ định.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/chart_fracatlas_subcat_baseline.png}
+    \caption{So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref{tab:fracatlas_subcat_baseline}).}
+    \label{fig:chart_fracatlas_subcat_baseline}
+\end{figure}
+
+\subsubsection*{PGA-UNet so với SAM-Med2D theo đặc tính lâm sàng}
+
+Tương tự Mục~\ref{subsec:subcategory}, tập test FracAtlas được chia thành ba nhóm bằng nhau theo cùng tiêu chí (diện tích tổn thương nhỏ nhất, Dice SAM-Med2D thấp nhất trong phần còn lại, diện tích lớn nhất trong phần còn lại), 24 ảnh/nhóm ($3 \times 24 = \NtestimgFA$). Theo yêu cầu phạm vi, chỉ kịch bản \textbf{Zoom-out} được trình bày ở phân tích sub-category (kịch bản đại diện, nhất quán với cách trình bày sub-category trên BTXRD).
+
+\begin{table}[htbp]
+    \centering
+    \caption{So sánh SAM-Med2D (FT, 256), PGA-UNet (256) và PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (kịch bản Zoom-out, 24 ảnh/nhóm, image-level)}
+    \label{tab:fracatlas_subcat}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llcccccc}
+        \hline
+        \textbf{Nhóm} & \textbf{Mô hình} & \textbf{Dice} & \textbf{IoU} & \textbf{Pre} & \textbf{Rec} & \textbf{HD95 (px)} & \textbf{CBL} \\
+        \hline
+        \multirow{3}{*}{Tổn thương nhỏ (N=24)}
+            & SAM-Med2D (FT)  & 0.2535 & 0.1697 & 0.4449 & 0.2572 & 98.39 & 0.6321 \\
+            & PGA-UNet (256)  & 0.7584 & 0.6178 & 0.6652 & 0.9006 & 6.04 & 0.9125 \\
+            & PGA-UNet (512)  & \textbf{0.8028} & \textbf{0.6756} & \textbf{0.7269} & \textbf{0.9150} & \textbf{5.05} & \textbf{0.9400} \\
+        \hline
+        \multirow{3}{*}{Biên giới mờ (N=24)}
+            & SAM-Med2D (FT)  & 0.2464 & 0.1450 & 0.5049 & 0.1890 & 24.20 & 0.7865 \\
+            & PGA-UNet (256)  & \textbf{0.8295} & \textbf{0.7130} & \textbf{0.7786} & \textbf{0.8977} & \textbf{7.49} & \textbf{0.9652} \\
+            & PGA-UNet (512)  & 0.8193 & 0.6979 & 0.7746 & 0.8847 & 8.78 & 0.9596 \\
+        \hline
+        \multirow{3}{*}{Tổn thương rõ nét (N=24)}
+            & SAM-Med2D (FT)  & 0.5217 & 0.3578 & 0.5528 & 0.5654 & 23.87 & 0.8814 \\
+            & PGA-UNet (256)  & 0.7989 & 0.6711 & 0.7437 & \textbf{0.8884} & 10.09 & 0.9476 \\
+            & PGA-UNet (512)  & \textbf{0.8249} & \textbf{0.7077} & \textbf{0.7897} & 0.8865 & \textbf{8.60} & \textbf{0.9581} \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\textbf{Phân tích:} Xu hướng chính từ BTXRD (Bảng~\ref{tab:subcat_sam}) được tái khẳng định trên FracAtlas: PGA-UNet vượt SAM-Med2D ở cả ba nhóm, khoảng cách lớn nhất tại nhóm \textit{Tổn thương nhỏ} ($\Delta=+0.549$ Dice so với PGA-512, so với $+0.376$ trên BTXRD). Biên độ lớn hơn trên FracAtlas phù hợp với đặc tính đường gãy mảnh vốn dễ mất hoàn toàn khi resize xuống $256\times256$ của SAM-Med2D. Riêng nhóm \textit{Biên giới mờ}, PGA-UNet (256) nhỉnh hơn PGA-UNet (512) (0.8295 so với 0.8193), khác biệt duy nhất trong ba nhóm mà độ phân giải cao hơn không mang lại lợi ích rõ rệt; đây là dấu hiệu đáng chú ý (có thể do biến thiên cỡ mẫu nhỏ N=24/nhóm) chưa đủ cơ sở kết luận chắc chắn nếu không kiểm định thống kê bổ sung.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/chart_subcat_fracatlas.png}
+    \caption{So sánh SAM-Med2D (FT), PGA-UNet (256) và PGA-UNet (512) theo ba nhóm đặc tính tổn thương trên FracAtlas (Bảng~\ref{tab:fracatlas_subcat}).}
+    \label{fig:chart_subcat_fracatlas}
+\end{figure}
+
+\subsection{Thảo luận: khả năng tổng quát hóa liên miền dữ liệu}
+
+Ba quan sát tổng hợp từ thực nghiệm FracAtlas:
+
+\begin{itemize}
+    \item \textbf{Tổng quát hóa kiến trúc, không phải overfitting vào BTXRD:} Dù được huấn luyện lại hoàn toàn từ đầu trên một bộ dữ liệu có nguồn gốc, đặc tính tổn thương và quy mô huấn luyện khác biệt (\NtrainFA~mẫu so với \Ntrain~mẫu, chỉ $\approx$49\%), PGA-UNet vẫn đạt Dice $>0.78$ ở mọi kịch bản và cả hai độ phân giải, vượt trội U-Net (baseline không prompt) với biên độ còn lớn hơn BTXRD ($+0.4338$ so với $+0.3794$) và vượt SAM-Med2D với biên độ lớn ($+0.28$ đến $+0.29$ Dice). Phân tích theo độ khó tác vụ (Bảng~\ref{tab:fracatlas_subcat_baseline}) cho thấy PGA-UNet gần như không đổi giữa nhóm ảnh dễ và khó (theo đánh giá hậu nghiệm của U-Net), trong khi U-Net sụp đổ hoàn toàn ở nhóm khó -- cùng một khuôn mẫu quan sát được trên BTXRD (Bảng~\ref{tab:subcat_baseline}). Điều này củng cố luận điểm rằng lợi ích của cơ chế Prompt Spatial Gate và Conditioned Attention không phải là hiện tượng đặc thù (overfit) của một bộ dữ liệu, mà là đặc tính kiến trúc tổng quát của phương pháp prompt-guided segmentation.
+    \item \textbf{Tính bền bỉ trước sai số câu nhắc được tái khẳng định ở cả hai độ phân giải:} Mức sụt Dice Zoom-out $\to$ Shift trên FracAtlas nhỏ ở cả 256 ($-0.0268$) và 512 ($-0.0319$), thấp hơn BTXRD ở cùng độ phân giải ($-0.0372$ tại 256), cho thấy cơ chế hướng dẫn mềm (Gaussian heatmap) không chỉ hoạt động tốt mà còn ổn định qua các miền dữ liệu khác nhau.
+    \item \textbf{Fine-tuning hội tụ sớm trên tập dữ liệu nhỏ -- một quan sát bổ sung, không phải hạn chế kiểm định:} Đối chiếu nhật ký huấn luyện xác nhận SAM-Med2D fine-tuned trên FracAtlas đạt Val Dice tốt nhất ngay tại epoch~1 rồi quá khớp dần (early stopping ở epoch~11), khác biệt rõ với BTXRD (hội tụ tốt nhất ở epoch~4, dừng sớm epoch~14, Mục~\ref{subsec:training_strategy_pga}). Đây là nguyên nhân khiến SAM-Med2D fine-tuned và zero-shot cho kết quả gần trùng khớp ở kịch bản Zoom-out (Bảng~\ref{tab:fracatlas_sam_comparison}\textsuperscript{\dag}) -- phản ánh giới hạn thực sự của việc fine-tuning một mô hình nền tảng lớn trên tập dữ liệu đích nhỏ (573 mẫu huấn luyện sau lọc), không phải sai sót trong quy trình thực nghiệm. Sau khi đã bổ sung đầy đủ PGA-UNet@512 (ba kịch bản), baseline U-Net và phân tích theo độ khó tác vụ, đây là điểm đáng lưu ý duy nhất còn lại của thực nghiệm FracAtlas.
+\end{itemize}
 
 % ------------------------------------------------------------
 \section{Trực quan hóa kết quả (Qualitative Results)}

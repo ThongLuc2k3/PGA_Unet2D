@@ -1,11 +1,11 @@
 \chapter*{Tóm tắt khóa luận}
 
-Khóa luận này nghiên cứu và phát triển một hệ thống phân đoạn tương tác ảnh X-quang xương dựa trên cơ chế câu nhắc trực quan (visual prompt), nhằm hỗ trợ bác sĩ đọc ảnh trong quy trình xác định và khoanh vùng tổn thương xương.
+Khóa luận nghiên cứu và phát triển một hệ thống phân đoạn tương tác ảnh X-quang xương dựa trên câu nhắc trực quan (visual prompt), giúp bác sĩ khoanh vùng tổn thương nhanh và chính xác hơn.
 
-\textbf{Bài toán:} Các phương pháp phân đoạn tự động hiện tại (U-Net, Attention U-Net) hoạt động như hộp đen, không tận dụng được tri thức lâm sàng của bác sĩ, dẫn đến hiện tượng nhận diện sai trên ảnh X-quang có độ tương phản thấp và cấu trúc chồng lấp. Trong khi đó, các mô hình nền tảng tương tác (SAM, MedSAM) đòi hỏi tài nguyên tính toán vượt quá khả năng triển khai thời gian thực tại các cơ sở y tế.
+\textbf{Bài toán:} Các mô hình phân đoạn tự động (U-Net, Attention U-Net) không tận dụng được tri thức của bác sĩ nên dễ nhận diện sai trên ảnh X-quang có độ tương phản thấp. Ngược lại, các mô hình tương tác nền tảng (SAM, SAM-Med2D) lại quá nặng để triển khai thực tế tại nhiều cơ sở y tế.
 
-\textbf{Giải pháp:} Khóa luận đề xuất kiến trúc PGA-UNet (Prompt-Guided Attention U-Net), tích hợp Cổng không gian (Prompt Spatial Gate) tại bộ mã hóa và Cơ chế chú ý có điều kiện (Conditioned Attention) tại bộ giải mã, cho phép mô hình CNN hạng nhẹ tiếp nhận và khai thác hiệu quả thông tin câu nhắc từ bác sĩ.
+\textbf{Giải pháp:} Khóa luận đề xuất \textbf{PGA-UNet} (Prompt-Guided Attention U-Net), một kiến trúc CNN hạng nhẹ tích hợp trực tiếp câu nhắc bounding box của bác sĩ vào cả bộ mã hóa (qua Cổng không gian) lẫn bộ giải mã (qua Cơ chế chú ý có điều kiện). Một module gác cổng (EfficientNet\_B3) được thêm vào để tự động sàng lọc ảnh trước khi phân đoạn, tạo thành pipeline xử lý đầu cuối hoàn chỉnh.
 
-\textbf{Kết quả:} Trên tập kiểm thử 187~ảnh image-level, PGA-UNet đạt Dice = 0.8584 (Zoom-out), vượt trội so với U-Net (0.4790) và SAM-Med2D fine-tuned (0.7350) trong điều kiện so sánh khác paradigm (tương tác so với tự động). Mô hình thể hiện tính bền bỉ cao khi câu nhắc bị lệch: Dice = 0.8454 ở kịch bản 100\% Shift, chênh lệch chỉ 0.0130 so với câu nhắc lý tưởng. Toàn bộ hệ thống được tích hợp vào ứng dụng phần mềm trình diễn (demo), minh họa khả năng phân đoạn tương tác trong quy trình đọc ảnh X-quang.
+\textbf{Kết quả:} PGA-UNet đạt Dice = 0.8584 trên tập kiểm thử 187 ảnh, vượt trội U-Net (0.4790) và SAM-Med2D fine-tuned (0.7350) dù nhỏ hơn nhiều lần về số tham số. Mô hình vẫn giữ Dice = 0.8454 ngay cả khi câu nhắc bị lệch tâm, cho thấy tính bền bỉ cao. Module gác cổng đạt AUC-ROC = 0.9405; khi đánh giá cả pipeline trên dữ liệu hỗn hợp mô phỏng điều kiện thực tế, hệ thống vẫn còn sai số tích lũy cần tiếp tục cải thiện (Pipeline Dice = 0.7544). Toàn bộ hệ thống đã được tích hợp vào một ứng dụng demo minh họa quy trình phân đoạn tương tác trên ảnh X-quang.
 
 \textbf{Từ khóa:} Phân đoạn ảnh y khoa, câu nhắc trực quan, X-quang xương, U-Net, phân đoạn tương tác.

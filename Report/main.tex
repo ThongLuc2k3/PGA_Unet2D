@@ -94,6 +94,7 @@
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{enumitem}
+\usepackage{longtable}
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -164,6 +165,9 @@
 \listoffigures
 \listoftables
 
+\addcontentsline{toc}{chapter}{Danh mục các ký hiệu và chữ viết tắt}
+\include{Appendix/danhmuctuvietat}
+
 \addcontentsline{toc}{chapter}{Tóm tắt}
 \include{Appendix/tomtat}
 
@@ -193,8 +197,4 @@
 
 \printbibliography[heading=none]
 
-% Phần phụ lục
-%\include{Appendix/appendix1}
-%\include{Appendix/appendix2}
-
-\end{document} 
+\end{document}
