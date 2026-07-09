@@ -8,14 +8,15 @@
 \label{sec:tong_the}
 % ------------------------------------------------------------
 
-Hệ thống phân đoạn tương tác đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) hoàn toàn tự động. Đầu vào của hệ thống gồm ảnh X-quang và một bounding box do người dùng vẽ lên vùng nghi ngờ, người dùng không cần biết trước ảnh có bệnh hay không. Kiến trúc tổng thể được chia thành các module liên hoàn qua hai giai đoạn cốt lõi:
+Hệ thống phân đoạn tương tác đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) \textbf{bán tự động}, trong đó bác sĩ luôn giữ vai trò xác nhận trước mỗi lần chuyển giai đoạn — đây là thiết kế \textit{triage mềm} (soft triage), không phải một bộ chặn cứng tự động loại bỏ ảnh mà không cho phép con người can thiệp. Đầu vào của hệ thống là ảnh X-quang; bounding box lên vùng nghi ngờ chỉ được bác sĩ vẽ sau khi đã xác nhận ảnh có bệnh lý ở bước sàng lọc. Kiến trúc tổng thể được chia thành các module liên hoàn qua hai giai đoạn cốt lõi:
 
-\textbf{1. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):} 
-Ảnh X-quang đầu vào đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống sẽ tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường. 
+\textbf{1. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):}
+Ảnh X-quang đầu vào đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường và \textbf{hiển thị kết quả này cho bác sĩ dưới dạng một gợi ý} (ví dụ: "AI dự đoán: CÓ BỆNH, độ tin cậy 0.87"), chứ không tự động hành động dựa trên gợi ý đó. Bác sĩ xem gợi ý rồi chủ động xác nhận một trong hai lựa chọn:
 \begin{itemize}
-    \item Nếu kết quả phân lớp là âm tính (bình thường), pipeline tự động dừng, bounding box không tạo ra sự khác biệt ở bước này.
-    \item Nếu kết quả là dương tính (có bệnh lý), pipeline tự động chuyển sang giai đoạn phân đoạn, sử dụng bounding box làm prompt hướng dẫn.
+    \item \textbf{Xác nhận không bệnh:} quy trình kết thúc cho ảnh này.
+    \item \textbf{Xác nhận có bệnh lý:} hệ thống chuyển sang giai đoạn phân đoạn, sử dụng bounding box do bác sĩ vẽ làm prompt hướng dẫn.
 \end{itemize}
+Vì quyết định cuối cùng luôn do bác sĩ đưa ra, hệ thống \textbf{không bao giờ tự động loại một ca nghi ngờ mà không có xác nhận của con người}: ngay cả khi mô hình gợi ý "không bệnh", bác sĩ vẫn có thể bác bỏ gợi ý và chủ động yêu cầu chuyển sang bước phân đoạn nếu có nghi ngờ lâm sàng riêng. Thiết kế này khác với một bộ chặn cứng tự động (nơi ảnh bị gán nhãn âm tính sẽ bị loại bỏ hoàn toàn khỏi luồng xử lý), và giữ đúng triết lý human-in-the-loop trong toàn bộ luồng xử lý — kể cả ở bước sàng lọc, không chỉ ở bước phân đoạn. Đánh giá định lượng ở Chương~\ref{Chapter4} (Mục~\ref{sec:pipeline_eval}) mô phỏng kịch bản thận trọng nhất — giả định gợi ý của Gatekeeper được làm theo tuyệt đối không có xác nhận của bác sĩ — nhằm đo lường cận dưới của hiệu năng hệ thống trong trường hợp xấu nhất.
 
 \textbf{2. Giai đoạn phân đoạn có hướng dẫn (PGA-UNet):} 
 Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác. Bác sĩ thực hiện thao tác khoanh một hộp giới hạn (Bounding Box) bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt không gian (Prompt Heatmap). Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
@@ -23,7 +24,7 @@ Hệ thống phân đoạn tương tác đề xuất trong khóa luận được
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.88\textwidth, keepaspectratio]{images/pipeline_pga_app_inference.png}
-    \caption{Pipeline tổng thể hệ thống: đầu vào gồm ảnh X-quang và bounding box, qua EfficientNet\_B3 sàng lọc tự động, âm tính dừng, dương tính chuyển sang PGA-UNet phân đoạn có hướng dẫn.}
+    \caption{Pipeline tổng thể hệ thống: ảnh X-quang qua EfficientNet\_B3 để sinh gợi ý sàng lọc; bác sĩ xem gợi ý và xác nhận (không bệnh $\to$ kết thúc, có bệnh $\to$ vẽ bounding box) trước khi hệ thống chuyển sang PGA-UNet phân đoạn có hướng dẫn.}
     \label{fig:pipeline_overview}
 \end{figure}
 
@@ -220,7 +221,7 @@ Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễ
 
 Mô hình PGA-UNet được huấn luyện hoàn toàn trên tập ảnh \textbf{chỉ chứa các ca bệnh lý}. Trong môi trường lâm sàng thực tế, luồng đầu vào hỗn hợp cả ảnh bình thường lẫn bệnh lý. Nếu đưa trực tiếp ảnh xương bình thường vào PGA-UNet, mô hình sẽ tạo ra mặt nạ sai lệch (False Positive), gây hiểu nhầm nghiêm trọng cho bác sĩ và lãng phí tài nguyên tính toán.
 
-\textbf{Giải pháp:} Một module phân lớp nhị phân (\textbf{Gatekeeper}) đặt trước pipeline phân đoạn, sàng lọc tự động: ảnh bình thường → dừng sớm; ảnh dương tính → chuyển sang PGA-UNet. Module này \textbf{không phải đóng góp kỹ thuật trọng tâm} của khóa luận mà là thành phần hỗ trợ lấp đầy khoảng trống giữa điều kiện huấn luyện và triển khai thực tế. Kiến trúc cụ thể (EfficientNet\_B3, chiến lược tinh chỉnh hai giai đoạn) và kết quả định lượng được trình bày đầy đủ tại Mục~\ref{sec:danh_gia_phan_lop} (Chương~\ref{Chapter4}).
+\textbf{Giải pháp:} Một module phân lớp nhị phân (\textbf{Gatekeeper}) đặt trước pipeline phân đoạn, đưa ra gợi ý sàng lọc: ảnh nghi ngờ bình thường hay có bệnh lý. Module này \textbf{không tự động loại bỏ ảnh} — kết quả luôn được hiển thị cho bác sĩ dưới dạng gợi ý kèm độ tin cậy, và bác sĩ là người xác nhận bước tiếp theo (Mục~\ref{sec:tong_the}). Thiết kế \textit{triage mềm} này được lựa chọn thay vì một bộ chặn cứng tự động vì hai lý do: (1) giữ đúng triết lý human-in-the-loop xuyên suốt toàn hệ thống, không riêng bước phân đoạn; (2) tránh rủi ro một ca bệnh thực sự bị loại bỏ vĩnh viễn khỏi luồng xử lý chỉ vì một dự đoán sai của mô hình phân lớp (false negative) mà không có cơ hội con người can thiệp — rủi ro này càng đáng lưu ý khi Gatekeeper đạt Sensitivity dưới 90\% (chi tiết tại Mục~\ref{sec:danh_gia_phan_lop}, Chương~\ref{Chapter4}). Module này \textbf{không phải đóng góp kỹ thuật trọng tâm} của khóa luận mà là thành phần hỗ trợ lấp đầy khoảng trống giữa điều kiện huấn luyện và triển khai thực tế. Kiến trúc cụ thể (EfficientNet\_B3, chiến lược tinh chỉnh hai giai đoạn) và kết quả định lượng được trình bày đầy đủ tại Mục~\ref{sec:danh_gia_phan_lop} (Chương~\ref{Chapter4}).
 
 Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
 \begin{equation}
@@ -229,7 +230,7 @@ Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
 \end{equation}
 trong đó $y_i \in \{0, 1\}$ là nhãn thực và $\hat{p}_i \in [0, 1]$ là xác suất dự đoán của ảnh thứ $i$.
 
-Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên: kết quả âm tính → pipeline dừng; kết quả dương tính → hệ thống tự động chuyển sang Giai đoạn 2 (PGA-UNet phân đoạn với prompt bounding box).
+Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên và hiển thị gợi ý sàng lọc cho bác sĩ; bác sĩ xác nhận "không bệnh" (pipeline kết thúc) hoặc "có bệnh" (hệ thống chuyển sang Giai đoạn 2 — PGA-UNet phân đoạn với prompt bounding box do bác sĩ vẽ). Quá trình chuyển giai đoạn luôn cần xác nhận của bác sĩ, kể cả khi bác sĩ không đồng ý với gợi ý của mô hình.
 
 % ------------------------------------------------------------
 \section{Tóm tắt giải thuật hệ thống: Huấn luyện và Suy luận}
@@ -268,15 +269,16 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeepe
 \caption{Quy trình suy luận trực tuyến (Online Inference)}
 \label{alg:online}
 \begin{algorithmic}[1]
-\Require Ảnh X-quang đầu vào $\mathbf{I}$; hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ vẽ (có thể rỗng)
+\Require Ảnh X-quang đầu vào $\mathbf{I}$; hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ vẽ \textbf{sau khi xác nhận có bệnh lý} (có thể rỗng nếu bác sĩ chưa vẽ)
 \Ensure Mặt nạ phân đoạn $\hat{\mathbf{M}}$, hoặc thông báo phù hợp
 
 \State \textbf{Tiền xử lý:} Loại bỏ R/L và nhiễu từ bản sao $\mathbf{I}'$ của $\mathbf{I}$ (giữ $\mathbf{I}$ gốc để hiển thị)
-\State \textbf{Sàng lọc bệnh lý:} $p \leftarrow f_{\text{cls}}(\mathbf{I}';\; \boldsymbol{\theta}_{\text{cls}})$
-\If{$p < 0.5$}
-    \State \Return \textit{``Không phát hiện bệnh lý: không cần phân đoạn''}
+\State \textbf{Sàng lọc bệnh lý (gợi ý):} $p \leftarrow f_{\text{cls}}(\mathbf{I}';\; \boldsymbol{\theta}_{\text{cls}})$; hiển thị gợi ý ``CÓ BỆNH'' nếu $p \geq 0.5$, ngược lại ``KHÔNG BỆNH'', kèm độ tin cậy
+\State \textbf{Bác sĩ xác nhận:} $c \leftarrow$ lựa chọn của bác sĩ ($c{=}1$: có bệnh, $c{=}0$: không bệnh) \Comment{$c$ độc lập với $p$ — bác sĩ có thể bác bỏ gợi ý của mô hình}
+\If{$c = 0$}
+    \State \Return \textit{``Bác sĩ xác nhận không có bệnh lý: kết thúc quy trình''}
 \EndIf
-\If{$\mathbf{B} = \emptyset$ \textbf{(bác sĩ không cung cấp câu nhắc)}}
+\If{$\mathbf{B} = \emptyset$ \textbf{(bác sĩ đã xác nhận có bệnh nhưng chưa vẽ câu nhắc)}}
     \State \Return \textit{``Vui lòng khoanh hộp giới hạn lên vùng nghi ngờ''}
     \Comment{Heatmap zero không xác định hành vi phân đoạn}
 \EndIf
@@ -287,7 +289,7 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeepe
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Xử lý câu nhắc rỗng (Bước 5--6 của Algorithm~\ref{alg:online}):} Khi bác sĩ không vẽ bounding box (câu nhắc rỗng $\mathbf{B} = \emptyset$), hệ thống từ chối thực hiện phân đoạn và yêu cầu người dùng cung cấp vùng nghi ngờ. Lý do: bản đồ nhiệt tương ứng sẽ là ma trận không ($\mathbf{H} = \mathbf{0}$), không mang thông tin định hướng nào; Cổng không gian tại bộ mã hóa (Phương trình~\eqref{eq:spatial_gate}) sẽ không khuếch đại vùng nào, và Cơ chế chú ý có điều kiện (Phương trình~\eqref{eq:conditioned_gate}) sẽ dựa hoàn toàn vào tín hiệu decoder mà không có ràng buộc không gian, dẫn đến mặt nạ đầu ra thiếu độ tin cậy. Thiết kế từ chối tường minh (explicit rejection) này ưu tiên an toàn lâm sàng hơn là cố gắng phân đoạn với đầu vào không đủ thông tin.
+\textbf{Xử lý câu nhắc rỗng (bước kiểm tra $\mathbf{B} = \emptyset$ của Algorithm~\ref{alg:online}, chỉ xảy ra sau khi bác sĩ đã xác nhận có bệnh lý):} Khi bác sĩ chưa vẽ bounding box, hệ thống từ chối thực hiện phân đoạn và yêu cầu người dùng cung cấp vùng nghi ngờ. Lý do: bản đồ nhiệt tương ứng sẽ là ma trận không ($\mathbf{H} = \mathbf{0}$), không mang thông tin định hướng nào; Cổng không gian tại bộ mã hóa (Phương trình~\eqref{eq:spatial_gate}) sẽ không khuếch đại vùng nào, và Cơ chế chú ý có điều kiện (Phương trình~\eqref{eq:conditioned_gate}) sẽ dựa hoàn toàn vào tín hiệu decoder mà không có ràng buộc không gian, dẫn đến mặt nạ đầu ra thiếu độ tin cậy. Thiết kế từ chối tường minh (explicit rejection) này ưu tiên an toàn lâm sàng hơn là cố gắng phân đoạn với đầu vào không đủ thông tin.
 
 % ------------------------------------------------------------
 \section{Tổng kết chương}
