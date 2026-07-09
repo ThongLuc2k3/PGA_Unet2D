@@ -100,14 +100,14 @@ Khóa luận có hai đóng góp chính:
     \item \textbf{Đề xuất biểu diễn câu nhắc dạng heatmap và kiến trúc PGA-UNet điều kiện hóa bởi câu nhắc:} Đóng góp trọng tâm của khóa luận là phương pháp \textbf{mã hóa hộp giới hạn thành Gaussian Plateau Heatmap}: một kênh 2D liên tục đồng kích thước với bản đồ đặc trưng, cung cấp tín hiệu định hướng với gradient liên tục thay vì vector rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân. Biểu diễn này tương thích về cấu trúc với phép tích chập CNN, cho phép tín hiệu câu nhắc lan truyền qua toàn bộ các tầng mạng. Kiến trúc PGA-UNet ($\sim$3 triệu tham số) hiện thực hóa đóng góp này trên nền U-Net thông qua hai thành phần kiến trúc:
 
     \begin{itemize}
-        \item \textit{Cổng không gian tại bộ mã hóa (PSG):} Thành phần mới hoàn toàn, tích hợp bản đồ heatmap vào từng tầng encoder theo cơ chế khuếch đại có chọn lọc (selective enhancement), tăng cường đặc trưng trong vùng câu nhắc mà không triệt tiêu thông tin ngoài vùng.
+        \item \textit{Cổng không gian tại bộ mã hóa (PSG):} Thành phần được đề xuất trong khóa luận này, không tồn tại trong U-Net hay Attention U-Net gốc, tích hợp bản đồ heatmap vào từng tầng encoder theo cơ chế khuếch đại có chọn lọc (selective enhancement) với ràng buộc chỉ khuếch đại không triệt tiêu, tăng cường đặc trưng trong vùng câu nhắc mà không mất thông tin ngoài vùng.
 
         \item \textit{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD):} Kế thừa Cổng chú ý (Attention Gate) từ Attention U-Net và mở rộng bằng cách đưa heatmap câu nhắc trực tiếp vào tín hiệu gating $\mathbf{g}$, thay vì chỉ dựa vào đặc trưng ảnh như thiết kế gốc.
     \end{itemize}
 
     Ablation study xác nhận: Gaussian Heatmap so với Binary prompt cải thiện Dice Shift $+0.10$ (V5 vs V4); kiến trúc PSG+CAD kết hợp Gaussian tạo hiệu ứng tương hỗ, cải thiện Dice Shift $+0.12$ so với chỉ concatenate heatmap đơn giản (V5 vs V1); chi tiết tại Bảng~\ref{tab:ablation_arch}, Chương~\ref{Chapter4}. Toàn hệ thống được đánh giá so sánh với U-Net và SAM-Med2D trên bộ dữ liệu BTXRD.
 
-    \item \textbf{Đánh giá thực nghiệm toàn pipeline:} Xây dựng kịch bản đánh giá end-to-end kết hợp module phân lớp (EfficientNet\_B3) và PGA-UNet, mô phỏng luồng xử lý thực tế trên tập dữ liệu hỗn hợp gồm cả ảnh bình thường và ảnh bệnh lý, phản ánh điều kiện triển khai lâm sàng sát thực hơn so với đánh giá phân đoạn đơn lẻ.
+    \item \textbf{Đánh giá thực nghiệm toàn pipeline:} Xây dựng kịch bản đánh giá end-to-end kết hợp module phân lớp (EfficientNet\_B3) và PGA-UNet trên tập dữ liệu hỗn hợp gồm cả ảnh bình thường và ảnh bệnh lý — phân bố đầu vào gần với thực tế hơn so với đánh giá phân đoạn đơn lẻ trên tập ảnh bệnh thuần túy. Đây là kịch bản \textbf{thận trọng nhất} nhằm đo cận dưới hiệu năng hệ thống (giả định gợi ý của Gatekeeper được làm theo tuyệt đối, chưa mô phỏng bước bác sĩ xác nhận của thiết kế triage mềm thực tế — Chương~\ref{Chapter3}).
 \end{enumerate}
 
 % ------------------------------------------------------------

@@ -133,7 +133,7 @@ Việc kết hợp một vector embedding rời rạc (256 chiều, không có c
 
 Trong kiến trúc U-Net truyền thống, bộ mã hóa (Encoder) chịu trách nhiệm trích xuất các đặc trưng ngữ nghĩa. Tuy nhiên, nếu thiếu định hướng, nó có xu hướng học mọi thứ xuất hiện trên ảnh X-quang, dẫn đến việc lãng phí tài nguyên tính toán vào các vùng nền không liên quan. 
 
-PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (Prompt Spatial Gate, PSG)} trực tiếp vào nhánh mã hóa; đây là thành phần hoàn toàn mới, không tồn tại trong U-Net hay Attention U-Net gốc, được đề xuất để đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng. Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
+PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (Prompt Spatial Gate, PSG)} trực tiếp vào nhánh mã hóa; đây là thành phần \textbf{không tồn tại trong U-Net hay Attention U-Net gốc}, được đề xuất và phát triển qua quá trình thực nghiệm của khóa luận để đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng, với một ràng buộc thiết kế riêng cho bài toán y khoa (chỉ khuếch đại, không triệt tiêu tín hiệu gốc — xem ràng buộc $\alpha \in [0,1]$ bên dưới). Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
 \begin{equation}
     \tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \left(1 + \alpha \cdot \sigma\!\left(\mathbf{W}_{gate} \ast \mathbf{H}^l\right)\right)
     \label{eq:spatial_gate}
