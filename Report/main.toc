@@ -48,37 +48,37 @@
 \contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{42}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{42}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{42}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{44}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Phương pháp đánh giá image-level}{45}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{46}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{46}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{48}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{50}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Kiểm chứng công bằng tại cùng độ phân giải 256$\times $256}{52}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{53}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.1.2}Mô hình so sánh trong thực nghiệm}{44}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{45}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Phương pháp đánh giá image-level}{46}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{47}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{47}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{49}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{51}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{53}{subsection.4.2.4}%
 \contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{54}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{54}{subsection.4.3.1}%
 \contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{56}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{57}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Đánh giá khả năng tổng quát hóa liên miền dữ liệu (Cross-dataset: FracAtlas)}{61}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{61}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{58}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{61}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{62}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản prompt)}{63}{subsection.4.4.2}%
 \contentsline {subsection}{\numberline {4.4.3}So sánh cơ sở (Baseline): PGA-UNet vs U-Net trên FracAtlas}{64}{subsection.4.4.3}%
 \contentsline {subsection}{\numberline {4.4.4}So sánh với SAM-Med2D (Fine-tuned và Zero-shot) trên FracAtlas}{65}{subsection.4.4.4}%
 \contentsline {subsection}{\numberline {4.4.5}Đánh giá theo đặc tính tổn thương (Sub-Category) trên FracAtlas}{67}{subsection.4.4.5}%
-\contentsline {subsection}{\numberline {4.4.6}Thảo luận: khả năng tổng quát hóa liên miền dữ liệu}{70}{subsection.4.4.6}%
-\contentsline {section}{\numberline {4.5}Trực quan hóa kết quả (Qualitative Results)}{71}{section.4.5}%
+\contentsline {subsection}{\numberline {4.4.6}Thảo luận: hiệu quả của kiến trúc khi huấn luyện lại trên miền dữ liệu khác}{70}{subsection.4.4.6}%
+\contentsline {section}{\numberline {4.5}Trực quan hóa kết quả (Qualitative Results)}{72}{section.4.5}%
 \contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{72}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{72}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{72}{subsection.4.6.1}%
-\contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và pipeline end-to-end}{73}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{73}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Phân tích các ca bỏ sót (False Negative) và thử nghiệm ngưỡng phân loại}{76}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Phân tích sai số tích lũy (Cascading Error)}{78}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{80}{subsection.4.7.4}%
-\contentsline {subsection}{\numberline {4.7.5}Các chỉ số end-to-end bổ sung: Sensitivity bệnh lý, FNR và Lesion-level Recall}{81}{subsection.4.7.5}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{85}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{85}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{86}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{88}{section.5.3}%
-\contentsline {chapter}{Tài liệu tham khảo}{91}{section.5.3}%
+\contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{73}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{73}{subsection.4.6.1}%
+\contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và pipeline end-to-end}{74}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{74}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Phân tích các ca bỏ sót (False Negative) và thử nghiệm ngưỡng phân loại}{77}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Phân tích sai số tích lũy (Cascading Error)}{79}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{81}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.5}Các chỉ số end-to-end bổ sung: Sensitivity bệnh lý, FNR và Lesion-level Recall}{84}{subsection.4.7.5}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{86}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{86}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{88}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{90}{section.5.3}%
+\contentsline {chapter}{Tài liệu tham khảo}{93}{section.5.3}%

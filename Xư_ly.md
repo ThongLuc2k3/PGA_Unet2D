@@ -107,11 +107,21 @@ Vấn đề chung: các bảng trong Chương 4 hiện chưa theo một trật t
 **D.1 — Thiết lập lại trật tự trình bày tổng thể của Chương 4**
 Trình bày lại theo mạch: thiết lập dữ liệu → mô hình so sánh → chỉ số đánh giá → kết quả chính → ablation → phân tích lỗi → đánh giá pipeline. Đây là khung sườn để sắp xếp lại toàn bộ các mục con bên dưới.
 
-**D.2 — Gộp/làm rõ mục 4.2.3 và 4.2.4 (đang bị trùng ý)**
+**D.2 — Gộp/làm rõ mục 4.2.3 và 4.2.4 (đang bị trùng ý)** ✅ ĐÃ LÀM (hoàn tất thật sự ở phiên D.3, xem ghi chú bên dưới)
 4.2.3 "So sánh với SAM-Med2D" và 4.2.4 "Kiểm chứng công bằng tại cùng độ phân giải 256×256" hiện đọc như lặp lại cùng một ý (cả hai đều là so sánh PGA-UNet vs SAM-Med2D ở 256). Nguồn dữ liệu của cả hai là cùng một notebook: `Result/Result_BTXRD/test-pga-samzs-samft-r256.ipynb`. Gộp lại thành một mục duy nhất (hoặc làm rõ 4.2.4 là phần mở rộng phân tích riêng biệt, không lặp lại số liệu đã trình bày ở 4.2.3).
 
-**D.3 — Chuẩn hóa lại bảng so sánh SAM-Med2D (mục 4.2.3)**
+*Lưu ý quá trình xử lý:* lần đầu làm D.2, đã chọn hướng "làm rõ vai trò riêng biệt" mà KHÔNG gộp bảng, giữ 4.2.3 = PGA@512 vs SAM@256 (nghĩ đây là so sánh "mỗi model ở cấu hình mặc định"). Sau đó ở D.3, đối chiếu lại `pga-vs-unet2d-r512.ipynb` và `test-pga-samzs-samft-r256.ipynb`, xác nhận PGA@512 trong 4.2.3 thực ra bị lấy nhầm từ notebook U-Net (không phải từ thực nghiệm 3-model gốc của tác giả), đúng như D.2 ĐÃ GHI TỪ ĐẦU (cả hai bảng cùng nguồn `test-pga-samzs-samft-r256.ipynb`). Đã sửa lại đúng theo bản gốc: 4.2.3 giờ dùng toàn bộ số liệu 256 (PGA/SAM-FT/SAM-ZS cùng 1 thực nghiệm), xóa hẳn bảng 4.2.4 vì nay trùng hoàn toàn.
+
+**D.3 — Chuẩn hóa lại bảng so sánh SAM-Med2D (mục 4.2.3)** ✅ ĐÃ LÀM (phạm vi rộng hơn dự kiến ban đầu)
 Bảng hiện tại đang chuẩn hóa cả HD95 và chỉ có một kích thước (256) — không cần thiết phải đưa HD95 vào, và nên trình bày theo format đẹp/gọn giống bảng FracAtlas (mục 4.14/4.18) thay vì format hiện tại.
+
+*Thực tế đã làm (vượt phạm vi ban đầu):* không chỉ là vấn đề định dạng HD95. Phát hiện bảng 4.2.3 đang trộn 2 checkpoint khác độ phân giải (PGA@512 từ notebook U-Net + SAM@256), gây hiểu lầm khi so HD95 thô. Đã sửa tận gốc: đổi toàn bộ bảng 4.2.3 về đúng 1 thực nghiệm `test-pga-samzs-samft-r256.ipynb` (PGA@256 vs SAM-FT@256 vs SAM-ZS@256), qua đó hoàn tất luôn D.2 (gộp 4.2.3/4.2.4, xóa bảng trùng). Hệ quả kèm theo:
+- Sửa lại claim "PGA bền bỉ hơn SAM trước sai số câu nhắc": ở cùng 256, PGA sụt Dice Shift (−4.4%) còn nhiều hơn SAM-FT (−3.6%) — claim cũ chỉ đúng khi so PGA@512 với SAM@256, đã viết lại trung thực (lợi thế bền bỉ đến từ độ phân giải 512, không phải bản thân kiến trúc ở cùng điều kiện).
+- HD95 giờ so sánh trực tiếp được (cùng 256×256): PGA thắng rõ (6.14–7.77px vs SAM-FT 9.17–9.70px), không cần footnote caveat nữa.
+- Vẽ lại Hình 4.1 (`chart_baseline_sam_comparison.png`) dùng đúng PGA@256 (0.842/0.805/0.832) thay vì PGA@512 (0.858/0.845/0.855) để khớp bảng.
+- Cập nhật cross-reference còn sót ở phần FracAtlas (không còn trỏ tới `subsec:fair256`/`tab:sam_comparison_256` đã xóa).
+
+*Hệ quả CHƯA xử lý, cần cân nhắc khi làm D.9 (rà soát cuối):* `chapter5.tex` (Kết luận) và `tomtat.tex` (Tóm tắt) vẫn đang viết headline "PGA-UNet đạt Dice = 0.8584... vượt... SAM-Med2D fine-tuned (0.7432, +0.1234)" — đây lại là kiểu so sánh PGA@512 vs SAM@256 vừa bỏ khỏi 4.2.3. Đã hỏi lại, quyết định: **giữ nguyên như hiện tại**, coi đây là cách trình bày chấp nhận được cho phần tóm tắt/kết luận (nêu số tốt nhất của từng mô hình), không bắt buộc phải đổi theo số 256 kiểu apples-to-apples như trong Chương 4. Ghi lại ở đây để D.9 không hiểu nhầm là bỏ sót.
 
 **D.4 — Đổi tên biến thể trong ablation kiến trúc (mục 4.3.1)**
 Thay vì gọi V1/V2/V3/V4/V5, đặt tên theo kiến trúc để người đọc hiểu ngay đây là ablation kiến trúc: U-Net, U-Net+PSG, U-Net+CAD, U-Net+PSG+CAD (PGA đầy đủ), v.v. — khớp với cách đã dùng ở phần đóng góp (liên kết C.3).
@@ -126,8 +136,12 @@ Làm rõ trong văn bản (ví dụ ở đầu mỗi mục, hoặc trong phụ l
 - `test-subcat-pga-vs-baseline.ipynb` → so sánh PGA-UNet vs U-Net theo **subcategory** (ảnh U-Net tin cậy nhất/kém nhất), ở 512.
 - `test-subcat-pga-vs-sam-r256-r512.ipynb` → so sánh PGA-UNet vs SAM-Med2D fine-tuned theo 3 loại tổn thương (nhỏ/mờ/rõ): SAM-Med2D chỉ ở 256 (để so cùng cấp), PGA-UNet có cả 256 và 512 (để chứng minh lợi thế train tùy ý kích thước không bị resize quá mức, khác với SAM-Med2D vốn cố định 256 và rất khó mở lên 512).
 
+*Đã xác nhận lại (phiên D.3):* đối chiếu trực tiếp output của `pga-vs-unet2d-r512.ipynb` (in rõ `IMG_SIZE=512`) và `test-pga-samzs-samft-r256.ipynb` (in rõ `IMG_SIZE=256`, chứa cả PGA/SAM-FT/SAM-ZS cùng 1 lần chạy) — mapping D.6 mô tả ở trên là chính xác 100%, không cần chỉnh sửa.
+
 **D.7 — Bổ sung so sánh PGA-256 vs PGA-512**
 Hiện không có notebook riêng cho so sánh này, nhưng dữ liệu đã có sẵn trong `pga-vs-unet2d-r512.ipynb` (PGA-512) và `test-pga-samzs-samft-r256.ipynb` (PGA-256) — có thể cắt/khớp số liệu từ hai file này để dựng một bảng so sánh PGA-256 vs PGA-512, làm rõ luận điểm: PGA-UNet có thể train lại tùy ý ở độ phân giải cao hơn (512) mà không bị giới hạn kiến trúc như SAM-Med2D (vốn cố định 256, khó mở rộng).
+
+*Cập nhật sau D.3:* việc này giờ càng cần thiết hơn, vì sau khi sửa 4.2.3 về thuần 256 (D.2/D.3), câu chuyện "PGA-512 vs SAM-256" không còn xuất hiện trực tiếp trong Chương 4 nữa — bảng D.7 sẽ là nơi phục hồi lại luận điểm đó một cách gián tiếp/bắc cầu (PGA-512 > PGA-256 ở Bảng~này, PGA-256 > SAM-256 ở Bảng~4.2.3 → suy ra PGA-512 còn cách biệt SAM lớn hơn nữa), thay vì nhét vào 1 bảng trộn độ phân giải như cách làm cũ. Số liệu PGA-256 đã có sẵn nguyên trong `tab:sam_comparison` (0.8420/0.8048/0.8317); PGA-512 lấy từ `tab:baseline_comparison`/`tab:robustness_comparison` (0.8584/0.8454/0.8554).
 
 **D.8 — Áp dụng cùng cấu trúc mapping notebook cho phần FracAtlas (mục 4.4.2–4.4.5)**
 Thư mục `Result/Result_FracAtlas/` chứa đúng 4 notebook cùng tên với BTXRD: `pga-vs-unet2d-r512.ipynb`, `test-pga-samzs-samft-r256.ipynb`, `test-subcat-pga-vs-baseline.ipynb`, `test-subcat-pga-vs-sam-r256-r512.ipynb`. Vì vậy phần FracAtlas (mục 4.4) nên chia thành 4 mục con 4.4.2–4.4.5, mirror đúng logic đã áp dụng cho BTXRD ở D.6:
