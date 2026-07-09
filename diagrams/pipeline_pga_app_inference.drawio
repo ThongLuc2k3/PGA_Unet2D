@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="4. Inference Pipeline" id="inferencepipeline">
-        <mxGraphModel dx="1042" dy="124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="820" math="0" shadow="0">
+        <mxGraphModel dx="1042" dy="124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="940" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -15,34 +15,39 @@
                     <mxGeometry x="280" y="108" width="280" height="65" as="geometry"/>
                 </mxCell>
 
-                <!-- ===== DECISION ===== -->
-                <mxCell id="dec" value="Âm tính hay&lt;br&gt;Dương tính?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="305" y="210" width="230" height="90" as="geometry"/>
+                <!-- ===== AI SUGGESTION (not a decision) ===== -->
+                <mxCell id="dec" value="AI gợi ý:&lt;br&gt;Âm tính hay Dương tính?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="305" y="210" width="230" height="80" as="geometry"/>
                 </mxCell>
 
-                <!-- ===== NEGATIVE branch ===== -->
-                <mxCell id="stop" value="&lt;b&gt;Kết thúc&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Ảnh bình thường — không phân đoạn&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="620" y="227" width="190" height="55" as="geometry"/>
+                <!-- ===== DOCTOR CONFIRMATION (actual decision point) ===== -->
+                <mxCell id="confirm" value="&lt;b&gt;Bác sĩ xác nhận&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Xem gợi ý AI, tự quyết định Có bệnh / Không bệnh (có thể bác bỏ gợi ý)&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="320" width="260" height="100" as="geometry"/>
                 </mxCell>
 
-                <!-- ===== POSITIVE branch ===== -->
+                <!-- ===== "KHÔNG BỆNH" branch (bác sĩ xác nhận) ===== -->
+                <mxCell id="stop" value="&lt;b&gt;Kết thúc&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bác sĩ xác nhận không bệnh — không phân đoạn&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="345" width="200" height="55" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== "CÓ BỆNH" branch (bác sĩ xác nhận) ===== -->
                 <mxCell id="prompt0" value="&lt;b&gt;Sinh Prompt Heatmap&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bounding Box → Gaussian Heatmap (plateau, k=31)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="270" y="342" width="300" height="60" as="geometry"/>
+                    <mxGeometry x="270" y="462" width="300" height="60" as="geometry"/>
                 </mxCell>
 
-                <!-- BBox chỉ xuất hiện SAU quyết định Dương tính (cùng hàng với Sinh Prompt Heatmap) -->
-                <mxCell id="bbox_in" value="&lt;b&gt;Bounding Box&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bác sĩ vẽ SAU khi có kết quả Dương tính&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="610" y="342" width="220" height="60" as="geometry"/>
+                <!-- BBox chỉ xuất hiện SAU khi bác sĩ tự xác nhận Có bệnh (cùng hàng với Sinh Prompt Heatmap) -->
+                <mxCell id="bbox_in" value="&lt;b&gt;Bounding Box&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bác sĩ vẽ SAU khi tự xác nhận Có bệnh&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="462" width="220" height="60" as="geometry"/>
                 </mxCell>
 
                 <!-- ===== PGA-UNet ===== -->
                 <mxCell id="pga" value="&lt;b&gt;PGA-UNet — Phân đoạn tự động&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Prompt Spatial Gate + Conditioned Attention Decoder&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="260" y="445" width="320" height="65" as="geometry"/>
+                    <mxGeometry x="260" y="565" width="320" height="65" as="geometry"/>
                 </mxCell>
 
                 <!-- ===== OUTPUT ===== -->
                 <mxCell id="out" value="&lt;b&gt;Output: Mặt nạ phân đoạn&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Binary Mask — hiển thị trên Gradio UI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="270" y="555" width="300" height="60" as="geometry"/>
+                    <mxGeometry x="270" y="675" width="300" height="60" as="geometry"/>
                 </mxCell>
 
                 <!-- ===== ARROWS ===== -->
@@ -54,12 +59,16 @@
                 <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" parent="1" source="gate" target="dec" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <!-- Decision → Stop (âm tính) -->
-                <mxCell id="a3" value="Âm tính" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="dec" target="stop" edge="1">
+                <!-- AI suggestion → Doctor confirmation -->
+                <mxCell id="a2b" value="Hiển thị gợi ý" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="dec" target="confirm" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <!-- Decision → Prompt (dương tính) -->
-                <mxCell id="a4" value="Dương tính" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;" parent="1" source="dec" target="prompt0" edge="1">
+                <!-- Confirm → Stop (bác sĩ xác nhận không bệnh) -->
+                <mxCell id="a3" value="Xác nhận: Không bệnh" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="confirm" target="stop" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <!-- Confirm → Prompt (bác sĩ xác nhận có bệnh) -->
+                <mxCell id="a4" value="Xác nhận: Có bệnh" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;" parent="1" source="confirm" target="prompt0" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <!-- BBox → Prompt (BBox được dùng để sinh heatmap) -->

@@ -866,26 +866,116 @@ Bảng~\ref{tab:classification_results} tổng hợp hiệu năng của mô hìn
     \item \textbf{F1-Score 88.06\%:} Cân bằng tốt giữa Precision và Recall, phù hợp với kịch bản dữ liệu cân bằng (187 vs 188).
 \end{itemize}
 
+% ------------------------------------------------------------
+\subsection{Phân tích các ca bỏ sót (False Negative) và thử nghiệm ngưỡng phân loại}
+\label{subsec:fn_analysis}
+% ------------------------------------------------------------
+
+Bảng~\ref{tab:pipeline_eval} (Mục~\ref{sec:pipeline_eval}) cho thấy Gatekeeper bỏ sót 21/187 ảnh bệnh lý (FN) ở ngưỡng mặc định $p=0.5$. Mục này phân tích sâu hơn đặc điểm của 21 ca này và thử nghiệm dịch chuyển ngưỡng phân loại để đánh giá đánh đổi giữa Sensitivity và Specificity.
+
+\textbf{Đặc điểm của 21 ca FN:} Xác suất dự đoán $p$ của mô hình cho 21 ảnh này dao động trong khoảng $[0.0000,\; 0.4202]$, trung bình $0.1635$, trung vị $0.0922$ — tức phần lớn không phải các ca ``suýt đúng'' ở sát ngưỡng 0.5.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN theo khoảng cách tới ngưỡng 0.5}
+    \label{tab:fn_prob_dist}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{7cm}|p{6cm}|}
+        \hline
+        \textbf{Khoảng xác suất dự đoán} & \textbf{Số ca (/21)} \\
+        \hline
+        $p \in [0.4,\, 0.5)$ — cận ngưỡng (``near-miss'') & 2 (9.5\%) \\
+        \hline
+        $p \in [0.3,\, 0.4)$ & 3 (14.3\%) \\
+        \hline
+        $p \in [0.2,\, 0.3)$ & 4 (19.0\%) \\
+        \hline
+        $p \in [0.1,\, 0.2)$ & 1 (4.8\%) \\
+        \hline
+        $p < 0.1$ — mô hình dự đoán tự tin (nhưng sai) là ảnh lành & 11 (52.4\%) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Như vậy hơn một nửa số ca FN (11/21) không phải lỗi ``suýt đúng'' mà là các ca mô hình dự đoán rất tự tin là bình thường — cho thấy hạ ngưỡng phân loại một cách đơn thuần sẽ khó cứu được nhóm này.
+
+\textbf{Tương quan với kích thước tổn thương:} So sánh diện tích tổn thương (tính theo \% diện tích ảnh, đo trên toàn bộ polygon của từng ảnh) giữa nhóm bị bỏ sót (FN, 23 tổn thương trong 21 ảnh) và nhóm phát hiện đúng (TP, 209 tổn thương trong 166 ảnh):
+
+\begin{table}[htbp]
+    \centering
+    \caption{So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}
+    \label{tab:fn_area_compare}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Thống kê diện tích tổn thương} & \textbf{Nhóm FN (n=23)} & \textbf{Nhóm TP (n=209)} \\
+        \hline
+        Trung vị (\% diện tích ảnh) & \textbf{0.226\%} & \textbf{1.018\%} \\
+        \hline
+        Trung bình & 0.310\% & 2.100\% \\
+        \hline
+        Nhỏ nhất / Lớn nhất & 0.036\% / 1.430\% & 0.003\% / 18.378\% \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Trung vị diện tích tổn thương ở nhóm FN chỉ bằng khoảng 22\% trung vị nhóm TP (0.226\% so với 1.018\% diện tích ảnh); kiểm định phi tham số Mann--Whitney U (giả thuyết một phía: diện tích nhóm FN nhỏ hơn nhóm TP) cho $p = 0.0001$, khác biệt có ý nghĩa thống kê. Điều này cho thấy các ca bị Gatekeeper bỏ sót \textbf{không phải lỗi ngẫu nhiên}, mà tương quan rõ với tổn thương có kích thước nhỏ — nhất quán với hạn chế đã biết của một mô hình phân loại toàn ảnh khi tín hiệu bất thường chỉ chiếm một phần rất nhỏ diện tích đầu vào.
+
+\textbf{Thử nghiệm dịch chuyển ngưỡng phân loại:} Bảng~\ref{tab:threshold_sweep} khảo sát Sensitivity/Specificity khi hạ ngưỡng quyết định dương tính từ mặc định $0.5$ xuống các mức thấp hơn (tính lại trên toàn bộ 375 ảnh của dataset\_online).
+
+\begin{table}[htbp]
+    \centering
+    \caption{Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}
+    \label{tab:threshold_sweep}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Ngưỡng} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{TN} & \textbf{Sensitivity} & \textbf{Specificity} \\
+        \hline
+        0.50 (mặc định) & 166 & 24 & 21 & 164 & 88.77\% & 87.23\% \\
+        \hline
+        0.40 & 168 & 31 & 19 & 157 & 89.84\% & 83.51\% \\
+        \hline
+        0.30 & 171 & 36 & 16 & 152 & 91.44\% & 80.85\% \\
+        \hline
+        0.20 & 175 & 42 & 12 & 146 & 93.58\% & 77.66\% \\
+        \hline
+        0.10 & 176 & 51 & 11 & 137 & 94.12\% & 72.87\% \\
+        \hline
+        0.05 & 180 & 59 & 7 & 129 & 96.26\% & 68.62\% \\
+        \hline
+        0.01 & 182 & 83 & 5 & 105 & 97.33\% & 55.85\% \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Nhận xét:} Không tồn tại một ngưỡng nào cho phép tăng mạnh Sensitivity mà gần như không đánh đổi Specificity — đường cong đánh đổi khá thoải chứ không có điểm ``miễn phí''. Ví dụ, hạ ngưỡng từ 0.5 xuống 0.1 cứu thêm 10/21 ca FN (Sensitivity 88.77\%~$\to$~94.12\%) nhưng đổi lại số ảnh lành bị báo động nhầm tăng hơn gấp đôi (FP từ 24 lên 51, Specificity giảm còn 72.87\%). Để loại bỏ gần hết FN (Sensitivity~$\to$~100\%) cần ngưỡng gần bằng 0, tại đó Specificity sụp đổ về gần 0\% — tương đương từ bỏ hoàn toàn khả năng phân biệt của Gatekeeper. Do đó, việc chỉ điều chỉnh ngưỡng không phải là giải pháp triệt để; kết hợp với thiết kế triage mềm (Mục~\ref{sec:tong_the}, Chương~\ref{Chapter3}) — nơi bác sĩ luôn xác nhận lại gợi ý trước khi kết thúc quy trình — là lớp phòng vệ bổ sung cần thiết bên cạnh việc cải thiện bản thân mô hình phân lớp.
+
+\textbf{Hậu quả khi Gatekeeper chặn nhầm một ca có bệnh (kịch bản không có xác nhận của bác sĩ):} Trong kịch bản đánh giá thận trọng nhất của Mục~\ref{sec:pipeline_eval} (không có bước bác sĩ xác nhận), mỗi ca FN đồng nghĩa với việc một tổn thương thật — theo phân tích ở trên, thường là tổn thương nhỏ (trung vị 0.226\% diện tích ảnh) — hoàn toàn không được đưa vào PGA-UNet và bị tính Dice~=~0 trong Pipeline Dice end-to-end (Mục~\ref{sec:pipeline_eval}). Trong hệ thống triển khai thực tế (Chương~\ref{Chapter3}), hậu quả này chỉ xảy ra nếu bác sĩ đồng thời cũng không phát hiện ra tổn thương khi xem lại ảnh gốc và xác nhận theo gợi ý sai của mô hình — một rủi ro thuộc phạm trù \textit{automation bias} chưa được đánh giá trong khóa luận này (đã nêu tại Chương~\ref{Chapter5}).
+
 \subsection{Phân tích sai số tích lũy (Cascading Error)}
 \label{subsec:cascading_error}
 
-Khi đánh giá \textbf{hệ thống end-to-end} trên tập \textbf{dataset\_online} (375 ảnh hỗn hợp, bao gồm 187 ảnh bệnh lý và 188 ảnh bình thường), sai số từ bước phân lớp lan truyền sang bước phân đoạn qua hai kênh:
+Khi đánh giá \textbf{hệ thống end-to-end} trên tập \textbf{dataset\_online} (375 ảnh hỗn hợp, bao gồm 187 ảnh bệnh lý và 188 ảnh bình thường), sai số từ bước phân lớp lan truyền sang bước phân đoạn qua hai kênh, và cả hai kênh đều phải được tính là lỗi phân đoạn (Dice~=~0) trong một chỉ số end-to-end đúng nghĩa:
 
 \begin{enumerate}
-    \item \textbf{Sai số Recall (FN):} Các ca bệnh bị gác cổng bỏ sót → không chuyển xuống PGA-UNet (21 ảnh FN, tương ứng Sensitivity~=~88.77\%).
-    \item \textbf{Sai số Specificity (FP):} Các ảnh bình thường bị phân loại nhầm thành dương tính → PGA-UNet chạy nhưng không có GT mask (24 ảnh FP, tương ứng Specificity~=~87.23\%), đóng góp Dice~=~0 vào mẫu số.
+    \item \textbf{Sai số Recall (FN):} Các ca bệnh bị gác cổng bỏ sót → không chuyển xuống PGA-UNet, bệnh nhân có tổn thương thật nhưng không được phân đoạn (21 ảnh FN, tương ứng Sensitivity~=~88.77\%). Đây là lỗi nghiêm trọng nhất trong một pipeline y khoa và \textbf{phải được gán Dice~=~0}, không thể loại khỏi mẫu số như một trường hợp ``không tính''.
+    \item \textbf{Sai số Specificity (FP):} Các ảnh bình thường bị phân loại nhầm thành dương tính → PGA-UNet chạy nhưng không có GT mask (24 ảnh FP, tương ứng Specificity~=~87.23\%), cũng đóng góp Dice~=~0 vào mẫu số.
 \end{enumerate}
 
-Cận trên ước tính của Pipeline Dice (bỏ qua hiệu ứng FP lên mẫu số):
-\begin{equation}
-    \begin{aligned}
-    \text{Pipeline Dice}_{\text{ước tính}} &\approx
-        \text{Sensitivity} \times \overline{\text{Dice}}_{\text{TP}} \\
-    &= 88.77\% \times 86.35\% \approx \mathbf{76.6\%}
-    \end{aligned}
-\end{equation}
+Chất lượng phân đoạn thuần của PGA-UNet, tính \textit{có điều kiện} rằng ảnh đã được gác cổng chuyển đúng xuống (166/166 ảnh TP), đạt $\overline{\text{Dice}}_{\text{TP}} = 86.35\%$. Đây \textbf{không phải} hiệu năng thật của toàn hệ thống vì nó bỏ qua hoàn toàn 21 ảnh FN và 24 ảnh FP.
 
-Kết quả thực nghiệm đo được Pipeline Dice = \textbf{0.7544}, thấp hơn ước tính 76.6\% do ảnh hưởng của FP lên mẫu số: mẫu số thực tế là 190 đơn vị image-level (166 TP + 24 FP), không phải 166 TP đơn thuần. Hai nguồn suy giảm: \textbf{24 ảnh FP} (Specificity~=~87.23\%) gây 24 đơn vị Dice~=~0 trong mẫu số 190, và \textbf{21 ảnh FN} (Sensitivity~=~88.77\%) làm mất 21 ảnh TP khỏi tử số. Cải thiện đồng thời cả Sensitivity lẫn Specificity là hướng ưu tiên tiếp theo. Chi tiết xem Mục~\ref{sec:pipeline_eval} và định hướng cải thiện tại Chương~\ref{Chapter5}.
+Phân rã theo từng kênh lỗi (mẫu số chỉ tính một kênh tại một thời điểm):
+\begin{itemize}
+    \item Chỉ tính kênh FP (mẫu số~=~166 TP + 24 FP~=~190): Dice~=~\textbf{0.7544} — đây là con số từng được báo cáo là ``Pipeline Dice'', nhưng thực chất bỏ hẳn 21 ảnh FN ra khỏi phép tính nên đo hiệu năng \textit{cao hơn thực tế}.
+    \item Chỉ tính kênh FN (mẫu số~=~166 TP + 21 FN~=~187, tương đương $\text{Sensitivity} \times \overline{\text{Dice}}_{\text{TP}} = 88.77\% \times 86.35\%$): Dice~=~\textbf{0.7665}.
+\end{itemize}
+
+Khi tính \textbf{đúng và đủ} trên toàn bộ 211 ảnh liên quan đến bước phân đoạn (166 TP + 24 FP + 21 FN), với cả FP lẫn FN đều đóng góp Dice~=~0 vào mẫu số:
+\begin{equation}
+    \text{Pipeline Dice}_{\text{end-to-end}} = \frac{\displaystyle\sum_{i \in \text{ảnh TP}} \text{Dice}_{\text{img}}(i)}{N_{\text{TP}} + N_{\text{FP}} + N_{\text{FN}}} = \frac{\sum \text{Dice}_{\text{TP}}}{166+24+21} = \mathbf{0.6793}
+\end{equation}
+tức \textbf{thấp hơn 0.0751 điểm Dice} so với con số 0.7544 từng báo cáo, đúng như kỳ vọng vì phạt đầy đủ cả 21 ca bệnh bị bỏ sót hoàn toàn. Đây là chỉ số Pipeline Dice chính thức được dùng trong Mục~\ref{sec:pipeline_eval}. Cải thiện đồng thời cả Sensitivity lẫn Specificity là hướng ưu tiên tiếp theo. Định hướng cải thiện được trình bày tại Chương~\ref{Chapter5}.
 
 
 % ------------------------------------------------------------
@@ -895,11 +985,11 @@ Kết quả thực nghiệm đo được Pipeline Dice = \textbf{0.7544}, thấp
 
 Để đánh giá pipeline trong điều kiện thực tế, nơi không phải ảnh nào cũng có bệnh lý, hệ thống được chạy trên tập \textbf{dataset\_online} (375 ảnh: 187 ảnh bệnh lý + 188 ảnh bình thường). Tập này được ghép từ \textbf{tập kiểm thử của PGA-UNet} (187 ảnh bệnh lý, có chú thích đa giác) và \textbf{tập kiểm thử của EfficientNet\_B3} (188 ảnh bình thường), cả hai đều thuộc phân vùng kiểm thử BTXRD (10\%), đảm bảo không mô hình nào đã thấy các ảnh này trong quá trình huấn luyện, tránh rò rỉ dữ liệu (data leakage).
 
-\textbf{Thiết kế đánh giá:} Mỗi ảnh đi qua toàn bộ pipeline (EfficientNet\_B3 → PGA-UNet). Kết quả chia thành 4 trường hợp: TP (có JSON, dự đoán dương, PGA chạy thực tế), FP (không có JSON, dự đoán dương, Dice = 0 vì không có GT mask), FN (có JSON, dự đoán âm, không qua PGA, không tính), TN (không có JSON, dự đoán âm).
+\textbf{Thiết kế đánh giá:} Đánh giá này mô phỏng kịch bản \textbf{thận trọng nhất} — giả định gợi ý của Gatekeeper được làm theo tuyệt đối, không có bước bác sĩ xem lại và xác nhận như trong thiết kế \textit{triage mềm} thực tế của hệ thống (Mục~\ref{sec:tong_the}, Chương~\ref{Chapter3}) — nhằm đo cận dưới (worst-case) của hiệu năng end-to-end nếu gợi ý sàng lọc không được con người kiểm tra lại. Mỗi ảnh đi qua toàn bộ pipeline (EfficientNet\_B3 → PGA-UNet). Kết quả chia thành 4 trường hợp: TP (có JSON, dự đoán dương, PGA chạy thực tế), FP (không có JSON, dự đoán dương, Dice = 0 vì không có GT mask), FN (có JSON, dự đoán âm, không qua PGA, \textbf{Dice = 0 vì bệnh nhân có tổn thương thật không được phân đoạn}), TN (không có JSON, dự đoán âm, không tính vào mẫu số phân đoạn).
 
-Dice pipeline được tính trên \textit{toàn bộ đơn vị image-level classifier gửi cho PGA} (mẫu số = ảnh TP + ảnh FP), phản ánh hiệu năng tổng thể khi tích hợp cả trường hợp phân loại sai. Mỗi ảnh TP được tính một Dice image-level (max-merge predictions, union GT), mỗi ảnh FP đóng góp 1 đơn vị với Dice~=~0:
+Dice pipeline được tính trên \textit{toàn bộ ảnh có liên quan đến nhiệm vụ phân đoạn}, tức mọi ảnh mà hệ thống \textbf{lẽ ra phải phân đoạn đúng} (mẫu số = ảnh TP + ảnh FP + ảnh FN), phản ánh đúng rủi ro lâm sàng khi cả sai số dương giả lẫn âm giả đều làm giảm chất lượng end-to-end. Mỗi ảnh TP được tính một Dice image-level (max-merge predictions, union GT); mỗi ảnh FP và mỗi ảnh FN đều đóng góp 1 đơn vị với Dice~=~0:
 \begin{equation}
-    \text{Pipeline Dice} = \frac{\displaystyle\sum_{i \in \text{ảnh TP}} \text{Dice}_{\text{img}}(i)}{N_{\text{ảnh TP}} + N_{\text{ảnh FP}}}
+    \text{Pipeline Dice} = \frac{\displaystyle\sum_{i \in \text{ảnh TP}} \text{Dice}_{\text{img}}(i)}{N_{\text{ảnh TP}} + N_{\text{ảnh FP}} + N_{\text{ảnh FN}}}
 \end{equation}
 
 \begin{table}[htbp]
@@ -907,7 +997,7 @@ Dice pipeline được tính trên \textit{toàn bộ đơn vị image-level cla
     \caption{Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}
     \label{tab:pipeline_eval}
     \renewcommand{\arraystretch}{1.3}
-    \begin{tabular}{|l|p{7.5cm}|}
+    \begin{tabular}{|p{6.5cm}|p{6.5cm}|}
         \hline
         \textbf{Thống kê} & \textbf{Giá trị} \\
         \hline
@@ -929,18 +1019,61 @@ Dice pipeline được tính trên \textit{toàn bộ đơn vị image-level cla
         \hline
         Ảnh TP đưa vào PGA & 166 ảnh (209 polygon, tb. 1.26 polygon/ảnh) \\
         \hline
+        Dice trung bình thuần trên ảnh TP (tham khảo, có điều kiện gác cổng đúng) & \textbf{0.8635} \\
+        \hline
         Ảnh FP (Dice = 0) & 24 ảnh \\
         \hline
-        Mẫu số (ảnh TP + ảnh FP, image-level) & 166 + 24 = \textbf{190 đơn vị} \\
+        Ảnh FN (Dice = 0, bệnh bị bỏ sót hoàn toàn) & 21 ảnh \\
         \hline
-        Pipeline Dice & \textbf{0.7544} \\
+        Mẫu số end-to-end (TP + FP + FN) & 166 + 24 + 21 = \textbf{211 đơn vị} \\
         \hline
-        Pipeline IoU & \textbf{0.6693} \\
+        \textbf{Pipeline Dice (end-to-end)} & \textbf{0.6793} \\
+        \hline
+        \textbf{Pipeline IoU (end-to-end)} & \textbf{0.6027} \\
+        \hline
+        Tham khảo — cách tính cũ, bỏ qua FN (mẫu số = 190) & Dice = 0.7544 / IoU = 0.6693 \\
         \hline
     \end{tabular}
 \end{table}
 
-\textbf{Nhận xét:} Pipeline Dice~=~0.7544 (mẫu số 190 đơn vị image-level: 166 ảnh TP và 24 ảnh FP bị gán Dice~=~0) phản ánh hiệu năng tổng thể khi pipeline xử lý luồng ảnh hỗn hợp theo đúng thiết kế image-level. Con số này thấp hơn PGA-UNet độc lập (Dice~=~0.8584) do hai nguồn suy giảm: (1) 24 ảnh bình thường bị phân loại sai (FP, Specificity~=~87.23\%) kéo mẫu số lên mà không đóng góp vào tử số; (2) 21 ảnh bệnh bị bỏ sót (FN, Sensitivity~=~88.77\%) loại bỏ 21 ảnh TP khỏi tử số. Đây là \textbf{kết quả thực nghiệm đầy đủ} trên dữ liệu hỗn hợp thực tế, minh chứng cho sai số tích lũy tất yếu của kiến trúc hai tầng.
+\textbf{Nhận xét:} Pipeline Dice end-to-end~=~\textbf{0.6793} (mẫu số 211 đơn vị image-level: 166 ảnh TP, 24 ảnh FP và 21 ảnh FN, với cả FP lẫn FN đều bị gán Dice~=~0) phản ánh đúng và đủ hiệu năng tổng thể của pipeline khi xử lý luồng ảnh hỗn hợp, kể cả các ca bệnh bị Gatekeeper bỏ sót hoàn toàn. Con số này thấp hơn PGA-UNet độc lập (Dice~=~0.8584) do hai nguồn suy giảm: (1) 24 ảnh bình thường bị phân loại sai (FP, Specificity~=~87.23\%) đóng góp Dice~=~0 vào mẫu số; (2) 21 ảnh bệnh bị bỏ sót hoàn toàn (FN, Sensitivity~=~88.77\%) cũng đóng góp Dice~=~0 vào mẫu số thay vì bị loại khỏi phép tính. So với cách tính trước đây (loại hẳn 21 ảnh FN khỏi mẫu số, cho Dice~=~0.7544), chỉ số end-to-end đã sửa lại này thấp hơn 0.0751 điểm Dice — phản ánh trung thực hơn rủi ro lâm sàng thực sự: một ca bệnh bị Gatekeeper bỏ sót gây hậu quả tương đương một ca phân đoạn sai hoàn toàn (Dice~=~0), không phải một trường hợp ``không tính''. Đây là \textbf{kết quả thực nghiệm đầy đủ} trên dữ liệu hỗn hợp thực tế, minh chứng cho sai số tích lũy tất yếu của kiến trúc hai tầng.
 
 Mô hình phân lớp gác cổng đạt AUC-ROC~=~0.9405 trên dataset\_online là bản lề để toàn bộ hệ thống vận hành ổn định. Cải thiện đồng thời Sensitivity và Specificity (hiện tương đương nhau ở mức $\sim$88\%) nhằm giảm cả FN lẫn FP là hướng ưu tiên phát triển tiếp theo (xem Chương~\ref{Chapter5}).
+
+% ------------------------------------------------------------
+\subsection{Các chỉ số end-to-end bổ sung: Sensitivity bệnh lý, FNR và Lesion-level Recall}
+\label{subsec:additional_e2e_metrics}
+% ------------------------------------------------------------
+
+Pipeline Dice end-to-end (Mục~\ref{sec:pipeline_eval}) là một chỉ số tổng hợp duy nhất; với một hệ thống sàng lọc y khoa, một con số tổng hợp không đủ để thể hiện rủi ro lâm sàng cụ thể. Phần này báo cáo bổ sung các chỉ số an toàn ở cấp độ ảnh (image-level) và cấp độ từng tổn thương (lesion-level), tách bạch rõ nguồn gốc rủi ro thay vì chỉ dựa vào Pipeline Dice.
+
+\textbf{Cấp độ ảnh:} Sensitivity bệnh lý (Recall)~=~\textbf{88.77\%} (166/187 ảnh bệnh được Gatekeeper phát hiện đúng); False Negative Rate (FNR)~=~\textbf{11.23\%} (21/187 ảnh bệnh bị Gatekeeper bỏ sót hoàn toàn, không được PGA-UNet xử lý).
+
+\textbf{Cấp độ tổn thương (lesion-level):} Một ảnh có thể chứa nhiều đa giác tổn thương, nên chỉ số image-level có thể che khuất rủi ro thực sự trên từng tổn thương riêng lẻ. Chạy lại toàn bộ 375 ảnh qua pipeline (EfficientNet\_B3~$\to$~PGA-UNet, tái lập cục bộ, kết quả phân loại khớp tuyệt đối với Mục~\ref{sec:danh_gia_phan_lop}: TP=166, FP=24, FN=21, TN=164) và tính Dice/IoU cho \textit{từng đa giác riêng lẻ} (không gộp theo ảnh) trên toàn bộ 232 tổn thương của 187 ảnh bệnh lý cho kết quả:
+
+\begin{table}[htbp]
+    \centering
+    \caption{Các chỉ số end-to-end bổ sung ở cấp độ tổn thương (lesion-level), tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}
+    \label{tab:lesion_level_metrics}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{8cm}|p{5cm}|}
+        \hline
+        \textbf{Chỉ số} & \textbf{Giá trị} \\
+        \hline
+        Tổng số tổn thương (đa giác) trong 187 ảnh bệnh & \textbf{232} (209 trong 166 ảnh TP + 23 trong 21 ảnh FN) \\
+        \hline
+        Lesion-level Recall (tổn thương đến được PGA-UNet, không bị Gatekeeper bỏ sót) & \textbf{90.09\%} (209/232) \\
+        \hline
+        Lesion-level FNR (tổn thương bị mất hoàn toàn do Gatekeeper) & \textbf{9.91\%} (23/232) \\
+        \hline
+        Dice trung bình trên từng tổn thương riêng lẻ (166 ảnh TP, chưa gộp theo ảnh) & 0.8560 \\
+        \hline
+        Tỉ lệ tổn thương đạt Dice~$\geq$~0.5 trên toàn pipeline (tổn thương bị FN tính là không đạt) & \textbf{89.66\%} (208/232) \\
+        \hline
+        Tỉ lệ tổn thương đạt Dice~$\geq$~0.7 trên toàn pipeline (tổn thương bị FN tính là không đạt) & \textbf{84.91\%} (197/232) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Nhận xét:} Lesion-level Recall (90.09\%) cao hơn nhẹ so với Sensitivity ở cấp độ ảnh (88.77\%): 21 ảnh FN có trung bình 1.10 tổn thương/ảnh, thấp hơn 1.26 tổn thương/ảnh của 166 ảnh TP, cho thấy Gatekeeper có xu hướng phát hiện đúng nhiều hơn ở các ảnh có nhiều tổn thương. Khi tính tỉ lệ tổn thương thực sự được phân đoạn đạt chất lượng chấp nhận được (Dice~$\geq$~0.5), toàn hệ thống chỉ đạt \textbf{89.66\%} (208/232), và giảm còn \textbf{84.91\%} ở ngưỡng chặt hơn (Dice~$\geq$~0.7) — nghĩa là cứ khoảng 6–10 tổn thương thì có 1 tổn thương hoặc bị Gatekeeper bỏ sót hoàn toàn, hoặc bị PGA-UNet phân đoạn dưới ngưỡng chấp nhận được. Các chỉ số lesion-level và FNR này phản ánh trực tiếp hơn hậu quả lâm sàng so với một con số Pipeline Dice tổng hợp duy nhất, và nên được báo cáo song song khi đánh giá mức độ sẵn sàng của hệ thống cho vai trò hỗ trợ sàng lọc.
 

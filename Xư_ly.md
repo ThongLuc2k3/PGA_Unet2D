@@ -1,490 +1,192 @@
-# Danh sách việc cần sửa báo cáo KLTN
+# KẾ HOẠCH CHỈNH SỬA KHÓA LUẬN — PGA-UNet2D
 
-> Review toàn bộ 87 trang PDF. Ưu tiên từ cao xuống thấp.
-
----
-
-## 🔴 KHẨN CẤP — Bắt buộc sửa trước khi nộp
-
-### 1. Thêm Lời cam đoan *(bắt buộc theo quy định ĐHKHTN)*
-- **Vấn đề:** `main.tex` dòng 152–153 đang comment out:
-  ```latex
-  %\addcontentsline{toc}{chapter}{Lời cam đoan}
-  %\include{Appendix/reassurances}
-  ```
-- **Sửa:** Bỏ comment 2 dòng trên. File `Appendix/reassurances.tex` đã có sẵn.
+Tài liệu này tổng hợp lại toàn bộ các nhận xét (về đóng góp, lỗi sai nghiêm trọng, lỗi trình bày, và các vấn đề riêng của Chương 4) thành một **kế hoạch chỉnh sửa có cấu trúc**. Mỗi **Kế hoạch lớn** là một nhóm vấn đề cùng bản chất; bên trong là các **Kế hoạch nhỏ** — từng đầu việc cụ thể, kèm lý do (bằng chứng/số liệu đã có) và hướng sửa.
 
 ---
 
-### 2. Xóa viền đỏ hyperlink trong mục lục / danh sách hình / bảng
-- **Vấn đề:** Toàn bộ mục lục, danh sách hình, danh sách bảng có viền đỏ bao quanh từng mục — do hyperlink chưa ẩn màu. Trông rất mất thẩm mỹ khi in và nộp.
-- **Sửa:** Thêm vào `main.tex` (sau phần khai báo `\usepackage[unicode]{hyperref}`):
-  ```latex
-  \hypersetup{hidelinks}
-  ```
+## ĐÁNH GIÁ NỀN (căn cứ để lập kế hoạch)
+
+Trước khi liệt kê kế hoạch sửa, cần thống nhất hiện trạng: khóa luận **đủ minh chứng cho đóng góp kỹ thuật cốt lõi** (PGA-UNet, Gaussian heatmap, PSG/CAD, so sánh U-Net/SAM-Med2D, robustness theo kịch bản đã định nghĩa, hiệu quả trên BTXRD + kiểm tra thêm FracAtlas), nhưng **chưa đủ minh chứng cho các claim mạnh về lâm sàng** (triển khai thực tế, an toàn sàng lọc, tổng quát hóa rộng, độ tin cậy với bác sĩ thật, readiness cho PACS/hospital workflow).
+
+Chi tiết theo từng đóng góp:
+
+1. **PGA-UNet vs U-Net/SAM-Med2D**: Bảng 4.2–4.5 cho thấy PGA-UNet vượt cả hai. Bảng 4.3: prompt lệch tâm (Shift) chỉ làm Dice giảm từ 0.8584 → 0.8454 (giảm rất ít) → claim bền bỉ với prompt lệch có cơ sở. Bảng 4.5 (cùng độ phân giải 256×256): PGA-UNet 256 đạt Dice 0.8420/0.8048/0.8317 (Zoom-out/Shift/Mixed) so với SAM-Med2D fine-tuned 0.7432/0.7159/0.7355 → claim "nhẹ nhưng hiệu quả hơn SAM-Med2D" được hỗ trợ rõ.
+2. **Gaussian Heatmap + PSG + CAD**: Bảng 4.7 — V5 (đầy đủ PSG+CAD+Gaussian) đạt Dice Shift 0.8454, cao hơn rõ V1 concat heatmap (0.7268), V2 PSG-only (0.7348), V3 CAD-only (0.7410), V4 full PGA + binary prompt (0.7433). Ablation chưa full factorial (thiếu binary+concat, kiểm định thống kê cặp, prompt ngẫu nhiên/sai vị trí).
+3. **Robustness prompt lệch**: đủ cho 3 kịch bản Zoom-out/Shift/Mixed (Shift vẫn giữ Dice 0.8454), nhưng **chưa đủ** để nói "bền bỉ trong lâm sàng thực tế" (chưa test bbox quá nhỏ/quá lớn/sai hoàn toàn/nhiều bác sĩ/nhiều tổn thương trong 1 ảnh).
+4. **Tổng quát hóa liên miền (FracAtlas)**: Bảng 4.14 — Dice 0.7842–0.8169 tùy độ phân giải/kịch bản. Bảng 4.18 — PGA-UNet vượt SAM-Med2D rõ rệt ở nhóm tổn thương nhỏ (SAM-Med2D FT Dice 0.4395 vs PGA-UNet 512 Dice 0.8028). Nhưng N=72 ảnh test, và FracAtlas có train/val/test riêng (573/72/72) nên **không phải** true cross-dataset zero-shot generalization.
+5. **Pipeline end-to-end**: Bảng 4.19 — Gatekeeper AUC-ROC 0.9405, Accuracy 88.00%, Recall 88.77%, Specificity 87.23%, F1 88.06%. Recall 88.77% nghĩa là bỏ sót 21/187 ca bệnh (11.23%) — nghiêm trọng cho hệ thống y khoa. Pipeline Dice 0.7544, thấp hơn rõ so với PGA-UNet riêng lẻ do sai số tích lũy từ Gatekeeper.
+
+Các kế hoạch bên dưới xử lý từng nhóm vấn đề phát sinh từ đánh giá này.
 
 ---
 
-### 3. Fix trang 27 gần như trắng hoàn toàn
-- **Vấn đề:** Câu `"sáng của ký tự R/L là tổn thương xương."` nằm đơn độc ở đầu trang 27, phần còn lại trắng. Nguyên nhân: có `\clearpage` hoặc `\FloatBarrier` thừa trong `Chapter3/chapter3.tex` sau đoạn mô tả Lưu ý R/L.
-- **Sửa:** Tìm và xóa `\clearpage` / `\newpage` / `\FloatBarrier` thừa trong section 3.2.2 của `Chapter3/chapter3.tex`.
+## KẾ HOẠCH LỚN A: Hạ mức claim cho khớp với bằng chứng thực nghiệm
+
+Vấn đề chung: nhiều chỗ trong khóa luận diễn giải kết quả mạnh hơn mức bằng chứng cho phép.
+
+**A.1 — Sửa claim Gatekeeper "an toàn"**
+Hiện diễn giải Recall 88.77% (bỏ sót 21/187 ca) là "đảm bảo an toàn sàng lọc", NPV 88.65% là "đủ tin cậy làm bộ lọc sơ cấp" — kết luận quá mạnh so với yêu cầu an toàn lâm sàng. Sửa: chỉ nói Gatekeeper có hiệu năng ban đầu khá tốt, **chưa đủ an toàn** để tự động chặn ảnh âm tính; cần ưu tiên tăng sensitivity và có cơ chế không cho Gatekeeper loại bỏ ca nghi ngờ.
+
+**A.2 — Sửa claim "bền bỉ trong lâm sàng thực tế" → "bền vững trong kịch bản mô phỏng có kiểm soát"**
+Chỉ đánh giá qua Zoom-out/Shift/Mixed (bbox mô phỏng), chưa có bbox từ nhiều bác sĩ, bbox quá nhỏ/quá lớn/sai hoàn toàn, nhiều tổn thương trong cùng ảnh. Sửa câu chữ ở mọi nơi xuất hiện (đặc biệt phần kết luận): "bền vững trước sai lệch bbox có kiểm soát trong các kịch bản Zoom-out/Shift/Mixed", không viết "bền bỉ trong lâm sàng thực tế".
+
+**A.3 — Sửa claim "tổng quát hóa liên miền" trên FracAtlas**
+FracAtlas có train/val/test riêng (573/72/72) → mô hình đã được huấn luyện lại trên FracAtlas, không phải test trực tiếp mô hình train-trên-BTXRD. Sửa cách viết: "đánh giá bổ sung trên bộ dữ liệu thứ hai sau khi huấn luyện/tinh chỉnh trên FracAtlas", không dùng "cross-dataset generalization" theo nghĩa external domain generalization trừ khi bổ sung thí nghiệm ở A.3.1.
+
+**A.4 — Sửa mâu thuẫn "pipeline phản ánh sát điều kiện lâm sàng" vs. thiết kế human-in-the-loop**
+Thiết kế hiện tại: Gatekeeper âm tính → dừng, không qua PGA-UNet, bác sĩ không có cơ hội vẽ bbox. Điều này mâu thuẫn với mô tả "human-in-the-loop" vì ở nhánh âm tính con người bị loại khỏi vòng quyết định. Sửa mô tả kiến trúc: Gatekeeper không nên là bộ chặn cứng, chỉ nên là module cảnh báo/triage mềm (xem B.3).
+
+**A.5 — Hạ mức claim novelty của PSG/CAD**
+Hiện mô tả PSG là "thành phần mới hoàn toàn", CAD là mở rộng Attention Gate, nhưng khảo sát liên quan còn hẹp (chủ yếu U-Net, Attention U-Net, SAM-Med2D). Cần bổ sung khảo sát (xem C.2) trước khi giữ nguyên mức claim "mới hoàn toàn".
+
+**A.6 — Viết lại phần kết luận chung ở mức thận trọng**
+Kết luận hiện tại viết "tính bền bỉ cao trong điều kiện lâm sàng thực tế" — dễ bị phản biện. Sửa thành: một hệ thống **thử nghiệm/tiền lâm sàng** có tiềm năng hỗ trợ phân đoạn tương tác, chưa đủ bằng chứng khẳng định an toàn hoặc sẵn sàng triển khai lâm sàng.
 
 ---
 
-### 4. Thống nhất tháng trên trang bìa và lời cảm ơn
-- **Vấn đề:**
-  - Trang bìa: `tháng 07/2026`
-  - Lời cảm ơn (`Appendix/thanks.tex`): `tháng 6 năm 2026`
-- **Sửa:** Chọn một tháng thống nhất (tháng 6 hoặc 7) rồi sửa cả hai nơi.
+## KẾ HOẠCH LỚN B: Sửa lỗi phương pháp đánh giá (nghiêm trọng nhất)
+
+**B.1 — Sửa công thức Pipeline Dice**
+Hiện tại: FN (ảnh có bệnh nhưng Gatekeeper dự đoán âm) không qua PGA-UNet và "không tính" — mẫu số Pipeline Dice chỉ gồm TP+FP, FN không bị đưa vào với Dice=0. Điều này làm chỉ số pipeline "đẹp" hơn thực tế vì ca bị bỏ sót hoàn toàn không bị phạt. Sửa: tính lại Pipeline Dice trong đó **mọi FN bệnh lý được gán Dice = 0** trong mẫu số/tử số end-to-end.
+
+**B.2 — Bổ sung các chỉ số end-to-end phản ánh đúng rủi ro lâm sàng**
+Báo cáo thêm riêng: sensitivity bệnh lý (ở cấp độ ảnh), lesion-level recall, false negative rate, và một metric end-to-end đã tính FN=0 Dice như B.1 — không chỉ dựa vào Pipeline Dice hiện tại.
+
+**B.3 — Đổi thiết kế Gatekeeper từ "bộ chặn cứng" sang "module triage mềm"**
+Vì Gatekeeper bỏ sót 21/187 ca và đang được mô tả như một bước chặn cứng trước phân đoạn, cần đề xuất/chỉnh sửa thiết kế: Gatekeeper chỉ đưa ra cảnh báo/độ ưu tiên, bác sĩ vẫn có thể kiểm tra và chủ động kích hoạt phân đoạn ngay cả khi Gatekeeper dự đoán âm tính — giữ đúng tinh thần human-in-the-loop (liên kết A.4).
+
+**B.4 — Phân tích định lượng các ca FN của Gatekeeper**
+Bổ sung: confusion matrix đầy đủ, phân tích đặc điểm của 21 ca bị bỏ sót (loại tổn thương, kích thước, độ mờ), thử nghiệm chọn ngưỡng (threshold) ưu tiên sensitivity cao thay vì ngưỡng mặc định, và đánh giá hậu quả khi Gatekeeper chặn nhầm ảnh có bệnh.
 
 ---
 
-### 5. *(Đã sửa)* Đề cương — Bỏ so sánh với Attention U-Net
-- **Trạng thái:** ✅ Đã sửa trong `Appendix/decuong.tex` dòng 74 và 85.
-- **Lý do:** Attention U-Net được kế thừa kiến trúc (CAD mở rộng từ Attention Gate), không phải là mô hình đối sánh trong thực nghiệm.
+## KẾ HOẠCH LỚN C: Bổ sung thực nghiệm còn thiếu
+
+**C.1 — Kiểm định thống kê chính thức**
+Hiện chưa có kiểm định thống kê cho các so sánh chính: PGA-UNet vs SAM-Med2D, V5 vs V4 (ablation). Bổ sung Wilcoxon signed-rank test cho so sánh cặp ở cấp độ ảnh (image-level paired comparison) cho toàn bộ các bảng so sánh chính (4.2–4.7, 4.14, 4.18).
+
+**C.2 — Khảo sát liên quan (related work) rộng hơn để bảo vệ claim novelty**
+Bổ sung khảo sát các phương pháp đưa prompt/bbox/mask/click vào CNN, attention U-Net có điều kiện, interactive segmentation y khoa, MedSAM, SAM-based adapters, nnU-Net-based prompt variants — làm nền cho A.5.
+
+**C.3 — Ablation kiến trúc đầy đủ hơn (gần full factorial)**
+Hiện đã có V1–V5 nhưng thiếu: biến thể binary+concat, kiểm định thống kê cặp ảnh cho từng cặp so sánh, và đặc biệt **prompt ngẫu nhiên hoặc prompt sai vị trí** để chứng minh mô hình thực sự dùng prompt đúng cách (không chỉ học overfit theo phân bố heatmap).
+
+**C.4 — Ablation tiền xử lý (YOLOv11s xóa nhiễu + xóa ký hiệu R/L)**
+Pipeline tiền xử lý hiện tại (YOLOv11s phát hiện nhiễu trên 3.746 ảnh PNG, tô vùng nhiễu bằng màu nền/đen, xóa ký hiệu R/L) là thao tác mạnh trên ảnh y khoa nhưng chưa có ablation. Bổ sung: so sánh ảnh gốc vs ảnh đã xóa nhiễu; so sánh xóa R/L bằng inpainting vs tô màu vs không xóa; kiểm tra tiền xử lý có làm sai lệch vùng giải phẫu hoặc gây artifact ảnh hưởng model không.
+
+**C.5 — Baseline công bằng hơn để tách bạch đóng góp kiến trúc vs lợi ích của prompt**
+PGA-UNet nhận thêm bbox/heatmap còn U-Net baseline hoàn toàn tự động — nên việc PGA-UNet vượt U-Net chủ yếu chứng minh "có thêm thông tin định hướng không gian giúp bài toán dễ hơn", chưa tách bạch được đóng góp kiến trúc thuần túy. Bổ sung baseline: U-Net + bbox channel, U-Net + binary mask prompt, Attention U-Net + prompt, và nếu khả thi: nnU-Net, UNet++, TransUNet/Swin-UNet, hoặc các mô hình interactive segmentation nhẹ khác.
+
+**C.6 — Thí nghiệm cross-dataset generalization thật sự (bổ trợ A.3)**
+Để có thể giữ claim tổng quát hóa liên miền theo đúng nghĩa, cần thêm: train trên BTXRD → test trực tiếp trên FracAtlas (không fine-tune), hoặc train trên FracAtlas → test trên BTXRD (zero-shot theo cả hai chiều).
+
+**C.7 — Mở rộng quy mô/độ tin cậy thống kê của tập kiểm thử**
+187 ảnh test BTXRD, 72 ảnh test FracAtlas — chấp nhận được cho khóa luận đại học nhưng chưa đủ cho claim mạnh về ổn định/triển khai/hiệu quả lâm sàng. Bổ sung khoảng tin cậy (confidence interval), phân tích theo ca khó, và nếu khả thi, external validation từ dataset/bệnh viện độc lập khác.
+
+**C.8 — Bổ sung trực quan hóa kết quả và phân tích lỗi định tính**
+Hiện chỉ có một ca tiêu biểu (Hình 4.7). Bổ sung nhiều ví dụ: ca đúng, ca sai, ca FN của Gatekeeper, ca FP, ca tổn thương nhỏ, ca prompt lệch, ca gãy/khối u khó, ca có nhiễu ảnh — để phần phân tích lỗi có sức thuyết phục.
+
+**C.9 — Đánh giá liên chuyên gia (nếu khả thi trong thời gian còn lại)**
+Đo độ nhạy của mô hình với bbox do nhiều bác sĩ/nhiều người vẽ khác nhau — hiện hoàn toàn chưa có. Ghi rõ trong hạn chế nếu không kịp thực hiện, thay vì bỏ qua.
+
+**C.10 — Chạy Ablation (V1→V5 tương đương) trên FracAtlas** *(giá trị cao nhất, ưu tiên làm trước trong nhóm C.10–C.12)*
+Hiện thư mục `Result/Result_FracAtlas/Ablation/` đang trống, trong khi BTXRD đã có đủ ablation V1–V5. Chạy lại đúng bộ biến thể kiến trúc (U-Net / +PSG / +CAD / +PSG+CAD binary / +PSG+CAD Gaussian) trên FracAtlas để chứng minh đóng góp của PSG/CAD/Gaussian không chỉ đúng trên BTXRD mà còn giữ nguyên trên domain khác — trực tiếp củng cố claim kiến trúc đang bị đánh giá là chưa đủ full factorial (C.3) và claim tổng quát hóa (A.3/C.6).
+
+**C.11 — Train Gatekeeper + đánh giá Pipeline end-to-end trên FracAtlas** *(giá trị cao thứ hai)*
+BTXRD có `efficientnet-b3.ipynb` (Gatekeeper) và `test-pipeline-evaluation.ipynb` (pipeline end-to-end); FracAtlas hiện chưa có notebook tương đương. Cần kiểm tra FracAtlas có nhãn fracture/no-fracture ở cấp ảnh (nhiều khả năng có, vì FracAtlas gốc là dataset phân loại gãy xương) để train lại Gatekeeper và dựng lại pipeline evaluation. Đây là bổ sung trả lời trực tiếp điểm yếu bị phê bình nặng nhất: pipeline/Gatekeeper mới chỉ được validate trên một dataset (A.3, C.6, và mục B toàn bộ).
+
+**C.12 — Chạy 4-fold cross-validation trên FracAtlas** *(ưu tiên thấp nhất trong nhóm C.10–C.12)*
+BTXRD có `test-pga-dataset-1234.ipynb` (4-fold CV, tương ứng Bảng 4.8/4.9); FracAtlas chưa có. Vì train set FracAtlas khá nhỏ (573 ảnh) và mục tiêu chính của 4-fold là củng cố độ ổn định của claim chính (đã chứng minh trên BTXRD), làm thêm trên FracAtlas là "có thì tốt" chứ không bắt buộc — chỉ nên làm sau khi đã hoàn thành C.10 và C.11 nếu còn thời gian.
 
 ---
 
-## 🟠 QUAN TRỌNG — Ảnh hưởng đến điểm đánh giá học thuật
+## KẾ HOẠCH LỚN D: Tái cấu trúc Chương 4 theo đúng nguồn dữ liệu thực nghiệm
 
-### 6. Tài liệu tham khảo quá ít (chỉ 8 tài liệu)
-- **Vấn đề:** KLTN chuẩn cần 20–30+ tài liệu. Hiện tại:
-  - `[1]` là website bệnh viện (không phải công trình khoa học)
-  - `[2]` SAM-Med2D là arXiv preprint, chưa peer-reviewed
-  - `[3]`, `[4]` là website tool (Roboflow, YOLO)
-- **Cần bổ sung (gợi ý):**
-  - SAM gốc (Kirillov et al., 2023, ICCV)
-  - MedSAM (Ma et al., 2024)
-  - nnU-Net (Isensee et al., 2021, Nature Methods)
-  - TransUNet (Chen et al., 2021)
-  - SwinUNet (Cao et al., 2022)
-  - Survey về medical image segmentation
-  - Survey về interactive segmentation
-  - Các bài báo về bone tumor detection/segmentation
-  - PACS system references
-  - Các bài báo về prompt-based learning in computer vision
+Vấn đề chung: các bảng trong Chương 4 hiện chưa theo một trật tự logic rõ ràng, có phần trùng lặp ý và không phản ánh đúng cách các notebook kết quả đã được tổ chức.
 
----
+**D.1 — Thiết lập lại trật tự trình bày tổng thể của Chương 4**
+Trình bày lại theo mạch: thiết lập dữ liệu → mô hình so sánh → chỉ số đánh giá → kết quả chính → ablation → phân tích lỗi → đánh giá pipeline. Đây là khung sườn để sắp xếp lại toàn bộ các mục con bên dưới.
 
-### 7. Thiếu kiểm định thống kê (Statistical Significance Test)
-- **Vấn đề:** Mục 4.3.2 tự nhắc "kiểm định Wilcoxon signed-rank là bước được khuyến nghị" nhưng **không thực hiện và không báo cáo p-value** nào. Không có p-value thì kết luận "vượt trội" không có cơ sở thống kê.
-- **Sửa:** Chạy Wilcoxon signed-rank test (phi tham số) trên 232 giá trị Dice per-polygon cho các cặp so sánh chính:
-  - PGA-UNet (V5) vs V4 (Binary prompt)
-  - PGA-UNet vs U-Net
-  - PGA-UNet vs SAM-Med2D FT
-  - Báo cáo p-value trong Bảng 4.7 hoặc text phân tích.
+**D.2 — Gộp/làm rõ mục 4.2.3 và 4.2.4 (đang bị trùng ý)**
+4.2.3 "So sánh với SAM-Med2D" và 4.2.4 "Kiểm chứng công bằng tại cùng độ phân giải 256×256" hiện đọc như lặp lại cùng một ý (cả hai đều là so sánh PGA-UNet vs SAM-Med2D ở 256). Nguồn dữ liệu của cả hai là cùng một notebook: `Result/Result_BTXRD/test-pga-samzs-samft-r256.ipynb`. Gộp lại thành một mục duy nhất (hoặc làm rõ 4.2.4 là phần mở rộng phân tích riêng biệt, không lặp lại số liệu đã trình bày ở 4.2.3).
 
----
+**D.3 — Chuẩn hóa lại bảng so sánh SAM-Med2D (mục 4.2.3)**
+Bảng hiện tại đang chuẩn hóa cả HD95 và chỉ có một kích thước (256) — không cần thiết phải đưa HD95 vào, và nên trình bày theo format đẹp/gọn giống bảng FracAtlas (mục 4.14/4.18) thay vì format hiện tại.
 
-### 8. Thiếu đường cong huấn luyện (Training Curves)
-- **Vấn đề:** Không có biểu đồ Loss/Dice theo epoch. Đây là hình cơ bản trong mọi báo cáo deep learning — xác nhận mô hình hội tụ ổn định, không overfit.
-- **Sửa:** Thêm vào Section 4.1.2 hoặc 4.2 một figure gồm:
-  - Train Loss vs Val Loss theo epoch (PGA-UNet)
-  - Train Dice vs Val Dice theo epoch (PGA-UNet)
-  - Có thể thêm U-Net để so sánh tốc độ hội tụ.
+**D.4 — Đổi tên biến thể trong ablation kiến trúc (mục 4.3.1)**
+Thay vì gọi V1/V2/V3/V4/V5, đặt tên theo kiến trúc để người đọc hiểu ngay đây là ablation kiến trúc: U-Net, U-Net+PSG, U-Net+CAD, U-Net+PSG+CAD (PGA đầy đủ), v.v. — khớp với cách đã dùng ở phần đóng góp (liên kết C.3).
 
----
+**D.5 — Sửa caption bảng 4.8 và 4.9 để mạch lạc theo tầng bậc**
+Bảng 4.8 nên có caption: "Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out/Shift/Mixed)"; Bảng 4.9 nên có caption: "Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản prompt (trung bình 4 fold)". Cách đặt tên này giúp người đọc thấy ngay bảng sau là tổng hợp/trung bình của bảng trước.
 
-### 9. Section 4.4 Qualitative Results quá nghèo
-- **Vấn đề:** Chỉ có **1 hình duy nhất** (Hình 4.1, 8 ảnh nhỏ khó đọc). Một hội đồng sẽ yêu cầu nhiều ví dụ hơn.
-- **Sửa:** Thêm ít nhất 2 hình nữa:
-  - Hình 4.2: So sánh trực quan PGA-UNet vs U-Net trên nhóm **Khó** (tổn thương nhỏ / biên giới mờ)
-  - Hình 4.3: Failure cases — 3–4 trường hợp PGA-UNet dự đoán kém, kèm chú thích lý do
+**D.6 — Ánh xạ rõ vai trò từng notebook kết quả vào đúng mục của Chương 4**
+Làm rõ trong văn bản (ví dụ ở đầu mỗi mục, hoặc trong phụ lục mô tả nguồn số liệu) vai trò của từng notebook, tránh người đọc nhầm lẫn các bảng có vẻ trùng nhau:
+- `pga-vs-unet2d-r512.ipynb` → so sánh PGA-UNet vs U-Net **cùng kích thước 512**.
+- `test-pga-samzs-samft-r256.ipynb` → so sánh PGA-UNet vs SAM-Med2D **chưa fine-tune (zero-shot)** và **đã fine-tune**, cùng kích thước 256.
+- `test-subcat-pga-vs-baseline.ipynb` → so sánh PGA-UNet vs U-Net theo **subcategory** (ảnh U-Net tin cậy nhất/kém nhất), ở 512.
+- `test-subcat-pga-vs-sam-r256-r512.ipynb` → so sánh PGA-UNet vs SAM-Med2D fine-tuned theo 3 loại tổn thương (nhỏ/mờ/rõ): SAM-Med2D chỉ ở 256 (để so cùng cấp), PGA-UNet có cả 256 và 512 (để chứng minh lợi thế train tùy ý kích thước không bị resize quá mức, khác với SAM-Med2D vốn cố định 256 và rất khó mở lên 512).
+
+**D.7 — Bổ sung so sánh PGA-256 vs PGA-512**
+Hiện không có notebook riêng cho so sánh này, nhưng dữ liệu đã có sẵn trong `pga-vs-unet2d-r512.ipynb` (PGA-512) và `test-pga-samzs-samft-r256.ipynb` (PGA-256) — có thể cắt/khớp số liệu từ hai file này để dựng một bảng so sánh PGA-256 vs PGA-512, làm rõ luận điểm: PGA-UNet có thể train lại tùy ý ở độ phân giải cao hơn (512) mà không bị giới hạn kiến trúc như SAM-Med2D (vốn cố định 256, khó mở rộng).
+
+**D.8 — Áp dụng cùng cấu trúc mapping notebook cho phần FracAtlas (mục 4.4.2–4.4.5)**
+Thư mục `Result/Result_FracAtlas/` chứa đúng 4 notebook cùng tên với BTXRD: `pga-vs-unet2d-r512.ipynb`, `test-pga-samzs-samft-r256.ipynb`, `test-subcat-pga-vs-baseline.ipynb`, `test-subcat-pga-vs-sam-r256-r512.ipynb`. Vì vậy phần FracAtlas (mục 4.4) nên chia thành 4 mục con 4.4.2–4.4.5, mirror đúng logic đã áp dụng cho BTXRD ở D.6:
+- 4.4.2 PGA-UNet vs U-Net cùng kích thước 512 (từ `pga-vs-unet2d-r512.ipynb`).
+- 4.4.3 PGA-UNet vs SAM-Med2D (zero-shot & fine-tuned) cùng kích thước 256 (từ `test-pga-samzs-samft-r256.ipynb`) — áp dụng luôn D.3 (bỏ HD95, format gọn) cho bảng này.
+- 4.4.4 PGA-UNet vs U-Net theo subcategory (ảnh tin cậy nhất/kém nhất), ở 512 (từ `test-subcat-pga-vs-baseline.ipynb`).
+- 4.4.5 PGA-UNet vs SAM-Med2D fine-tuned theo 3 loại tổn thương (nhỏ/mờ/rõ): SAM-Med2D chỉ ở 256, PGA-UNet có cả 256 và 512 (từ `test-subcat-pga-vs-sam-r256-r512.ipynb`) — cùng luận điểm về lợi thế train tùy ý kích thước như D.6.
+
+Lưu ý khác biệt: FracAtlas **không có** notebook tương đương cho đánh giá chéo 4-fold (`test-pga-dataset-1234.ipynb`), Gatekeeper (`efficientnet-b3.ipynb`), hay pipeline end-to-end (`test-pipeline-evaluation.ipynb`) — thư mục `Result_FracAtlas/Ablation/` hiện cũng đang trống. Ba phần này (4-fold CV, Gatekeeper, pipeline) chỉ tồn tại ở BTXRD và không cần ép vào phần trình bày FracAtlas; nếu muốn có ablation trên FracAtlas thì đây là hạng mục thực nghiệm còn thiếu (bổ sung vào Kế hoạch lớn C nếu còn thời gian).
+
+**D.9 — Rà soát toàn bộ Chương 4 sau khi tái cấu trúc**
+Sau khi áp dụng D.1–D.8, đọc lại toàn chương để đảm bảo không còn mục nào lặp ý (như tình trạng 4.2.3/4.2.4 ban đầu), cấu trúc 4.4.x (FracAtlas) phản ánh đúng song song với 4.2.x (BTXRD), và mỗi bảng/mục đều có thể truy ngược về đúng notebook nguồn.
 
 ---
 
-### 10. Thêm Abstract tiếng Anh
-- **Vấn đề:** Trang đề cương đã có tiêu đề tiếng Anh nhưng `Appendix/tomtat.tex` chỉ có tiếng Việt. Báo cáo khoa học chuẩn cần cả 2 ngôn ngữ.
-- **Sửa:** Thêm phần "Abstract" tiếng Anh vào `Appendix/tomtat.tex`, ngay sau phần tiếng Việt, có cùng cấu trúc: Problem / Solution / Results / Keywords.
+## KẾ HOẠCH LỚN E: Sửa lỗi trình bày hình thức toàn khóa luận
+
+**E.1 — Chuyển đề cương khóa luận vào phụ lục**
+Phần "ĐỀ CƯƠNG KHOÁ LUẬN TỐT NGHIỆP" hiện nằm ngay sau lời cảm ơn, trước mục lục — không nên xuất hiện như một chương/phần chính. Chuyển toàn bộ vào phụ lục.
+
+**E.2 — Sửa ngôi xưng trong lời cam đoan**
+Hiện ghi "Tôi xin cam đoan..." dù khóa luận do hai sinh viên thực hiện. Sửa thành "Chúng tôi xin cam đoan đây là công trình nghiên cứu của nhóm...".
+
+**E.3 — Thống nhất thuật ngữ "khóa luận" (bỏ "luận văn")**
+Lời cam đoan hiện dùng "luận văn" — dễ gây nhầm với luận văn thạc sĩ. Rà soát toàn văn bản, thống nhất dùng "khóa luận".
+
+**E.4 — Chuẩn hóa đánh số trang phần đầu**
+Trang bìa thứ hai hiện hiển thị số trang "2" (trang bìa thường không đánh số hiển thị), sau đó chuyển sang số La Mã cho lời cam đoan/cảm ơn/đề cương/mục lục. Chuẩn hóa lại theo quy ước: trang bìa không số, phần mở đầu số La Mã, nội dung chính số Ả Rập.
+
+**E.5 — Gộp hệ thống tài liệu tham khảo thành một danh mục duy nhất**
+Phần đề cương hiện có danh mục tài liệu tham khảo riêng (chỉ vài mục, đánh số lại từ [1]) tách biệt với danh mục đầy đủ ở cuối khóa luận — gây rối trích dẫn (đề cương trích [7][8][9] nhưng danh mục ngay sau chỉ có [1]-[4]). Bỏ danh mục riêng trong đề cương (đã chuyển vào phụ lục theo E.1), chỉ giữ một danh mục thống nhất ở cuối.
+
+**E.6 — Sửa lỗi encoding/ký tự lạ toàn văn bản**
+Nhiều chỗ lỗi font: "X￾quang", "PGA￾UNet", "end-to￾end", "256Ö256", "512Ö512", "PGAö512". Kiểm tra lại font, LaTeX encoding, gói tiếng Việt, ký hiệu nhân "×", và cách ngắt dòng/gạch nối.
+
+**E.7 — Sửa tên đề tài khóa luận**
+Tên hiện tại "Phát triển hệ thống phân đoạn ảnh X-quang về xương dựa vào câu nhắc trực quan" — cụm "ảnh X-quang về xương" không tự nhiên. Đề xuất: "Phát triển hệ thống phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan" (hoặc ngắn hơn: "Phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan").
+
+**E.8 — Rút gọn caption hình/bảng**
+Nhiều caption dài như một đoạn văn và lồng cả kết luận nhân quả (ví dụ Hình 4.7: "Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention"). Viết lại caption ngắn gọn, chỉ mô tả nội dung hình/bảng; phần diễn giải nhân quả để trong văn bản phân tích.
+
+**E.9 — Chuẩn hóa thuật ngữ Anh–Việt**
+Các cụm Gatekeeper, pipeline end-to-end, image-level, baseline comparison, robustness, sub-category, cross-dataset, prompt-guided, zero-shot, fine-tuned xuất hiện dày đặc và lẫn lộn. Quy tắc: lần đầu xuất hiện ghi tiếng Việt kèm tiếng Anh trong ngoặc, sau đó dùng nhất quán một cách gọi. Ví dụ: "đánh giá liên bộ dữ liệu" thay cho "cross-dataset", "đánh giá theo ảnh" thay cho "image-level", "đường ống xử lý đầu cuối" (hoặc thống nhất "pipeline đầu cuối").
+
+**E.10 — Viết lại tiêu đề mục Chương 4 theo văn phong khóa luận**
+Nhiều tiêu đề hiện mang dáng dấp bài báo (Baseline Comparison, Robustness, SOTA Prompt-based, Cross-dataset, Sub-Category). Viết lại theo mạch logic khóa luận (liên kết D.1): thiết lập dữ liệu → mô hình so sánh → chỉ số → kết quả chính → ablation → phân tích lỗi → đánh giá pipeline.
+
+**E.11 — Chuẩn hóa định dạng danh mục tài liệu tham khảo**
+Hiện có URL tách kiểu "https : / / …", một số mục ghi "Truy cập năm 2025", một số ghi phiên bản, arXiv, DOI không đồng nhất. Chọn một chuẩn trích dẫn cụ thể (IEEE/ACM/APA) và áp dụng thống nhất cho toàn bộ danh mục.
+
+**E.12 — Sửa văn phong một số cụm từ chưa chuẩn học thuật**
+"module gác cổng" → "module sàng lọc"; "đánh giá toàn diện" → "đánh giá trên nhiều khía cạnh"; "mô phỏng điều kiện lâm sàng thực tế" → "mô phỏng một phần luồng xử lý lâm sàng"; "hệ thống đủ thông minh" → "hệ thống có khả năng hỗ trợ tương tác".
 
 ---
 
-## 🟡 NÊN SỬA — Cải thiện chất lượng tổng thể
-
-### 11. Phần 2.1 Related Work quá ngắn
-- **Vấn đề:** Chỉ đề cập 2 mô hình (U-Net, Attention U-Net) + SAM-Med2D trong 1.5 trang. Hội đồng thường hỏi về bức tranh tổng quan.
-- **Sửa:** Mở rộng Section 2.1 thêm ít nhất:
-  - nnU-Net (self-configuring, SOTA trên nhiều benchmark y tế)
-  - TransUNet / SwinUNet (hybrid CNN-Transformer)
-  - MedSAM, SEEM (các foundation model interactive khác)
-  - Kết thúc bằng bảng tóm tắt so sánh các công trình liên quan.
-
----
-
-### 12. Thiếu hình minh họa tiền xử lý (Section 3.2)
-- **Vấn đề:** Mô tả quy trình xóa nhiễu R/L rất chi tiết nhưng không có ảnh ví dụ before/after. Khó thuyết phục hội đồng về hiệu quả tiền xử lý.
-- **Sửa:** Thêm Hình 3.2b (hoặc thay thế Hình 3.2 hiện tại bằng một figure kết hợp flowchart + ví dụ ảnh) gồm:
-  - 2 ảnh gốc chứa ký tự R/L
-  - 2 ảnh tương ứng sau khi xóa nhiễu
-
----
-
-### 13. Các trang trắng không cần thiết
-- **Vấn đề:** Trang 8, 21, 39, 63, 69 — nội dung kết thúc rất sớm, phần còn lại của trang hoàn toàn trắng. Không nghiêm trọng nhưng trông thiếu chuyên nghiệp.
-- **Sửa:** Kiểm tra và xóa `\clearpage` / `\newpage` thừa ở cuối các section tương ứng trong:
-  - `Chapter1/chapter1.tex` (trang 8)
-  - `Chapter2/chapter2.tex` (trang 21)
-  - `Chapter3/chapter3.tex` (trang 39)
-  - `Chapter4/chapter4.tex` (trang 63)
-  - `Chapter5/chapter5.tex` (trang 69)
-
----
-
-### 14. Thêm Phụ lục (Appendix)
-- **Vấn đề:** `main.tex` dòng 197–198 có appendix bị comment out hoàn toàn. Không có phụ lục nào trong báo cáo.
-- **Sửa (tối thiểu):** Thêm vào `Appendix/appendix1.tex`:
-  - Bảng hyperparameters đầy đủ của tất cả mô hình (PGA-UNet, U-Net, EfficientNet_B3)
-  - Thêm visualization kết quả bổ sung (10–15 ảnh) nếu còn chỗ
-
----
-
-### 15. Hình ablation study thiếu trực quan hóa
-- **Vấn đề:** Bảng 4.7 (Ablation) chỉ có số, không có hình so sánh trực quan V1 vs V5. Kết quả sẽ thuyết phục hơn nhiều nếu có hình side-by-side.
-- **Sửa:** Thêm 1 figure trong Section 4.3.1 so sánh mask phân đoạn của V1 (concat heatmap đơn giản) vs V5 (PSG+CAD+Gaussian) trên cùng 1 ca ảnh, đặc biệt kịch bản Shift.
-
----
-
-## Ghi chú từ review GVHD trước (giữ lại)
-
-Phải tự kiểm tra báo cáo ít nhất 10 lần
-1. Đóng góp
-Xác định đóng góp: đóng góp gì (final solution)? Phần nào là kế thừa, phần nào là tự phát triển (sử dụng visual prompt ko phải là đóng góp).
-Xác định đối tượng end user: bác sĩ đọc ảnh (đã xác định)
-2 module phân đoạn Image Encoder, Mask Decoder thì có kế thừa/cải tiến cải lùi gì
-Làm rõ kiến trúc khối mã hóa và hòa trộn: Giải thích sâu về kỹ thuật trong cách thức hoạt động của Image Encoder, Prompt Encoder, kỹ thuật xử lý để huyện prompt và encoder/decoder với nhau. Attention ở đây là trên ảnh hay prompt hay gì?
-Nhấn mạnh kỹ thuật mã hóa visual prompt (kế thừa hay cải tiến từ đâu): giải thích từng kiểu prompt (heatmap vs binary(token)), giải thích lý do chọn heatmap, so sánh bản chất của 2 kỹ thuật này. Nói rõ đóng góp này trong chương 3 và khi nói là đóng góp thì sẽ bị soi xuống phần thực nghiệm để minh chứng
-Giải thích hàm loss có thay đổi gì không khi có thêm visual prompt trong giai đoạn học không
-Thực nghiệm phải luôn có minh chứng cho phần đóng góp
-
-2. Về ảnh đầu vào
-Về vấn đề resize ảnh thì có 2 hướng:
-Hướng 1 (không resize): Thử nghiệm dùng kiến trúc Swin Transformer để chia ảnh thành các patch nhỏ
-Hướng 2: Nếu phải resize, cần chứng minh rằng dù ảnh bị scale nhỏ nhưng khi có visual prompt hỗ trợ thì hiệu suất phân đoạn được kéo lại đáng kể
-
-3. Quy trình pipeline
-Nâng chỉ số Gatekeeper
-Cần bổ sung phần thảo luận và chuẩn bị câu trả lời phản biện cho hai tình huống thực tế sau:
-Bác sĩ không vẽ, không đưa bất kỳ gợi ý nào (prompt rỗng) thì hệ thống xử lý ra sao?
-Bác sĩ nhận thức sai, vẽ bbox lệch tâm hoặc sai hoàn toàn vị trí thì hệ thống vận hành ra sao?
-⇒ Phải đưa ra thêm các lý luận để giải thích thỏa đáng 
-
-4. Sửa đổi thực nghiệm và đánh giá so sánh
-Mọi tuyên bố cải tiến kỹ thuật (như việc thay đổi cách mã hóa từ binary sang heatmap) đều phải có số liệu thực nghiệm đối chứng trực tiếp để chứng minh tính hiệu quả
-Đảm bảo tính công bằng:
-Với unet và att unet thì đừng dùng từ so sánh hay lý luận như thế nào đó
-Nói rõ về mẫu theo ảnh và mẫu theo GT
-Kết quả tốt là do prompt hay do kiến trúc
-Att unet chưa tối ưu
-So sánh với sam-med2d cần cùng kích thước 256x256
-
-5. Tiền xử lý dữ liệu
-Cần nói rõ là việc xóa chữ R/L, văn bản thông tin bệnh nhân trên ảnh x quang là chỉ nằm trong phạm vi cho mô hình học đặc trưng. Trên giao diện làm việc thực tế thì vẫn hiển thị những thông tin đó.
-
----
-
-# CODE REVIEW TOÀN BỘ — PGA_Unet2D
-
-> Review thực hiện ngày 2026-06-23. Phủ toàn bộ source code Python trong dự án.
-
----
-
-## 1. Kiến trúc tổng thể
-
-```
-Source/Prompt-Guided-XRay-Segmentation/
-├── dataset.py                          ← BTXRD_Dataset
-├── train.py                            ← training loop
-├── models/
-│   ├── __init__.py                     ← EMPTY (1 dòng trắng)
-│   ├── networks_other.py               ← legacy GAN utilities (KHÔNG DÙNG)
-│   ├── networks/
-│   │   ├── __init__.py                 ← legacy factory + import unet_2D (BUG)
-│   │   └── prompt_unet_2D.py           ← CORE: PGA-UNet, PSG, CAD
-│   └── layers/
-│       ├── __init__.py                 ← re-export grid_attention_layer
-│       └── grid_attention_layer.py     ← GridAttentionBlock2D (có bugs)
-thuyết trình/
-├── manim_01_prompt_encoding.py         ← animation Gaussian Plateau
-├── manim_02_psg_encoder.py             ← animation PSG
-└── manim_03_cad_decoder.py             ← animation CAD
-```
-
----
-
-## 2. `prompt_unet_2D.py` — Core Architecture
-
-**Đánh giá: TỐT. Thiết kế sạch, tư duy rõ ràng.**
-
-### 2.1 `PromptSpatialGate` (PSG)
-
-```python
-# Công thức: features * (1 + clamp(alpha, 0, 1) * sigmoid(conv1x1(prompt)))
-gate_conv = Conv2d(1 → C, k=1) + Sigmoid
-alpha     = Parameter(0.1)  # learnable, clamp [0,1]
-forward:  features * (1.0 + clamp(alpha, 0, 1) * gate_conv(prompt))
-```
-
-**Tốt:**
-- Dùng `(1 + alpha * gate)` thay vì chỉ `gate` → đảm bảo `output >= input`, chỉ khuếch đại không tắt tín hiệu
-- `clamp(alpha, 0, 1)` ngăn alpha âm (gây triệt tín hiệu)
-- Khởi tạo alpha=0.1 nhỏ → gating yếu ban đầu, gradient dần hội tụ
-
-**Vấn đề nhỏ:**
-- Không có `register_buffer` hay note về việc prompt được resize ra sao trước khi vào PSG → phụ thuộc F.interpolate trong forward của PGA_UNet (cần kiểm tra)
-
----
-
-### 2.2 `unetUp_PromptAttention` (CAD — Conditioned Attention Decoder)
-
-```python
-alpha_raw  = Parameter(-0.84)   # sigmoid(-0.84) ≈ 0.30
-beta       = Parameter(0.05)    # output residual
-w          = prompt_weight      # float, varies per level: 1.0 / 0.7 / 0.4 / 0.2
-skip_att + 0.3 * skip           # residual hardcode 0.3 — không học được!
-```
-
-**Tốt:**
-- `confidence = AdaptiveAvgPool + Conv1x1 + Sigmoid` → global context từ prompt
-- Prompt encoder: 2×(Conv3x3 + InstanceNorm + ReLU) → biến đổi phi tuyến trước khi hòa trộn
-- `g_fused = gating + conf * sigmoid(alpha_raw) * w * p_encoded` → điều chỉnh gating bằng confidence
-- `beta=0.05` residual nhỏ tránh over-correction
-
-**Vấn đề:**
-- **Line ~92: `skip_att + 0.3 * skip` — hardcode 0.3**. Đây là skip residual cố định, không học được. Có thể cần tune nếu muốn kiến trúc linh hoạt hơn. Không gây bug nhưng là design choice cứng.
-- `prompt_weights=(1.0, 0.7, 0.4, 0.2)` theo thứ tự decoder từ sâu lên nông — hợp lý (tầng sâu cần prompt nhiều hơn), nhưng các giá trị này là hyperparameter cứng, không học.
-
----
-
-### 2.3 `PGA_UNet`
-
-```python
-filters = [16, 32, 64, 128, 256]  # với feature_scale=4
-pg1..pg4  = PromptSpatialGate      # 4 PSG tại encoder
-up1..up4  = unetUp_PromptAttention # 4 CAD tại decoder
-```
-
-**Tốt:**
-- `use_encoder_prompt=True` flag cho phép tắt PSG để thử nghiệm ablation → sạch
-- Training augmentation trong `forward()`:
-  ```python
-  if r < 0.15: prompt = zeros(...)     # 15% prompt rỗng (zero-prompt robustness)
-  elif r < 0.30: prompt += noise(...)  # 15% prompt nhiễu (noise robustness)
-  ```
-  → Đây là kỹ thuật quan trọng, tương tự dropout nhưng trên prompt
-- Resize heatmap về từng resolution encoder trong forward: `F.interpolate(prompt, size=...)` tại mỗi tầng
-
-**Vấn đề nhỏ:**
-- Training augmentation (zero/noisy prompt) chỉ chạy khi `self.training` — nhưng không dùng `if self.training:` explicit, dùng `if self.training` ẩn trong điều kiện random → cần xác nhận không leak sang eval mode
-- Không có comment giải thích tại sao chọn threshold 0.15 / 0.30 → magic numbers
-
----
-
-## 3. `grid_attention_layer.py` — GridAttentionBlock2D
-
-**Đánh giá: CÓ BUGS. File legacy, cần chú ý.**
-
-### 3.1 Bugs xác nhận
-
-| # | Vị trí | Vấn đề | Mức độ |
-|---|--------|---------|--------|
-| B1 | `_GridAttentionBlockND.__init__` | `raise NotImplemented` → phải là `raise NotImplementedError()` | **CRITICAL** (sẽ raise TypeError nếu gọi) |
-| B2 | `_GridAttentionBlockND.forward` | `F.sigmoid(...)` → deprecated, dùng `torch.sigmoid(...)` | WARNING |
-| B3 | `_GridAttentionBlockND_TORR.__init__` | `nn.init.constant(...)` → deprecated, dùng `nn.init.constant_(...)` | WARNING |
-| B4 | `_GridAttentionBlockND_TORR.forward` | `parallel = False` dead code block không bao giờ chạy | DEAD CODE |
-| B5 | Bottom of file | `if __name__ == '__main__':` test code | MINOR (không hại) |
-
-**B1 chi tiết:** `raise NotImplemented` → Python sẽ raise `TypeError: exceptions must derive from BaseException` vì `NotImplemented` là built-in hằng số (dùng trong `__eq__` etc.), không phải exception. Nếu class này bị gọi trực tiếp, sẽ crash theo cách khó debug.
-
-### 3.2 Thiết kế
-
-- `GridAttentionBlock2D` dùng `concatenation` mode: `θ(x) + φ(g) → ReLU → ψ → Sigmoid`
-- Đây là Attention Gate chuẩn từ paper Attention U-Net (Oktay et al., 2018)
-- PGA-UNet kế thừa pattern này cho CAD (Conditioned Attention Decoder)
-
----
-
-## 4. `networks_other.py` — Legacy GAN Utilities
-
-**Đánh giá: FILE LEGACY, KHÔNG DÙNG. Nhiều deprecated APIs.**
-
-### 4.1 Deprecated APIs (toàn bộ file)
-
-```python
-# Tất cả cần thêm dấu _ (underscore):
-init.normal(...)          → init.normal_(...)
-init.xavier_normal(...)   → init.xavier_normal_(...)
-init.orthogonal(...)      → init.orthogonal_(...)
-init.constant(...)        → init.constant_(...)
-```
-
-### 4.2 Bug nghiêm trọng
-
-```python
-# Dòng 137:
-return NotImplementedError('learning rate policy [%s] is not implemented', opt.lr_policy)
-# Bug: trả về Error object thay vì raise! Caller nhận về một Exception object
-# nhưng không biết đó là lỗi → silent failure
-```
-
-### 4.3 Deprecated patterns
-
-```python
-from torch.autograd import Variable   # Không cần từ PyTorch >= 0.4
-nn.parallel.data_parallel(...)         # Deprecated, dùng nn.DataParallel
-```
-
-### 4.4 Classes không dùng
-
-- `GANLoss`, `ResnetGenerator`, `ResnetBlock`, `UnetGenerator`, `UnetSkipConnectionBlock`, `NLayerDiscriminator` → toàn bộ là GAN infrastructure từ pix2pix, không tham chiếu trong bất kỳ notebook hay train script nào của project.
-- File này là legacy code, nên giữ riêng hoặc xóa để tránh nhầm lẫn.
-
----
-
-## 5. `models/networks/__init__.py` — Legacy Factory
-
-**Đánh giá: CÓ BUG IMPORT, DEAD CODE.**
-
-```python
-# Dòng 1: BUG NGHIÊM TRỌNG
-from .unet_2D import *
-# File unet_2D.py KHÔNG TỒN TẠI trong codebase hiện tại
-# → Nếu ai import models.networks sẽ nhận ImportError ngay lập tức
-```
-
-```python
-# Dòng 44: Bug logic
-raise 'Model {} not available'.format(name)
-# Raise một string thay vì Exception → TypeError
-# Chuẩn: raise ValueError('Model {} not available'.format(name))
-```
-
-- Toàn bộ factory `get_network()` và `_get_model_instance()` không được gọi bởi `train.py` hay bất kỳ notebook nào → dead code cho project hiện tại
-
----
-
-## 6. `dataset.py` — BTXRD_Dataset
-
-**Đánh giá: XUẤT SẮC. Code sạch, đúng, tư duy kỹ.**
-
-### 6.1 Điểm mạnh
-
-- **Synchronized augmentation:** `hflip` và `rotate` áp dụng đồng bộ lên `image`, `mask`, `prompt` → đúng tuyệt đối
-- **INTER_NEAREST** cho mask resize → bảo toàn giá trị nhị phân ✓
-- **Plateau heatmap:** fill 1.0 trong bbox + GaussianBlur(31,31) → gradient mềm tại viền, tâm ≈1.0 tự nhiên khi bbox đủ lớn ✓
-- **Test-time determinism:** `_shift_bbox` dùng `random.Random(seed_idx)` → reproducible ✓
-- **Mixed_7_3 test:** `idx % 10 >= 7` → 30% shift, 70% zoom_out, deterministic ✓
-- **Normalization:** `(/ 255 - 0.5) / 0.5` → range [-1, 1] ✓
-
-### 6.2 Điểm cần lưu ý
-
-- **`_shift_bbox` test-time** (line 81-82):
-  ```python
-  dx = rng.uniform(gt_w * 0.4, gt_w * 0.7) * self.shift_ratio
-  dy = rng.uniform(gt_h * 0.1, gt_h * 0.3) * self.shift_ratio
-  ```
-  Shift test-time luôn dương (dx > 0, dy > 0) → bbox luôn lệch về phía dưới-phải. Train-time ngẫu nhiên cả chiều âm lẫn dương. Đây là intentional (để deterministic) nhưng tạo asymmetry có thể ảnh hưởng tính đại diện.
-
-- **Không có error handling** nếu `image` là `None` (cv2.imread thất bại) → sẽ crash với `AttributeError: 'NoneType' object` tại `image.shape`. Trong thực tế không ảnh hưởng nếu dataset clean.
-
-- **JSON re-open mỗi sample**: `__getitem__` mở JSON 2 lần (lần đầu trong `__init__` chỉ đếm polygon, lần 2 trong `__getitem__` để đọc points). Tối ưu hơn nếu cache toàn bộ JSON data trong `__init__`, nhưng không ảnh hưởng correctness.
-
----
-
-## 7. `train.py` — Training Loop
-
-**Đánh giá: TỐT. Training loop đúng và đủ.**
-
-### 7.1 Điểm mạnh
-
-- **Loss = BCEWithLogitsLoss + DiceLoss:** kết hợp chuẩn cho segmentation ✓
-- **Gradient clipping max_norm=1.0:** ổn định training ✓
-- **AdamW + weight_decay=1e-4:** phòng overfitting ✓
-- **ReduceLROnPlateau (mode='max', factor=0.5, patience=5):** giảm LR khi Dice plateau ✓
-- **Early stopping patience=15:** hợp lý ✓
-- **Save best + last checkpoint:** đúng ✓
-- **Validation trên 3 loaders** (Exp B): đánh giá robustness Zoom/Shift/Mixed đồng thời ✓
-
-### 7.2 CBL Metric (Center-Based Localization)
-
-```python
-cbl = clamp(1 - dist(centroid_pred, centroid_gt) / diag_gt, min=0)
-```
-
-- Metric custom đo vị trí trung tâm predicted mask so với GT
-- Scale-invariant (chuẩn hóa theo đường chéo bbox GT)
-- **Tốt:** `if gt_area < smooth: continue` bỏ qua mẫu GT rỗng ✓
-- **Vấn đề nhỏ:** CBL chỉ measure centroid localization, không capture shape. Không được báo cáo trong paper cuối — chỉ dùng monitor training. OK.
-
-### 7.3 `batch_metrics_sum`
-
-```python
-return dice.sum(), iou.sum(), precision.sum(), recall.sum()  # trả SUM qua batch
-# Chia cho n_total bên ngoài → macro-average per-sample ✓
-```
-
-Đúng. Không dùng reduce='mean' trong hàm để có thể tích lũy đúng qua nhiều batch.
-
-### 7.4 Vấn đề nhỏ
-
-- **`EXPERIMENT = 'B'`** (mixed_7_3) là config mặc định — không có validation rằng 'B' vs 'A' mapping đúng với checkpoint names. Comment giải thích 'A' → 'B' là đủ.
-- **`num_workers=2`** cố định — có thể bottleneck trên máy nhiều CPU. Không critical.
-- **Emoji 🥇 trong logger** có thể gây UnicodeEncodeError trên Windows với encoding CP1252. Trên Linux/WSL OK.
-
----
-
-## 8. Manim Scripts (Presentation Animations)
-
-**Đánh giá: CHẤT LƯỢNG CAO. Tư duy sư phạm tốt.**
-
-### 8.1 `manim_01_prompt_encoding.py`
-
-- Chính xác mô tả pipeline: BBox → Binary → GaussianBlur → Plateau Heatmap
-- **Quan trọng:** có comment inline `# Code thực KHÔNG có bước max(blur,binary)` → phân biệt rõ "minh họa 6x6" vs "code thực 31x31 tự nhiên plateau"
-- Dữ liệu minh họa (6x6 grid) nhất quán với code thực
-- Pipeline text: `BBox → Binary Mask → Gaussian Blur → Plateau → Heatmap` — chính xác
-
-### 8.2 `manim_02_psg_encoder.py`
-
-- Công thức hiển thị: `x̃ = x × (1 + α × gate)` → khớp code
-- Chú thích rõ `VÍ DỤ — code dùng 31×31, σ≈5px`; `α = 1.0 (VÍ DỤ sau huấn luyện)` → tránh mislead
-- Minh họa tổn thương vs nhiễu: tổn thương trong bbox được khuếch đại, nhiễu ngoài bbox giữ nguyên — đúng tinh thần PSG
-
-### 8.3 `manim_03_cad_decoder.py`
-
-- So sánh `ATTN_NO_HM` vs `ATTN_CAD`: nhiễu (3,3) giảm từ 0.63 → 0.18 khi có heatmap
-- Dữ liệu minh họa nhất quán với logic CAD
-
-**Vấn đề nhỏ:** Tất cả 3 file dùng `from manim import *` → namespace pollution, nhưng đây là convention của Manim.
-
----
-
-## 9. Tổng kết: Bug cần sửa (nếu triển khai production)
-
-| # | File | Vấn đề | Priority |
-|---|------|---------|----------|
-| 1 | `grid_attention_layer.py` | `raise NotImplemented` → `raise NotImplementedError()` | HIGH |
-| 2 | `models/networks/__init__.py` | `from .unet_2D import *` — file không tồn tại | HIGH (ImportError) |
-| 3 | `models/networks/__init__.py` | `raise 'Model...'` → `raise ValueError('Model...')` | MEDIUM |
-| 4 | `networks_other.py` | `return NotImplementedError(...)` → `raise NotImplementedError(...)` line 137 | MEDIUM |
-| 5 | `grid_attention_layer.py` | `F.sigmoid` → `torch.sigmoid` | LOW |
-| 6 | `grid_attention_layer.py` | `nn.init.constant` → `nn.init.constant_` | LOW |
-| 7 | `networks_other.py` | `init.normal`, `init.xavier_normal`, etc. → thêm `_` | LOW |
-| 8 | `networks_other.py` | `torch.autograd.Variable` → xóa, không cần | LOW |
-
-**Không ảnh hưởng đến kết quả thực nghiệm:** Bugs 1-8 đều nằm trong code đường không được gọi bởi `train.py` và các notebook chính (grid_attention_layer được kế thừa pattern nhưng PGA-UNet không import GridAttentionBlock2D trực tiếp).
-
----
-
-## 10. Đánh giá tổng thể chất lượng code
-
-| Thành phần | Chất lượng | Ghi chú |
-|-----------|-----------|---------|
-| `prompt_unet_2D.py` | ⭐⭐⭐⭐⭐ | Core đóng góp, thiết kế rõ, tư duy kỹ |
-| `dataset.py` | ⭐⭐⭐⭐⭐ | Clean, đúng, synchronized aug |
-| `train.py` | ⭐⭐⭐⭐ | Loop tốt, CBL metric thú vị |
-| `manim_*.py` | ⭐⭐⭐⭐⭐ | Minh họa chính xác, sư phạm tốt |
-| `grid_attention_layer.py` | ⭐⭐⭐ | Legacy bugs, nhưng không ảnh hưởng chạy |
-| `networks_other.py` | ⭐⭐ | Toàn bộ deprecated + 1 silent bug |
-| `models/networks/__init__.py` | ⭐ | ImportError ngay dòng đầu |
-
-**Kết luận:** Phần code thực sự chạy (prompt_unet_2D.py, dataset.py, train.py) có chất lượng **tốt đến xuất sắc** — tư duy kỹ thuật rõ ràng, không có lỗi logic trong luồng chính. Các bug tập trung ở legacy code không được sử dụng.
+## THỨ TỰ ƯU TIÊN ĐỀ XUẤT
+
+1. **Kế hoạch lớn B** (lỗi phương pháp đánh giá) — vì đây là lỗi học thuật nghiêm trọng nhất, ảnh hưởng trực tiếp đến tính đúng đắn của số liệu đã công bố.
+2. **Kế hoạch lớn A** (hạ mức claim) — sửa nhanh, rủi ro phản biện cao nếu bỏ qua, không cần thêm thực nghiệm.
+3. **Kế hoạch lớn D** (tái cấu trúc Chương 4) — cải thiện rõ rệt tính mạch lạc, mức độ ưu tiên cao vì đây là chương trọng tâm.
+4. **Kế hoạch lớn E** (lỗi trình bày hình thức) — dễ sửa, nên làm song song, ảnh hưởng điểm hình thức.
+5. **Kế hoạch lớn C** (bổ sung thực nghiệm) — tốn thời gian nhất; ưu tiên theo khả năng còn lại: C.1 (kiểm định thống kê) và C.3/C.4 (ablation bổ sung) khả thi nhất trong thời gian ngắn; C.6/C.9 (cross-dataset thật sự, đánh giá liên chuyên gia) có thể ghi vào phần hạn chế nếu không kịp thực hiện.
