@@ -3,7 +3,8 @@
 \contentsline {chapter}{Đề cương chi tiết}{iii}{chapter*.2}%
 \contentsline {chapter}{Mục lục}{ix}{Item.9}%
 \contentsline {chapter}{Danh mục các ký hiệu và chữ viết tắt}{xvii}{chapter*.5}%
-\contentsline {chapter}{Tóm tắt}{xxi}{table.0.1}%
+\contentsline {chapter}{Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}{xxi}{table.0.1}%
+\contentsline {chapter}{Tóm tắt}{xxiv}{table.0.2}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%
@@ -37,48 +38,49 @@
 \contentsline {subsection}{\numberline {3.2.2}Quy trình tiền xử lý và loại bỏ nhiễu}{26}{subsection.3.2.2}%
 \contentsline {section}{\numberline {3.3}Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}{29}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}Biểu diễn câu nhắc trực quan (Prompt Heatmap Representation)}{30}{subsection.3.3.1}%
-\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}{31}{equation.3.3.1}%
-\contentsline {paragraph}{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}{31}{equation.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}{32}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}{33}{subsection.3.3.3}%
+\contentsline {paragraph}{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có đạo hàm thay vì mặt nạ nhị phân?}{31}{equation.3.3.1}%
+\contentsline {paragraph}{So sánh với cách mã hóa câu nhắc của SAM và SAM-Med2D.}{31}{equation.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Cổng không gian tại bộ mã hóa (PSG)}{32}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Cơ chế chú ý có điều kiện tại bộ giải mã (CAD)}{33}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Chiến lược huấn luyện và so sánh với mô hình nền tảng SAM-Med2D}{35}{subsection.3.3.4}%
 \contentsline {section}{\numberline {3.4}Module gác cổng sàng lọc (Gatekeeper)}{37}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Tóm tắt giải thuật hệ thống: Huấn luyện và Suy luận}{38}{section.3.5}%
+\contentsline {section}{\numberline {3.5}Tóm tắt giải thuật hệ thống: Huấn luyện và Suy luận}{39}{section.3.5}%
 \contentsline {section}{\numberline {3.6}Tổng kết chương}{41}{section.3.6}%
 \contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{42}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{42}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{42}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang}{42}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2}Mô hình so sánh trong thực nghiệm}{44}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{45}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Phương pháp đánh giá image-level}{46}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.3}Cấu hình huấn luyện}{45}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Phương pháp đánh giá cấp độ ảnh (image-level)}{46}{subsection.4.1.4}%
 \contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{47}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{47}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{49}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{51}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{53}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{54}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{54}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{56}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{58}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{61}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{62}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản prompt)}{63}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}So sánh cơ sở (Baseline): PGA-UNet vs U-Net trên FracAtlas}{64}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}So sánh với SAM-Med2D (Fine-tuned và Zero-shot) trên FracAtlas}{65}{subsection.4.4.4}%
-\contentsline {subsection}{\numberline {4.4.5}Đánh giá theo đặc tính tổn thương (Sub-Category) trên FracAtlas}{67}{subsection.4.4.5}%
-\contentsline {subsection}{\numberline {4.4.6}Thảo luận: hiệu quả của kiến trúc khi huấn luyện lại trên miền dữ liệu khác}{70}{subsection.4.4.6}%
-\contentsline {section}{\numberline {4.5}Trực quan hóa kết quả (Qualitative Results)}{72}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{72}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{73}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{73}{subsection.4.6.1}%
-\contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và pipeline end-to-end}{74}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{74}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Phân tích các ca bỏ sót (False Negative) và thử nghiệm ngưỡng phân loại}{77}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Phân tích sai số tích lũy (Cascading Error)}{79}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{81}{subsection.4.7.4}%
-\contentsline {subsection}{\numberline {4.7.5}Các chỉ số end-to-end bổ sung: Sensitivity bệnh lý, FNR và Lesion-level Recall}{84}{subsection.4.7.5}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{86}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{86}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{88}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{90}{section.5.3}%
-\contentsline {chapter}{Tài liệu tham khảo}{93}{section.5.3}%
+\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở: U-Net so với PGA-UNet}{47}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ trước sai lệch câu nhắc: Kịch bản Zoom-out, Shift và Mixed}{49}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}So sánh với mô hình nền tảng SAM-Med2D}{51}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}PGA-UNet ở hai độ phân giải: 256$\times $256 so với 512$\times $512 (BTXRD)}{53}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{55}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{55}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{56}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo}{58}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương}{60}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{63}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{64}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản câu nhắc)}{65}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}So sánh cơ sở: PGA-UNet so với U-Net trên FracAtlas}{67}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}So sánh với SAM-Med2D (Đã tinh chỉnh và Chưa tinh chỉnh) trên FracAtlas}{68}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}Đánh giá theo đặc tính tổn thương trên FracAtlas}{70}{subsection.4.4.5}%
+\contentsline {subsection}{\numberline {4.4.6}Thảo luận: hiệu quả của kiến trúc khi huấn luyện lại trên miền dữ liệu khác}{72}{subsection.4.4.6}%
+\contentsline {section}{\numberline {4.5}Trực quan hóa kết quả}{74}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{75}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{75}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{76}{subsection.4.6.1}%
+\contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và luồng xử lý đầu cuối}{76}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{76}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Phân tích các ca bỏ sót và thử nghiệm ngưỡng phân loại}{79}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Phân tích sai số tích lũy qua hai giai đoạn}{82}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}Đánh giá luồng xử lý đầu cuối trên dữ liệu hỗn hợp}{84}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.5}Các chỉ số đầu cuối bổ sung: Sensitivity bệnh lý, FNR và Recall cấp độ tổn thương}{86}{subsection.4.7.5}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{89}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận những đóng góp đạt được}{89}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của hệ thống}{91}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển tương lai}{93}{section.5.3}%
+\contentsline {chapter}{Tài liệu tham khảo}{96}{section.5.3}%

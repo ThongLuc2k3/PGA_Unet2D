@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  9 JUL 2026 22:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  10 JUL 2026 13:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -317,6 +317,8 @@ Package biblatex Info: ... file 'blx-dm.def' found.
 (/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/blx-dm.def
 File: blx-dm.def 2025/07/10 v3.21 biblatex datamodel (PK/MW)
 )
+Package biblatex Info: Trying to load biblatex style data model...
+Package biblatex Info: ... file 'ieee.dbx' not found.
 Package biblatex Info: Trying to load biblatex custom data model...
 Package biblatex Info: ... file 'biblatex-dm.cfg' not found.
 \c@afterword=\count310
@@ -436,10 +438,20 @@ File: biblatex.def 2025/07/10 v3.21 biblatex compatibility (PK/MW)
 \biburllcskip=\muskip20
 \c@smartand=\count386
 )
+Package biblatex Info: Trying to load bibliography style 'ieee'...
+Package biblatex Info: ... file 'ieee.bbx' found.
+
+(/home/thongluc/texmf/tex/latex/biblatex-ieee/ieee.bbx
+File: ieee.bbx 2021/12/06 v1.3f biblatex bibliography style
+Package biblatex Info: Trying to load bibliography style 'numeric-comp'...
+Package biblatex Info: ... file 'numeric-comp.bbx' found.
+
+(/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/bbx/numeric-comp.bb
+x
+File: numeric-comp.bbx 2025/07/10 v3.21 biblatex bibliography style (PK/MW)
 Package biblatex Info: Trying to load bibliography style 'numeric'...
 Package biblatex Info: ... file 'numeric.bbx' found.
-
-(/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/bbx/numeric.bbx
+ (/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/bbx/numeric.bbx
 File: numeric.bbx 2025/07/10 v3.21 biblatex bibliography style (PK/MW)
 Package biblatex Info: Trying to load bibliography style 'standard'...
 Package biblatex Info: ... file 'standard.bbx' found.
@@ -448,12 +460,21 @@ Package biblatex Info: ... file 'standard.bbx' found.
 File: standard.bbx 2025/07/10 v3.21 biblatex bibliography style (PK/MW)
 \c@bbx:relatedcount=\count387
 \c@bbx:relatedtotal=\count388
-))
-Package biblatex Info: Trying to load citation style 'numeric'...
-Package biblatex Info: ... file 'numeric.cbx' found.
+))))
+Package biblatex Info: Trying to load citation style 'ieee'...
+Package biblatex Info: ... file 'ieee.cbx' found.
+ (/home/thongluc/texmf/tex/latex/biblatex-ieee/ieee.cbx
+File: ieee.cbx 2021/12/06 v1.3f biblatex citation style
+Package biblatex Info: Trying to load citation style 'numeric-comp'...
+Package biblatex Info: ... file 'numeric-comp.cbx' found.
 
-(/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/cbx/numeric.cbx
-File: numeric.cbx 2025/07/10 v3.21 biblatex citation style (PK/MW)
+(/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/cbx/numeric-comp.cb
+x
+File: numeric-comp.cbx 2025/07/10 v3.21 biblatex citation style (PK/MW)
+\c@cbx@tempcnta=\count389
+\c@cbx@tempcntb=\count390
+\c@cbx@tempcntc=\count391
+\c@cbx@tempcntd=\count392
 Package biblatex Info: Redefining '\cite'.
 Package biblatex Info: Redefining '\parencite'.
 Package biblatex Info: Redefining '\footcite'.
@@ -466,10 +487,13 @@ Package biblatex Info: Redefining '\cites'.
 Package biblatex Info: Redefining '\parencites'.
 Package biblatex Info: Redefining '\smartcites'.
 )
+Package biblatex Info: Redefining '\cite'.
+Package biblatex Info: Redefining '\supercite'.
+Package biblatex Info: Redefining '\cites'.
+)
 Package biblatex Info: Trying to load configuration file...
 Package biblatex Info: ... file 'biblatex.cfg' found.
-
-(/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/biblatex.cfg
+ (/home/thongluc/texmf/tex/latex/biblatex-pkg/biblatex/latex/biblatex.cfg
 File: biblatex.cfg 
 )
 Package biblatex Info: Input encoding 'utf8' detected.
@@ -480,7 +504,7 @@ Package: expl3 2024-01-22 L3 programming layer (loader)
 
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count389
+\l__color_backend_stack_int=\count393
 \l__pdf_internal_box=\box51
 ))
 Package biblatex Info: ... and expl3
@@ -518,11 +542,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count390
+\c@section@level=\count394
 )
 \@linkdim=\dimen142
-\Hy@linkcounter=\count391
-\Hy@pagecounter=\count392
+\Hy@linkcounter=\count395
+\Hy@pagecounter=\count396
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2024-01-20 v7.01h Hyperref: PDFDocEncoding definition (HO)
@@ -532,7 +556,7 @@ Now handling font encoding PD1 ...
 (/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count393
+\Hy@SavedSpaceFactor=\count397
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2024-01-20 v7.01h Hyperref: PDF Unicode definition (HO)
@@ -547,7 +571,7 @@ Package hyperref Info: Plain pages OFF on input line 4194.
 Package hyperref Info: Backreferencing OFF on input line 4199.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4446.
-\c@Hy@tempcnt=\count394
+\c@Hy@tempcnt=\count398
 LaTeX Info: Redefining \url on input line 4784.
 \XeTeXLinkMargin=\dimen143
 
@@ -558,7 +582,7 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count395
+\Fld@menulength=\count399
 \Field@Width=\dimen144
 \Fld@charsize=\dimen145
 Package hyperref Info: Hyper figures OFF on input line 6063.
@@ -573,9 +597,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6093.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count396
-\c@Item=\count397
-\c@Hfootnote=\count398
+\Hy@abspage=\count400
+\c@Item=\count401
+\c@Hfootnote=\count402
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
@@ -587,8 +611,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count399
-\c@bookmark@seq@number=\count400
+\Fld@listcount=\count403
+\c@bookmark@seq@number=\count404
 
 (/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
@@ -601,7 +625,11 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip72
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/xurl/xurl.sty
+Package: xurl 2022/01/09 v 0.10 modify URL breaks
+
+xurl: Set penalties for biblatex
+) (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
@@ -622,23 +650,23 @@ File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 \Gin@req@width=\dimen147
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count401
+\lst@mode=\count405
 \lst@gtempboxa=\box52
 \lst@token=\toks20
-\lst@length=\count402
+\lst@length=\count406
 \lst@currlwidth=\dimen148
-\lst@column=\count403
-\lst@pos=\count404
+\lst@column=\count407
+\lst@pos=\count408
 \lst@lostspace=\dimen149
 \lst@width=\dimen150
-\lst@newlines=\count405
-\lst@lineno=\count406
+\lst@newlines=\count409
+\lst@lineno=\count410
 \lst@maxwidth=\dimen151
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
-\c@lstnumber=\count407
-\lst@skipnumbers=\count408
+\c@lstnumber=\count411
+\lst@skipnumbers=\count412
 \lst@framebox=\box53
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
@@ -675,14 +703,14 @@ Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count409
+\inf@bad=\count413
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count410
-\leftroot@=\count411
+\uproot@=\count414
+\leftroot@=\count415
 LaTeX Info: Redefining \overline on input line 399.
 LaTeX Info: Redefining \colon on input line 410.
-\classnum@=\count412
-\DOTSCASE@=\count413
+\classnum@=\count416
+\DOTSCASE@=\count417
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
@@ -695,20 +723,20 @@ LaTeX Info: Redefining \Bigg on input line 725.
 \big@size=\dimen154
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count414
+\macc@depth=\count418
 LaTeX Info: Redefining \bmod on input line 905.
 LaTeX Info: Redefining \pmod on input line 910.
 LaTeX Info: Redefining \smash on input line 940.
 LaTeX Info: Redefining \relbar on input line 970.
 LaTeX Info: Redefining \Relbar on input line 971.
-\c@MaxMatrixCols=\count415
+\c@MaxMatrixCols=\count419
 \dotsspace@=\muskip21
-\c@parentequation=\count416
-\dspbrk@lvl=\count417
+\c@parentequation=\count420
+\dspbrk@lvl=\count421
 \tag@help=\toks22
-\row@=\count418
-\column@=\count419
-\maxfields@=\count420
+\row@=\count422
+\column@=\count423
+\maxfields@=\count424
 \andhelp@=\toks23
 \eqnshift@=\dimen155
 \alignsep@=\dimen156
@@ -740,14 +768,14 @@ nment
 
 (/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count421
+\c@float@type=\count425
 \float@exts=\toks26
 \float@box=\box56
 \@float@everytoks=\toks27
 \@floatcapt=\box57
 )
 \@float@every@algorithm=\toks28
-\c@algorithm=\count422
+\c@algorithm=\count426
 )
 (/home/thongluc/texmf/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
@@ -756,15 +784,15 @@ Package: algpseudocode
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count423
-\c@ALG@rem=\count424
-\c@ALG@nested=\count425
+\c@ALG@line=\count427
+\c@ALG@rem=\count428
+\c@ALG@nested=\count429
 \ALG@tlm=\skip76
 \ALG@thistlm=\skip77
-\c@ALG@Lnr=\count426
-\c@ALG@blocknr=\count427
-\c@ALG@storecount=\count428
-\c@ALG@tmpcounter=\count429
+\c@ALG@Lnr=\count430
+\c@ALG@blocknr=\count431
+\c@ALG@storecount=\count432
+\c@ALG@tmpcounter=\count433
 \ALG@tmplength=\skip78
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
@@ -786,7 +814,7 @@ Package: titlesec 2023/10/27 v2.16 Sectioning titles
 (/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip81
-\multirow@cntb=\count430
+\multirow@cntb=\count434
 \multirow@dima=\skip82
 \bigstrutjot=\dimen166
 )
@@ -806,8 +834,8 @@ Package: enumitem 2019/06/20 v3.9 Customized lists
 \enit@outerparindent=\dimen169
 \enit@toks=\toks31
 \enit@inbox=\box61
-\enit@count@id=\count431
-\enitdp@description=\count432
+\enit@count@id=\count435
+\enitdp@description=\count436
 )
 (/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty
 Package: longtable 2023-11-01 v4.19 Multi-page Table package (DPC)
@@ -815,17 +843,17 @@ Package: longtable 2023-11-01 v4.19 Multi-page Table package (DPC)
 \LTright=\skip87
 \LTpre=\skip88
 \LTpost=\skip89
-\LTchunksize=\count433
+\LTchunksize=\count437
 \LTcapwidth=\dimen170
 \LT@head=\box62
 \LT@firsthead=\box63
 \LT@foot=\box64
 \LT@lastfoot=\box65
 \LT@gbox=\box66
-\LT@cols=\count434
-\LT@rows=\count435
-\c@LT@tables=\count436
-\c@LT@chunks=\count437
+\LT@cols=\count438
+\LT@rows=\count439
+\c@LT@tables=\count440
+\c@LT@chunks=\count441
 \LT@p@ftn=\toks32
 )
 (/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
@@ -838,7 +866,7 @@ Package: indentfirst 2023/07/02 v1.03 Indent first paragraph (DPC)
 Package: microtype 2023/03/13 v3.1a Micro-typographical refinements (RS)
 \MT@toks=\toks33
 \MT@tempbox=\box67
-\MT@count=\count438
+\MT@count=\count442
 LaTeX Info: Redefining \noprotrusionifhmode on input line 1059.
 LaTeX Info: Redefining \leftprotrusion on input line 1060.
 \MT@prot@toks=\toks34
@@ -846,7 +874,7 @@ LaTeX Info: Redefining \rightprotrusion on input line 1078.
 LaTeX Info: Redefining \textls on input line 1368.
 \MT@outer@kern=\dimen171
 LaTeX Info: Redefining \textmicrotypecontext on input line 1988.
-\MT@listname@count=\count439
+\MT@listname@count=\count443
 
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype-pdftex.def
 File: microtype-pdftex.def 2023/03/13 v3.1a Definitions specific to pdftex (RS)
@@ -866,9 +894,9 @@ Package: geometry 2020/01/02 v5.9 Page Geometry
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count440
-\Gm@cntv=\count441
-\c@Gm@tempcnt=\count442
+\Gm@cnth=\count444
+\Gm@cntv=\count445
+\c@Gm@tempcnt=\count446
 \Gm@bindingoffset=\dimen172
 \Gm@wd@mp=\dimen173
 \Gm@odd@mp=\dimen174
@@ -921,14 +949,14 @@ Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
 \pgf@yd=\dimen191
 \w@pgf@writea=\write4
 \r@pgf@reada=\read3
-\c@pgf@counta=\count443
-\c@pgf@countb=\count444
-\c@pgf@countc=\count445
-\c@pgf@countd=\count446
+\c@pgf@counta=\count447
+\c@pgf@countb=\count448
+\c@pgf@countc=\count449
+\c@pgf@countd=\count450
 \t@pgf@toka=\toks40
 \t@pgf@tokb=\toks41
 \t@pgf@tokc=\toks42
-\pgf@sys@id@count=\count447
+\pgf@sys@id@count=\count451
  (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
 )
@@ -943,8 +971,8 @@ File: pgfsys-common-pdf.def 2023-01-15 v3.1.10 (3.1.10)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.
 tex
 File: pgfsyssoftpath.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfsyssoftpath@smallbuffer@items=\count448
-\pgfsyssoftpath@bigbuffer@items=\count449
+\pgfsyssoftpath@smallbuffer@items=\count452
+\pgfsyssoftpath@bigbuffer@items=\count453
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.
 tex
@@ -976,7 +1004,7 @@ Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
 \pgfmath@dimen=\dimen192
-\pgfmath@count=\count450
+\pgfmath@count=\count454
 \pgfmath@box=\box69
 \pgfmath@toks=\toks43
 \pgfmath@stack@operand=\toks44
@@ -1001,7 +1029,7 @@ tex)
 thmetics.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count451
+\c@pgfmathroundto@lastzeros=\count455
 ))
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.te
@@ -1040,7 +1068,7 @@ File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgfpic=\box70
 \pgf@hbox=\box71
 \pgf@layerbox@main=\box72
-\pgf@picture@serial@count=\count452
+\pgf@picture@serial@count=\count456
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.c
 ode.tex
@@ -1073,8 +1101,8 @@ File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgf@max=\dimen272
-\pgf@sys@shading@range@num=\count453
-\pgf@shadingcount=\count454
+\pgf@sys@shading@range@num=\count457
+\pgf@shadingcount=\count458
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
@@ -1132,7 +1160,7 @@ Package: tikz 2023-01-15 v3.1.10 (3.1.10)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers
 .code.tex
 File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@plot@mark@count=\count455
+\pgf@plot@mark@count=\count459
 \pgfplotmarksize=\dimen277
 )
 \tikz@lastx=\dimen278
@@ -1147,18 +1175,18 @@ File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \tikz@figbox@bg=\box76
 \tikz@tempbox=\box77
 \tikz@tempbox@bg=\box78
-\tikztreelevel=\count456
-\tikznumberofchildren=\count457
-\tikznumberofcurrentchild=\count458
-\tikz@fig@count=\count459
+\tikztreelevel=\count460
+\tikznumberofchildren=\count461
+\tikznumberofcurrentchild=\count462
+\tikz@fig@count=\count463
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfmatrixcurrentrow=\count460
-\pgfmatrixcurrentcolumn=\count461
-\pgf@matrix@numberofcolumns=\count462
+\pgfmatrixcurrentrow=\count464
+\pgfmatrixcurrentcolumn=\count465
+\pgf@matrix@numberofcolumns=\count466
 )
-\tikz@expandcount=\count463
+\tikz@expandcount=\count467
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibrarytopaths.code.tex
@@ -1198,35 +1226,35 @@ File: tikzlibrarybackgrounds.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgf@layerbox@background=\box79
 \pgf@layerboxsaved@background=\box80
 )
-\@quotelevel=\count464
-\@quotereset=\count465
+\@quotelevel=\count468
+\@quotereset=\count469
  (./main.aux (./Appendix/reassurances.aux)
 (./Appendix/thanks.aux) (./Appendix/decuong.aux)
-(./Appendix/danhmuctuvietat.aux) (./Appendix/tomtat.aux)
-(./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux) (./Chapter3/chapter3.aux)
-(./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux))
+(./Appendix/danhmuctuvietat.aux) (./Appendix/doichieuthuatngu.aux)
+(./Appendix/tomtat.aux) (./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux)
+(./Chapter3/chapter3.aux) (./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 146.
-LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 147.
+LaTeX Font Info:    ... okay on input line 147.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
 
@@ -1245,9 +1273,9 @@ Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
 
 (./main.bbl)
-Package biblatex Info: Reference section=0 on input line 146.
-Package biblatex Info: Reference segment=0 on input line 146.
-Package hyperref Info: Link coloring OFF on input line 146.
+Package biblatex Info: Reference section=0 on input line 147.
+Package biblatex Info: Reference segment=0 on input line 147.
+Package hyperref Info: Link coloring OFF on input line 147.
  (./main.out) (./main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
@@ -1255,16 +1283,16 @@ Package hyperref Info: Link coloring OFF on input line 146.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count466
+\scratchcounter=\count470
 \scratchdimen=\dimen290
 \scratchbox=\box81
-\nofMPsegments=\count467
-\nofMParguments=\count468
+\nofMPsegments=\count471
+\nofMParguments=\count472
 \everyMPshowfont=\toks48
-\MPscratchCnt=\count469
+\MPscratchCnt=\count473
 \MPscratchDim=\dimen291
-\MPnumerator=\count470
-\makeMPintoPDFobject=\count471
+\MPnumerator=\count474
+\makeMPintoPDFobject=\count475
 \everyMPtoPDFconversion=\toks49
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -1275,16 +1303,16 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@lstlisting=\count472
-LaTeX Info: Redefining \microtypecontext on input line 146.
-Package microtype Info: Applying patch `item' on input line 146.
-Package microtype Info: Applying patch `toc' on input line 146.
-Package microtype Info: Applying patch `eqnum' on input line 146.
+\c@lstlisting=\count476
+LaTeX Info: Redefining \microtypecontext on input line 147.
+Package microtype Info: Applying patch `item' on input line 147.
+Package microtype Info: Applying patch `toc' on input line 147.
+Package microtype Info: Applying patch `eqnum' on input line 147.
 
 
-Package microtype Warning: Unable to apply patch `footnote' on input line 146.
+Package microtype Warning: Unable to apply patch `footnote' on input line 147.
 
-Package microtype Info: Applying patch `verbatim' on input line 146.
+Package microtype Info: Applying patch `verbatim' on input line 147.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -1356,7 +1384,7 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 \openout2 = `Appendix/decuong.aux'.
 
  (./Appendix/decuong.tex
-<images/logo.png, id=355, 597.23125pt x 260.975pt>
+<images/logo.png, id=363, 597.23125pt x 260.975pt>
 File: images/logo.png Graphic file (type png)
 <use images/logo.png>
 Package pdftex.def Info: images/logo.png  used on input line 7.
@@ -1381,7 +1409,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 
  <./images/logo.png>] [4] [5] [6] [7]) [8] (./main.toc
-Underfull \hbox (badness 1540) in paragraph at lines 16--16
+Underfull \hbox (badness 1540) in paragraph at lines 17--17
  [] [][]\T5/cmr/bx/n/14.4 CÅC C∆NG TRúNH LIñN QUAN VÄ CÃ S– Lﬁ 
  []
 
@@ -1401,11 +1429,11 @@ Underfull \hbox (badness 1540) in paragraph at lines 16--16
 
  [14] (./main.lot [15
 
-])
+] [16])
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
- [16] [17]
+ [17]
 \openout2 = `Appendix/danhmuctuvietat.aux'.
 
 
@@ -1418,16 +1446,25 @@ Underfull \hbox (badness 1077) in paragraph at lines 21--21
 
 
 ] [19]) [20]
+\openout2 = `Appendix/doichieuthuatngu.aux'.
+
+ (./Appendix/doichieuthuatngu.tex [21
+
+
+
+
+] [22]) [23]
 \openout2 = `Appendix/tomtat.aux'.
 
- (./Appendix/tomtat.tex) [21
+
+(./Appendix/tomtat.tex) [24
 
 
 
 
 ]
-Package hyperref Info: Option `pageanchor' set `false' on input line 176.
-Package hyperref Info: Option `pageanchor' set `true' on input line 178.
+Package hyperref Info: Option `pageanchor' set `false' on input line 180.
+Package hyperref Info: Option `pageanchor' set `true' on input line 182.
 \openout2 = `Chapter1/chapter1.aux'.
 
  (./Chapter1/chapter1.tex
@@ -1461,7 +1498,7 @@ Ch∆∞∆°ng 2.
 
 
 ]
-<images/arch_sammed2d.png, id=800, 1155.31625pt x 415.5525pt>
+<images/arch_sammed2d.png, id=818, 1155.31625pt x 415.5525pt>
 File: images/arch_sammed2d.png Graphic file (type png)
 <use images/arch_sammed2d.png>
 Package pdftex.def Info: images/arch_sammed2d.png  used on input line 31.
@@ -1471,9 +1508,10 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1})
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.48 
-      <./images/arch_sammed2d.png>] [12]
-<images/arch_unet2d.png, id=822, 864.22874pt x 124.465pt>
+l.49 T
+      ·∫°i m·ªôt t·∫ßng t√≠ch ch·∫≠p th·ª© $l$, ƒë·∫ßu v√†o l√† b·∫£n ƒë·ªì ...
+ <./images/arch_sammed2d.png>] [12]
+<images/arch_unet2d.png, id=841, 864.22874pt x 124.465pt>
 File: images/arch_unet2d.png Graphic file (type png)
 <use images/arch_unet2d.png>
 Package pdftex.def Info: images/arch_unet2d.png  used on input line 69.
@@ -1483,15 +1521,15 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.2.2})
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 
-      <./images/arch_unet2d.png>]
+l.86 \end{equation}
+                    <./images/arch_unet2d.png>]
 Underfull \hbox (badness 3000) in paragraph at lines 86--88
 \T5/cmr/m/n/14.4 trong ^^_‚ $\OML/cmm/m/it/14.4 ^^[[]$ \T5/cmr/m/n/14.4 l† h†m 
 kΩch ho§t ReLU, $\OML/cmm/m/it/14.4 ^^[[]$ \T5/cmr/m/n/14.4 l† h†m Sig-moid, v†
 
  []
 
-<images/arch_attention_unet2d.png, id=830, 924.45375pt x 299.1175pt>
+<images/arch_attention_unet2d.png, id=849, 924.45375pt x 299.1175pt>
 File: images/arch_attention_unet2d.png Graphic file (type png)
 <use images/arch_attention_unet2d.png>
 Package pdftex.def Info: images/arch_attention_unet2d.png  used on input line 9
@@ -1515,7 +1553,7 @@ Ch∆∞∆°ng 3.
 
 
 ]
-<images/pipeline_pga_app_inference.png, id=886, 653.44125pt x 598.235pt>
+<images/pipeline_pga_app_inference.png, id=904, 653.44125pt x 598.235pt>
 File: images/pipeline_pga_app_inference.png Graphic file (type png)
 <use images/pipeline_pga_app_inference.png>
 Package pdftex.def Info: images/pipeline_pga_app_inference.png  used on input l
@@ -1529,7 +1567,7 @@ has been already used, duplicate ignored
 l.36 \section
              {Ti·ªÅn x·ª≠ l√Ω d·ªØ li·ªáu v√† lo·∫°i b·ªè nhi·ªÖu ·∫£nh X-qu...
  <./images/pipeline_pga_app_inference.png>] [25]
-<images/preprocessing_pipeline.png, id=902, 251.94125pt x 547.04375pt>
+<images/preprocessing_pipeline.png, id=921, 251.94125pt x 547.04375pt>
 File: images/preprocessing_pipeline.png Graphic file (type png)
 <use images/preprocessing_pipeline.png>
 Package pdftex.def Info: images/preprocessing_pipeline.png  used on input line 
@@ -1543,8 +1581,13 @@ has been already used, duplicate ignored
 l.75 \section
              {M√¥ h√¨nh ph√¢n ƒëo·∫°n PGA-UNet (Prompt-Guided Attention U-Net)}
  <./images/preprocessing_pipeline.png>] [28]
+Underfull \hbox (badness 3250) in paragraph at lines 90--90
+[]|\T5/cmr/m/n/14.4 Khung bÎ m¢
+ []
+
+
 Underfull \hbox (badness 1097) in paragraph at lines 90--90
-[]|\T5/cmr/m/n/14.4 U-Net [[]7[]]: khËi tΩch
+[]|\T5/cmr/m/n/14.4 U-Net [[]1[]]: khËi tΩch
  []
 
 
@@ -1558,13 +1601,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 92--92
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 92--92
-\T5/cmr/m/n/14.4 tial At-ten-tion
+Underfull \hbox (badness 6944) in paragraph at lines 92--92
+[]|\T5/cmr/m/n/14.4 Attention U-Net [[]5[]]:
  []
 
 
-Underfull \hbox (badness 6944) in paragraph at lines 92--92
-[]|\T5/cmr/m/n/14.4 Attention U-Net [[]6[]]:
+Underfull \hbox (badness 2134) in paragraph at lines 92--92
+\T5/cmr/m/n/14.4 t≠t (At-ten-tion U-Net
  []
 
 
@@ -1574,37 +1617,32 @@ Underfull \hbox (badness 10000) in paragraph at lines 94--94
 
 
 Underfull \hbox (badness 4316) in paragraph at lines 94--94
-[]|\T5/cmr/m/n/14.4 SAM-Med2D [[]3[]]: ˛
+[]|\T5/cmr/m/n/14.4 SAM-Med2D [[]2[]]: ˛
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 94--94
-\T5/cmr/m/n/14.4 t˜ng prompt d®n
+Underfull \hbox (badness 2310) in paragraph at lines 94--94
+\T5/cmr/m/n/14.4 t˜ng c•u nh≠c d®n
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 94--95
-[]|\T5/cmr/m/n/14.4 Thay to-ken/bi-nary
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 94--95
-\T5/cmr/m/n/14.4 b¨ng \T5/cmr/bx/n/14.4 Gaus-sian
+Underfull \hbox (badness 6204) in paragraph at lines 94--95
+[]|\T5/cmr/m/n/14.4 Thay bi∫u diπn rÌi
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 94--95
-\T5/cmr/bx/n/14.4 Plateau Heatmap
+\T5/cmr/m/n/14.4 r§c/nh‡ ph•n b¨ng
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--95
+\T5/cmr/bx/n/14.4 Gaus-sian Plateau
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 96--96
 []|\T5/cmr/m/n/14.4 CÍng khÊng
- []
-
-
-Underfull \hbox (badness 2591) in paragraph at lines 96--97
-\T5/cmr/m/n/14.4 c˜Ìng ^^_∞c tr˜ng en-
  []
 
 [29
@@ -1626,7 +1664,7 @@ Package microtype Warning: I cannot find a protrusion list for font
 (microtype)                protrusion for this font on input line 150.
 
 [33]
-<images/arch_pga_unet2d.png, id=958, 1180.41pt x 329.23pt>
+<images/arch_pga_unet2d.png, id=977, 1180.41pt x 329.23pt>
 File: images/arch_pga_unet2d.png Graphic file (type png)
 <use images/arch_pga_unet2d.png>
 Package pdftex.def Info: images/arch_pga_unet2d.png  used on input line 167.
@@ -1636,8 +1674,9 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.3.3})
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.184 
-       <./images/arch_pga_unet2d.png>]
+l.185 ƒê
+        ·ªÉ tr√°nh hi·ªÉu nh·∫ßm khi so s√°nh k·∫øt qu·∫£ th·ª±c nghi·ªám, c...
+ <./images/arch_pga_unet2d.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 200--200
 []|\T5/cmr/bx/n/14.4 PGA-UNet (^^_∑
  []
@@ -1648,18 +1687,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 200--201
  []
 
 
-Underfull \hbox (badness 7613) in paragraph at lines 202--203
-[]|\T5/cmr/m/n/14.4 Tinh chønh t¯ pre-
+Underfull \hbox (badness 1253) in paragraph at lines 204--205
+[]|\T5/cmr/m/n/14.4 ViT-B, ^^_¢ ti∑n hußn
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 206--206
 []|\T5/cmr/m/n/14.4 Th†nh ph¶n b‡
- []
-
-
-Underfull \hbox (badness 1424) in paragraph at lines 210--210
-[]|\T5/cmr/m/n/14.4 SË epoch hÎi tˆ
  []
 
 [36] [37
@@ -1707,326 +1741,358 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.4.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.188 \end{itemize}
-                   ] [49] [50
+l.194     \item
+                \textbf{100\% Zoom-out:} C√¢u nh·∫Øc l√Ω t∆∞·ªüng, bao tr·ªç...
+] [49] [50
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.227 K
-       ·∫øt qu·∫£ cho th·∫•y m√¥ h√¨nh \textbf{kh√¥ng} ghi nh·ªõ c·ª©ng nh·∫...
-] [51] [52
+l.228 
+      ] [51
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.4}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.267 \end{itemize}
-                   ]
-<images/chart_baseline_sam_comparison.png, id=1104, 715.473pt x 421.575pt>
+l.263     \item \textbf
+                       {PGA b√°m bi√™n s√°t h∆°n SAM ·ªü c√πng ƒë·ªô ph√¢n g...
+] [52]
+<images/chart_baseline_sam_comparison.png, id=1122, 789.1673pt x 461.57846pt>
 File: images/chart_baseline_sam_comparison.png Graphic file (type png)
 <use images/chart_baseline_sam_comparison.png>
 Package pdftex.def Info: images/chart_baseline_sam_comparison.png  used on inpu
 t line 271.
-(pdftex.def)             Requested size: 418.82375pt x 246.77797pt.
- [53
+(pdftex.def)             Requested size: 418.82375pt x 244.96645pt.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 277.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\times' on input line 277.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 277.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 277.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\times' on input line 277.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 277.
+
+[53
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.310 \section
-              {Ph√¢n t√≠ch ki·∫øn tr√∫c v√† kh·∫£ nƒÉng t·ªïng qu√°t h√≥a} <./i
-mages/chart_baseline_sam_comparison.png>] [54
+l.282 
+       <./images/chart_baseline_sam_comparison.png>] [54
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.5}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.358 
+l.310 
       ] [55
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.6}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.362 
-      ]
-<images/chart_ablation.png, id=1126, 821.7099pt x 327.74445pt>
-File: images/chart_ablation.png Graphic file (type png)
-<use images/chart_ablation.png>
-Package pdftex.def Info: images/chart_ablation.png  used on input line 365.
-(pdftex.def)             Requested size: 432.48051pt x 172.49849pt.
-
-Underfull \hbox (badness 1048) in paragraph at lines 371--371
-|[]\T5/cmr/bx/n/14.4 Ki∫m ^^_‡nh ^^_Î Ín ^^_‡nh b¨ng ^^_°nh gi° ch≤o (Cross-
- []
-
-
-Overfull \hbox (40.9773pt too wide) in paragraph at lines 402--417
- [][] 
- []
-
-[56
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.420 
-      
+l.358     \item
+                \textbf{U-Net+Concat:} Kh√¥ng c√≥ PSG, kh√¥ng c√≥ CAD -- c√¢...
+] [56] [57
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.7}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.420 
-       <./images/chart_ablation.png>] [57
+l.397 
+      ]
+<images/chart_ablation.png, id=1160, 1438.173pt x 598.3956pt>
+File: images/chart_ablation.png Graphic file (type png)
+<use images/chart_ablation.png>
+Package pdftex.def Info: images/chart_ablation.png  used on input line 400.
+(pdftex.def)             Requested size: 432.48051pt x 179.94008pt.
+
+Overfull \hbox (40.9773pt too wide) in paragraph at lines 417--432
+ [][] 
+ []
+
+[58
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.437 
+       <./images/chart_ablation.png>] [59
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.8}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.429 
-      ] [58
+l.461 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.9}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.456 
-      ]
-<images/chart_subcat_btxrd.png, id=1147, 531.54585pt x 305.7021pt>
-File: images/chart_subcat_btxrd.png Graphic file (type png)
-<use images/chart_subcat_btxrd.png>
-Package pdftex.def Info: images/chart_subcat_btxrd.png  used on input line 491.
-
-(pdftex.def)             Requested size: 364.19667pt x 209.46063pt.
- [59
+l.461 
+      ] [60
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.10}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.499 
-      ] [60
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.526 
-      
+l.495 
+      ] [61
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.11}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.526 
-       <./images/chart_subcat_btxrd.png>] [61]
-Underfull \hbox (badness 10000) in paragraph at lines 545--545
-[]|\T5/cmr/bx/n/14.4 T™p d˙
- []
+l.527 
+      ]
+<images/chart_subcat_btxrd.png, id=1189, 531.54585pt x 305.7021pt>
+File: images/chart_subcat_btxrd.png Graphic file (type png)
+<use images/chart_subcat_btxrd.png>
+Package pdftex.def Info: images/chart_subcat_btxrd.png  used on input line 532.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 549--549
-[]|\T5/cmr/m/n/14.4 X°c th¸c
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 551--551
-[]|\T5/cmr/m/n/14.4 Ki∫m th˚
- []
-
-[62
+(pdftex.def)             Requested size: 364.19667pt x 209.46063pt.
+ [62
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.567 
+       <./images/chart_subcat_btxrd.png>] [63
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.12}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.557 
-      ]
-Underfull \hbox (badness 3417) in paragraph at lines 560--560
+l.574 
+      ] [64]
+Underfull \hbox (badness 10000) in paragraph at lines 588--588
+[]|\T5/cmr/bx/n/14.4 T™p d˙
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 592--592
+[]|\T5/cmr/m/n/14.4 X°c th¸c
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 594--594
+[]|\T5/cmr/m/n/14.4 Ki∫m th˚
+ []
+
+
+Underfull \hbox (badness 3417) in paragraph at lines 603--603
 |[]\T5/cmr/bx/n/14.4 PGA-UNet to†n diªn tr∂n Fra-cAt-las (256\TS1/cmr/bx/n/14.4
  ÷\T5/cmr/bx/n/14.4 256 v†
  []
 
-[63
+[65
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.13}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.590 
-      ]
-<images/chart_fracatlas_pga_full.png, id=1188, 539.8569pt x 305.7021pt>
-File: images/chart_fracatlas_pga_full.png Graphic file (type png)
-<use images/chart_fracatlas_pga_full.png>
-Package pdftex.def Info: images/chart_fracatlas_pga_full.png  used on input lin
-e 593.
-(pdftex.def)             Requested size: 418.82375pt x 237.16855pt.
- [64
+l.607 
+      ] [66
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.14}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.622 
-      ] [65
+l.633 
+      ]
+<images/chart_fracatlas_pga_full.png, id=1238, 539.8569pt x 305.7021pt>
+File: images/chart_fracatlas_pga_full.png Graphic file (type png)
+<use images/chart_fracatlas_pga_full.png>
+Package pdftex.def Info: images/chart_fracatlas_pga_full.png  used on input lin
+e 636.
+(pdftex.def)             Requested size: 418.82375pt x 237.16855pt.
+ [67
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4.4}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.652 \end{table}
-                  <./images/chart_fracatlas_pga_full.png>] [66
+l.665 
+       <./images/chart_fracatlas_pga_full.png>] [68
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.15}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.659 
-      ] [67]
-<images/chart_fracatlas_subcat_baseline.png, id=1217, 482.0409pt x 319.4334pt>
-File: images/chart_fracatlas_subcat_baseline.png Graphic file (type png)
-<use images/chart_fracatlas_subcat_baseline.png>
-Package pdftex.def Info: images/chart_fracatlas_subcat_baseline.png  used on in
-put line 692.
-(pdftex.def)             Requested size: 364.19667pt x 241.34377pt.
- [68
+l.698 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.16}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.700 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.5}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.700 
-       <./images/chart_fracatlas_subcat_baseline.png>] [69
+l.698 
+      ] [69]
+<images/chart_fracatlas_subcat_baseline.png, id=1262, 482.0409pt x 319.4334pt>
+File: images/chart_fracatlas_subcat_baseline.png Graphic file (type png)
+<use images/chart_fracatlas_subcat_baseline.png>
+Package pdftex.def Info: images/chart_fracatlas_subcat_baseline.png  used on in
+put line 733.
+(pdftex.def)             Requested size: 364.19667pt x 241.34377pt.
+ [70
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.17}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.730 
-      ]
-<images/chart_subcat_fracatlas.png, id=1232, 539.8569pt x 305.34074pt>
-File: images/chart_subcat_fracatlas.png Graphic file (type png)
-<use images/chart_subcat_fracatlas.png>
-Package pdftex.def Info: images/chart_subcat_fracatlas.png  used on input line 
-733.
-(pdftex.def)             Requested size: 386.96027pt x 218.86674pt.
- [70
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.6}) 
+l.741 
+      ] [71
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.5}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.744     \item \textbf
-                       {T√≠nh b·ªÅn b·ªâ tr∆∞·ªõc sai s·ªë c√¢u nh·∫Øc ƒë∆∞·...
- <./images/chart_subcat_fracatlas.png>] [71]
-<images/vis_pga_01.png, id=1249, 1424.4417pt x 616.4631pt>
-File: images/vis_pga_01.png Graphic file (type png)
-<use images/vis_pga_01.png>
-Package pdftex.def Info: images/vis_pga_01.png  used on input line 764.
-(pdftex.def)             Requested size: 432.48051pt x 187.16028pt.
- [72] [73
-pdfTeX warning (ext4): destination with the same identifier (name{figure.4.7}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.785     \item \textbf
-                       {·∫¢nh ch·∫•t l∆∞·ª£ng th·∫•p:} C√°c ·∫£nh X-quang b·...
- <./images/vis_pga_01.png>] [74] [75] [76
+l.771 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.18}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.854 
-      ]
-Overfull \hbox (61.97957pt too wide) in paragraph at lines 895--906
- [][] 
- []
-
-[77
+l.771 
+       <./images/chart_fracatlas_subcat_baseline.png>]
+<images/chart_subcat_fracatlas.png, id=1277, 539.8569pt x 305.34074pt>
+File: images/chart_subcat_fracatlas.png Graphic file (type png)
+<use images/chart_subcat_fracatlas.png>
+Package pdftex.def Info: images/chart_subcat_fracatlas.png  used on input line 
+774.
+(pdftex.def)             Requested size: 386.96027pt x 218.86674pt.
+ [72] [73
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.6}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.786     \item \textbf
+                       {SAM-Med2D ƒë√£ tinh ch·ªânh c·∫£i thi·ªán r√µ r·ªát ...
+ <./images/chart_subcat_fracatlas.png>] [74]
+<images/vis_pga_01.png, id=1298, 1424.4417pt x 616.4631pt>
+File: images/vis_pga_01.png Graphic file (type png)
+<use images/vis_pga_01.png>
+Package pdftex.def Info: images/vis_pga_01.png  used on input line 805.
+(pdftex.def)             Requested size: 432.48051pt x 187.16028pt.
+ [75
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.7}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.822 
+       <./images/vis_pga_01.png>] [76] [77] [78
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.19}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.906 \end{table}
-                 ] [78
+l.891     \item \textbf
+                       {F1-Score 88.06\%:} C√¢n b·∫±ng gi·ªØa Precision v√† ...
+]
+Underfull \hbox (badness 1831) in paragraph at lines 914--914
+[]|$\OML/cmm/m/it/14.4 p \OMS/cmsy/m/n/14.4 2 \OT1/cmr/m/n/14.4 [0\OML/cmm/m/it
+/14.4 :\OT1/cmr/m/n/14.4 4\OML/cmm/m/it/14.4 ;  \OT1/cmr/m/n/14.4 0\OML/cmm/m/i
+t/14.4 :\OT1/cmr/m/n/14.4 5)$\T5/cmr/m/n/14.4 : c™n ng˜Ông
+ []
+
+
+Overfull \hbox (61.97957pt too wide) in paragraph at lines 936--947
+ [][] 
+ []
+
+[79] [80
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.20}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.939 
-      ] [79
+l.950 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.21}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.948     \item \textbf
-                       {Sai s·ªë Recall (FN):} C√°c ca b·ªánh b·ªã g√°c c·ªï...
-] [80] [81]
-Underfull \hbox (badness 10000) in paragraph at lines 1016--1016
-[]|\T5/cmr/bx/n/14.4 Pipeline Dice (end-to-
- []
-
-
-Underfull \hbox (badness 3872) in paragraph at lines 1027--1028
-[]\T5/cmr/m/n/14.4 MÊ hºnh ph•n lÓp g°c cÍng ^^_§t AUC-ROC = 0.9405 tr∂n
- []
-
-[82] [83
+l.950 
+      ] [81
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.22}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1035 
-       ]
-Underfull \hbox (badness 1389) in paragraph at lines 1036--1037
-\T5/cmr/m/n/14.4 £nh bªnh ^^_˜Òc Gate-keeper ph°t hiªn ^^_Ûng); False Neg-a-tiv
-e Rate
- []
-
-
-Underfull \hbox (badness 1681) in paragraph at lines 1051--1051
-\T5/cmr/m/n/14.4 ^^_˜Òc PGA-UNet, khÊng b‡ Gate-
- []
-
-) [84] [85
+l.980 
+      ] [82] [83] [84] [85
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.23}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.187 \include{Chapter4/chapter4}
-                                 ]
+l.1067 
+       ]
+Underfull \hbox (badness 3872) in paragraph at lines 1068--1069
+[]\T5/cmr/m/n/14.4 MÊ hºnh ph•n lÓp g°c cÍng ^^_§t AUC-ROC = 0.9405 tr∂n
+ []
+
+
+Underfull \hbox (badness 1389) in paragraph at lines 1077--1078
+\T5/cmr/m/n/14.4 £nh bªnh ^^_˜Òc Gate-keeper ph°t hiªn ^^_Ûng); False Neg-a-tiv
+e Rate
+ []
+
+[86]
+Underfull \hbox (badness 1681) in paragraph at lines 1092--1092
+\T5/cmr/m/n/14.4 ^^_˜Òc PGA-UNet, khÊng b‡ Gate-
+ []
+
+[87
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.24}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1106 
+       ]) [88]
 \openout2 = `Chapter5/chapter5.aux'.
 
  (./Chapter5/chapter5.tex
 Ch∆∞∆°ng 5.
-[86
+[89
 
 
 
 
-] [87] [88] [89] [90] [91]) [92]
-Underfull \hbox (badness 10000) in paragraph at lines 198--198
-[]\T5/cmr/m/n/14.4 Cheng, Jun-long et al. ``SAM-Med2D''. In: \T5/cmr/m/it/14.4 
-arXiv preprint
- []
-
-[93
+] [90] [91] [92] [93] [94]) [95] [96
 
 
 
-] [94] (./main.aux (./Appendix/reassurances.aux) (./Appendix/thanks.aux)
-(./Appendix/decuong.aux) (./Appendix/danhmuctuvietat.aux)
+] [97] (./main.aux
+(./Appendix/reassurances.aux) (./Appendix/thanks.aux) (./Appendix/decuong.aux)
+(./Appendix/danhmuctuvietat.aux) (./Appendix/doichieuthuatngu.aux)
 (./Appendix/tomtat.aux) (./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux)
 (./Chapter3/chapter3.aux) (./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: DB9FEC262809688E3D634233AB083343;23363.
+(rerunfilecheck)             Checksum: 9B99CD7A0C007468001823449A570342;23333.
+
+Package biblatex Warning: Please (re)run BibTeX on the file(s):
+(biblatex)                main
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 35282 strings out of 476182
- 662915 string characters out of 5795595
- 1966975 words of memory out of 5000000
- 56394 multiletter control sequences out of 15000+600000
+ 35438 strings out of 476182
+ 666465 string characters out of 5795595
+ 1965975 words of memory out of 5000000
+ 56520 multiletter control sequences out of 15000+600000
  577951 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 84i,13n,93p,1964b,1414s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,13n,93p,1964b,1477s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.
 600pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1
 440.600pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/t
@@ -2050,10 +2116,10 @@ fonts/type1/vntex/vnr/vnr12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr
 17.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnti10.pfb></home/thongluc/t
 exmf/fonts/type1/vntex/vnr/vnti12.pfb></home/thongluc/texmf/fonts/type1/vntex/v
 nr/vntt12.pfb>
-Output written on main.pdf (117 pages, 1803893 bytes).
+Output written on main.pdf (123 pages, 1841670 bytes).
 PDF statistics:
- 1583 PDF objects out of 1728 (max. 8388607)
- 1359 compressed objects within 14 object streams
- 290 named destinations out of 1000 (max. 500000)
- 12515 words of extra memory for PDF output out of 14400 (max. 10000000)
+ 1629 PDF objects out of 1728 (max. 8388607)
+ 1400 compressed objects within 14 object streams
+ 300 named destinations out of 1000 (max. 500000)
+ 12531 words of extra memory for PDF output out of 14400 (max. 10000000)
 

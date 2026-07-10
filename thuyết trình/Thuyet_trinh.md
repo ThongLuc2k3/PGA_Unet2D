@@ -1,230 +1,125 @@
-# Bài Thuyết Trình Khóa Luận Tốt Nghiệp
-## PGA-UNet: Phân Đoạn Tổn Thương Xương Trên Ảnh X-Quang Với Hướng Dẫn Mềm Từ Câu Nhắc Không Gian
+# Giải thích PGA-UNet (bản thuyết trình)
 
-**Sinh viên:** Thong Luc  
-**Thời lượng ước tính:** 15–20 phút
+Dùng đúng thuật ngữ chuyên ngành của đề tài (không mượn ví dụ từ ngành khác), viết theo mạch nói chuyện — người nghe không chuyên vẫn theo được, nhưng đầy đủ công thức và lý do đặt từng công thức ở đúng vị trí đó trong kiến trúc.
 
 ---
 
-## SLIDE 1: MỞ ĐẦU
+## 1. Vấn đề cần giải quyết
 
-Kính chào Hội đồng, kính thưa quý thầy cô.
+Muốn phân đoạn (khoanh chính xác từng pixel) vùng tổn thương xương trên ảnh X-quang. Có hai hướng cũ:
 
-Em xin phép trình bày khóa luận tốt nghiệp với đề tài:
-**"Phân đoạn tổn thương xương trên ảnh X-quang với hướng dẫn mềm từ câu nhắc không gian"**
+- **U-Net tự động**: đưa thẳng ảnh vào, mô hình tự tìm vùng bệnh — nhưng không có ai chỉ hướng nên dễ nhầm lẫn, đặc biệt ảnh X-quang tương phản thấp.
+- **SAM-Med2D**: một mô hình nền tảng lớn, nhận thêm bounding box (khung chữ nhật bác sĩ vẽ quanh vùng nghi ngờ) làm gợi ý — chính xác hơn nhưng rất nặng (~91 triệu tham số) và bị giới hạn cứng ở độ phân giải nhỏ (256×256).
 
----
-
-## SLIDE 2: BỐI CẢNH VÀ ĐỘNG LỰC
-
-Trong thực tế lâm sàng, bác sĩ chẩn đoán hình ảnh phải đọc và phân tích hàng trăm phim X-quang mỗi ngày, điển hình như Cambridge University Hospitals thực hiện hơn 174.000 ca chụp mỗi năm, tương đương 200–300 bệnh nhân mỗi ngày.
-
-Khi nghi ngờ có tổn thương xương, bác sĩ cần **khoanh vùng chính xác** để đo kích thước, theo dõi diễn tiến và lập kế hoạch điều trị. Hiện tại việc này được thực hiện **thủ công** trên hệ thống PACS, tốn thời gian, phụ thuộc kinh nghiệm cá nhân và tiềm ẩn sai sót.
-
-Các giải pháp phân đoạn hoàn toàn tự động (như U-Net) gặp khó khăn đặc thù với X-quang xương: độ tương phản thấp, cấu trúc giải phẫu chồng lấp, tổn thương trông gần giống mô lành. Kết quả: **Dice chỉ đạt 0.45**, không đủ tin cậy cho lâm sàng.
+PGA-UNet ra đời để lấy ưu điểm của cả hai: nhẹ như U-Net nhưng vẫn nhận được gợi ý bounding box như SAM-Med2D.
 
 ---
 
-## SLIDE 3: PHÁT BIỂU BÀI TOÁN
+## 2. Ý tưởng cốt lõi: biến bounding box thành "bản đồ nhiệt" (heatmap)
 
-**Người dùng cuối:** Bác sĩ chẩn đoán hình ảnh (radiologist) làm việc trong ca đọc phim, sử dụng hệ thống PACS. Thao tác duy nhất họ cần thực hiện là **khoanh một hộp giới hạn** bao quanh vùng nghi ngờ.
+Thay vì đưa bounding box vào dưới dạng một khối 0/1 cứng (trong hộp là 1, ngoài hộp là 0), PGA-UNet chuyển nó thành một bản đồ nhiệt: giá trị cao đều bên trong hộp, mờ dần ra viền, mượt liên tục thay vì đứt gãy đột ngột ở biên hộp.
 
-**Bài toán (giai đoạn Online):**
-- **Đầu vào:** Ảnh X-quang xương `I` + hộp giới hạn `B = (x1, y1, x2, y2)` do bác sĩ vẽ
-- **Đầu ra:** Mặt nạ phân đoạn nhị phân `M̂`, pixel = 1 là vùng tổn thương
+**Lý do làm vậy:** bounding box bác sĩ vẽ tay không bao giờ hoàn hảo — có thể lệch tâm một chút, to hơn hoặc nhỏ hơn vùng bệnh thật. Nếu mô hình tin tuyệt đối vào đúng viền hộp (dạng 0/1 cứng), chỉ cần hộp lệch một chút là mô hình dễ sai theo. Bản đồ nhiệt mềm giúp mô hình hiểu "vùng nghi ngờ nằm khoảng đây, tin tưởng giảm dần ra ngoài", nên chịu được sai số của bác sĩ tốt hơn.
 
-Yêu cầu then chốt: hệ thống phải **bền vững** trước sai lệch thực tế trong cách bác sĩ vẽ hộp, lệch tâm, kích thước không hoàn hảo.
+### 2.1. Công thức: Plateau Heatmap với Gaussian Blur, $k = 31$
 
----
+Bác sĩ vẽ một hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$. Quy trình biến hộp này thành bản đồ nhiệt liên tục $\mathbf{H}_{prompt}$ gồm 2 bước:
 
-## SLIDE 4: KIẾN TRÚC HỆ THỐNG TỔNG THỂ
+**Bước 1 — Tạo mặt nạ nhị phân có đệm:** Từ hộp $\mathbf{B}$, tạo một mặt nạ nhị phân $\mathbf{B}_{mask}$ (bên trong hộp = 1, bên ngoài = 0), nhưng hộp được nới rộng thêm 5 pixel mỗi cạnh trước khi gán giá trị 1, để không cắt sát ngay biên tổn thương thực tế.
 
-Hệ thống gồm hai module hoạt động tuần tự:
+**Bước 2 — Làm mềm biên bằng bộ lọc Gaussian:**
 
-**Bước 1: Sàng lọc tự động (Gatekeeper)**
-- Ảnh X-quang đi qua **EfficientNet\_B3** (~12M tham số, pretrained ImageNet)
-- Tính xác suất bệnh lý p̂ ∈ [0,1]
-- Nếu p̂ < 0.5: dừng, báo "bình thường"
-- Nếu p̂ ≥ 0.5: chuyển sang Bước 2
+$$\mathbf{H}_{prompt} = \text{GaussianBlur}\left(\mathbf{B}_{mask},\ k=31\right)$$
 
-**Bước 2: Phân đoạn có hướng dẫn (PGA-UNet)**
-- Bác sĩ khoanh hộp giới hạn B
-- Hệ thống chuyển B thành Bản đồ nhiệt câu nhắc H (Prompt Heatmap)
-- PGA-UNet nhận cặp (ảnh, heatmap) và xuất mặt nạ phân đoạn M̂
+Ở đây $k$ là **kích thước cửa sổ lọc** (kernel size) — tức là khi làm mềm một điểm ảnh, bộ lọc sẽ nhìn vào một vùng vuông $31 \times 31$ pixel xung quanh điểm đó, tính trung bình có trọng số (trọng số giảm dần theo khoảng cách tới tâm, đúng theo phân phối Gaussian) để quyết định giá trị mới. Kết quả: bên trong hộp vẫn giữ nguyên giá trị cao gần bằng 1 (vì toàn bộ vùng lân cận cũng là 1, trung bình ra vẫn xấp xỉ 1), còn tại **đường biên hộp**, giá trị giảm dần mượt mà từ 1 xuống 0 trong một vùng chuyển tiếp, thay vì nhảy đột ngột từ 1 xuống 0 như mặt nạ nhị phân gốc.
 
-Triết lý thiết kế: **human-in-the-loop**, tự động hoá sàng lọc, trao quyền định hướng không gian cho bác sĩ.
+**Tại sao chọn đúng $k = 31$:** Nhóm đã thử nghiệm với $k \in \{15, 21, 31, 51\}$ trên tập xác thực:
 
----
+- $k < 21$: vùng chuyển tiếp quá hẹp, gần như vẫn là mặt nạ nhị phân cứng, không giải quyết được vấn đề ban đầu.
+- $k > 51$: vùng chuyển tiếp quá rộng, tín hiệu câu nhắc "tràn" ra ngoài, lấn sang các cấu trúc xương lân cận không liên quan.
+- $k = 31$ tạo vùng chuyển tiếp mượt khoảng 15 pixel mỗi bên (đủ phủ vùng biên tổn thương điển hình trên ảnh $512\times512$), cho Dice tốt nhất trên tập xác thực. Số 31 là số lẻ vì bộ lọc cần có đúng một pixel tâm để đối xứng đều hai bên.
 
-## SLIDE 5: ĐÓNG GÓP CHÍNH: HƯỚNG DẪN MỀM QUA PROMPT HEATMAP
+**Vì sao không dùng mặt nạ nhị phân cứng luôn:** Khi một mặt nạ có cạnh sắc nét đi qua một lớp tích chập, đường biên đột ngột đó tạo ra gradient giả tạo — mạng dễ học theo hình dạng cạnh của hộp thay vì học đặc trưng thật của tổn thương. Bản đồ nhiệt mượt tránh được hiện tượng này, đồng thời phù hợp tự nhiên với cách các mạng nơ-ron vốn tạo ra vùng kích hoạt dạng phân phối liên tục (mạnh ở trung tâm, giảm dần ra biên).
 
-Đây là đóng góp kỹ thuật trọng tâm của khóa luận.
-
-**Vấn đề với các cách biểu diễn hiện có:**
-- **SAM / SAM-Med2D:** mã hóa hộp thành vector rời rạc 256 chiều, mất thông tin không gian 2D, khó tích hợp vào U-Net CNN
-- **Mặt nạ nhị phân phẳng:** đường biên sắc nét tạo gradient giả, mô hình học bám theo biên hộp thay vì biên tổn thương thực
-
-**Giải pháp đề xuất: Plateau Heatmap**
-- Vùng trong hộp: giá trị = 1.0 (plateau đồng đều)
-- Làm mềm biên bằng Gaussian blur (kernel 31×31)
-- Kết quả: kênh ảnh H ∈ [0,1]^(H×W) đi **song hành** cùng ảnh X-quang vào toàn bộ mạng
-
-**Tại sao hiệu quả:** Tín hiệu liên tục không có đường biên sắc nét, mô hình không thể "ghi nhớ" vị trí tâm hộp, khi bác sĩ vẽ lệch, mô hình vẫn tìm được tổn thương đúng.
-
-**Bằng chứng (ablation study V4 vs V5):**
-- Binary prompt: Dice Shift = 0.7378
-- Gaussian Heatmap: Dice Shift = **0.8382** (+0.1004, tăng 13.6%)
+**So với cách SAM/SAM-Med2D mã hóa prompt:** SAM mã hóa hộp giới hạn thành các vector nhúng vị trí rời rạc (positional embedding), phù hợp với kiến trúc Transformer vốn xử lý tập token rời rạc. PGA-UNet dùng kiến trúc U-Net với feature map 2D liên tục, nên chọn biểu diễn bản đồ nhiệt 2D cùng không gian $H \times W$ với feature map — cho phép nhân trực tiếp theo từng điểm ảnh (sẽ thấy ở công thức PSG bên dưới), đơn giản, hiệu quả và không mất thông tin vị trí như khi phải chiếu một vector rời rạc vào không gian 2D.
 
 ---
 
-## SLIDE 6: KIẾN TRÚC PGA-UNET
+## 3. Đưa bản đồ nhiệt vào đúng hai chỗ trong kiến trúc U-Net
 
-PGA-UNet là kiến trúc U-Net nhẹ (~3M tham số) được thiết kế để khai thác tín hiệu heatmap liên tục.
+PGA-UNet vẫn giữ khung U-Net gốc (một nhánh mã hóa nén ảnh xuống, một nhánh giải mã dựng lại mặt nạ), nhưng thêm hai thành phần mới đưa bản đồ nhiệt vào:
 
-**Tại Encoder: Prompt Spatial Gate (PSG)**
+- **Cổng không gian (Prompt Spatial Gate – PSG)**, đặt ở nhánh mã hóa: tăng cường đặc trưng đúng vùng được khoanh ngay từ giai đoạn trích đặc trưng.
+- **Cơ chế chú ý có điều kiện (Conditioned Attention Decoder – CAD)**, đặt ở nhánh giải mã: mở rộng Attention Gate sẵn có, đưa thêm câu nhắc vào tín hiệu quyết định "nên chú ý vào đâu" khi dựng lại mặt nạ.
 
-Tại mỗi tầng encoder, đặc trưng được nhân với một hệ số khuếch đại dẫn xuất từ heatmap câu nhắc. Vùng nằm trong hộp giới hạn được tăng cường, trong khi vùng ngoài vẫn được giữ nguyên (không bị triệt tiêu). Điều này giúp encoder tập trung trích xuất đặc trưng đúng vùng quan tâm ngay từ đầu mà không mất thông tin toàn cục.
+Tóm gọn vai trò: PSG lo phần "tập trung sớm" ở đầu vào, CAD lo phần "bám đúng vùng" ở đầu ra. Cả hai cùng dùng chung một bản đồ nhiệt $\mathbf{H}_{prompt}$ làm tín hiệu dẫn đường xuyên suốt mạng.
 
-**Tại Decoder: Conditioned Attention (CAD)**
+### 3.1. Cổng không gian tại Encoder (PSG) — công thức và lý do
 
-Tín hiệu điều khiển attention gate được bổ sung thêm một nhánh từ câu nhắc, có trọng số giảm dần ở các tầng phân giải cao. Ý tưởng: ở tầng sâu, câu nhắc định hướng ngữ nghĩa; ở tầng cuối gần output, mạng tự do dựa vào gradient ảnh thực để vẽ biên chính xác thay vì bị ép bởi bounding box thô.
+Encoder của PGA-UNet vẫn là encoder U-Net chuẩn: ảnh đi qua nhiều tầng, mỗi tầng gồm các lớp tích chập trích đặc trưng rồi giảm kích thước không gian (downsample) để chuyển sang tầng sau — tầng càng sâu thì kích thước ảnh càng nhỏ nhưng số kênh đặc trưng càng nhiều.
 
-**So sánh với SAM:** SAM dùng transformer + positional embedding rời rạc. PGA dùng CNN + heatmap 2D, phù hợp tự nhiên với kiến trúc feature map không gian.
+PSG được chèn thêm vào **ngay sau bước trích đặc trưng của mỗi tầng, trước khi đặc trưng đó được downsample chuyển xuống tầng kế tiếp**. Tại tầng thứ $l$, gọi đặc trưng vừa trích được là $\mathbf{x}^l$:
 
----
+**Bước 1:** Bản đồ nhiệt gốc $\mathbf{H}_{prompt}$ được resize (giảm mẫu) về đúng kích thước không gian của $\mathbf{x}^l$ tại tầng đó, gọi là $\mathbf{H}^l$. Lý do bắt buộc phải resize: $\mathbf{x}^l$ càng sâu thì kích thước càng nhỏ, nên heatmap phải thu nhỏ theo để nhân được với nhau theo từng điểm ảnh tương ứng.
 
-## SLIDE 7: KẾT QUẢ: SO SÁNH BASELINE
+**Bước 2 — Công thức cổng:**
 
-**Lưu ý đơn vị đánh giá:** U-Net và Attention U-Net được đánh giá theo **ảnh** (per-image, N=187, mask hợp nhất), trong khi PGA-UNet đánh giá theo **polygon** (per-polygon, N=232). Đây là hai đơn vị khác nhau do PGA-UNet nhận từng vùng tổn thương riêng lẻ kèm bbox tương ứng. So sánh phản ánh đúng điều kiện vận hành thực tế của từng mô hình.
+$$\tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \Big(1 + \alpha \cdot \sigma(\mathbf{W}_{gate} * \mathbf{H}^l)\Big)$$
 
-| Mô hình | Đơn vị đánh giá | Dice ↑ | IoU ↑ | HD95 ↓ |
-|---|---|---|---|---|
-| U-Net (tự động) | per-image (N=187) | 0.4534 | 0.3671 | 128.61 |
-| Attention U-Net (tự động) | per-image (N=187) | 0.4159 | 0.3306 | 132.86 |
-| **PGA-UNet Zoom-out** | per-polygon (N=232) | **0.8524** | **0.7527** | **13.96** |
+Giải thích từng ký hiệu:
 
-**Quan sát:** Attention U-Net thậm chí tệ hơn U-Net, khi không có tín hiệu định hướng, cơ chế attention tự do khuếch đại nhiễu (bờ khớp xương, dị vật) thay vì tổn thương. Điều này cho thấy attention chỉ phát huy khi được "neo" bởi prompt rõ ràng.
+- $\mathbf{W}_{gate} * \mathbf{H}^l$: phép tích chập $1\times1$ (chỉ đổi số kênh, không đổi kích thước không gian), biến heatmap từ 1 kênh thành đúng số kênh $C^l$ của $\mathbf{x}^l$ tại tầng đó, để hai bên khớp nhau khi nhân.
+- $\sigma$: hàm sigmoid, ép giá trị về khoảng $(0,1)$.
+- $\alpha \in [0,1]$: một tham số học được, khởi tạo nhỏ ở $0.1$ để không làm xáo trộn huấn luyện ban đầu.
+- $\odot$: nhân theo từng phần tử (element-wise), tức mỗi điểm ảnh, mỗi kênh nhân riêng.
 
----
+**Vì sao công thức có dạng $(1 + \alpha \cdot \sigma(\cdot))$ chứ không phải chỉ $\alpha \cdot \sigma(\cdot)$:** Đây là điểm mấu chốt. Vì luôn cộng thêm 1, hệ số nhân luôn $\geq 1$ — nghĩa là đặc trưng **chỉ có thể được khuếch đại lên, không bao giờ bị nhân với số nhỏ hơn 1 để triệt tiêu**. Ở vùng trong hộp (nơi $\mathbf{H}^l$ gần 1), hệ số nhân sẽ lớn hơn 1, đặc trưng được tăng cường. Ở vùng ngoài hộp ($\mathbf{H}^l \approx 0$), hệ số nhân gần bằng 1, đặc trưng giữ nguyên như cũ, không bị mất đi. Đây gọi là "tăng cường có chọn lọc" (selective enhancement) — encoder không bỏ sót thông tin toàn cục, chỉ ưu tiên truyền mạnh hơn phần đặc trưng nằm trong vùng bác sĩ chỉ định xuống các tầng sâu hơn.
 
-## SLIDE 8: KẾT QUẢ: SO SÁNH VỚI SAM-Med2D
+**Tại sao đặt PSG ở encoder mà không phải chỗ khác:** Vì encoder là nơi quyết định đặc trưng nào được giữ lại và truyền tiếp xuống các tầng sau. Nếu không định hướng ngay từ đây, mạng phải tự học lọc nhiễu nền trên toàn ảnh — lãng phí và dễ sai. Đặt PSG ngay sau mỗi tầng trích đặc trưng nghĩa là mọi tầng sâu hơn phía sau đều được thừa hưởng phần đặc trưng đã được "nhắc" ngay từ đầu vào của chúng. Đây cũng là thành phần **không tồn tại trong U-Net hay Attention U-Net gốc** — hoàn toàn mới được thêm vào cho PGA-UNet.
 
-| Mô hình | Kịch bản | Dice ↑ | Params |
-|---|---|---|---|
-| PGA-UNet | Zoom-out | **0.8524** | ~3M |
-| PGA-UNet | Shift | **0.8382** | ~3M |
-| PGA-UNet | Mixed | **0.8496** | ~3M |
-| SAM-Med2D (fine-tuned) | Zoom-out | 0.7350 | ~91M |
-| SAM-Med2D (fine-tuned) | Shift | 0.7097 | ~91M |
-| SAM-Med2D (zero-shot) | Zoom-out | 0.5337 | ~91M |
+### 3.2. Cơ chế chú ý có điều kiện tại Decoder (CAD) — công thức và lý do
 
-**PGA-UNet vượt SAM-Med2D fine-tuned ~12–13 điểm Dice** với số tham số nhỏ hơn **30 lần**, huấn luyện hoàn toàn từ đầu trên BTXRD, không cần pretrained quy mô lớn.
+Decoder chuẩn của Attention U-Net hoạt động thế này: ở mỗi tầng giải mã, đặc trưng từ tầng sâu hơn (đã qua upsample) được dùng làm **tín hiệu gating** $\mathbf{g}$, tín hiệu này quyết định nên "chú ý" vào phần nào của đặc trưng skip-connection $\mathbf{x}^l$ (lấy từ encoder cùng tầng, đã qua PSG ở trên) khi ghép nối lại. Vấn đề của thiết kế gốc: $\mathbf{g}$ được tính hoàn toàn từ đặc trưng ảnh, không hề biết bác sĩ đã chỉ vùng nào.
 
----
+CAD sửa đúng bước tính $\mathbf{g}$ này, chèn thêm câu nhắc vào **trước khi** $\mathbf{g}$ được đưa vào cổng chú ý chuẩn. Cụ thể gồm 4 bước:
 
-## SLIDE 9: KẾT QUẢ: ABLATION STUDY
+**Bước 1 — Mã hóa câu nhắc riêng cho tầng này:**
 
-| Biến thể | PSG | CAD | Prompt | Dice Zoom ↑ | Dice Shift ↑ | Dice Mixed ↑ |
-|---|---|---|---|---|---|---|
-| V1: Baseline concat | ✗ | ✗ | Gaussian | 0.8718 | 0.7201 | 0.8158 |
-| V2: PSG only | ✓ | ✗ | Gaussian | 0.8643 | 0.7291 | 0.8146 |
-| V3: CAD only | ✗ | ✓ | Gaussian | 0.8827 | 0.7335 | 0.8256 |
-| V4: Full + Binary | ✓ | ✓ | Binary | 0.8800 | 0.7378 | 0.8276 |
-| **V5: Full + Gaussian** | ✓ | ✓ | **Gaussian** | 0.8524 | **0.8382** | **0.8496** |
+$$\mathbf{p}_{enc} = f_{enc}(\mathbf{H}_{prompt})$$
 
-**Phát hiện đáng chú ý:** V4 sang V5 (chỉ thay Binary thành Gaussian):
-- Dice Shift **+0.1004** (+13.6%)
-- Dice Mixed **+0.0220** (+2.7%)
-- Dice Zoom-out giảm nhẹ -0.0276, **trade-off có chủ đích** để đổi lấy robustness
+$f_{enc}$ là hai lớp tích chập $3\times3$ liên tiếp (kèm InstanceNorm và ReLU), nhận heatmap (đã resize về đúng kích thước của $\mathbf{g}$ tại tầng này) làm đầu vào, biến nó thành một đặc trưng $\mathbf{p}_{enc}$ có cùng số kênh với $\mathbf{g}$.
 
----
+**Bước 2 — Tính điểm tin cậy vô hướng:**
 
-## SLIDE 10: KẾT QUẢ: TÍNH BỀN VỮNG VÀ ĐỘ ỔN ĐỊNH
+$$c = \sigma(\text{GAP}(\mathbf{p}_{enc}))$$
 
-**Cross-validation 4-fold (trung bình ± độ lệch chuẩn):**
+GAP (Global Average Pooling) lấy trung bình toàn bộ không gian của $\mathbf{p}_{enc}$, gộp thành một con số duy nhất cho mỗi kênh, rồi qua sigmoid ra một điểm tin cậy $c \in (0,1)$. Con số này đại diện cho việc "câu nhắc ở tầng này rõ ràng/mạnh đến mức nào" trên toàn ảnh.
 
-| Kịch bản | Dice | IoU | HD95 |
-|---|---|---|---|
-| Zoom-out | 0.8784 ± 0.0019 | 0.7897 | 10.29 |
-| Shift | 0.8522 ± 0.0099 | 0.7522 | 12.60 |
-| Mixed | 0.8723 ± 0.0035 | 0.7807 | 10.91 |
+**Bước 3 — Cộng có trọng số vào tín hiệu gating:**
 
-Độ lệch chuẩn rất thấp (±0.002 đến ±0.010) xác nhận mô hình ổn định, không phụ thuộc cách phân chia dữ liệu.
+$$\mathbf{g}' = \mathbf{g} + c \cdot \alpha \cdot w_l \cdot \mathbf{p}_{enc}$$
 
-**Sub-category analysis: nhóm "Khó" (bottom-50 U-Net Dice)**
-- U-Net: Dice = **0.0000** (sụp đổ hoàn toàn)
-- Attention U-Net: Dice = 0.0929
-- PGA-UNet: Dice = **0.8181** (duy trì ổn định)
+Trong đó $\alpha = \sigma(\alpha_{raw})$ là một tham số học được khác (trọng số hòa trộn), còn $w_l$ là hệ số cố định theo từng tầng giải mã, đi từ tầng sâu nhất ra tầng nông nhất: $\{1.0,\ 0.7,\ 0.4,\ 0.2\}$.
+
+**Tại sao $w_l$ giảm dần từ tầng sâu ra tầng nông:** Tầng giải mã sâu nhất (kích thước ảnh nhỏ nhất) là nơi quyết định vị trí tổng thể của tổn thương — câu nhắc cần ảnh hưởng mạnh nhất ở đây ($w_l = 1.0$). Càng ra các tầng nông hơn (kích thước ảnh lớn dần, gần với đầu ra cuối), nhiệm vụ chính chuyển sang tinh chỉnh đường biên chi tiết dựa trên đặc trưng ảnh thật (gradient xương, độ tương phản) — nếu vẫn ép câu nhắc ảnh hưởng mạnh như ban đầu sẽ khiến mô hình "cứng nhắc" bám theo đúng hình chữ nhật của hộp thay vì bám theo hình dạng tổn thương thật. Giảm dần $w_l$ giúp câu nhắc "buông tay" dần, nhường chỗ cho đặc trưng ảnh quyết định đường biên cuối cùng.
+
+**Bước 4 — Đưa vào cổng chú ý chuẩn:** $\mathbf{g}'$ (đã được điều kiện hóa) được đưa vào khối GridAttentionBlock2D — chính là cơ chế Attention Gate gốc không đổi — để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$, dùng để điều chỉnh đặc trưng skip-connection $\mathbf{x}^l$ trước khi ghép với đặc trưng decoder. Ngoài ra, tại đầu ra khối decoder tầng này còn cộng thêm một thành phần dư nhỏ $+\beta \cdot \mathbf{H}_{prompt}$ ($\beta$ học được) để đảm bảo tín hiệu câu nhắc gốc vẫn còn dấu vết trực tiếp, không bị pha loãng hoàn toàn qua nhiều phép biến đổi.
+
+**Vì sao CAD chỉ sửa $\mathbf{g}$ mà không sửa thẳng $\mathbf{x}^l$ (khác cách PSG làm ở encoder):** Vì vai trò của $\mathbf{g}$ trong Attention Gate vốn dĩ là "người ra quyết định nên chú ý vào đâu" — sửa đúng chỗ ra quyết định là hiệu quả nhất, còn cơ chế chú ý chuẩn (GridAttentionBlock2D) phía sau vẫn được giữ nguyên để tận dụng cách nó đã được chứng minh hoạt động tốt trong Attention U-Net gốc. Đây là điểm khác biệt cốt lõi so với Attention Gate gốc: CAD là phần **mở rộng** một kỹ thuật đã có (không phải làm mới hoàn toàn như PSG), bằng cách bổ sung câu nhắc trực tiếp vào tín hiệu gating.
 
 ---
 
-## SLIDE 11: KẾT QUẢ: PIPELINE END-TO-END
+## 4. Hàm mất mát — không đổi
 
-**Module Gatekeeper (EfficientNet\_B3), đánh giá trên 375 ảnh hỗn hợp:**
+$$\mathcal{L}_{seg} = \mathcal{L}_{Dice} + \mathcal{L}_{BCE}$$
 
-| Độ đo | Kết quả |
-|---|---|
-| Accuracy | 88.00% |
-| Precision | 87.37% |
-| Recall / Sensitivity | 88.77% |
-| Specificity | 87.23% |
-| AUC-ROC | 0.9405 |
-
-**Pipeline tổng thể (375 ảnh hỗn hợp: 187 bệnh lý + 188 bình thường):**
-- TP/FP/FN/TN: 166 / 24 / 21 / 164 ảnh
-- Pipeline Dice = **0.7675** trên 233 đơn vị (209 polygon TP + 24 ảnh FP)
-- Hai nguồn suy giảm ngang nhau: 24 ảnh FP (Specificity 87.23%) và 21 ảnh FN (Sensitivity 88.77%)
-- Cải thiện đồng thời cả hai là hướng phát triển tiếp theo
+Câu nhắc **không** làm thay đổi công thức hàm mất mát này — nó vẫn tính trên mặt nạ dự đoán cuối cùng so với nhãn thật, y hệt U-Net thường. Ảnh hưởng của câu nhắc chỉ đi vào qua kiến trúc (PSG, CAD), lan truyền tới hàm mất mát gián tiếp qua gradient trong quá trình lan truyền ngược. Điểm này đáng nói khi thuyết trình vì nó cho thấy PGA-UNet không "gian lận" bằng cách thêm số hạng phạt đặc biệt nào cho phần câu nhắc — toàn bộ cải thiện đến từ cách kiến trúc dùng câu nhắc, không phải từ hàm mất mát.
 
 ---
 
-## SLIDE 12: KẾT LUẬN VÀ HẠN CHẾ
+## 5. Vì sao thiết kế này hiệu quả (tổng kết)
 
-**Những gì đã đạt được:**
-1. Đề xuất và kiểm chứng phương pháp **hướng dẫn mềm qua Gaussian Heatmap**, biểu diễn câu nhắc liên tục 2D giúp mô hình bền vững trước sai số câu nhắc (+0.10 Dice Shift so với binary)
-2. PGA-UNet (~3M params) vượt SAM-Med2D (~91M params) trên bộ BTXRD, cho thấy kiến trúc chuyên biệt có thể hiệu quả hơn foundation model đa mục đích trên domain hẹp
-3. Đánh giá end-to-end pipeline lâm sàng thực tế, không chỉ đánh giá phân đoạn đơn lẻ
-
-**Hạn chế thừa nhận:**
-- Chưa ablate lịch trình trọng số decoder (giảm dần vs cố định vs tăng dần), đang thực hiện thực nghiệm bổ sung (V6, V7, V8)
-- Bounding box đánh giá được sinh tự động, chưa có user study với bác sĩ thực
-- Chỉ kiểm chứng trên bộ BTXRD (X-quang chi), chưa đánh giá khả năng tổng quát hóa sang domain khác
-- Specificity của Gatekeeper (87.23%) cần cải thiện để giảm FP trong pipeline
-
-**Hướng phát triển:**
-- Hoàn thiện ablation V6/V7/V8 về lịch trình trọng số
-- Thu thập 50+ ca bác sĩ thực vẽ hộp để đánh giá robustness thực tế
-- Kiểm chứng trên bộ dữ liệu X-quang xương thứ hai
-
----
-
-## SLIDE 13: KẾT THÚC
-
-Kính thưa Hội đồng,
-
-Khóa luận này đề xuất một hướng tiếp cận cụ thể và có kiểm chứng để hỗ trợ bác sĩ chẩn đoán hình ảnh: thay vì cố gắng thay thế phán đoán của bác sĩ, hệ thống **đặt bác sĩ vào vị trí kiểm soát** và chuyển thao tác đơn giản nhất, khoanh một hộp, thành kết quả phân đoạn có độ chính xác cao.
-
-**Câu hỏi cốt lõi mà khóa luận trả lời:** Cần biểu diễn tín hiệu định hướng của bác sĩ như thế nào để mô hình vừa chính xác vừa bền vững trong điều kiện thực tế?
-
-Câu trả lời: **Liên tục và có gradient, không phải rời rạc hay nhị phân.**
-
-Em xin trân trọng cảm ơn Hội đồng và kính mời thầy cô đặt câu hỏi.
-
----
-
-## PHỤ LỤC: CÂU HỎI PHẢN BIỆN THƯỜNG GẶP
-
-### Q1: Tại sao không dùng binary mask thay vì Gaussian Heatmap?
-**A:** Binary mask tạo gradient giả tại đường biên, mạng học bám biên hộp thay vì biên tổn thương. Gaussian Heatmap cung cấp tín hiệu liên tục, mô hình không thể "ghi nhớ" biên hộp. Ablation V4 sang V5 cho thấy: +0.1004 Dice Shift.
-
-### Q2: Lịch trình w_l = {1.0, 0.7, 0.4, 0.2} dựa trên cơ sở nào?
-**A:** Đây là siêu tham số triển khai được xác định thực nghiệm trên tập xác thực. Hướng giảm dần có cơ sở trực giác (tầng phân giải cao cần tự do tái tạo chi tiết biên hơn là bị ép bởi bounding box thô), nhưng em chưa có ablation so sánh giảm dần vs cố định vs tăng dần. Thực nghiệm bổ sung đang được thực hiện (V6, V7, V8).
-
-### Q3: Tại sao PGA-UNet 3M params vượt SAM-Med2D 91M params?
-**A:** SAM-Med2D là foundation model đa mục đích, pretrain trên 4.6M ảnh y tế đa dạng nhưng không đặc thù cho X-quang xương. PGA-UNet được thiết kế và huấn luyện chuyên biệt cho bài toán này. Trên domain hẹp với dữ liệu đặc thù, mô hình chuyên biệt thường vượt mô hình đa mục đích dù nhỏ hơn nhiều lần. Ngoài ra SAM dùng resolution 256×256, PGA dùng 512×512, SAM mất chi tiết trên ảnh X-quang.
-
-### Q4: Bounding box do bác sĩ vẽ có thực sự lệch bao nhiêu?
-**A:** Em mô phỏng bằng Shift ngẫu nhiên trên bộ test, chưa có user study với bác sĩ thực. Đây là hạn chế được thừa nhận. Nếu có thêm thời gian, ưu tiên thu thập 50+ ca bác sĩ thực vẽ để đánh giá distribution sai lệch thực tế.
-
-### Q5: Tại sao Attention U-Net lại tệ hơn cả U-Net?
-**A:** Khi không có tín hiệu định hướng, cổng chú ý tự do dễ bị kích hoạt bởi vùng có gradient mạnh không phải tổn thương (bờ khớp xương, thiết bị cố định). Attention khi đó khuếch đại nhiễu thay vì tổn thương. Tuy nhiên em thừa nhận kết quả này cũng có thể do chưa tối ưu siêu tham số cho Attention U-Net trên BTXRD, cần thêm thực nghiệm để khẳng định.
+- **Nhẹ:** chỉ khoảng 3 triệu tham số, học từ đầu hoàn toàn trên dữ liệu X-quang xương, không cần mượn trọng số khổng lồ có sẵn như SAM-Med2D (~91 triệu tham số).
+- **Chính xác hơn U-Net tự động:** vẫn tận dụng được gợi ý của bác sĩ nhờ hai cơ chế PSG (tập trung sớm ở encoder) và CAD (bám đúng vùng ở decoder).
+- **Bền bỉ trước sai số bác sĩ:** nhờ dùng bản đồ nhiệt mềm (Gaussian, $k=31$) thay vì hộp cứng, mô hình chịu được sai lệch khi bác sĩ vẽ hộp không hoàn toàn chuẩn — thử nghiệm cho thấy khi hộp bị lệch tâm, độ chính xác gần như không đổi.
+- **Minh bạch về mặt thiết kế:** toàn bộ cải thiện đến từ kiến trúc (PSG + CAD), không phải từ việc thay đổi hàm mất mát hay "mẹo" huấn luyện nào khác.

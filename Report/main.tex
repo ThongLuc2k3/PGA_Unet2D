@@ -13,19 +13,20 @@
 \usepackage[utf8]{inputenc}
 \DeclareTextSymbolDefault{\DH}{T1}
 
-% Tài liệu tham khảo
+% Tài liệu tham khảo (chuẩn IEEE: đánh số theo thứ tự trích dẫn, tên tác giả dạng viết tắt)
 \usepackage[
-	sorting=nty,
-	backend=bibtex,
-	defernumbers=true]{biblatex}
+	style=ieee,
+	sorting=none,
+	backend=bibtex]{biblatex}
 \usepackage[unicode]{hyperref} % Bookmark tiếng Việt
+\usepackage{xurl} % Ngắt dòng URL sạch, tránh giãn cách chữ kiểu "https : / / ..." trong danh mục tham khảo
 \addbibresource{References/references.bib}
 
 \makeatletter
 \def\blx@maxline{77}
 \makeatother
 
-% Chèn hình, các hình trong luận văn được để trong thư mục Images/
+% Chèn hình, các hình trong khóa luận được để trong thư mục Images/
 \usepackage{graphicx}
 \graphicspath{ {Images/} }
 
@@ -168,6 +169,9 @@
 \addcontentsline{toc}{chapter}{Danh mục các ký hiệu và chữ viết tắt}
 \include{Appendix/danhmuctuvietat}
 
+\addcontentsline{toc}{chapter}{Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}
+\include{Appendix/doichieuthuatngu}
+
 \addcontentsline{toc}{chapter}{Tóm tắt}
 \include{Appendix/tomtat}
 
@@ -192,9 +196,9 @@
 \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
 \printbibheading[title={Tài liệu tham khảo}]
 
-\DeclareNameAlias{sortname}{family-given}
-\DeclareNameAlias{default}{family-given}
-
+\begingroup
+\raggedright % Tránh giãn cách chữ trong URL dài khi canh đều hai lề
 \printbibliography[heading=none]
+\endgroup
 
 \end{document}

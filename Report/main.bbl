@@ -16,83 +16,44 @@
   {}
 \endgroup
 
-\datalist[entry]{nty/global//global/global/global}
-  \entry{fracatlas2023}{article}{}{}
-    \name{author}{6}{}{%
-      {{hash=AI}{%
-         family={Abedeen},
-         familyi={A\bibinitperiod},
-         given={Iftekharul},
-         giveni={I\bibinitperiod},
-      }}%
-      {{hash=RMA}{%
-         family={Rahman},
+\datalist[entry]{none/global//global/global/global}
+  \entry{ronneberger2015unet}{inproceedings}{}{}
+    \name{author}{3}{}{%
+      {{hash=RO}{%
+         family={Ronneberger},
          familyi={R\bibinitperiod},
-         given={Md.\bibnamedelima Ashiqur},
-         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+         given={Olaf},
+         giveni={O\bibinitperiod},
       }}%
-      {{hash=ZPF}{%
-         family={Zohra\bibnamedelima Prottyasha},
-         familyi={Z\bibinitperiod\bibinitdelim P\bibinitperiod},
-         given={Fatema},
-         giveni={F\bibinitperiod},
+      {{hash=FP}{%
+         family={Fischer},
+         familyi={F\bibinitperiod},
+         given={Philipp},
+         giveni={P\bibinitperiod},
       }}%
-      {{hash=AT}{%
-         family={Ahmed},
-         familyi={A\bibinitperiod},
-         given={Tasnim},
+      {{hash=BT}{%
+         family={Brox},
+         familyi={B\bibinitperiod},
+         given={Thomas},
          giveni={T\bibinitperiod},
-      }}%
-      {{hash=CTM}{%
-         family={Chowdhury},
-         familyi={C\bibinitperiod},
-         given={Tareque\bibnamedelima Mohmud},
-         giveni={T\bibinitperiod\bibinitdelim M\bibinitperiod},
-      }}%
-      {{hash=SS}{%
-         family={Shatabda},
-         familyi={S\bibinitperiod},
-         given={Swakkhar},
-         giveni={S\bibinitperiod},
       }}%
     }
     \list{publisher}{1}{%
-      {Nature Publishing Group}%
+      {Springer}%
     }
-    \strng{namehash}{AI+1}
-    \strng{fullhash}{AIRMAZPFATCTMSS1}
+    \strng{namehash}{ROFPBT1}
+    \strng{fullhash}{ROFPBT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{sortinit}{A}
-    \field{sortinithash}{A}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted
+  Intervention (MICCAI)}
     \verb{doi}
-    \verb 10.1038/s41597-023-02432-4
+    \verb 10.1007/978-3-319-24574-4_28
     \endverb
-    \field{pages}{521}
-    \field{title}{{FracAtlas: A Dataset for Fracture Classification,
-  Localization and Segmentation of Musculoskeletal Radiographs}}
-    \field{volume}{10}
-    \field{journaltitle}{Scientific Data}
-    \field{year}{2023}
-  \endentry
-
-  \entry{cuh2024xray}{misc}{}{}
-    \name{author}{1}{}{%
-      {{hash=C}{%
-         family={{Cambridge University Hospitals NHS Foundation Trust}},
-         familyi={C\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{C1}
-    \strng{fullhash}{C1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{C}
-    \field{sortinithash}{C}
-  \field{howpublished}{\url{https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/}}
-    \field{note}{Truy cập năm 2025}
-    \field{title}{{X-ray -- Imaging \& Radiology}}
-    \field{year}{2024}
+    \field{pages}{234\bibrangedash 241}
+    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
+  Segmentation}}
+    \field{year}{2015}
   \endentry
 
   \entry{2023-SAMMed2D-Cheng}{article}{}{}
@@ -188,244 +149,16 @@
          giveni={Y\bibinitperiod},
       }}%
     }
-    \strng{namehash}{CJ+1}
+    \strng{namehash}{CJYJDZ+1}
     \strng{fullhash}{CJYJDZCJLTWHSYHZCJJLSHHJZSZMQY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{sortinit}{C}
-    \field{sortinithash}{C}
     \field{title}{{SAM-Med2D}}
     \verb{url}
     \verb https://arxiv.org/abs/2308.16184
     \endverb
     \field{journaltitle}{arXiv preprint arXiv:2308.16184}
     \field{year}{2023}
-  \endentry
-
-  \entry{roboflow2023}{misc}{}{}
-    \name{author}{3}{}{%
-      {{hash=DB}{%
-         family={Dwyer},
-         familyi={D\bibinitperiod},
-         given={Brad},
-         giveni={B\bibinitperiod},
-      }}%
-      {{hash=NJ}{%
-         family={Nelson},
-         familyi={N\bibinitperiod},
-         given={Joseph},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=SJ}{%
-         family={Solawetz},
-         familyi={S\bibinitperiod},
-         given={Jacob},
-         giveni={J\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{DBNJSJ1}
-    \strng{fullhash}{DBNJSJ1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{D}
-    \field{sortinithash}{D}
-    \field{howpublished}{\url{https://roboflow.com}}
-    \field{title}{{Roboflow: Give Your Software the Power to See}}
-    \field{year}{2023}
-  \endentry
-
-  \entry{yolov11}{misc}{}{}
-    \name{author}{3}{}{%
-      {{hash=JG}{%
-         family={Jocher},
-         familyi={J\bibinitperiod},
-         given={Glenn},
-         giveni={G\bibinitperiod},
-      }}%
-      {{hash=CA}{%
-         family={Chaurasia},
-         familyi={C\bibinitperiod},
-         given={Ayush},
-         giveni={A\bibinitperiod},
-      }}%
-      {{hash=QJ}{%
-         family={Qiu},
-         familyi={Q\bibinitperiod},
-         given={Jing},
-         giveni={J\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{JGCAQJ1}
-    \strng{fullhash}{JGCAQJ1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{J}
-    \field{sortinithash}{J}
-    \field{howpublished}{\url{https://docs.ultralytics.com/models/yolo11}}
-    \field{note}{Phiên bản 11}
-    \field{title}{{Ultralytics YOLO11}}
-    \field{year}{2024}
-  \endentry
-
-  \entry{oktay2018attentionunet}{inproceedings}{}{}
-    \name{author}{12}{}{%
-      {{hash=OO}{%
-         family={Oktay},
-         familyi={O\bibinitperiod},
-         given={Ozan},
-         giveni={O\bibinitperiod},
-      }}%
-      {{hash=SJ}{%
-         family={Schlemper},
-         familyi={S\bibinitperiod},
-         given={Jo},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=FLL}{%
-         family={Folgoc},
-         familyi={F\bibinitperiod},
-         given={Loic\bibnamedelima Le},
-         giveni={L\bibinitperiod\bibinitdelim L\bibinitperiod},
-      }}%
-      {{hash=LM}{%
-         family={Lee},
-         familyi={L\bibinitperiod},
-         given={Matthew},
-         giveni={M\bibinitperiod},
-      }}%
-      {{hash=HM}{%
-         family={Heinrich},
-         familyi={H\bibinitperiod},
-         given={Mattias},
-         giveni={M\bibinitperiod},
-      }}%
-      {{hash=MK}{%
-         family={Misawa},
-         familyi={M\bibinitperiod},
-         given={Kazunari},
-         giveni={K\bibinitperiod},
-      }}%
-      {{hash=MK}{%
-         family={Mori},
-         familyi={M\bibinitperiod},
-         given={Kensaku},
-         giveni={K\bibinitperiod},
-      }}%
-      {{hash=MS}{%
-         family={McDonagh},
-         familyi={M\bibinitperiod},
-         given={Steven},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=HNY}{%
-         family={Hammerla},
-         familyi={H\bibinitperiod},
-         given={Nils\bibnamedelima Y.},
-         giveni={N\bibinitperiod\bibinitdelim Y\bibinitperiod},
-      }}%
-      {{hash=KB}{%
-         family={Kainz},
-         familyi={K\bibinitperiod},
-         given={Bernhard},
-         giveni={B\bibinitperiod},
-      }}%
-      {{hash=GB}{%
-         family={Glocker},
-         familyi={G\bibinitperiod},
-         given={Ben},
-         giveni={B\bibinitperiod},
-      }}%
-      {{hash=RD}{%
-         family={Rueckert},
-         familyi={R\bibinitperiod},
-         given={Daniel},
-         giveni={D\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{OO+1}
-    \strng{fullhash}{OOSJFLLLMHMMKMKMSHNYKBGBRD1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{O}
-    \field{sortinithash}{O}
-    \field{booktitle}{Medical Imaging with Deep Learning (MIDL)}
-    \field{title}{{Attention U-Net: Learning Where to Look for the Pancreas}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1804.03999
-    \endverb
-    \field{year}{2018}
-  \endentry
-
-  \entry{ronneberger2015unet}{inproceedings}{}{}
-    \name{author}{3}{}{%
-      {{hash=RO}{%
-         family={Ronneberger},
-         familyi={R\bibinitperiod},
-         given={Olaf},
-         giveni={O\bibinitperiod},
-      }}%
-      {{hash=FP}{%
-         family={Fischer},
-         familyi={F\bibinitperiod},
-         given={Philipp},
-         giveni={P\bibinitperiod},
-      }}%
-      {{hash=BT}{%
-         family={Brox},
-         familyi={B\bibinitperiod},
-         given={Thomas},
-         giveni={T\bibinitperiod},
-      }}%
-    }
-    \list{publisher}{1}{%
-      {Springer}%
-    }
-    \strng{namehash}{ROFPBT1}
-    \strng{fullhash}{ROFPBT1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{R}
-    \field{sortinithash}{R}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted
-  Intervention (MICCAI)}
-    \verb{doi}
-    \verb 10.1007/978-3-319-24574-4_28
-    \endverb
-    \field{pages}{234\bibrangedash 241}
-    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
-  Segmentation}}
-    \field{year}{2015}
-  \endentry
-
-  \entry{tan2019efficientnet}{inproceedings}{}{}
-    \name{author}{2}{}{%
-      {{hash=TM}{%
-         family={Tan},
-         familyi={T\bibinitperiod},
-         given={Mingxing},
-         giveni={M\bibinitperiod},
-      }}%
-      {{hash=LQV}{%
-         family={Le},
-         familyi={L\bibinitperiod},
-         given={Quoc\bibnamedelima V.},
-         giveni={Q\bibinitperiod\bibinitdelim V\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{TMLQV1}
-    \strng{fullhash}{TMLQV1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{T}
-    \field{sortinithash}{T}
-    \field{booktitle}{International Conference on Machine Learning (ICML)}
-    \field{pages}{6105\bibrangedash 6114}
-    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional
-  Neural Networks}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1905.11946
-    \endverb
-    \field{year}{2019}
   \endentry
 
   \entry{btxrd2024}{article}{}{}
@@ -518,12 +251,10 @@
     \list{publisher}{1}{%
       {Nature Publishing Group}%
     }
-    \strng{namehash}{YS+1}
+    \strng{namehash}{YSHYWX+1}
     \strng{fullhash}{YSHYWXZYPICWZCCLWHLDWGILSGYCQSJ1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{sortinit}{Y}
-    \field{sortinithash}{Y}
     \verb{doi}
     \verb 10.1038/s41597-024-04311-y
     \endverb
@@ -533,6 +264,265 @@
     \field{volume}{12}
     \field{journaltitle}{Scientific Data}
     \field{year}{2025}
+  \endentry
+
+  \entry{tan2019efficientnet}{inproceedings}{}{}
+    \name{author}{2}{}{%
+      {{hash=TM}{%
+         family={Tan},
+         familyi={T\bibinitperiod},
+         given={Mingxing},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LQV}{%
+         family={Le},
+         familyi={L\bibinitperiod},
+         given={Quoc\bibnamedelima V.},
+         giveni={Q\bibinitperiod\bibinitdelim V\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TMLQV1}
+    \strng{fullhash}{TMLQV1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{International Conference on Machine Learning (ICML)}
+    \field{pages}{6105\bibrangedash 6114}
+    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional
+  Neural Networks}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1905.11946
+    \endverb
+    \field{year}{2019}
+  \endentry
+
+  \entry{oktay2018attentionunet}{inproceedings}{}{}
+    \name{author}{12}{}{%
+      {{hash=OO}{%
+         family={Oktay},
+         familyi={O\bibinitperiod},
+         given={Ozan},
+         giveni={O\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Schlemper},
+         familyi={S\bibinitperiod},
+         given={Jo},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=FLL}{%
+         family={Folgoc},
+         familyi={F\bibinitperiod},
+         given={Loic\bibnamedelima Le},
+         giveni={L\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=LM}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Matthew},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=HM}{%
+         family={Heinrich},
+         familyi={H\bibinitperiod},
+         given={Mattias},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=MK}{%
+         family={Misawa},
+         familyi={M\bibinitperiod},
+         given={Kazunari},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MK}{%
+         family={Mori},
+         familyi={M\bibinitperiod},
+         given={Kensaku},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MS}{%
+         family={McDonagh},
+         familyi={M\bibinitperiod},
+         given={Steven},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=HNY}{%
+         family={Hammerla},
+         familyi={H\bibinitperiod},
+         given={Nils\bibnamedelima Y.},
+         giveni={N\bibinitperiod\bibinitdelim Y\bibinitperiod},
+      }}%
+      {{hash=KB}{%
+         family={Kainz},
+         familyi={K\bibinitperiod},
+         given={Bernhard},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=GB}{%
+         family={Glocker},
+         familyi={G\bibinitperiod},
+         given={Ben},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=RD}{%
+         family={Rueckert},
+         familyi={R\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{OOSJFLL+1}
+    \strng{fullhash}{OOSJFLLLMHMMKMKMSHNYKBGBRD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Medical Imaging with Deep Learning (MIDL)}
+    \field{title}{{Attention U-Net: Learning Where to Look for the Pancreas}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1804.03999
+    \endverb
+    \field{year}{2018}
+  \endentry
+
+  \entry{roboflow2023}{misc}{}{}
+    \name{author}{3}{}{%
+      {{hash=DB}{%
+         family={Dwyer},
+         familyi={D\bibinitperiod},
+         given={Brad},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=NJ}{%
+         family={Nelson},
+         familyi={N\bibinitperiod},
+         given={Joseph},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Solawetz},
+         familyi={S\bibinitperiod},
+         given={Jacob},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{DBNJSJ1}
+    \strng{fullhash}{DBNJSJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{{Roboflow: Give Your Software the Power to See}}
+    \verb{url}
+    \verb https://roboflow.com
+    \endverb
+    \field{year}{2023}
+  \endentry
+
+  \entry{yolov11}{misc}{}{}
+    \name{author}{3}{}{%
+      {{hash=JG}{%
+         family={Jocher},
+         familyi={J\bibinitperiod},
+         given={Glenn},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=CA}{%
+         family={Chaurasia},
+         familyi={C\bibinitperiod},
+         given={Ayush},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=QJ}{%
+         family={Qiu},
+         familyi={Q\bibinitperiod},
+         given={Jing},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{JGCAQJ1}
+    \strng{fullhash}{JGCAQJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{note}{Phiên bản 11}
+    \field{title}{{Ultralytics YOLO11}}
+    \verb{url}
+    \verb https://docs.ultralytics.com/models/yolo11
+    \endverb
+    \field{year}{2024}
+  \endentry
+
+  \entry{cuh2024xray}{misc}{}{}
+    \name{author}{1}{}{%
+      {{hash=C}{%
+         family={{Cambridge University Hospitals NHS Foundation Trust}},
+         familyi={C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{C1}
+    \strng{fullhash}{C1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{{X-ray -- Imaging \& Radiology}}
+    \verb{url}
+    \verb https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/
+    \endverb
+    \field{year}{2024}
+    \field{urlday}{01}
+    \field{urlmonth}{01}
+    \field{urlyear}{2025}
+  \endentry
+
+  \entry{fracatlas2023}{article}{}{}
+    \name{author}{6}{}{%
+      {{hash=AI}{%
+         family={Abedeen},
+         familyi={A\bibinitperiod},
+         given={Iftekharul},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RMA}{%
+         family={Rahman},
+         familyi={R\bibinitperiod},
+         given={Md.\bibnamedelima Ashiqur},
+         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=ZPF}{%
+         family={Zohra\bibnamedelima Prottyasha},
+         familyi={Z\bibinitperiod\bibinitdelim P\bibinitperiod},
+         given={Fatema},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=AT}{%
+         family={Ahmed},
+         familyi={A\bibinitperiod},
+         given={Tasnim},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=CTM}{%
+         family={Chowdhury},
+         familyi={C\bibinitperiod},
+         given={Tareque\bibnamedelima Mohmud},
+         giveni={T\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shatabda},
+         familyi={S\bibinitperiod},
+         given={Swakkhar},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{AIRMAZPF+1}
+    \strng{fullhash}{AIRMAZPFATCTMSS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1038/s41597-023-02432-4
+    \endverb
+    \field{pages}{521}
+    \field{title}{{FracAtlas: A Dataset for Fracture Classification,
+  Localization and Segmentation of Musculoskeletal Radiographs}}
+    \field{volume}{10}
+    \field{journaltitle}{Scientific Data}
+    \field{year}{2023}
   \endentry
 \enddatalist
 \endinput

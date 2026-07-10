@@ -8,23 +8,23 @@
 \label{sec:tong_the}
 % ------------------------------------------------------------
 
-Hệ thống phân đoạn tương tác đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối (end-to-end pipeline) \textbf{bán tự động}, trong đó bác sĩ luôn giữ vai trò xác nhận trước mỗi lần chuyển giai đoạn — đây là thiết kế \textit{triage mềm} (soft triage), không phải một bộ chặn cứng tự động loại bỏ ảnh mà không cho phép con người can thiệp. Đầu vào của hệ thống là ảnh X-quang; bounding box lên vùng nghi ngờ chỉ được bác sĩ vẽ sau khi đã xác nhận ảnh có bệnh lý ở bước sàng lọc. Kiến trúc tổng thể được chia thành các module liên hoàn qua hai giai đoạn cốt lõi:
+Hệ thống phân đoạn tương tác đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối \textbf{bán tự động}, trong đó bác sĩ luôn giữ vai trò xác nhận trước mỗi lần chuyển giai đoạn: đây là thiết kế \textit{triage mềm}, không phải một bộ chặn cứng tự động loại bỏ ảnh mà không cho phép con người can thiệp. Đầu vào của hệ thống là ảnh X-quang; hộp giới hạn lên vùng nghi ngờ chỉ được bác sĩ vẽ sau khi đã xác nhận ảnh có bệnh lý ở bước sàng lọc. Kiến trúc tổng thể được chia thành các module liên hoàn qua hai giai đoạn cốt lõi:
 
 \textbf{1. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):}
 Ảnh X-quang đầu vào đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường và \textbf{hiển thị kết quả này cho bác sĩ dưới dạng một gợi ý} (ví dụ: "AI dự đoán: CÓ BỆNH, độ tin cậy 0.87"), chứ không tự động hành động dựa trên gợi ý đó. Bác sĩ xem gợi ý rồi chủ động xác nhận một trong hai lựa chọn:
 \begin{itemize}
     \item \textbf{Xác nhận không bệnh:} quy trình kết thúc cho ảnh này.
-    \item \textbf{Xác nhận có bệnh lý:} hệ thống chuyển sang giai đoạn phân đoạn, sử dụng bounding box do bác sĩ vẽ làm prompt hướng dẫn.
+    \item \textbf{Xác nhận có bệnh lý:} hệ thống chuyển sang giai đoạn phân đoạn, sử dụng hộp giới hạn do bác sĩ vẽ làm câu nhắc hướng dẫn.
 \end{itemize}
-Vì quyết định cuối cùng luôn do bác sĩ đưa ra, hệ thống \textbf{không bao giờ tự động loại một ca nghi ngờ mà không có xác nhận của con người}: ngay cả khi mô hình gợi ý "không bệnh", bác sĩ vẫn có thể bác bỏ gợi ý và chủ động yêu cầu chuyển sang bước phân đoạn nếu có nghi ngờ lâm sàng riêng. Thiết kế này khác với một bộ chặn cứng tự động (nơi ảnh bị gán nhãn âm tính sẽ bị loại bỏ hoàn toàn khỏi luồng xử lý), và giữ đúng triết lý human-in-the-loop trong toàn bộ luồng xử lý — kể cả ở bước sàng lọc, không chỉ ở bước phân đoạn. Đánh giá định lượng ở Chương~\ref{Chapter4} (Mục~\ref{sec:pipeline_eval}) mô phỏng kịch bản thận trọng nhất — giả định gợi ý của Gatekeeper được làm theo tuyệt đối không có xác nhận của bác sĩ — nhằm đo lường cận dưới của hiệu năng hệ thống trong trường hợp xấu nhất.
+Vì quyết định cuối cùng luôn do bác sĩ đưa ra, hệ thống \textbf{không bao giờ tự động loại một ca nghi ngờ mà không có xác nhận của con người}: ngay cả khi mô hình gợi ý "không bệnh", bác sĩ vẫn có thể bác bỏ gợi ý và chủ động yêu cầu chuyển sang bước phân đoạn nếu có nghi ngờ lâm sàng riêng. Thiết kế này khác với một bộ chặn cứng tự động (nơi ảnh bị gán nhãn âm tính sẽ bị loại bỏ hoàn toàn khỏi luồng xử lý), và giữ đúng triết lý con người luôn giám sát trong vòng lặp quyết định trong toàn bộ luồng xử lý, kể cả ở bước sàng lọc, không chỉ ở bước phân đoạn. Đánh giá định lượng ở Chương~\ref{Chapter4} (Mục~\ref{sec:pipeline_eval}) mô phỏng kịch bản thận trọng nhất (giả định gợi ý của Gatekeeper được làm theo tuyệt đối không có xác nhận của bác sĩ) nhằm đo lường cận dưới của hiệu năng hệ thống trong trường hợp xấu nhất.
 
 \textbf{2. Giai đoạn phân đoạn có hướng dẫn (PGA-UNet):} 
-Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác. Bác sĩ thực hiện thao tác khoanh một hộp giới hạn (Bounding Box) bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt không gian (Prompt Heatmap). Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
+Ở giai đoạn này, hệ thống hoạt động theo cơ chế học máy tương tác. Bác sĩ thực hiện thao tác khoanh một hộp giới hạn bao quanh vị trí nghi ngờ trên giao diện. Tọa độ của hộp giới hạn ngay lập tức được hệ thống chuyển đổi thành một bản đồ nhiệt câu nhắc. Ảnh X-quang sạch và bản đồ nhiệt câu nhắc được đưa song song vào mô hình PGA-UNet (Prompt-Guided Attention U-Net). Bằng việc kích hoạt các cổng không gian và cơ chế chú ý có điều kiện, mô hình bị ép buộc phải hội tụ sự tập trung vào vùng được chỉ định để trích xuất hình dáng chính xác của khối u, tạo ra một mặt nạ phân đoạn thô.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.88\textwidth, keepaspectratio]{images/pipeline_pga_app_inference.png}
-    \caption{Pipeline tổng thể hệ thống: ảnh X-quang qua EfficientNet\_B3 để sinh gợi ý sàng lọc; bác sĩ xem gợi ý và xác nhận (không bệnh $\to$ kết thúc, có bệnh $\to$ vẽ bounding box) trước khi hệ thống chuyển sang PGA-UNet phân đoạn có hướng dẫn.}
+    \caption{Luồng xử lý tổng thể hệ thống: ảnh X-quang qua EfficientNet\_B3 để sinh gợi ý sàng lọc; bác sĩ xem gợi ý và xác nhận (không bệnh $\to$ kết thúc, có bệnh $\to$ vẽ hộp giới hạn) trước khi hệ thống chuyển sang PGA-UNet phân đoạn có hướng dẫn.}
     \label{fig:pipeline_overview}
 \end{figure}
 
@@ -62,11 +62,11 @@ Bộ dữ liệu này phục vụ hai mục đích song song trong kiến trúc 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth, height=0.82\textheight, keepaspectratio]{images/preprocessing_pipeline.png}
-    \caption{Quy trình tiền xử lý dữ liệu: gán nhãn bounding box nhiễu thủ công trên một phần ảnh qua Roboflow, finetune YOLOv11s, detect nhiễu trên toàn bộ tập ảnh PNG, tô màu vùng nhiễu bằng màu nền được chọn.}
+    \caption{Quy trình tiền xử lý dữ liệu: gán nhãn hộp giới hạn vùng nhiễu thủ công trên một phần ảnh qua Roboflow, tinh chỉnh YOLOv11s, phát hiện nhiễu trên toàn bộ tập ảnh PNG, tô màu vùng nhiễu bằng màu nền được chọn.}
     \label{fig:preprocessing_pipeline}
 \end{figure}
 
-Để xóa nhiễu tự động, nhóm tác giả tiến hành gán nhãn hộp giới hạn vùng nhiễu thủ công trên một tập con ảnh thông qua nền tảng \textbf{Roboflow}~\cite{roboflow2023}, sau đó tinh chỉnh \textbf{YOLOv11s}~\cite{yolov11} trên tập nhãn thu được. Mô hình sau khi huấn luyện được dùng để detect vùng nhiễu trên toàn bộ 3.746 ảnh PNG; các vùng phát hiện được xử lý bằng cách xác định giá trị màu xuất hiện nhiều nhất dọc theo biên hộp phát hiện; nếu giá trị đó nhỏ hơn 180 (không quá sáng) thì tô bằng màu đó, ngược lại tô bằng màu đen. Phương pháp này đảm bảo vùng được lấp đầy đồng nhất với nền xung quanh thay vì dùng màu cố định, loại bỏ hoàn toàn ký tự R/L và nhãn kỹ thuật.
+Để xóa nhiễu tự động, nhóm tác giả tiến hành gán nhãn hộp giới hạn vùng nhiễu thủ công trên một tập con ảnh thông qua nền tảng \textbf{Roboflow}~\cite{roboflow2023}, sau đó tinh chỉnh \textbf{YOLOv11s}~\cite{yolov11} trên tập nhãn thu được. Mô hình sau khi huấn luyện được dùng để phát hiện vùng nhiễu trên toàn bộ 3.746 ảnh PNG; các vùng phát hiện được xử lý bằng cách xác định giá trị màu xuất hiện nhiều nhất dọc theo biên hộp phát hiện; nếu giá trị đó nhỏ hơn 180 (không quá sáng) thì tô bằng màu đó, ngược lại tô bằng màu đen. Phương pháp này đảm bảo vùng được lấp đầy đồng nhất với nền xung quanh thay vì dùng màu cố định, loại bỏ hoàn toàn ký tự R/L và nhãn kỹ thuật.
 
 \textbf{Lưu ý về ký hiệu R/L trong triển khai:} Bước xóa R/L chỉ áp dụng cho bản sao ảnh đưa vào mô hình học máy, không áp dụng lên ảnh hiển thị. Trong hệ thống triển khai thực tế, giao diện người dùng hiển thị \textit{ảnh gốc còn ký hiệu R/L} để bác sĩ tra cứu thông tin định hướng trái/phải, thông tin có ý nghĩa lâm sàng quan trọng (nhầm bên là nguy hiểm tính mạng). Mặt nạ phân đoạn từ PGA-UNet sau đó được chồng lên ảnh gốc này để bác sĩ đọc kết quả trong đúng ngữ cảnh định hướng. Lý do loại bỏ R/L khỏi đầu vào mô hình là để tránh mạng nơ-ron nhận nhầm các vùng sáng của ký tự R/L là tổn thương xương.
 
@@ -87,18 +87,18 @@ Kiến trúc mạng PGA-UNet được xây dựng trên nền tảng kế thừa
         \hline
         \textbf{Thành phần} & \textbf{Kế thừa từ} & \textbf{Đóng góp mới} \\
         \hline
-        Khung encoder-decoder & U-Net~\cite{ronneberger2015unet}: khối tích chập, max pooling, kết nối tắt & Không có \\
+        Khung bộ mã hóa - bộ giải mã & U-Net~\cite{ronneberger2015unet}: khối tích chập, gộp cực đại, kết nối tắt & Không có \\
         \hline
-        Cổng chú ý không gian mềm (Soft Spatial Attention Gate) & Attention U-Net~\cite{oktay2018attentionunet}: cổng chú ý không gian mềm tại skip connections (Attention U-Net bổ sung cơ chế này lên nền U-Net) & Mở rộng thành CAD: bổ sung tri thức câu nhắc vào tín hiệu gating $\mathbf{g}$ \\
+        Cổng chú ý không gian mềm & Attention U-Net~\cite{oktay2018attentionunet}: cổng chú ý không gian mềm tại các kết nối tắt (Attention U-Net bổ sung cơ chế này lên nền U-Net) & Mở rộng thành CAD: bổ sung tri thức câu nhắc vào tín hiệu cổng $\mathbf{g}$ \\
         \hline
-        Mã hóa câu nhắc & SAM-Med2D~\cite{2023-SAMMed2D-Cheng}: ý tưởng prompt dẫn đường & Thay token/binary bằng \textbf{Gaussian Plateau Heatmap} 2D \\
+        Mã hóa câu nhắc & SAM-Med2D~\cite{2023-SAMMed2D-Cheng}: ý tưởng câu nhắc dẫn đường & Thay biểu diễn rời rạc/nhị phân bằng \textbf{Gaussian Plateau Heatmap} 2D \\
         \hline
-        Cổng không gian (PSG) & Không có & \textbf{Hoàn toàn mới}: tăng cường đặc trưng encoder có chọn lọc theo vùng câu nhắc \\
+        Cổng không gian (PSG) & Không có & \textbf{Hoàn toàn mới}: tăng cường đặc trưng bộ mã hóa có chọn lọc theo vùng câu nhắc \\
         \hline
     \end{tabular}
 \end{table}
 
-\noindent\textbf{Chuỗi kế thừa tuyến tính:} \textbf{U-Net}~\cite{ronneberger2015unet} (nền encoder-decoder) $\to$ \textbf{Attention U-Net}~\cite{oktay2018attentionunet} (bổ sung Soft Spatial Attention Gate vào skip connections của U-Net) $\to$ \textbf{PGA-UNet} (thêm PSG vào encoder, mở rộng Attention Gate thành CAD, thay mặt nạ nhị phân bằng Gaussian Plateau Heatmap). Attention U-Net là điểm xuất phát trực tiếp mà khóa luận mở rộng, không phải hai baseline độc lập song song.
+\noindent\textbf{Chuỗi kế thừa tuyến tính:} \textbf{U-Net}~\cite{ronneberger2015unet} (nền bộ mã hóa - bộ giải mã) $\to$ \textbf{Attention U-Net}~\cite{oktay2018attentionunet} (bổ sung Cổng chú ý không gian mềm vào các kết nối tắt của U-Net) $\to$ \textbf{PGA-UNet} (thêm PSG vào bộ mã hóa, mở rộng Cổng chú ý thành CAD, thay mặt nạ nhị phân bằng Gaussian Plateau Heatmap). Attention U-Net là điểm xuất phát trực tiếp mà khóa luận mở rộng, không phải hai baseline độc lập song song.
 
 Dựa trên ranh giới này, ba thành phần cốt lõi sau đây lần lượt hiện thực hóa đóng góp của khóa luận.
 
@@ -107,33 +107,33 @@ Dựa trên ranh giới này, ba thành phần cốt lõi sau đây lần lượ
 
 Nhằm chuyển đổi thao tác không gian của người dùng thành một định dạng số học mang tính chất dẫn đường mềm dẻo, tọa độ hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ cung cấp sẽ được biểu diễn dưới dạng Bản đồ nhiệt câu nhắc $\mathbf{H}_{prompt} \in [0, 1]^{H \times W}$. 
 
-Trong thiết kế lý thuyết, bản đồ nhiệt câu nhắc có thể xây dựng theo phân phối Gaussian 2D thuần túy như đã trình bày tại Phương trình~\eqref{eq:gaussian_heatmap}, với cường độ đạt cực đại tại tâm và phân rã dần về biên. Tuy nhiên, trong thực tế triển khai, nhóm sử dụng phương pháp \textbf{Plateau Heatmap}: vùng bên trong hộp giới hạn được gán đồng nhất giá trị $1.0$ (tạo vùng cao nguyên phẳng - plateau), sau đó làm mềm đường biên bằng bộ lọc Gaussian (kernel $31 \times 31$):
+Trong thiết kế lý thuyết, bản đồ nhiệt câu nhắc có thể xây dựng theo phân phối Gaussian 2D thuần túy như đã trình bày tại Phương trình~\eqref{eq:gaussian_heatmap}, với cường độ đạt cực đại tại tâm và phân rã dần về biên. Tuy nhiên, trong thực tế triển khai, nhóm sử dụng phương pháp \textbf{Plateau Heatmap}: vùng bên trong hộp giới hạn được gán đồng nhất giá trị $1.0$ (tạo vùng cao nguyên phẳng - plateau), sau đó làm mềm đường biên bằng bộ lọc Gaussian (cửa sổ lọc $31 \times 31$):
 \begin{equation}
     \mathbf{H}_{prompt} = \text{GaussianBlur}\!\left(\mathbf{B}_{\text{mask}},\; k=31\right)
     \label{eq:plateau_heatmap}
 \end{equation}
-trong đó $\mathbf{B}_{\text{mask}} \in \{0, 1\}^{H \times W}$ là mặt nạ nhị phân của hộp giới hạn (có đệm 5 px mỗi phía). Cách tiếp cận này giữ được tín hiệu dẫn đường mạnh và đồng đều bên trong vùng câu nhắc (không bị suy giảm về phía tâm như Gaussian thuần), đồng thời tạo ra đường chuyển tiếp mượt mà ở viền hộp để mạng không học các gradient giả tạo từ đường viền sắc nét. Bản đồ nhiệt $\mathbf{H}_{prompt}$ này đóng vai trò như một kênh dữ liệu độc lập, song hành cùng ảnh X-quang đi vào mạng.
+trong đó $\mathbf{B}_{\text{mask}} \in \{0, 1\}^{H \times W}$ là mặt nạ nhị phân của hộp giới hạn (có đệm 5 px mỗi phía). Cách tiếp cận này giữ được tín hiệu dẫn đường mạnh và đồng đều bên trong vùng câu nhắc (không bị suy giảm về phía tâm như Gaussian thuần), đồng thời tạo ra đường chuyển tiếp mượt mà ở viền hộp để mạng không học các đạo hàm giả tạo từ đường viền sắc nét. Bản đồ nhiệt $\mathbf{H}_{prompt}$ này đóng vai trò như một kênh dữ liệu độc lập, song hành cùng ảnh X-quang đi vào mạng.
 
-\textbf{Lý do chọn $k=31$:} Kích thước kernel được lựa chọn để cân bằng hai yêu cầu đối lập: đủ lớn để tạo vùng chuyển tiếp mịn kéo dài $\approx15$ px mỗi bên, phủ vùng biên tổn thương điển hình trên ảnh $512\times512$, đồng thời đủ nhỏ để tín hiệu câu nhắc không "tràn" sang các cấu trúc xương lân cận. Thực nghiệm với $k \in \{15, 21, 31, 51\}$ cho thấy $k < 21$ tạo đường chuyển tiếp quá đột ngột (gần mặt nạ nhị phân), trong khi $k > 51$ làm tín hiệu lan quá rộng ra ngoài vùng tổn thương. $k=31$ (số lẻ, đảm bảo tâm kernel đối xứng) cho kết quả Dice tốt nhất trên tập xác thực và được giữ cố định trong toàn bộ thực nghiệm.
+\textbf{Lý do chọn $k=31$:} Kích thước cửa sổ lọc được lựa chọn để cân bằng hai yêu cầu đối lập: đủ lớn để tạo vùng chuyển tiếp mịn kéo dài $\approx15$ px mỗi bên, phủ vùng biên tổn thương điển hình trên ảnh $512\times512$, đồng thời đủ nhỏ để tín hiệu câu nhắc không "tràn" sang các cấu trúc xương lân cận. Thực nghiệm với $k \in \{15, 21, 31, 51\}$ cho thấy $k < 21$ tạo đường chuyển tiếp quá đột ngột (gần mặt nạ nhị phân), trong khi $k > 51$ làm tín hiệu lan quá rộng ra ngoài vùng tổn thương. $k=31$ (số lẻ, đảm bảo tâm cửa sổ lọc đối xứng) cho kết quả Dice tốt nhất trên tập xác thực và được giữ cố định trong toàn bộ thực nghiệm.
 
-\paragraph{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có gradient thay vì mặt nạ nhị phân?}
+\paragraph{Cơ sở lý thuyết: Tại sao chọn biểu diễn liên tục có đạo hàm thay vì mặt nạ nhị phân?}
 
-Câu hỏi đặt ra là tại sao không dùng mặt nạ nhị phân phẳng, trong đó mọi điểm ảnh bên trong hộp giới hạn nhận giá trị $1$ và bên ngoài là $0$, thay vì bản đồ nhiệt liên tục. Câu trả lời nằm ở bản chất của phép tích chập và cơ chế dung hợp đặc trưng trong U-Net. Khi một mặt nạ nhị phân đi qua tầng tích chập, đường biên sắc nét tại viền hộp giới hạn tạo ra các gradient giả tạo (pseudo-gradients), mạng có thể học cạnh của hộp bao thay vì đặc trưng thực của tổn thương. Ngược lại, Plateau Heatmap cung cấp tín hiệu mạnh và đồng đều bên trong (đảm bảo câu nhắc rõ nét), nhưng chuyển tiếp mượt mà ở viền thông qua bộ lọc Gaussian. Thiết kế này phù hợp với bản chất tự nhiên của attention bias: cổng không gian tại phương trình~\eqref{eq:spatial_gate} cần một tín hiệu liên tục để thực hiện phép nhân theo phần tử trên feature map mà không tạo ra hiệu ứng ringing.
+Câu hỏi đặt ra là tại sao không dùng mặt nạ nhị phân phẳng, trong đó mọi điểm ảnh bên trong hộp giới hạn nhận giá trị $1$ và bên ngoài là $0$, thay vì bản đồ nhiệt liên tục. Câu trả lời nằm ở bản chất của phép tích chập và cơ chế dung hợp đặc trưng trong U-Net. Khi một mặt nạ nhị phân đi qua tầng tích chập, đường biên sắc nét tại viền hộp giới hạn tạo ra các đạo hàm giả tạo, mạng có thể học cạnh của hộp bao thay vì đặc trưng thực của tổn thương. Ngược lại, Plateau Heatmap cung cấp tín hiệu mạnh và đồng đều bên trong (đảm bảo câu nhắc rõ nét), nhưng chuyển tiếp mượt mà ở viền thông qua bộ lọc Gaussian. Thiết kế này phù hợp với bản chất tự nhiên của độ thiên lệch chú ý: cổng không gian tại phương trình~\eqref{eq:spatial_gate} cần một tín hiệu liên tục để thực hiện phép nhân theo phần tử trên bản đồ đặc trưng mà không tạo ra hiệu ứng dao động giả ở đường biên.
 
 Ngoài ra, các nghiên cứu về cơ chế chú ý trong học sâu cho thấy mạng nơ-ron tự nhiên tạo ra các vùng kích hoạt có dạng phân phối liên tục, với cường độ cao nhất tại vùng trung tâm đặc trưng nhất và giảm dần ra biên. Biểu diễn Plateau Heatmap của câu nhắc bắt chước đặc tính này, tạo ra sự tương thích tự nhiên với cơ chế học của mạng.
 
-\paragraph{So sánh với cách mã hóa prompt của SAM và SAM-Med2D.}
+\paragraph{So sánh với cách mã hóa câu nhắc của SAM và SAM-Med2D.}
 
-SAM và SAM-Med2D~\cite{2023-SAMMed2D-Cheng} mã hóa hộp giới hạn dưới dạng \textit{positional embedding rời rạc}: tọa độ hai góc của hộp (trên-trái và dưới-phải) được ánh xạ thành hai vector nhúng 256 chiều thông qua bảng tra vị trí sinusoidal. Cách tiếp cận này phù hợp với kiến trúc Transformer của SAM vì Transformer xử lý một tập token rời rạc và tích hợp thông tin vị trí qua phép cộng vector embedding. Tuy nhiên, PGA-UNet sử dụng kiến trúc U-Net với feature map 2D liên tục có cùng cấu trúc không gian $H \times W$ với ảnh đầu vào.
+SAM và SAM-Med2D~\cite{2023-SAMMed2D-Cheng} mã hóa hộp giới hạn dưới dạng \textit{vector nhúng vị trí rời rạc}: tọa độ hai góc của hộp (trên-trái và dưới-phải) được ánh xạ thành hai vector nhúng 256 chiều thông qua bảng tra vị trí sinusoidal. Cách tiếp cận này phù hợp với kiến trúc Transformer của SAM vì Transformer xử lý một tập phần tử rời rạc và tích hợp thông tin vị trí qua phép cộng vector nhúng. Tuy nhiên, PGA-UNet sử dụng kiến trúc U-Net với bản đồ đặc trưng 2D liên tục có cùng cấu trúc không gian $H \times W$ với ảnh đầu vào.
 
-Việc kết hợp một vector embedding rời rạc (256 chiều, không có cấu trúc không gian) vào feature map 2D đòi hỏi phép chiếu phức tạp và dễ mất thông tin vị trí. Biểu diễn bản đồ nhiệt 2D ($H \times W$, cùng không gian với feature map) cho phép Cổng không gian thực hiện phép nhân theo phần tử trực tiếp tại phương trình~\eqref{eq:spatial_gate}, một phép toán đơn giản, hiệu quả về tính toán và bảo toàn toàn vẹn thông tin vị trí không gian. Đây là lý do cốt lõi nhóm chọn biểu diễn heatmap 2D thay vì vector embedding rời rạc theo cách SAM: hai kiến trúc khác nhau đòi hỏi hai cách mã hóa prompt khác nhau để phù hợp nhất với cơ chế dung hợp đặc trưng nội tại.
+Việc kết hợp một vector nhúng rời rạc (256 chiều, không có cấu trúc không gian) vào bản đồ đặc trưng 2D đòi hỏi phép chiếu phức tạp và dễ mất thông tin vị trí. Biểu diễn bản đồ nhiệt 2D ($H \times W$, cùng không gian với bản đồ đặc trưng) cho phép Cổng không gian thực hiện phép nhân theo phần tử trực tiếp tại phương trình~\eqref{eq:spatial_gate}, một phép toán đơn giản, hiệu quả về tính toán và bảo toàn toàn vẹn thông tin vị trí không gian. Đây là lý do cốt lõi nhóm chọn biểu diễn bản đồ nhiệt 2D thay vì vector nhúng rời rạc theo cách SAM: hai kiến trúc khác nhau đòi hỏi hai cách mã hóa câu nhắc khác nhau để phù hợp nhất với cơ chế dung hợp đặc trưng nội tại.
 
 \FloatBarrier
-\subsection{Cổng không gian tại bộ mã hóa (Prompt Spatial Gate - Encoder)}
+\subsection{Cổng không gian tại bộ mã hóa (PSG)}
 
-Trong kiến trúc U-Net truyền thống, bộ mã hóa (Encoder) chịu trách nhiệm trích xuất các đặc trưng ngữ nghĩa. Tuy nhiên, nếu thiếu định hướng, nó có xu hướng học mọi thứ xuất hiện trên ảnh X-quang, dẫn đến việc lãng phí tài nguyên tính toán vào các vùng nền không liên quan. 
+Trong kiến trúc U-Net truyền thống, bộ mã hóa chịu trách nhiệm trích xuất các đặc trưng ngữ nghĩa. Tuy nhiên, nếu thiếu định hướng, nó có xu hướng học mọi thứ xuất hiện trên ảnh X-quang, dẫn đến việc lãng phí tài nguyên tính toán vào các vùng nền không liên quan. 
 
-PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (Prompt Spatial Gate, PSG)} trực tiếp vào nhánh mã hóa; đây là thành phần \textbf{không tồn tại trong U-Net hay Attention U-Net gốc}, được đề xuất và phát triển qua quá trình thực nghiệm của khóa luận để đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng, với một ràng buộc thiết kế riêng cho bài toán y khoa (chỉ khuếch đại, không triệt tiêu tín hiệu gốc — xem ràng buộc $\alpha \in [0,1]$ bên dưới). Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
+PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (PSG)} trực tiếp vào nhánh mã hóa; đây là thành phần \textbf{không tồn tại trong U-Net hay Attention U-Net gốc}, được đề xuất và phát triển qua quá trình thực nghiệm của khóa luận để đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng, với một ràng buộc thiết kế riêng cho bài toán y khoa (chỉ khuếch đại, không triệt tiêu tín hiệu gốc, xem ràng buộc $\alpha \in [0,1]$ bên dưới). Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
 \begin{equation}
     \tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \left(1 + \alpha \cdot \sigma\!\left(\mathbf{W}_{gate} \ast \mathbf{H}^l\right)\right)
     \label{eq:spatial_gate}
@@ -143,29 +143,29 @@ trong đó $\mathbf{W}_{gate}$ là phép tích chập $1\!\times\!1$ ánh xạ b
 Thiết kế này hoạt động theo nguyên lý \textit{tăng cường có chọn lọc} (selective enhancement) thay vì ức chế: các đặc trưng nằm trong vùng câu nhắc được nhân thêm một hệ số $> 1$ (tăng lên), trong khi các đặc trưng ngoài vùng câu nhắc (nơi $\mathbf{H}^l \approx 0$) vẫn giữ nguyên giá trị ban đầu (nhân với $\approx 1$). Nhờ đó, bộ mã hóa không bị mất thông tin toàn cục nhưng vẫn ưu tiên truyền tải các đặc trưng trong vùng mục tiêu xuống các tầng sâu hơn.
 
 \FloatBarrier
-\subsection{Cơ chế chú ý có điều kiện tại bộ giải mã (Conditioned Attention Decoder)}
+\subsection{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD)}
 
-Dù Cổng không gian ở bộ mã hóa đã giúp loại bỏ nhiễu nền đáng kể, nhưng tại bộ giải mã (Decoder) – nơi mạng thực hiện phép tăng mẫu để khôi phục ranh giới xương – tín hiệu định vị vẫn có nguy cơ bị phân tán. Để thiết lập sự dẫn đường xuyên suốt, khóa luận đề xuất \textbf{Cơ chế chú ý có điều kiện (Conditioned Attention Decoder, CAD)}, thay thế trực tiếp Cổng chú ý (Attention Gate) cơ sở của Attention U-Net tại từng tầng giải mã.
+Dù Cổng không gian ở bộ mã hóa đã giúp loại bỏ nhiễu nền đáng kể, nhưng tại bộ giải mã, nơi mạng thực hiện phép tăng mẫu để khôi phục ranh giới xương, tín hiệu định vị vẫn có nguy cơ bị phân tán. Để thiết lập sự dẫn đường xuyên suốt, khóa luận đề xuất \textbf{Cơ chế chú ý có điều kiện (CAD)}, thay thế trực tiếp Cổng chú ý cơ sở của Attention U-Net tại từng tầng giải mã.
 
-\textbf{Điểm khác biệt cốt lõi so với Attention Gate gốc~\cite{oktay2018attentionunet}:} Attention Gate cơ sở tính tín hiệu gating $\mathbf{g}$ hoàn toàn từ đặc trưng tầng decoder bên dưới, nghĩa là quyết định ``nên chú ý chỗ nào'' phụ thuộc hoàn toàn vào những gì mạng tự học từ ảnh, không có thông tin định hướng từ bác sĩ. CAD mở rộng thiết kế này bằng cách bổ sung câu nhắc trực tiếp vào $\mathbf{g}$: cấu kiện \texttt{unetUp\_PromptAttention} tích hợp tri thức câu nhắc vào tín hiệu gating thông qua \textbf{cơ chế dung hợp cộng có trọng số tin cậy} (confidence-weighted additive fusion). Cụ thể, bản đồ câu nhắc $\mathbf{H}_{prompt}$ được giảm mẫu về kích thước của $\mathbf{g}$ và đưa qua một bộ mã hóa hai tầng tích chập ($3\times 3$, InstanceNorm, ReLU) để trích xuất biểu diễn đặc trưng câu nhắc $\mathbf{p}_{\text{enc}}$. Từ đó, một điểm số tin cậy vô hướng $c \in (0,1)$ được tính bằng cách áp dụng GAP (Global Average Pooling) lên $\mathbf{p}_{\text{enc}}$:
+\textbf{Điểm khác biệt cốt lõi so với Cổng chú ý gốc~\cite{oktay2018attentionunet}:} Cổng chú ý cơ sở tính tín hiệu cổng $\mathbf{g}$ hoàn toàn từ đặc trưng tầng giải mã bên dưới, nghĩa là quyết định ``nên chú ý chỗ nào'' phụ thuộc hoàn toàn vào những gì mạng tự học từ ảnh, không có thông tin định hướng từ bác sĩ. CAD mở rộng thiết kế này bằng cách bổ sung câu nhắc trực tiếp vào $\mathbf{g}$: cấu kiện \texttt{unetUp\_PromptAttention} tích hợp tri thức câu nhắc vào tín hiệu cổng thông qua \textbf{cơ chế dung hợp cộng có trọng số tin cậy}. Cụ thể, bản đồ câu nhắc $\mathbf{H}_{prompt}$ được giảm mẫu về kích thước của $\mathbf{g}$ và đưa qua một bộ mã hóa hai tầng tích chập ($3\times 3$, InstanceNorm, ReLU) để trích xuất biểu diễn đặc trưng câu nhắc $\mathbf{p}_{\text{enc}}$. Từ đó, một điểm số tin cậy vô hướng $c \in (0,1)$ được tính bằng cách áp dụng GAP lên $\mathbf{p}_{\text{enc}}$:
 \begin{equation}
     \mathbf{p}_{\text{enc}} = f_{\text{enc}}(\mathbf{H}_{prompt}), \quad
     c = \sigma\!\left(\text{GAP}(\mathbf{p}_{\text{enc}})\right)
     \label{eq:prompt_confidence}
 \end{equation}
-Tín hiệu gating được điều kiện hóa bằng phép cộng có trọng số:
+Tín hiệu cổng được điều kiện hóa bằng phép cộng có trọng số:
 \begin{equation}
     \mathbf{g}' = \mathbf{g} + c \cdot \alpha \cdot w_l \cdot \mathbf{p}_{\text{enc}}
     \label{eq:conditioned_gate}
 \end{equation}
 trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là tham số học được (blend weight), và $w_l$ là hệ số tỷ lệ theo tầng giải mã $l$, được xác định qua thực nghiệm trên tập xác thực (lịch trình cụ thể tại Chương~\ref{Chapter4}), điều tiết mức độ ảnh hưởng của câu nhắc tại mỗi tầng.
 
-Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng skip connection $\mathbf{x}^l$, kết hợp cùng kết nối dư tắt và tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$, $\beta$ học được). Thiết kế đa lớp này đảm bảo câu nhắc không chỉ ảnh hưởng qua một điểm duy nhất mà được duy trì xuyên suốt toàn bộ bộ giải mã thông qua hệ số $w_l$ theo từng tầng. Các siêu tham số cụ thể của PSG và CAD (lịch trình $w_l$, hệ số kết nối dư) là chi tiết triển khai được xác định qua thực nghiệm trên tập xác thực, không phải đóng góp kỹ thuật cốt lõi; giá trị chi tiết được liệt kê tại mục cấu hình huấn luyện (Mục~\ref{subsec:hyperparameters}, Chương~\ref{Chapter4}). Sự kết hợp giữa ``Cổng không gian tại bộ mã hóa'' và ``Cơ chế chú ý có điều kiện tại bộ giải mã'' là yếu tố chính mang lại sự cải thiện đáng kể về hiệu năng Dice so với các mạng cơ sở hoạt động theo hướng tiếp cận tự động (chi tiết tại Chương~\ref{Chapter4}).
+Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng kết nối tắt $\mathbf{x}^l$, kết hợp cùng kết nối dư tắt và tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$, $\beta$ học được). Thiết kế đa lớp này đảm bảo câu nhắc không chỉ ảnh hưởng qua một điểm duy nhất mà được duy trì xuyên suốt toàn bộ bộ giải mã thông qua hệ số $w_l$ theo từng tầng. Các siêu tham số cụ thể của PSG và CAD (lịch trình $w_l$, hệ số kết nối dư) là chi tiết triển khai được xác định qua thực nghiệm trên tập xác thực, không phải đóng góp kỹ thuật cốt lõi; giá trị chi tiết được liệt kê tại mục cấu hình huấn luyện (Mục~\ref{subsec:hyperparameters}, Chương~\ref{Chapter4}). Sự kết hợp giữa ``Cổng không gian tại bộ mã hóa'' và ``Cơ chế chú ý có điều kiện tại bộ giải mã'' là yếu tố chính mang lại sự cải thiện đáng kể về hiệu năng Dice so với các mạng cơ sở hoạt động theo hướng tiếp cận tự động (chi tiết tại Chương~\ref{Chapter4}).
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{images/arch_pga_unet2d.png}
-    \caption{Kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): Cổng không gian (Prompt Spatial Gate) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (Conditioned Attention) ràng buộc tín hiệu gating bằng câu nhắc tại từng tầng giải mã với hệ số $w_l$ theo từng tầng}
+    \caption{Kiến trúc PGA-UNet: Cổng không gian (PSG) tích hợp bản đồ nhiệt câu nhắc vào bộ mã hóa để tăng cường đặc trưng có chọn lọc; Cơ chế chú ý có điều kiện (CAD) ràng buộc tín hiệu cổng bằng câu nhắc tại từng tầng giải mã với hệ số $w_l$ theo từng tầng}
     \label{fig:pga_architecture}
 \end{figure}
 
@@ -178,17 +178,17 @@ Hàm mất mát huấn luyện PGA-UNet kết hợp Dice Loss và Binary Cross-E
     \mathcal{L}_{\text{seg}} = \mathcal{L}_{\text{Dice}} + \mathcal{L}_{\text{BCE}}
     \label{eq:loss_seg}
 \end{equation}
-Dice Loss tối ưu trực tiếp độ tương đồng vùng giữa mặt nạ dự đoán và nhãn gốc; BCE phạt sai lệch tại từng điểm ảnh riêng lẻ và ổn định gradient. Hai thành phần bổ sung cho nhau, giúp mô hình cân bằng giữa hình dạng tổng thể và độ chính xác đường biên.
+Dice Loss tối ưu trực tiếp độ tương đồng vùng giữa mặt nạ dự đoán và nhãn gốc; BCE phạt sai lệch tại từng điểm ảnh riêng lẻ và ổn định đạo hàm. Hai thành phần bổ sung cho nhau, giúp mô hình cân bằng giữa hình dạng tổng thể và độ chính xác đường biên.
 
-\textbf{Vai trò của câu nhắc đối với hàm mất mát:} Việc tích hợp câu nhắc trực quan được thực hiện hoàn toàn ở \textit{cấp độ kiến trúc} (thông qua Cổng không gian PSG và Cơ chế chú ý có điều kiện CAD), chứ \textit{không} thay đổi cấu trúc hàm mất mát. $\mathcal{L}_{\text{seg}}$ vẫn giữ nguyên dạng BCE~+~Dice tính trên mặt nạ đầu ra $\hat{\mathbf{y}}$ so với nhãn ground-truth $\mathbf{M}$, bất kể câu nhắc đầu vào là heatmap Gaussian, mặt nạ nhị phân hay bất kỳ dạng biểu diễn nào. Ảnh hưởng của câu nhắc lên quá trình học được truyền ngầm qua gradient của PSG và CAD trong lan truyền ngược (backpropagation), không cần thêm số hạng phạt hay trọng số nào vào $\mathcal{L}_{\text{seg}}$.
+\textbf{Vai trò của câu nhắc đối với hàm mất mát:} Việc tích hợp câu nhắc trực quan được thực hiện hoàn toàn ở \textit{cấp độ kiến trúc} (thông qua Cổng không gian PSG và Cơ chế chú ý có điều kiện CAD), chứ \textit{không} thay đổi cấu trúc hàm mất mát. $\mathcal{L}_{\text{seg}}$ vẫn giữ nguyên dạng BCE~+~Dice tính trên mặt nạ đầu ra $\hat{\mathbf{y}}$ so với nhãn ground-truth $\mathbf{M}$, bất kể câu nhắc đầu vào là heatmap Gaussian, mặt nạ nhị phân hay bất kỳ dạng biểu diễn nào. Ảnh hưởng của câu nhắc lên quá trình học được truyền ngầm qua đạo hàm của PSG và CAD trong lan truyền ngược, không cần thêm số hạng phạt hay trọng số nào vào $\mathcal{L}_{\text{seg}}$.
 
 Để tránh hiểu nhầm khi so sánh kết quả thực nghiệm, cần làm rõ sự khác biệt căn bản về chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D.
 
 \textbf{PGA-UNet, Huấn luyện từ đầu hoàn toàn:}
-Toàn bộ kiến trúc PGA-UNet, bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện, được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$3 triệu tham số (đo từ kiến trúc thực nghiệm với \texttt{feature\_scale=4}, bộ lọc $[16,32,64,128,256]$) đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên domain data cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp (low-level features) như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ domain khác.
+Toàn bộ kiến trúc PGA-UNet, bao gồm bộ mã hóa U-Net, các Cổng không gian, khối dung hợp và bộ giải mã có điều kiện, được khởi tạo ngẫu nhiên và học trực tiếp từ tập dữ liệu BTXRD qua tối đa 100 vòng lặp với cơ chế dừng sớm (patience = 15). \textbf{Không có thành phần nào được đóng băng} trong quá trình huấn luyện; toàn bộ $\sim$3 triệu tham số (đo từ kiến trúc thực nghiệm với \texttt{feature\_scale=4}, bộ lọc $[16,32,64,128,256]$) đều tham gia lan truyền ngược (backpropagation) từ vòng lặp đầu tiên. Lý do cho lựa chọn này: bộ mã hóa U-Net của PGA-UNet là kiến trúc tích chập đơn giản, không có trọng số tiền huấn luyện quy mô lớn tương thích với ảnh X-quang xương. Việc huấn luyện từ đầu trên miền dữ liệu cụ thể (BTXRD) cho phép bộ mã hóa học được các đặc trưng thấp như kết cấu xương, biên tổn thương đặc thù của X-quang chi, không bị ràng buộc bởi các đặc trưng từ miền dữ liệu khác.
 
 \textbf{SAM-Med2D, Tinh chỉnh từ mô hình nền tảng:}
-SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp Adapter (adapter tuning) nhẹ; bộ giải mã mặt nạ và bộ mã hóa prompt được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 4 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất (dừng sớm tại epoch 14), nhanh hơn đáng kể so với PGA-UNet (best epoch 79, dừng sớm tại epoch 94). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp Adapter) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
+SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền huấn luyện của bộ mã hóa ViT-B đã được học trên khoảng 4.6 triệu ảnh y tế 2D đa dạng (tập SA-Med2D-20M). Trong quá trình tinh chỉnh trên BTXRD, bộ mã hóa ViT-B được đóng băng một phần và chỉ cập nhật qua các lớp thích ứng nhẹ; bộ giải mã mặt nạ và bộ mã hóa câu nhắc được cập nhật đầy đủ. Chính nhờ xuất phát từ trọng số đã hội tụ trên dữ liệu y tế quy mô lớn, SAM-Med2D chỉ cần 4 vòng lặp tinh chỉnh để đạt Val Dice tốt nhất (dừng sớm tại vòng lặp 14), nhanh hơn đáng kể so với PGA-UNet (vòng lặp tốt nhất 79, dừng sớm tại vòng lặp 94). Tuy nhiên, quy mô tham số của SAM-Med2D ($\sim$91 triệu theo kiến trúc ViT-B gốc~\cite{2023-SAMMed2D-Cheng}, cộng thêm các lớp thích ứng) lớn hơn PGA-UNet khoảng 30 lần ($\sim$3 triệu).
 
 \begin{table}[htbp]
     \centering
@@ -199,15 +199,15 @@ SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền 
         \hline
         \textbf{Thuộc tính} & \textbf{PGA-UNet (đề xuất)} & \textbf{SAM-Med2D (so sánh)} \\
         \hline
-        Chiến lược & Huấn luyện từ đầu (từ ngẫu nhiên) & Tinh chỉnh từ pretrained ViT-B \\
+        Chiến lược & Huấn luyện từ đầu (từ ngẫu nhiên) & Tinh chỉnh từ ViT-B đã tiền huấn luyện \\
         \hline
-        Bộ mã hóa & U-Net CNN, học toàn bộ từ đầu & ViT-B, pretrained trên 4.6M ảnh y tế 2D \\
+        Bộ mã hóa & U-Net CNN, học toàn bộ từ đầu & ViT-B, đã tiền huấn luyện trên 4.6M ảnh y tế 2D \\
         \hline
-        Thành phần bị đóng băng & Không có & ViT-B backbone (cập nhật qua Adapter) \\
+        Thành phần bị đóng băng & Không có & Mạng nền tảng ViT-B (cập nhật qua lớp thích ứng) \\
         \hline
-        Tổng tham số & $\sim$3 triệu & $\sim$91 triệu (ViT-B gốc) + Adapter \\
+        Tổng tham số & $\sim$3 triệu & $\sim$91 triệu (ViT-B gốc) + lớp thích ứng \\
         \hline
-        Số epoch hội tụ (best val) & 79 & 4 \\
+        Số vòng lặp hội tụ (tốt nhất trên tập xác thực) & 79 & 4 \\
         \hline
     \end{tabular}
 \end{table}
@@ -221,7 +221,7 @@ Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễ
 
 Mô hình PGA-UNet được huấn luyện hoàn toàn trên tập ảnh \textbf{chỉ chứa các ca bệnh lý}. Trong môi trường lâm sàng thực tế, luồng đầu vào hỗn hợp cả ảnh bình thường lẫn bệnh lý. Nếu đưa trực tiếp ảnh xương bình thường vào PGA-UNet, mô hình sẽ tạo ra mặt nạ sai lệch (False Positive), gây hiểu nhầm nghiêm trọng cho bác sĩ và lãng phí tài nguyên tính toán.
 
-\textbf{Giải pháp:} Một module phân lớp nhị phân (\textbf{Gatekeeper}) đặt trước pipeline phân đoạn, đưa ra gợi ý sàng lọc: ảnh nghi ngờ bình thường hay có bệnh lý. Module này \textbf{không tự động loại bỏ ảnh} — kết quả luôn được hiển thị cho bác sĩ dưới dạng gợi ý kèm độ tin cậy, và bác sĩ là người xác nhận bước tiếp theo (Mục~\ref{sec:tong_the}). Thiết kế \textit{triage mềm} này được lựa chọn thay vì một bộ chặn cứng tự động vì hai lý do: (1) giữ đúng triết lý human-in-the-loop xuyên suốt toàn hệ thống, không riêng bước phân đoạn; (2) tránh rủi ro một ca bệnh thực sự bị loại bỏ vĩnh viễn khỏi luồng xử lý chỉ vì một dự đoán sai của mô hình phân lớp (false negative) mà không có cơ hội con người can thiệp — rủi ro này càng đáng lưu ý khi Gatekeeper đạt Sensitivity dưới 90\% (chi tiết tại Mục~\ref{sec:danh_gia_phan_lop}, Chương~\ref{Chapter4}). Module này \textbf{không phải đóng góp kỹ thuật trọng tâm} của khóa luận mà là thành phần hỗ trợ lấp đầy khoảng trống giữa điều kiện huấn luyện và triển khai thực tế. Kiến trúc cụ thể (EfficientNet\_B3, chiến lược tinh chỉnh hai giai đoạn) và kết quả định lượng được trình bày đầy đủ tại Mục~\ref{sec:danh_gia_phan_lop} (Chương~\ref{Chapter4}).
+\textbf{Giải pháp:} Một module phân lớp nhị phân (\textbf{Gatekeeper}) đặt trước luồng xử lý phân đoạn, đưa ra gợi ý sàng lọc: ảnh nghi ngờ bình thường hay có bệnh lý. Module này \textbf{không tự động loại bỏ ảnh}: kết quả luôn được hiển thị cho bác sĩ dưới dạng gợi ý kèm độ tin cậy, và bác sĩ là người xác nhận bước tiếp theo (Mục~\ref{sec:tong_the}). Thiết kế \textit{triage mềm} này được lựa chọn thay vì một bộ chặn cứng tự động vì hai lý do: (1) giữ đúng triết lý con người luôn giám sát trong vòng lặp quyết định xuyên suốt toàn hệ thống, không riêng bước phân đoạn; (2) tránh rủi ro một ca bệnh thực sự bị loại bỏ vĩnh viễn khỏi luồng xử lý chỉ vì một dự đoán âm tính giả của mô hình phân lớp mà không có cơ hội con người can thiệp. Rủi ro này càng đáng lưu ý khi Gatekeeper đạt Sensitivity dưới 90\% (chi tiết tại Mục~\ref{sec:danh_gia_phan_lop}, Chương~\ref{Chapter4}). Module này \textbf{không phải đóng góp kỹ thuật trọng tâm} của khóa luận mà là thành phần hỗ trợ lấp đầy khoảng trống giữa điều kiện huấn luyện và triển khai thực tế. Kiến trúc cụ thể (EfficientNet\_B3, chiến lược tinh chỉnh hai giai đoạn) và kết quả định lượng được trình bày đầy đủ tại Mục~\ref{sec:danh_gia_phan_lop} (Chương~\ref{Chapter4}).
 
 Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
 \begin{equation}
@@ -230,14 +230,14 @@ Module này được tối ưu bằng hàm mất mát Entropy chéo nhị phân:
 \end{equation}
 trong đó $y_i \in \{0, 1\}$ là nhãn thực và $\hat{p}_i \in [0, 1]$ là xác suất dự đoán của ảnh thứ $i$.
 
-Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên và hiển thị gợi ý sàng lọc cho bác sĩ; bác sĩ xác nhận "không bệnh" (pipeline kết thúc) hoặc "có bệnh" (hệ thống chuyển sang Giai đoạn 2 — PGA-UNet phân đoạn với prompt bounding box do bác sĩ vẽ). Quá trình chuyển giai đoạn luôn cần xác nhận của bác sĩ, kể cả khi bác sĩ không đồng ý với gợi ý của mô hình.
+Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeeper chạy tự động ngay khi ảnh được tải lên và hiển thị gợi ý sàng lọc cho bác sĩ; bác sĩ xác nhận "không bệnh" (luồng xử lý kết thúc) hoặc "có bệnh" (hệ thống chuyển sang Giai đoạn 2: PGA-UNet phân đoạn với hộp giới hạn làm câu nhắc do bác sĩ vẽ). Quá trình chuyển giai đoạn luôn cần xác nhận của bác sĩ, kể cả khi bác sĩ không đồng ý với gợi ý của mô hình.
 
 % ------------------------------------------------------------
 \section{Tóm tắt giải thuật hệ thống: Huấn luyện và Suy luận}
 \label{sec:algorithm_summary}
 % ------------------------------------------------------------
 
-Để làm rõ toàn bộ thiết kế đã trình bày trong chương này, mục này phát biểu chính thức hai giải thuật cốt lõi của hệ thống: quy trình huấn luyện ngoại tuyến (Algorithm~\ref{alg:offline}) và quy trình suy luận trực tuyến (Algorithm~\ref{alg:online}). Hai giải thuật này làm rõ sự phân tách giữa \textbf{giai đoạn ngoại tuyến} (tiền xử lý dữ liệu, sinh heatmap từ ground-truth mask, tối ưu tham số) và \textbf{giai đoạn trực tuyến} (nhận đầu vào từ bác sĩ, sinh heatmap từ bounding box người dùng vẽ, trả mặt nạ phân đoạn), tương ứng với hai sơ đồ ngoại tuyến/trực tuyến của hệ thống.
+Để làm rõ toàn bộ thiết kế đã trình bày trong chương này, mục này phát biểu chính thức hai giải thuật cốt lõi của hệ thống: quy trình huấn luyện ngoại tuyến (Algorithm~\ref{alg:offline}) và quy trình suy luận trực tuyến (Algorithm~\ref{alg:online}). Hai giải thuật này làm rõ sự phân tách giữa \textbf{giai đoạn ngoại tuyến} (tiền xử lý dữ liệu, sinh bản đồ nhiệt từ mặt nạ nhãn gốc, tối ưu tham số) và \textbf{giai đoạn trực tuyến} (nhận đầu vào từ bác sĩ, sinh bản đồ nhiệt từ hộp giới hạn người dùng vẽ, trả mặt nạ phân đoạn), tương ứng với hai sơ đồ ngoại tuyến/trực tuyến của hệ thống.
 
 \begin{algorithm}[htbp]
 \caption{Quy trình huấn luyện ngoại tuyến (Offline Training)}
@@ -246,22 +246,22 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeepe
 \Require Tập dữ liệu $\mathcal{D} = \{(\mathbf{I}_i, \mathbf{M}_i)\}_{i=1}^{N}$ (ảnh X-quang và mặt nạ phân đoạn pixel-level)
 \Ensure Bộ tham số $\boldsymbol{\theta}^*$ của PGA-UNet đã hội tụ
 
-\State \textbf{Tiền xử lý:} Dùng YOLOv11s xóa ký hiệu R/L và nhiễu kỹ thuật khỏi toàn bộ ảnh trong $\mathcal{D}$; resize về $512 \times 512$
-\For{mỗi epoch $e = 1, 2, \ldots, E_{\max}$}
-    \For{mỗi mini-batch $(\mathbf{I}_i, \mathbf{M}_i)$}
-        \State Trích hộp giới hạn $\mathbf{B}_i$ từ $\mathbf{M}_i$ (bounding box bao sát mask + đệm 5~px)
+\State \textbf{Tiền xử lý:} Dùng YOLOv11s xóa ký hiệu R/L và nhiễu kỹ thuật khỏi toàn bộ ảnh trong $\mathcal{D}$; chỉnh lại kích thước về $512 \times 512$
+\For{mỗi vòng lặp $e = 1, 2, \ldots, E_{\max}$}
+    \For{mỗi lô nhỏ $(\mathbf{I}_i, \mathbf{M}_i)$}
+        \State Trích hộp giới hạn $\mathbf{B}_i$ từ $\mathbf{M}_i$ (hộp giới hạn bao sát mặt nạ + đệm 5~px)
         \State Chọn kịch bản câu nhắc ngẫu nhiên: \textit{zoom-out} (70\%) hoặc \textit{shift} (30\%)
         \State Sinh bản đồ nhiệt: $\mathbf{H}_i = \text{GaussianBlur}(\mathbf{B}_{i,\text{mask}},\; k{=}31)$ \hfill (Phương trình~\eqref{eq:plateau_heatmap})
         \State Tính đầu ra dự đoán: $\hat{\mathbf{y}}_i = f_{\text{PGA}}(\mathbf{I}_i, \mathbf{H}_i;\; \boldsymbol{\theta})$
         \State Tính hàm mất mát: $\mathcal{L} = \mathcal{L}_{\text{BCE}} + \mathcal{L}_{\text{Dice}}$ \hfill (Phương trình~\eqref{eq:loss_seg})
-        \State Cập nhật: $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta \nabla_{\boldsymbol{\theta}} \mathcal{L}$ \hfill (AdamW, gradient clip $\leq 1.0$)
+        \State Cập nhật: $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta \nabla_{\boldsymbol{\theta}} \mathcal{L}$ \hfill (AdamW, giới hạn đạo hàm $\leq 1.0$)
     \EndFor
-    \State Tính Dice xác thực trên tập val; cập nhật \texttt{ReduceLROnPlateau}
-    \If{Dice xác thực không cải thiện sau 15 epoch liên tiếp}
-        \State \textbf{break} \hfill (Early Stopping)
+    \State Tính Dice xác thực trên tập xác thực; cập nhật \texttt{ReduceLROnPlateau}
+    \If{Dice xác thực không cải thiện sau 15 vòng lặp liên tiếp}
+        \State \textbf{break} \hfill (dừng sớm)
     \EndIf
 \EndFor
-\State \Return $\boldsymbol{\theta}^* \leftarrow$ tham số tại epoch có Dice xác thực cao nhất
+\State \Return $\boldsymbol{\theta}^* \leftarrow$ tham số tại vòng lặp có Dice xác thực cao nhất
 \end{algorithmic}
 \end{algorithm}
 
@@ -274,7 +274,7 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeepe
 
 \State \textbf{Tiền xử lý:} Loại bỏ R/L và nhiễu từ bản sao $\mathbf{I}'$ của $\mathbf{I}$ (giữ $\mathbf{I}$ gốc để hiển thị)
 \State \textbf{Sàng lọc bệnh lý (gợi ý):} $p \leftarrow f_{\text{cls}}(\mathbf{I}';\; \boldsymbol{\theta}_{\text{cls}})$; hiển thị gợi ý ``CÓ BỆNH'' nếu $p \geq 0.5$, ngược lại ``KHÔNG BỆNH'', kèm độ tin cậy
-\State \textbf{Bác sĩ xác nhận:} $c \leftarrow$ lựa chọn của bác sĩ ($c{=}1$: có bệnh, $c{=}0$: không bệnh) \Comment{$c$ độc lập với $p$ — bác sĩ có thể bác bỏ gợi ý của mô hình}
+\State \textbf{Bác sĩ xác nhận:} $c \leftarrow$ lựa chọn của bác sĩ ($c{=}1$: có bệnh, $c{=}0$: không bệnh) \Comment{$c$ độc lập với $p$: bác sĩ có thể bác bỏ gợi ý của mô hình}
 \If{$c = 0$}
     \State \Return \textit{``Bác sĩ xác nhận không có bệnh lý: kết thúc quy trình''}
 \EndIf
@@ -289,11 +289,11 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), module Gatekeepe
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Xử lý câu nhắc rỗng (bước kiểm tra $\mathbf{B} = \emptyset$ của Algorithm~\ref{alg:online}, chỉ xảy ra sau khi bác sĩ đã xác nhận có bệnh lý):} Khi bác sĩ chưa vẽ bounding box, hệ thống từ chối thực hiện phân đoạn và yêu cầu người dùng cung cấp vùng nghi ngờ. Lý do: bản đồ nhiệt tương ứng sẽ là ma trận không ($\mathbf{H} = \mathbf{0}$), không mang thông tin định hướng nào; Cổng không gian tại bộ mã hóa (Phương trình~\eqref{eq:spatial_gate}) sẽ không khuếch đại vùng nào, và Cơ chế chú ý có điều kiện (Phương trình~\eqref{eq:conditioned_gate}) sẽ dựa hoàn toàn vào tín hiệu decoder mà không có ràng buộc không gian, dẫn đến mặt nạ đầu ra thiếu độ tin cậy. Thiết kế từ chối tường minh (explicit rejection) này ưu tiên an toàn lâm sàng hơn là cố gắng phân đoạn với đầu vào không đủ thông tin.
+\textbf{Xử lý câu nhắc rỗng (bước kiểm tra $\mathbf{B} = \emptyset$ của Algorithm~\ref{alg:online}, chỉ xảy ra sau khi bác sĩ đã xác nhận có bệnh lý):} Khi bác sĩ chưa vẽ hộp giới hạn, hệ thống từ chối thực hiện phân đoạn và yêu cầu người dùng cung cấp vùng nghi ngờ. Lý do: bản đồ nhiệt tương ứng sẽ là ma trận không ($\mathbf{H} = \mathbf{0}$), không mang thông tin định hướng nào; Cổng không gian tại bộ mã hóa (Phương trình~\eqref{eq:spatial_gate}) sẽ không khuếch đại vùng nào, và Cơ chế chú ý có điều kiện (Phương trình~\eqref{eq:conditioned_gate}) sẽ dựa hoàn toàn vào tín hiệu bộ giải mã mà không có ràng buộc không gian, dẫn đến mặt nạ đầu ra thiếu độ tin cậy. Thiết kế từ chối tường minh này ưu tiên an toàn lâm sàng hơn là cố gắng phân đoạn với đầu vào không đủ thông tin.
 
 % ------------------------------------------------------------
 \section{Tổng kết chương}
 \label{sec:summary_ch3}
 % ------------------------------------------------------------
 
-Chương này đã trình bày đầy đủ kiến trúc và quy trình vận hành của hệ thống đề xuất: từ bước tiền xử lý loại bỏ nhiễu kỹ thuật trên BTXRD, đến ba thành phần cốt lõi của PGA-UNet (biểu diễn câu nhắc dạng Plateau Heatmap, Cổng không gian tại bộ mã hóa, và Cơ chế chú ý có điều kiện tại bộ giải mã), module gác cổng sàng lọc, và hai giải thuật hình thức hóa toàn bộ luồng huấn luyện ngoại tuyến lẫn suy luận trực tuyến. Bảng~\ref{tab:inheritance_contribution} đã phân định rõ ranh giới giữa phần kế thừa (khung U-Net, Attention Gate) và phần đóng góp mới (PSG, CAD, biểu diễn heatmap liên tục). Đây là cơ sở kỹ thuật để Chương~\ref{Chapter4} tiến hành đo lường định lượng mức độ hiệu quả của từng đóng góp thông qua thực nghiệm baseline, ablation study và các phân tích so sánh chi tiết.
+Chương này đã trình bày đầy đủ kiến trúc và quy trình vận hành của hệ thống đề xuất: từ bước tiền xử lý loại bỏ nhiễu kỹ thuật trên BTXRD, đến ba thành phần cốt lõi của PGA-UNet (biểu diễn câu nhắc dạng Plateau Heatmap, Cổng không gian tại bộ mã hóa, và Cơ chế chú ý có điều kiện tại bộ giải mã), module sàng lọc, và hai giải thuật hình thức hóa toàn bộ luồng huấn luyện ngoại tuyến lẫn suy luận trực tuyến. Bảng~\ref{tab:inheritance_contribution} đã phân định rõ ranh giới giữa phần kế thừa (khung U-Net, Attention Gate) và phần đóng góp mới (PSG, CAD, biểu diễn heatmap liên tục). Đây là cơ sở kỹ thuật để Chương~\ref{Chapter4} tiến hành đo lường định lượng mức độ hiệu quả của từng đóng góp thông qua thực nghiệm baseline, ablation study và các phân tích so sánh chi tiết.
