@@ -6,123 +6,127 @@
 \newlabel{Chapter4}{{4}{42}{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{chapter.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{42}{section.4.1}\protected@file@percent }
 \newlabel{sec:thiet_lap}{{4.1}{42}{Thiết lập môi trường thực nghiệm}{section.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang (Dataset)}{42}{subsection.4.1.1}\protected@file@percent }
-\newlabel{subsec:dataset}{{4.1.1}{42}{Tập dữ liệu ảnh X-quang (Dataset)}{subsection.4.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Tập dữ liệu ảnh X-quang}{42}{subsection.4.1.1}\protected@file@percent }
+\newlabel{subsec:dataset}{{4.1.1}{42}{Tập dữ liệu ảnh X-quang}{subsection.4.1.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố bộ dữ liệu thực nghiệm}}{43}{table.4.1}\protected@file@percent }
 \newlabel{tab:dataset_stats}{{4.1}{43}{Thống kê phân bố bộ dữ liệu thực nghiệm}{table.4.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Mô hình so sánh trong thực nghiệm}{44}{subsection.4.1.2}\protected@file@percent }
 \newlabel{subsec:models_compared}{{4.1.2}{44}{Mô hình so sánh trong thực nghiệm}{subsection.4.1.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Cấu hình huấn luyện (Hyperparameters, Loss functions)}{45}{subsection.4.1.3}\protected@file@percent }
-\newlabel{subsec:hyperparameters}{{4.1.3}{45}{Cấu hình huấn luyện (Hyperparameters, Loss functions)}{subsection.4.1.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Phương pháp đánh giá image-level}{46}{subsection.4.1.4}\protected@file@percent }
-\newlabel{subsec:image_level_eval}{{4.1.4}{46}{Phương pháp đánh giá image-level}{subsection.4.1.4}{}}
-\newlabel{eq:dice_img}{{4.4}{47}{Phương pháp đánh giá image-level}{equation.4.1.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Cấu hình huấn luyện}{45}{subsection.4.1.3}\protected@file@percent }
+\newlabel{subsec:hyperparameters}{{4.1.3}{45}{Cấu hình huấn luyện}{subsection.4.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Phương pháp đánh giá cấp độ ảnh (image-level)}{46}{subsection.4.1.4}\protected@file@percent }
+\newlabel{subsec:image_level_eval}{{4.1.4}{46}{Phương pháp đánh giá cấp độ ảnh (image-level)}{subsection.4.1.4}{}}
+\newlabel{eq:dice_img}{{4.4}{47}{Phương pháp đánh giá cấp độ ảnh (image-level)}{equation.4.1.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{47}{section.4.2}\protected@file@percent }
 \newlabel{sec:danh_gia_hieu_nang}{{4.2}{47}{Đánh giá hiệu năng kiến trúc PGA-UNet}{section.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở (Baseline Comparison): U-Net vs.\ PGA-UNet}{47}{subsection.4.2.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net (tự động, N=187~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (prompt-guided, N=187~ảnh, image-level)}}{48}{table.4.2}\protected@file@percent }
-\newlabel{tab:baseline_comparison}{{4.2}{48}{So sánh hiệu năng phân đoạn: U-Net (tự động, N=\Ntestimg ~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (prompt-guided, N=\Ntestimg ~ảnh, image-level)}{table.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ (Robustness): Kịch bản Zoom-out, Shift và Mixed}{49}{subsection.4.2.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản prompt (N=187~ảnh, image-level)}}{50}{table.4.3}\protected@file@percent }
-\newlabel{tab:robustness_comparison}{{4.3}{50}{Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản prompt (N=\Ntestimg ~ảnh, image-level)}{table.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}So sánh với SAM-Med2D (SOTA Prompt-based)}{51}{subsection.4.2.3}\protected@file@percent }
-\newlabel{subsec:sam_comparison}{{4.2.3}{51}{So sánh với SAM-Med2D (SOTA Prompt-based)}{subsection.4.2.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh toàn diện PGA-UNet với SAM-Med2D fine-tuned và SAM-Med2D zero-shot trên 3 kịch bản prompt, tất cả cùng độ phân giải $256\times 256$, image-level (N=187~ảnh).}}{52}{table.4.4}\protected@file@percent }
-\newlabel{tab:sam_comparison}{{4.4}{52}{So sánh toàn diện PGA-UNet với SAM-Med2D fine-tuned và SAM-Med2D zero-shot trên 3 kịch bản prompt, tất cả cùng độ phân giải $256\times 256$, image-level (N=\Ntestimg ~ảnh)}{table.4.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces So sánh Dice Score giữa U-Net (không prompt, $512\times 512$), PGA-UNet ($256\times 256$) và SAM-Med2D (fine-tuned, zero-shot, $256\times 256$) trên ba kịch bản prompt, tổng hợp trực quan từ Bảng~\ref {tab:baseline_comparison} và~\ref {tab:sam_comparison}.}}{53}{figure.4.1}\protected@file@percent }
-\newlabel{fig:chart_baseline_sam}{{4.1}{53}{So sánh Dice Score giữa U-Net (không prompt, $512\times 512$), PGA-UNet ($256\times 256$) và SAM-Med2D (fine-tuned, zero-shot, $256\times 256$) trên ba kịch bản prompt, tổng hợp trực quan từ Bảng~\ref {tab:baseline_comparison} và~\ref {tab:sam_comparison}}{figure.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}So sánh hiệu quả tính toán}{53}{subsection.4.2.4}\protected@file@percent }
-\newlabel{subsec:efficiency}{{4.2.4}{53}{So sánh hiệu quả tính toán}{subsection.4.2.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{54}{table.4.5}\protected@file@percent }
-\newlabel{tab:efficiency}{{4.5}{54}{So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}{table.4.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{54}{section.4.3}\protected@file@percent }
-\newlabel{sec:ablation_study}{{4.3}{54}{Phân tích kiến trúc và khả năng tổng quát hóa}{section.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{54}{subsection.4.3.1}\protected@file@percent }
-\newlabel{subsec:ablation_arch}{{4.3.1}{54}{Ablation kiến trúc: Đóng góp của PSG và CAD}{subsection.4.3.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Ablation study: Dice Score trên 3 kịch bản prompt của 5 biến thể kiến trúc PGA-UNet (N=187~ảnh, image-level). V5 là mô hình đề xuất.}}{55}{table.4.6}\protected@file@percent }
-\newlabel{tab:ablation_arch}{{4.6}{55}{Ablation study: Dice Score trên 3 kịch bản prompt của 5 biến thể kiến trúc PGA-UNet (N=\Ntestimg ~ảnh, image-level). V5 là mô hình đề xuất}{table.4.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Ablation study: Dice Score của 5 biến thể kiến trúc PGA-UNet trên ba kịch bản prompt (Bảng~\ref {tab:ablation_arch}). V5 (đề xuất, xanh dương) thấp hơn nhẹ ở Zoom-out nhưng vượt trội rõ rệt ở Shift so với bốn biến thể còn lại (xám).}}{56}{figure.4.2}\protected@file@percent }
-\newlabel{fig:chart_ablation}{{4.2}{56}{Ablation study: Dice Score của 5 biến thể kiến trúc PGA-UNet trên ba kịch bản prompt (Bảng~\ref {tab:ablation_arch}). V5 (đề xuất, xanh dương) thấp hơn nhẹ ở Zoom-out nhưng vượt trội rõ rệt ở Shift so với bốn biến thể còn lại (xám)}{figure.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{56}{subsection.4.3.2}\protected@file@percent }
-\newlabel{subsec:cross_validation}{{4.3.2}{56}{Kiểm định độ ổn định bằng đánh giá chéo (Cross-validation)}{subsection.4.3.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản prompt (trung bình 4 fold)}}{56}{table.4.7}\protected@file@percent }
-\newlabel{tab:cross_validation}{{4.7}{56}{Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản prompt (trung bình 4 fold)}{table.4.7}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{57}{table.4.8}\protected@file@percent }
-\newlabel{tab:cross_validation_per_fold}{{4.8}{57}{Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}{table.4.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương (Sub-Category)}{58}{subsection.4.3.3}\protected@file@percent }
-\newlabel{subsec:subcategory}{{4.3.3}{58}{Đánh giá theo đặc tính tổn thương (Sub-Category)}{subsection.4.3.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.9}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ (50 ảnh mỗi nhóm, image-level; phân nhóm dễ nhất / khó nhất theo Dice của U-Net)}}{58}{table.4.9}\protected@file@percent }
-\newlabel{tab:subcat_baseline}{{4.9}{58}{So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ (50 ảnh mỗi nhóm, image-level; phân nhóm dễ nhất / khó nhất theo Dice của U-Net)}{table.4.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh mỗi nhóm, image-level)}}{59}{table.4.10}\protected@file@percent }
-\newlabel{tab:subcat_sam}{{4.10}{59}{So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh mỗi nhóm, image-level)}{table.4.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref {tab:subcat_sam}): khoảng cách lớn nhất ở nhóm Tổn thương nhỏ, thu hẹp dần ở nhóm Tổn thương rõ nét.}}{60}{figure.4.3}\protected@file@percent }
-\newlabel{fig:chart_subcat_btxrd}{{4.3}{60}{So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref {tab:subcat_sam}): khoảng cách lớn nhất ở nhóm Tổn thương nhỏ, thu hẹp dần ở nhóm Tổn thương rõ nét}{figure.4.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.11}{\ignorespaces So sánh công bằng PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh image-level mỗi nhóm, cùng 256×256)}}{60}{table.4.11}\protected@file@percent }
-\newlabel{tab:subcat_sam_256}{{4.11}{60}{So sánh công bằng PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh image-level mỗi nhóm, cùng 256×256)}{table.4.11}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{61}{section.4.4}\protected@file@percent }
-\newlabel{sec:fracatlas}{{4.4}{61}{Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{section.4.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{62}{subsection.4.4.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.12}{\ignorespaces Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu per-polygon)}}{62}{table.4.12}\protected@file@percent }
-\newlabel{tab:fracatlas_dataset_stats}{{4.12}{62}{Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu per-polygon)}{table.4.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản prompt)}{63}{subsection.4.4.2}\protected@file@percent }
-\newlabel{subsec:fracatlas_pga_full}{{4.4.2}{63}{PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản prompt)}{subsection.4.4.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.13}{\ignorespaces PGA-UNet trên FracAtlas: kết quả toàn diện tại 256×256 và 512×512, ba kịch bản prompt (N=72~ảnh, image-level)}}{63}{table.4.13}\protected@file@percent }
-\newlabel{tab:fracatlas_pga_full}{{4.13}{63}{PGA-UNet trên FracAtlas: kết quả toàn diện tại 256×256 và 512×512, ba kịch bản prompt (N=\NtestimgFA ~ảnh, image-level)}{table.4.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}So sánh cơ sở (Baseline): PGA-UNet vs U-Net trên FracAtlas}{64}{subsection.4.4.3}\protected@file@percent }
-\newlabel{subsec:fracatlas_baseline}{{4.4.3}{64}{So sánh cơ sở (Baseline): PGA-UNet vs U-Net trên FracAtlas}{subsection.4.4.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.14}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net (tự động) so với PGA-UNet (512, Zoom-out) trên FracAtlas (N=72~ảnh, image-level, cùng độ phân giải 512×512)}}{64}{table.4.14}\protected@file@percent }
-\newlabel{tab:fracatlas_baseline}{{4.14}{64}{So sánh hiệu năng phân đoạn: U-Net (tự động) so với PGA-UNet (512, Zoom-out) trên FracAtlas (N=\NtestimgFA ~ảnh, image-level, cùng độ phân giải 512×512)}{table.4.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces PGA-UNet trên FracAtlas: Dice Score tại 256×256 và 512×512, ba kịch bản prompt (Bảng~\ref {tab:fracatlas_pga_full}).}}{65}{figure.4.4}\protected@file@percent }
-\newlabel{fig:chart_fracatlas_pga_full}{{4.4}{65}{PGA-UNet trên FracAtlas: Dice Score tại 256×256 và 512×512, ba kịch bản prompt (Bảng~\ref {tab:fracatlas_pga_full})}{figure.4.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.4}So sánh với SAM-Med2D (Fine-tuned và Zero-shot) trên FracAtlas}{65}{subsection.4.4.4}\protected@file@percent }
-\newlabel{subsec:fracatlas_sam}{{4.4.4}{65}{So sánh với SAM-Med2D (Fine-tuned và Zero-shot) trên FracAtlas}{subsection.4.4.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.15}{\ignorespaces So sánh toàn diện PGA-UNet (256) với SAM-Med2D fine-tuned và zero-shot trên FracAtlas, ba kịch bản prompt (tất cả cùng image-level, N=72~ảnh, cùng độ phân giải 256×256)}}{66}{table.4.15}\protected@file@percent }
-\newlabel{tab:fracatlas_sam_comparison}{{4.15}{66}{So sánh toàn diện PGA-UNet (256) với SAM-Med2D fine-tuned và zero-shot trên FracAtlas, ba kịch bản prompt (tất cả cùng image-level, N=\NtestimgFA ~ảnh, cùng độ phân giải 256×256)}{table.4.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.5}Đánh giá theo đặc tính tổn thương (Sub-Category) trên FracAtlas}{67}{subsection.4.4.5}\protected@file@percent }
-\newlabel{subsec:fracatlas_subcat}{{4.4.5}{67}{Đánh giá theo đặc tính tổn thương (Sub-Category) trên FracAtlas}{subsection.4.4.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.16}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh mỗi nhóm, image-level; phân nhóm dễ nhất / khó nhất theo Dice của U-Net, kịch bản Zoom-out)}}{68}{table.4.16}\protected@file@percent }
-\newlabel{tab:fracatlas_subcat_baseline}{{4.16}{68}{So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh mỗi nhóm, image-level; phân nhóm dễ nhất / khó nhất theo Dice của U-Net, kịch bản Zoom-out)}{table.4.16}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline}).}}{68}{figure.4.5}\protected@file@percent }
-\newlabel{fig:chart_fracatlas_subcat_baseline}{{4.5}{68}{So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline})}{figure.4.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.17}{\ignorespaces So sánh SAM-Med2D (FT, 256), PGA-UNet (256) và PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (kịch bản Zoom-out, 24 ảnh/nhóm, image-level)}}{69}{table.4.17}\protected@file@percent }
-\newlabel{tab:fracatlas_subcat}{{4.17}{69}{So sánh SAM-Med2D (FT, 256), PGA-UNet (256) và PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (kịch bản Zoom-out, 24 ảnh/nhóm, image-level)}{table.4.17}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces So sánh SAM-Med2D (FT), PGA-UNet (256) và PGA-UNet (512) theo ba nhóm đặc tính tổn thương trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat}).}}{70}{figure.4.6}\protected@file@percent }
-\newlabel{fig:chart_subcat_fracatlas}{{4.6}{70}{So sánh SAM-Med2D (FT), PGA-UNet (256) và PGA-UNet (512) theo ba nhóm đặc tính tổn thương trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat})}{figure.4.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.6}Thảo luận: hiệu quả của kiến trúc khi huấn luyện lại trên miền dữ liệu khác}{70}{subsection.4.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Trực quan hóa kết quả (Qualitative Results)}{72}{section.4.5}\protected@file@percent }
-\newlabel{sec:truc_quan_hoa}{{4.5}{72}{Trực quan hóa kết quả (Qualitative Results)}{section.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{72}{subsection.4.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải). Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention.}}{73}{figure.4.7}\protected@file@percent }
-\newlabel{fig:vis_pga_sample}{{4.7}{73}{Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải). Đường biên bám sát GT nhờ cơ chế Prompt Spatial Gate và Conditioned Attention}{figure.4.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{73}{section.4.6}\protected@file@percent }
-\newlabel{sec:failure_cases}{{4.6}{73}{Giới hạn kiến trúc và phân tích trường hợp thất bại}{section.4.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{73}{subsection.4.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và pipeline end-to-end}{74}{section.4.7}\protected@file@percent }
-\newlabel{sec:product_overview}{{4.7}{74}{Đánh giá module Gatekeeper và pipeline end-to-end}{section.4.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{74}{subsection.4.7.1}\protected@file@percent }
-\newlabel{sec:danh_gia_phan_lop}{{4.7.1}{74}{Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{subsection.4.7.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.18}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{76}{table.4.18}\protected@file@percent }
-\newlabel{tab:classification_results}{{4.18}{76}{Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}{table.4.18}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Phân tích các ca bỏ sót (False Negative) và thử nghiệm ngưỡng phân loại}{77}{subsection.4.7.2}\protected@file@percent }
-\newlabel{subsec:fn_analysis}{{4.7.2}{77}{Phân tích các ca bỏ sót (False Negative) và thử nghiệm ngưỡng phân loại}{subsection.4.7.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.19}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN theo khoảng cách tới ngưỡng 0.5}}{77}{table.4.19}\protected@file@percent }
-\newlabel{tab:fn_prob_dist}{{4.19}{77}{Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN theo khoảng cách tới ngưỡng 0.5}{table.4.19}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.20}{\ignorespaces So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}}{78}{table.4.20}\protected@file@percent }
-\newlabel{tab:fn_area_compare}{{4.20}{78}{So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}{table.4.20}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.21}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}}{79}{table.4.21}\protected@file@percent }
-\newlabel{tab:threshold_sweep}{{4.21}{79}{Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}{table.4.21}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Phân tích sai số tích lũy (Cascading Error)}{79}{subsection.4.7.3}\protected@file@percent }
-\newlabel{subsec:cascading_error}{{4.7.3}{79}{Phân tích sai số tích lũy (Cascading Error)}{subsection.4.7.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.4}Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{81}{subsection.4.7.4}\protected@file@percent }
-\newlabel{sec:pipeline_eval}{{4.7.4}{81}{Đánh giá pipeline end-to-end trên dữ liệu hỗn hợp}{subsection.4.7.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.22}{\ignorespaces Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{83}{table.4.22}\protected@file@percent }
-\newlabel{tab:pipeline_eval}{{4.22}{83}{Kết quả pipeline end-to-end trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}{table.4.22}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.5}Các chỉ số end-to-end bổ sung: Sensitivity bệnh lý, FNR và Lesion-level Recall}{84}{subsection.4.7.5}\protected@file@percent }
-\newlabel{subsec:additional_e2e_metrics}{{4.7.5}{84}{Các chỉ số end-to-end bổ sung: Sensitivity bệnh lý, FNR và Lesion-level Recall}{subsection.4.7.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.23}{\ignorespaces Các chỉ số end-to-end bổ sung ở cấp độ tổn thương (lesion-level), tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}}{85}{table.4.23}\protected@file@percent }
-\newlabel{tab:lesion_level_metrics}{{4.23}{85}{Các chỉ số end-to-end bổ sung ở cấp độ tổn thương (lesion-level), tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}{table.4.23}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Đánh giá cơ sở: U-Net so với PGA-UNet}{47}{subsection.4.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net (tự động, N=187~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (dựa trên câu nhắc, N=187~ảnh, cấp độ ảnh)}}{48}{table.4.2}\protected@file@percent }
+\newlabel{tab:baseline_comparison}{{4.2}{48}{So sánh hiệu năng phân đoạn: U-Net (tự động, N=\Ntestimg ~ảnh) so với PGA-UNet kịch bản Zoom-out lý tưởng (dựa trên câu nhắc, N=\Ntestimg ~ảnh, cấp độ ảnh)}{table.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Đánh giá tính bền bỉ trước sai lệch câu nhắc: Kịch bản Zoom-out, Shift và Mixed}{49}{subsection.4.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh)}}{50}{table.4.3}\protected@file@percent }
+\newlabel{tab:robustness_comparison}{{4.3}{50}{Đánh giá tính bền bỉ của PGA-UNet trên 3 kịch bản câu nhắc (N=\Ntestimg ~ảnh, cấp độ ảnh)}{table.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}So sánh với mô hình nền tảng SAM-Med2D}{51}{subsection.4.2.3}\protected@file@percent }
+\newlabel{subsec:sam_comparison}{{4.2.3}{51}{So sánh với mô hình nền tảng SAM-Med2D}{subsection.4.2.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh toàn diện PGA-UNet với SAM-Med2D đã tinh chỉnh và SAM-Med2D chưa tinh chỉnh trên 3 kịch bản câu nhắc, tất cả cùng độ phân giải $256\times 256$, cấp độ ảnh (N=187~ảnh).}}{51}{table.4.4}\protected@file@percent }
+\newlabel{tab:sam_comparison}{{4.4}{51}{So sánh toàn diện PGA-UNet với SAM-Med2D đã tinh chỉnh và SAM-Med2D chưa tinh chỉnh trên 3 kịch bản câu nhắc, tất cả cùng độ phân giải $256\times 256$, cấp độ ảnh (N=\Ntestimg ~ảnh)}{table.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces So sánh Dice Score giữa U-Net (không câu nhắc, $512\times 512$), PGA-UNet ($256\times 256$) và SAM-Med2D (đã tinh chỉnh, chưa tinh chỉnh, $256\times 256$) trên ba kịch bản câu nhắc, tổng hợp trực quan từ Bảng~\ref {tab:baseline_comparison} và~\ref {tab:sam_comparison}.}}{53}{figure.4.1}\protected@file@percent }
+\newlabel{fig:chart_baseline_sam}{{4.1}{53}{So sánh Dice Score giữa U-Net (không câu nhắc, $512\times 512$), PGA-UNet ($256\times 256$) và SAM-Med2D (đã tinh chỉnh, chưa tinh chỉnh, $256\times 256$) trên ba kịch bản câu nhắc, tổng hợp trực quan từ Bảng~\ref {tab:baseline_comparison} và~\ref {tab:sam_comparison}}{figure.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}PGA-UNet ở hai độ phân giải: 256$\times $256 so với 512$\times $512 (BTXRD)}{53}{subsection.4.2.4}\protected@file@percent }
+\newlabel{subsec:pga_256_512}{{4.2.4}{53}{PGA-UNet ở hai độ phân giải: 256$\times $256 so với 512$\times $512 (BTXRD)}{subsection.4.2.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh PGA-UNet tại 256×256 và 512×512 trên BTXRD, ba kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh)}}{54}{table.4.5}\protected@file@percent }
+\newlabel{tab:pga_256_512}{{4.5}{54}{So sánh PGA-UNet tại 256×256 và 512×512 trên BTXRD, ba kịch bản câu nhắc (N=\Ntestimg ~ảnh, cấp độ ảnh)}{table.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.5}So sánh hiệu quả tính toán}{55}{subsection.4.2.5}\protected@file@percent }
+\newlabel{subsec:efficiency}{{4.2.5}{55}{So sánh hiệu quả tính toán}{subsection.4.2.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{55}{table.4.6}\protected@file@percent }
+\newlabel{tab:efficiency}{{4.6}{55}{So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}{table.4.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Phân tích kiến trúc và khả năng tổng quát hóa}{55}{section.4.3}\protected@file@percent }
+\newlabel{sec:ablation_study}{{4.3}{55}{Phân tích kiến trúc và khả năng tổng quát hóa}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Ablation kiến trúc: Đóng góp của PSG và CAD}{56}{subsection.4.3.1}\protected@file@percent }
+\newlabel{subsec:ablation_arch}{{4.3.1}{56}{Ablation kiến trúc: Đóng góp của PSG và CAD}{subsection.4.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Ablation study: Dice Score trên 3 kịch bản câu nhắc của 5 biến thể kiến trúc PGA-UNet (N=187~ảnh, cấp độ ảnh). PGA-UNet (đề xuất) là mô hình chính dùng xuyên suốt khóa luận.}}{57}{table.4.7}\protected@file@percent }
+\newlabel{tab:ablation_arch}{{4.7}{57}{Ablation study: Dice Score trên 3 kịch bản câu nhắc của 5 biến thể kiến trúc PGA-UNet (N=\Ntestimg ~ảnh, cấp độ ảnh). PGA-UNet (đề xuất) là mô hình chính dùng xuyên suốt khóa luận}{table.4.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Ablation study: Dice Score của 5 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc (Bảng~\ref {tab:ablation_arch}). PGA-UNet (đề xuất) tô xanh dương, bốn biến thể còn lại tô xám.}}{58}{figure.4.2}\protected@file@percent }
+\newlabel{fig:chart_ablation}{{4.2}{58}{Ablation study: Dice Score của 5 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc (Bảng~\ref {tab:ablation_arch}). PGA-UNet (đề xuất) tô xanh dương, bốn biến thể còn lại tô xám}{figure.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Kiểm định độ ổn định bằng đánh giá chéo}{58}{subsection.4.3.2}\protected@file@percent }
+\newlabel{subsec:cross_validation}{{4.3.2}{58}{Kiểm định độ ổn định bằng đánh giá chéo}{subsection.4.3.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{59}{table.4.8}\protected@file@percent }
+\newlabel{tab:cross_validation_per_fold}{{4.8}{59}{Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}{table.4.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.9}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}}{59}{table.4.9}\protected@file@percent }
+\newlabel{tab:cross_validation}{{4.9}{59}{Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}{table.4.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Đánh giá theo đặc tính tổn thương}{60}{subsection.4.3.3}\protected@file@percent }
+\newlabel{subsec:subcategory}{{4.3.3}{60}{Đánh giá theo đặc tính tổn thương}{subsection.4.3.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ (50 ảnh mỗi nhóm, cấp độ ảnh; phân nhóm dễ nhất / khó nhất theo Dice của U-Net)}}{60}{table.4.10}\protected@file@percent }
+\newlabel{tab:subcat_baseline}{{4.10}{60}{So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ (50 ảnh mỗi nhóm, cấp độ ảnh; phân nhóm dễ nhất / khó nhất theo Dice của U-Net)}{table.4.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.11}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh mỗi nhóm, cấp độ ảnh)}}{61}{table.4.11}\protected@file@percent }
+\newlabel{tab:subcat_sam}{{4.11}{61}{So sánh PGA-UNet với SAM-Med2D trên ba nhóm đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh mỗi nhóm, cấp độ ảnh)}{table.4.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref {tab:subcat_sam}).}}{62}{figure.4.3}\protected@file@percent }
+\newlabel{fig:chart_subcat_btxrd}{{4.3}{62}{So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref {tab:subcat_sam})}{figure.4.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.12}{\ignorespaces So sánh công bằng PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh cấp độ ảnh mỗi nhóm, cùng 256×256)}}{63}{table.4.12}\protected@file@percent }
+\newlabel{tab:subcat_sam_256}{{4.12}{63}{So sánh công bằng PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng (kịch bản Zoom-out, 50 ảnh cấp độ ảnh mỗi nhóm, cùng 256×256)}{table.4.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{63}{section.4.4}\protected@file@percent }
+\newlabel{sec:fracatlas}{{4.4}{63}{Đánh giá bổ sung trên bộ dữ liệu thứ hai (FracAtlas)}{section.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Giới thiệu bộ dữ liệu FracAtlas}{64}{subsection.4.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.13}{\ignorespaces Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu per-polygon)}}{65}{table.4.13}\protected@file@percent }
+\newlabel{tab:fracatlas_dataset_stats}{{4.13}{65}{Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu per-polygon)}{table.4.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản câu nhắc)}{65}{subsection.4.4.2}\protected@file@percent }
+\newlabel{subsec:fracatlas_pga_full}{{4.4.2}{65}{PGA-UNet toàn diện trên FracAtlas (256×256 và 512×512, ba kịch bản câu nhắc)}{subsection.4.4.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.14}{\ignorespaces PGA-UNet trên FracAtlas: kết quả toàn diện tại 256×256 và 512×512, ba kịch bản câu nhắc (N=72~ảnh, cấp độ ảnh)}}{66}{table.4.14}\protected@file@percent }
+\newlabel{tab:fracatlas_pga_full}{{4.14}{66}{PGA-UNet trên FracAtlas: kết quả toàn diện tại 256×256 và 512×512, ba kịch bản câu nhắc (N=\NtestimgFA ~ảnh, cấp độ ảnh)}{table.4.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces PGA-UNet trên FracAtlas: Dice Score tại 256×256 và 512×512, ba kịch bản câu nhắc (Bảng~\ref {tab:fracatlas_pga_full}).}}{67}{figure.4.4}\protected@file@percent }
+\newlabel{fig:chart_fracatlas_pga_full}{{4.4}{67}{PGA-UNet trên FracAtlas: Dice Score tại 256×256 và 512×512, ba kịch bản câu nhắc (Bảng~\ref {tab:fracatlas_pga_full})}{figure.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}So sánh cơ sở: PGA-UNet so với U-Net trên FracAtlas}{67}{subsection.4.4.3}\protected@file@percent }
+\newlabel{subsec:fracatlas_baseline}{{4.4.3}{67}{So sánh cơ sở: PGA-UNet so với U-Net trên FracAtlas}{subsection.4.4.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.15}{\ignorespaces So sánh hiệu năng phân đoạn: U-Net (tự động) so với PGA-UNet (512, Zoom-out) trên FracAtlas (N=72~ảnh, cấp độ ảnh, cùng độ phân giải 512×512)}}{68}{table.4.15}\protected@file@percent }
+\newlabel{tab:fracatlas_baseline}{{4.15}{68}{So sánh hiệu năng phân đoạn: U-Net (tự động) so với PGA-UNet (512, Zoom-out) trên FracAtlas (N=\NtestimgFA ~ảnh, cấp độ ảnh, cùng độ phân giải 512×512)}{table.4.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.4}So sánh với SAM-Med2D (Đã tinh chỉnh và Chưa tinh chỉnh) trên FracAtlas}{68}{subsection.4.4.4}\protected@file@percent }
+\newlabel{subsec:fracatlas_sam}{{4.4.4}{68}{So sánh với SAM-Med2D (Đã tinh chỉnh và Chưa tinh chỉnh) trên FracAtlas}{subsection.4.4.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.16}{\ignorespaces So sánh toàn diện PGA-UNet (256) với SAM-Med2D đã tinh chỉnh và chưa tinh chỉnh trên FracAtlas, ba kịch bản câu nhắc (tất cả cùng cấp độ ảnh, N=72~ảnh, cùng độ phân giải 256×256)}}{68}{table.4.16}\protected@file@percent }
+\newlabel{tab:fracatlas_sam_comparison}{{4.16}{68}{So sánh toàn diện PGA-UNet (256) với SAM-Med2D đã tinh chỉnh và chưa tinh chỉnh trên FracAtlas, ba kịch bản câu nhắc (tất cả cùng cấp độ ảnh, N=\NtestimgFA ~ảnh, cùng độ phân giải 256×256)}{table.4.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.5}Đánh giá theo đặc tính tổn thương trên FracAtlas}{70}{subsection.4.4.5}\protected@file@percent }
+\newlabel{subsec:fracatlas_subcat}{{4.4.5}{70}{Đánh giá theo đặc tính tổn thương trên FracAtlas}{subsection.4.4.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.17}{\ignorespaces So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh mỗi nhóm, cấp độ ảnh; phân nhóm dễ nhất / khó nhất theo Dice của U-Net, kịch bản Zoom-out)}}{70}{table.4.17}\protected@file@percent }
+\newlabel{tab:fracatlas_subcat_baseline}{{4.17}{70}{So sánh hiệu năng PGA-UNet với U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh mỗi nhóm, cấp độ ảnh; phân nhóm dễ nhất / khó nhất theo Dice của U-Net, kịch bản Zoom-out)}{table.4.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline}).}}{71}{figure.4.5}\protected@file@percent }
+\newlabel{fig:chart_fracatlas_subcat_baseline}{{4.5}{71}{So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline})}{figure.4.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.18}{\ignorespaces So sánh SAM-Med2D (FT, 256), PGA-UNet (256) và PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (kịch bản Zoom-out, 24 ảnh/nhóm, cấp độ ảnh)}}{71}{table.4.18}\protected@file@percent }
+\newlabel{tab:fracatlas_subcat}{{4.18}{71}{So sánh SAM-Med2D (FT, 256), PGA-UNet (256) và PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (kịch bản Zoom-out, 24 ảnh/nhóm, cấp độ ảnh)}{table.4.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.6}Thảo luận: hiệu quả của kiến trúc khi huấn luyện lại trên miền dữ liệu khác}{72}{subsection.4.4.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces So sánh SAM-Med2D (FT), PGA-UNet (256) và PGA-UNet (512) theo ba nhóm đặc tính tổn thương trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat}).}}{73}{figure.4.6}\protected@file@percent }
+\newlabel{fig:chart_subcat_fracatlas}{{4.6}{73}{So sánh SAM-Med2D (FT), PGA-UNet (256) và PGA-UNet (512) theo ba nhóm đặc tính tổn thương trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat})}{figure.4.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Trực quan hóa kết quả}{74}{section.4.5}\protected@file@percent }
+\newlabel{sec:truc_quan_hoa}{{4.5}{74}{Trực quan hóa kết quả}{section.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Trực quan hóa các kịch bản phân đoạn tiêu biểu}{75}{subsection.4.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải).}}{75}{figure.4.7}\protected@file@percent }
+\newlabel{fig:vis_pga_sample}{{4.7}{75}{Trực quan hóa kết quả phân đoạn của PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), mặt nạ Ground Truth (giữa), mặt nạ dự đoán (phải)}{figure.4.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}Giới hạn kiến trúc và phân tích trường hợp thất bại}{75}{section.4.6}\protected@file@percent }
+\newlabel{sec:failure_cases}{{4.6}{75}{Giới hạn kiến trúc và phân tích trường hợp thất bại}{section.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}Trường hợp PGA-UNet dự đoán kém}{76}{subsection.4.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}Đánh giá module Gatekeeper và luồng xử lý đầu cuối}{76}{section.4.7}\protected@file@percent }
+\newlabel{sec:product_overview}{{4.7}{76}{Đánh giá module Gatekeeper và luồng xử lý đầu cuối}{section.4.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{76}{subsection.4.7.1}\protected@file@percent }
+\newlabel{sec:danh_gia_phan_lop}{{4.7.1}{76}{Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}{subsection.4.7.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.19}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{78}{table.4.19}\protected@file@percent }
+\newlabel{tab:classification_results}{{4.19}{78}{Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}{table.4.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Phân tích các ca bỏ sót và thử nghiệm ngưỡng phân loại}{79}{subsection.4.7.2}\protected@file@percent }
+\newlabel{subsec:fn_analysis}{{4.7.2}{79}{Phân tích các ca bỏ sót và thử nghiệm ngưỡng phân loại}{subsection.4.7.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.20}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN theo khoảng cách tới ngưỡng 0.5}}{80}{table.4.20}\protected@file@percent }
+\newlabel{tab:fn_prob_dist}{{4.20}{80}{Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN theo khoảng cách tới ngưỡng 0.5}{table.4.20}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.21}{\ignorespaces So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}}{80}{table.4.21}\protected@file@percent }
+\newlabel{tab:fn_area_compare}{{4.21}{80}{So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}{table.4.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.22}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}}{81}{table.4.22}\protected@file@percent }
+\newlabel{tab:threshold_sweep}{{4.22}{81}{Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}{table.4.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Phân tích sai số tích lũy qua hai giai đoạn}{82}{subsection.4.7.3}\protected@file@percent }
+\newlabel{subsec:cascading_error}{{4.7.3}{82}{Phân tích sai số tích lũy qua hai giai đoạn}{subsection.4.7.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.4}Đánh giá luồng xử lý đầu cuối trên dữ liệu hỗn hợp}{84}{subsection.4.7.4}\protected@file@percent }
+\newlabel{sec:pipeline_eval}{{4.7.4}{84}{Đánh giá luồng xử lý đầu cuối trên dữ liệu hỗn hợp}{subsection.4.7.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.23}{\ignorespaces Kết quả luồng xử lý đầu cuối trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{85}{table.4.23}\protected@file@percent }
+\newlabel{tab:pipeline_eval}{{4.23}{85}{Kết quả luồng xử lý đầu cuối trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}{table.4.23}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.5}Các chỉ số đầu cuối bổ sung: Sensitivity bệnh lý, FNR và Recall cấp độ tổn thương}{86}{subsection.4.7.5}\protected@file@percent }
+\newlabel{subsec:additional_e2e_metrics}{{4.7.5}{86}{Các chỉ số đầu cuối bổ sung: Sensitivity bệnh lý, FNR và Recall cấp độ tổn thương}{subsection.4.7.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.24}{\ignorespaces Các chỉ số đầu cuối bổ sung ở cấp độ tổn thương (lesion-level), tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}}{87}{table.4.24}\protected@file@percent }
+\newlabel{tab:lesion_level_metrics}{{4.24}{87}{Các chỉ số đầu cuối bổ sung ở cấp độ tổn thương (lesion-level), tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}{table.4.24}{}}
 \@setckpt{Chapter4/chapter4}{
-\setcounter{page}{86}
+\setcounter{page}{89}
 \setcounter{equation}{6}
 \setcounter{enumi}{2}
 \setcounter{enumii}{0}
@@ -138,7 +142,7 @@
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
 \setcounter{figure}{7}
-\setcounter{table}{23}
+\setcounter{table}{24}
 \setcounter{tabx@nest}{0}
 \setcounter{listtotal}{0}
 \setcounter{listcount}{0}
@@ -150,7 +154,7 @@
 \setcounter{multicitetotal}{0}
 \setcounter{instcount}{46}
 \setcounter{maxnames}{3}
-\setcounter{minnames}{1}
+\setcounter{minnames}{3}
 \setcounter{maxitems}{3}
 \setcounter{minitems}{1}
 \setcounter{citecounter}{0}
@@ -247,16 +251,20 @@
 \setcounter{textcitemaxnames}{0}
 \setcounter{biburlbigbreakpenalty}{100}
 \setcounter{biburlbreakpenalty}{200}
-\setcounter{biburlnumpenalty}{0}
-\setcounter{biburlucpenalty}{0}
-\setcounter{biburllcpenalty}{0}
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{200}
+\setcounter{biburllcpenalty}{100}
 \setcounter{smartand}{1}
 \setcounter{bbx:relatedcount}{0}
 \setcounter{bbx:relatedtotal}{0}
+\setcounter{cbx@tempcnta}{0}
+\setcounter{cbx@tempcntb}{4}
+\setcounter{cbx@tempcntc}{0}
+\setcounter{cbx@tempcntd}{-1}
 \setcounter{section@level}{0}
 \setcounter{Item}{19}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{77}
+\setcounter{bookmark@seq@number}{79}
 \setcounter{lstnumber}{1}
 \setcounter{parentequation}{0}
 \setcounter{float@type}{16}
@@ -268,7 +276,7 @@
 \setcounter{ALG@blocknr}{10}
 \setcounter{ALG@storecount}{0}
 \setcounter{ALG@tmpcounter}{0}
-\setcounter{LT@tables}{1}
+\setcounter{LT@tables}{2}
 \setcounter{LT@chunks}{3}
 \setcounter{lstlisting}{0}
 }
