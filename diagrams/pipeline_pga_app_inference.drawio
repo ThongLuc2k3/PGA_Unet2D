@@ -1,89 +1,89 @@
 <mxfile host="65bd71144e">
     <diagram name="4. Inference Pipeline" id="inferencepipeline">
-        <mxGraphModel dx="1042" dy="124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="940" math="0" shadow="0">
+        <mxGraphModel dx="1219" dy="288" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="940" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-
-                <!-- ===== INPUT (ảnh X-quang, duy nhất từ đầu) ===== -->
-                <mxCell id="xray" value="&lt;b&gt;Ảnh X-quang&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;" parent="1" vertex="1">
+                <mxCell id="xray" value="&lt;b&gt;Input: Ảnh X-quang&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;" parent="1" vertex="1">
                     <mxGeometry x="320" y="20" width="200" height="48" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== GATEKEEPER ===== -->
                 <mxCell id="gate" value="&lt;b&gt;EfficientNet_B3&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Gatekeeper — phân loại tổn thương xương&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="280" y="108" width="280" height="65" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== AI SUGGESTION (not a decision) ===== -->
-                <mxCell id="dec" value="AI gợi ý:&lt;br&gt;Âm tính hay Dương tính?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="305" y="210" width="230" height="80" as="geometry"/>
+                <mxCell id="confirm" value="&lt;b&gt;Kết quả phân lớp&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Có bệnh / Không bệnh&amp;nbsp;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="275" y="230" width="290" height="140" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== DOCTOR CONFIRMATION (actual decision point) ===== -->
-                <mxCell id="confirm" value="&lt;b&gt;Bác sĩ xác nhận&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Xem gợi ý AI, tự quyết định Có bệnh / Không bệnh (có thể bác bỏ gợi ý)&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="290" y="320" width="260" height="100" as="geometry"/>
+                <mxCell id="15" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="stop" target="14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== "KHÔNG BỆNH" branch (bác sĩ xác nhận) ===== -->
-                <mxCell id="stop" value="&lt;b&gt;Kết thúc&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bác sĩ xác nhận không bệnh — không phân đoạn&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="620" y="345" width="200" height="55" as="geometry"/>
+                <mxCell id="stop" value="&lt;b&gt;Kết thúc&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;&amp;nbsp;một lượt xử lý ảnh&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="860" width="220" height="55" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== "CÓ BỆNH" branch (bác sĩ xác nhận) ===== -->
                 <mxCell id="prompt0" value="&lt;b&gt;Sinh Prompt Heatmap&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bounding Box → Gaussian Heatmap (plateau, k=31)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="270" y="462" width="300" height="60" as="geometry"/>
+                    <mxGeometry x="270" y="530" width="300" height="60" as="geometry"/>
                 </mxCell>
-
-                <!-- BBox chỉ xuất hiện SAU khi bác sĩ tự xác nhận Có bệnh (cùng hàng với Sinh Prompt Heatmap) -->
-                <mxCell id="bbox_in" value="&lt;b&gt;Bounding Box&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bác sĩ vẽ SAU khi tự xác nhận Có bệnh&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="610" y="462" width="220" height="60" as="geometry"/>
+                <mxCell id="bbox_in" value="&lt;b&gt;Bounding Box&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Bác sĩ vẽ SAU khi xác nhận Có bệnh&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="430" width="220" height="60" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== PGA-UNet ===== -->
                 <mxCell id="pga" value="&lt;b&gt;PGA-UNet — Phân đoạn tự động&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Prompt Spatial Gate + Conditioned Attention Decoder&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="260" y="565" width="320" height="65" as="geometry"/>
+                    <mxGeometry x="260" y="633" width="320" height="65" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== OUTPUT ===== -->
+                <mxCell id="13" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="out" target="stop" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
                 <mxCell id="out" value="&lt;b&gt;Output: Mặt nạ phân đoạn&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Binary Mask — hiển thị trên Gradio UI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="270" y="675" width="300" height="60" as="geometry"/>
+                    <mxGeometry x="270" y="743" width="300" height="57" as="geometry"/>
                 </mxCell>
-
-                <!-- ===== ARROWS ===== -->
-                <!-- Ảnh → Gatekeeper -->
                 <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" parent="1" source="xray" target="gate" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <!-- Gatekeeper → Decision -->
-                <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" parent="1" source="gate" target="dec" edge="1">
+                <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="gate" target="confirm" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="420" y="210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a3" value="Xác nhận: Không bệnh" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#ffffcc;" parent="1" source="confirm" target="11" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <!-- AI suggestion → Doctor confirmation -->
-                <mxCell id="a2b" value="Hiển thị gợi ý" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="dec" target="confirm" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
+                <mxCell id="a4" value="Xác nhận: Có bệnh" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#ffffcc;" parent="1" source="confirm" target="bbox_in" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="420" y="462" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
-                <!-- Confirm → Stop (bác sĩ xác nhận không bệnh) -->
-                <mxCell id="a3" value="Xác nhận: Không bệnh" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="confirm" target="stop" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <!-- Confirm → Prompt (bác sĩ xác nhận có bệnh) -->
-                <mxCell id="a4" value="Xác nhận: Có bệnh" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;" parent="1" source="confirm" target="prompt0" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <!-- BBox → Prompt (BBox được dùng để sinh heatmap) -->
-                <mxCell id="a_bbox_prompt" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;dashed=1;strokeColor=#b85450;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="bbox_in" target="prompt0" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <!-- Prompt → PGA-UNet -->
                 <mxCell id="a5" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" parent="1" source="prompt0" target="pga" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <!-- PGA-UNet → Output -->
                 <mxCell id="a6" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;" parent="1" source="pga" target="out" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-
+                <mxCell id="3" value="" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="bbox_in" target="prompt0" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="430" y="600" as="sourcePoint"/>
+                        <mxPoint x="430" y="643" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="420" y="500"/>
+                            <mxPoint x="420" y="500"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="&lt;b&gt;Bác sĩ vẫn nghi ngờ,&lt;br&gt;muốn tự thử phân đoạn?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="350" width="200" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3b" value="Không, kết thúc" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffcc;" parent="1" source="11" target="stop" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Có, tự vẽ vùng nghi ngờ" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;fontSize=11;dashed=1;strokeColor=#b85450;labelBackgroundColor=#ffffcc;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="11" target="bbox_in" edge="1">
+                    <mxGeometry x="-0.1429" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="600" y="395"/>
+                            <mxPoint x="600" y="460"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="&lt;b&gt;Trở về màn hình input&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Sẵn sàng nhận ảnh X-quang tiếp theo&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="960" width="180" height="60" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>

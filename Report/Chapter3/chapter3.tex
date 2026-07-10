@@ -10,7 +10,7 @@
 
 Hệ thống phân đoạn tương tác đề xuất trong khóa luận được thiết kế dưới dạng một luồng xử lý đầu cuối \textbf{bán tự động}, trong đó bác sĩ luôn giữ vai trò xác nhận trước mỗi lần chuyển giai đoạn: đây là thiết kế \textit{triage mềm}, không phải một bộ chặn cứng tự động loại bỏ ảnh mà không cho phép con người can thiệp. Đầu vào của hệ thống là ảnh X-quang; hộp giới hạn lên vùng nghi ngờ chỉ được bác sĩ vẽ sau khi đã xác nhận ảnh có bệnh lý ở bước sàng lọc. Kiến trúc tổng thể được chia thành các module liên hoàn qua hai giai đoạn cốt lõi:
 
-\textbf{1. Giai đoạn sàng lọc bệnh lý (Mô hình gác cổng):}
+\textbf{1. Giai đoạn sàng lọc bệnh lý (Gatekeeper):}
 Ảnh X-quang đầu vào đi qua một mạng nơ-ron tích chập đóng vai trò phân loại nhị phân. Hệ thống tính toán xác suất tồn tại của khối u hoặc các tổn thương bất thường và \textbf{hiển thị kết quả này cho bác sĩ dưới dạng một gợi ý} (ví dụ: "AI dự đoán: CÓ BỆNH, độ tin cậy 0.87"), chứ không tự động hành động dựa trên gợi ý đó. Bác sĩ xem gợi ý rồi chủ động xác nhận một trong hai lựa chọn:
 \begin{itemize}
     \item \textbf{Xác nhận không bệnh:} quy trình kết thúc cho ảnh này.
@@ -93,7 +93,7 @@ Kiến trúc mạng PGA-UNet được xây dựng trên nền tảng kế thừa
         \hline
         Mã hóa câu nhắc & SAM-Med2D~\cite{2023-SAMMed2D-Cheng}: ý tưởng câu nhắc dẫn đường & Thay biểu diễn rời rạc/nhị phân bằng \textbf{Gaussian Plateau Heatmap} 2D \\
         \hline
-        Cổng không gian (PSG) & Không có & \textbf{Hoàn toàn mới}: tăng cường đặc trưng bộ mã hóa có chọn lọc theo vùng câu nhắc \\
+        Cổng không gian (PSG) & Lấy cảm hứng từ hướng tiêm bản đồ không gian vào CNN: ghép kênh bản đồ khoảng cách tương tác trong DeepIGeoS~\cite{wang2019deepigeos}; gần đây một số công trình tiêm Gaussian heatmap vào các tầng bộ mã hóa của mô hình nền tảng để thích nghi khi suy luận~\cite{xu2025boundaryaware} & Cụ thể hóa thành cơ chế \textbf{gate nhân} (không phải ghép kênh) huấn luyện từ đầu trên CNN nhẹ, tăng cường đặc trưng bộ mã hóa có chọn lọc theo vùng câu nhắc với ràng buộc chỉ khuếch đại không triệt tiêu \\
         \hline
     \end{tabular}
 \end{table}
@@ -133,7 +133,7 @@ Việc kết hợp một vector nhúng rời rạc (256 chiều, không có cấ
 
 Trong kiến trúc U-Net truyền thống, bộ mã hóa chịu trách nhiệm trích xuất các đặc trưng ngữ nghĩa. Tuy nhiên, nếu thiếu định hướng, nó có xu hướng học mọi thứ xuất hiện trên ảnh X-quang, dẫn đến việc lãng phí tài nguyên tính toán vào các vùng nền không liên quan. 
 
-PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (PSG)} trực tiếp vào nhánh mã hóa; đây là thành phần \textbf{không tồn tại trong U-Net hay Attention U-Net gốc}, được đề xuất và phát triển qua quá trình thực nghiệm của khóa luận để đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng, với một ràng buộc thiết kế riêng cho bài toán y khoa (chỉ khuếch đại, không triệt tiêu tín hiệu gốc, xem ràng buộc $\alpha \in [0,1]$ bên dưới). Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
+PGA-UNet khắc phục điều này bằng cách tích hợp cấu kiện \textbf{Cổng không gian (PSG)} trực tiếp vào nhánh mã hóa; đây là thành phần không tồn tại trong U-Net hay Attention U-Net gốc. Hướng tiếp cận đưa bản đồ không gian vào CNN đã được gợi mở ở một số công trình trước, ví dụ ghép kênh bản đồ khoảng cách từ tương tác người dùng trong DeepIGeoS~\cite{wang2019deepigeos}, hoặc gần đây hơn là tiêm Gaussian heatmap vào các tầng của mô hình nền tảng để thích nghi khi suy luận~\cite{xu2025boundaryaware} -- các hướng này chủ yếu dùng phép ghép kênh (concatenation) hoặc áp dụng lên mô hình nền tảng đã tiền huấn luyện, khác với bối cảnh chung của khảo sát gần đây về cơ chế câu nhắc trong ảnh y khoa vốn tập trung vào việc tinh chỉnh mô hình nền tảng~\cite{yang2025promptmechanisms}. PSG cụ thể hóa hướng đưa bản đồ không gian vào CNN thành một \textbf{cơ chế gate nhân} (không phải ghép kênh) huấn luyện từ đầu trên một CNN nhẹ, được phát triển qua quá trình thực nghiệm của khóa luận để đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng, với một ràng buộc thiết kế riêng cho bài toán y khoa (chỉ khuếch đại, không triệt tiêu tín hiệu gốc, xem ràng buộc $\alpha \in [0,1]$ bên dưới). Tại tầng mã hóa thứ $l$, bản đồ nhiệt $\mathbf{H}^l$ được giảm mẫu về cùng độ phân giải với đặc trưng $\mathbf{x}^l$, sau đó đưa qua một bộ lọc cổng để sinh ra tín hiệu khuếch đại không gian:
 \begin{equation}
     \tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \left(1 + \alpha \cdot \sigma\!\left(\mathbf{W}_{gate} \ast \mathbf{H}^l\right)\right)
     \label{eq:spatial_gate}
@@ -212,10 +212,10 @@ SAM-Med2D~\cite{2023-SAMMed2D-Cheng} kế thừa toàn bộ trọng số tiền 
     \end{tabular}
 \end{table}
 
-Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễn giải kết quả ở Chương~\ref{Chapter4}: PGA-UNet đạt hiệu năng Dice cao hơn SAM-Med2D mặc dù nhỏ hơn $\sim$30 lần về tổng tham số ($\sim$3 triệu so với $\sim$91 triệu của ViT-B) và không có bất kỳ trọng số tiền huấn luyện nào. Kết quả này phản ánh hiệu quả của cơ chế tích hợp câu nhắc sâu sát vào kiến trúc nhẹ, chứ không phải ưu thế từ quy mô mô hình hay dữ liệu tiền huấn luyện.
+Sự khác biệt về chiến lược này có ý nghĩa quan trọng khi diễn giải kết quả ở Chương~\ref{Chapter4}: PGA-UNet nhỏ hơn $\sim$30 lần về tổng tham số ($\sim$3 triệu so với $\sim$91 triệu của ViT-B) và không kế thừa bất kỳ trọng số tiền huấn luyện nào, nên nếu đạt hiệu năng ngang bằng hoặc vượt SAM-Med2D, kết quả đó nên được diễn giải như hiệu quả của cơ chế tích hợp câu nhắc sâu sát vào kiến trúc nhẹ, chứ không phải ưu thế từ quy mô mô hình hay dữ liệu tiền huấn luyện. Số liệu cụ thể được trình bày và phân tích tại Chương~\ref{Chapter4}.
 
 % ------------------------------------------------------------
-\section{Module gác cổng sàng lọc (Gatekeeper)}
+\section{Module sàng lọc (Gatekeeper)}
 \label{sec:phan_lop}
 % ------------------------------------------------------------
 

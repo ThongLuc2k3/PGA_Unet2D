@@ -63,7 +63,7 @@ Dữ liệu thực nghiệm được sử dụng trong khóa luận là bộ \te
     \end{tabular}
 \end{table}
 
-\textbf{Thống kê bộ dữ liệu phân lớp (Gatekeeper):} Bộ BTXRD gồm 3.746 ảnh X-quang (cả lành lặn lẫn bệnh lý) được dùng toàn bộ để huấn luyện mô hình gác cổng, phân chia train/val/test theo tỷ lệ 80/10/10 ($\approx$2.996/375/375~ảnh). Tập phân lớp và tập phân đoạn dùng chung ảnh bệnh lý nhưng độc lập về nhãn: nhãn nhị phân (lành/bệnh) cho Gatekeeper, nhãn mặt nạ pixel-level cho PGA-UNet.
+\textbf{Thống kê bộ dữ liệu phân lớp (Gatekeeper):} Bộ BTXRD gồm 3.746 ảnh X-quang (cả lành lặn lẫn bệnh lý) được dùng toàn bộ để huấn luyện Gatekeeper, phân chia train/val/test theo tỷ lệ 80/10/10 ($\approx$2.996/375/375~ảnh). Tập phân lớp và tập phân đoạn dùng chung ảnh bệnh lý nhưng độc lập về nhãn: nhãn nhị phân (lành/bệnh) cho Gatekeeper, nhãn mặt nạ pixel-level cho PGA-UNet.
 
 % ------------------------------------------------------------
 \subsection{Mô hình so sánh trong thực nghiệm}
@@ -152,7 +152,7 @@ Metric cuối cùng được tính trung bình trên toàn bộ \Ntestimg~ảnh 
 \label{sec:danh_gia_hieu_nang}
 % ============================================================
 
-Để đo lường khách quan năng lực của kiến trúc PGA-UNet, quá trình thực nghiệm được tiến hành qua ba bước: (1)~so sánh với mô hình cơ sở không có câu nhắc (U-Net); (2)~đánh giá tính bền bỉ trước sai số câu nhắc; (3)~so sánh với SAM-Med2D (SOTA dựa trên câu nhắc). PGA-UNet và SAM-Med2D được đánh giá ở cấp độ ảnh (cấp độ ảnh, N=\Ntestimg~ảnh).
+Để đo lường khách quan năng lực của kiến trúc PGA-UNet, quá trình thực nghiệm được tiến hành qua ba bước: (1)~so sánh với mô hình cơ sở không có câu nhắc (U-Net); (2)~đánh giá tính bền bỉ trước sai số câu nhắc; (3)~so sánh với SAM-Med2D (SOTA dựa trên câu nhắc). PGA-UNet và SAM-Med2D được đánh giá ở cấp độ ảnh (N=\Ntestimg~ảnh).
 
 % ------------------------------------------------------------
 \subsection{Đánh giá cơ sở: U-Net so với PGA-UNet}
@@ -661,7 +661,7 @@ Tương tự Mục~\ref{sec:danh_gia_hieu_nang} trên BTXRD, U-Net (không câu 
     }
 \end{table}
 
-\textbf{Nhận xét:} Khoảng cách giữa U-Net và PGA-UNet trên FracAtlas ($\Delta$Dice~$=+0.4338$) còn lớn hơn trên BTXRD ($\Delta$Dice~$=+0.3794$, Bảng~\ref{tab:baseline_comparison}), củng cố quan sát đã có ở Mục~\ref{subsec:fracatlas_sam}: đặc tính đường gãy mảnh của FracAtlas càng bất lợi hơn cho mô hình không có định hướng không gian. HD95 của U-Net trên FracAtlas (136.82~px) cũng cao hơn nhiều so với PGA-UNet (7.45~px, chênh lệch $\sim$18 lần), cho thấy khi không có câu nhắc, U-Net không chỉ bỏ sót tổn thương mà còn định vị hoàn toàn sai vị trí ở nhiều ca.
+\textbf{Nhận xét:} Khoảng cách giữa U-Net và PGA-UNet trên FracAtlas ($\Delta$Dice~$=+0.4338$) còn lớn hơn trên BTXRD ($\Delta$Dice~$=+0.3794$, Bảng~\ref{tab:baseline_comparison}), một quan sát sẽ được phân tích thêm ở Mục~\ref{subsec:fracatlas_sam}: đặc tính đường gãy mảnh của FracAtlas càng bất lợi hơn cho mô hình không có định hướng không gian. HD95 của U-Net trên FracAtlas (136.82~px) cũng cao hơn nhiều so với PGA-UNet (7.45~px, chênh lệch $\sim$18 lần), cho thấy khi không có câu nhắc, U-Net không chỉ bỏ sót tổn thương mà còn định vị hoàn toàn sai vị trí ở nhiều ca.
 
 \subsection{So sánh với SAM-Med2D (Đã tinh chỉnh và Chưa tinh chỉnh) trên FracAtlas}
 \label{subsec:fracatlas_sam}
@@ -836,11 +836,11 @@ Qua quá trình phân tích trên tập kiểm thử, ba nhóm trường hợp m
 Phần này trình bày đánh giá module Gatekeeper (EfficientNet\_B3), thành phần hỗ trợ được tích hợp để lấp đầy khoảng trống giữa điều kiện huấn luyện và triển khai thực tế, cùng với đánh giá luồng xử lý đầu cuối trên dữ liệu hỗn hợp. Phân tích sai số tích lũy của luồng xử lý được trình bày tại Mục~\ref{subsec:cascading_error}.
 
 % ------------------------------------------------------------
-\subsection{Đánh giá mô hình phân lớp gác cổng (EfficientNet\_B3)}
+\subsection{Đánh giá Gatekeeper (EfficientNet\_B3)}
 \label{sec:danh_gia_phan_lop}
 % ------------------------------------------------------------
 
-Mô hình phân lớp đóng vai trò là "người gác cổng" (gatekeeper) trong luồng xử lý đầu cuối của phần mềm. Nhiệm vụ của mô hình là sàng lọc tự động ảnh X-quang đầu vào thành hai nhóm: Bình thường (Âm tính) và Có bệnh lý bất thường (Dương tính). Việc đánh giá chính xác hiệu năng của module này mang ý nghĩa quyết định, bởi một dự đoán sai sót ở bước này có thể khiến bệnh nhân bị lọt lưới sàng lọc mà không bao giờ đi tới được bước phân đoạn chi tiết phía sau.
+Gatekeeper đảm nhận vai trò sàng lọc trong luồng xử lý đầu cuối của phần mềm. Nhiệm vụ của mô hình là sàng lọc tự động ảnh X-quang đầu vào thành hai nhóm: Bình thường (Âm tính) và Có bệnh lý bất thường (Dương tính). Việc đánh giá chính xác hiệu năng của module này mang ý nghĩa quyết định, bởi một dự đoán sai sót ở bước này có thể khiến bệnh nhân bị lọt lưới sàng lọc mà không bao giờ đi tới được bước phân đoạn chi tiết phía sau.
 
 \textbf{Kiến trúc: EfficientNet\_B3 tinh chỉnh hai giai đoạn.}
 Mô hình \textbf{EfficientNet\_B3}~\cite{tan2019efficientnet} được tiền huấn luyện trên ImageNet-1K sử dụng chiến lược \textit{compound scaling}, đồng thời mở rộng chiều rộng, chiều sâu và độ phân giải theo một hệ số hợp lý. Mạng nền tảng gồm các khối MBConv kết hợp với cơ chế Squeeze-and-Excitation (SE). Với $\sim$10.7M tham số và đầu vào $300\times300$, EfficientNet\_B3 đạt cân bằng tốt giữa hiệu năng phân lớp và tốc độ suy luận. Tầng phân lớp gốc được thay thế bởi $\text{Linear}(1536, 1)$ + Sigmoid, xuất xác suất $p \in (0,1)$; ngưỡng $p \geq 0.5$ → dương tính.
@@ -881,7 +881,7 @@ Mô hình \textbf{EfficientNet\_B3}~\cite{tan2019efficientnet} được tiền h
 \end{table}
 
 \textbf{Phân tích kết quả:}
-Bảng~\ref{tab:classification_results} tổng hợp hiệu năng của mô hình phân lớp gác cổng sau quá trình tinh chỉnh hai giai đoạn, đánh giá thống nhất trên tập kiểm thử \textbf{dataset\_online} (375 ảnh: 187 bệnh lý + 188 bình thường). Kết quả cho thấy Gatekeeper đạt hiệu năng ban đầu khá tốt và tương đối cân bằng giữa Sensitivity và Specificity, nhưng \textbf{chưa đạt mức đủ để tự động chặn ảnh âm tính một cách an toàn} trong một ứng dụng y khoa nếu không có thêm cơ chế bảo vệ:
+Bảng~\ref{tab:classification_results} tổng hợp hiệu năng của Gatekeeper sau quá trình tinh chỉnh hai giai đoạn, đánh giá thống nhất trên tập kiểm thử \textbf{dataset\_online} (375 ảnh: 187 bệnh lý + 188 bình thường). Kết quả cho thấy Gatekeeper đạt hiệu năng ban đầu khá tốt và tương đối cân bằng giữa Sensitivity và Specificity, nhưng \textbf{chưa đạt mức đủ để tự động chặn ảnh âm tính một cách an toàn} trong một ứng dụng y khoa nếu không có thêm cơ chế bảo vệ:
 \begin{itemize}
     \item \textbf{AUC-ROC 0.9405:} Khả năng phân biệt bệnh/không bệnh khá tốt, bất kể ngưỡng phân loại.
     \item \textbf{Recall/Sensitivity 88.77\%:} Phát hiện đúng $\approx$89\% ca bệnh thực sự, nhưng vẫn bỏ sót 21/187 ca (11.23\%); mức bỏ sót này \textbf{chưa đủ an toàn} để Gatekeeper tự động loại bỏ ảnh âm tính mà không có xác nhận của bác sĩ. Đặc điểm của 21 ca này và đánh đổi khi hạ ngưỡng phân loại được phân tích chi tiết tại Mục~\ref{subsec:fn_analysis}.
@@ -986,11 +986,11 @@ Trung vị diện tích tổn thương ở nhóm FN chỉ bằng khoảng 22\% t
 Khi đánh giá \textbf{hệ thống đầu cuối} trên tập \textbf{dataset\_online} (375 ảnh hỗn hợp, bao gồm 187 ảnh bệnh lý và 188 ảnh bình thường), sai số từ bước phân lớp lan truyền sang bước phân đoạn qua hai kênh, và cả hai kênh đều phải được tính là lỗi phân đoạn (Dice~=~0) trong một chỉ số đầu cuối đúng nghĩa:
 
 \begin{enumerate}
-    \item \textbf{Sai số Recall (FN):} Các ca bệnh bị gác cổng bỏ sót → không chuyển xuống PGA-UNet, bệnh nhân có tổn thương thật nhưng không được phân đoạn (21 ảnh FN, tương ứng Sensitivity~=~88.77\%). Đây là lỗi nghiêm trọng nhất trong một luồng xử lý y khoa và \textbf{phải được gán Dice~=~0}, không thể loại khỏi mẫu số như một trường hợp ``không tính''.
+    \item \textbf{Sai số Recall (FN):} Các ca bệnh bị Gatekeeper bỏ sót → không chuyển xuống PGA-UNet, bệnh nhân có tổn thương thật nhưng không được phân đoạn (21 ảnh FN, tương ứng Sensitivity~=~88.77\%). Đây là lỗi nghiêm trọng nhất trong một luồng xử lý y khoa và \textbf{phải được gán Dice~=~0}, không thể loại khỏi mẫu số như một trường hợp ``không tính''.
     \item \textbf{Sai số Specificity (FP):} Các ảnh bình thường bị phân loại nhầm thành dương tính → PGA-UNet chạy nhưng không có GT mask (24 ảnh FP, tương ứng Specificity~=~87.23\%), cũng đóng góp Dice~=~0 vào mẫu số.
 \end{enumerate}
 
-Chất lượng phân đoạn thuần của PGA-UNet, tính \textit{có điều kiện} rằng ảnh đã được gác cổng chuyển đúng xuống (166/166 ảnh TP), đạt $\overline{\text{Dice}}_{\text{TP}} = 86.35\%$. Đây \textbf{không phải} hiệu năng thật của toàn hệ thống vì nó bỏ qua hoàn toàn 21 ảnh FN và 24 ảnh FP.
+Chất lượng phân đoạn thuần của PGA-UNet, tính \textit{có điều kiện} rằng ảnh đã được Gatekeeper chuyển đúng xuống (166/166 ảnh TP), đạt $\overline{\text{Dice}}_{\text{TP}} = 86.35\%$. Đây \textbf{không phải} hiệu năng thật của toàn hệ thống vì nó bỏ qua hoàn toàn 21 ảnh FN và 24 ảnh FP.
 
 Phân rã theo từng kênh lỗi (mẫu số chỉ tính một kênh tại một thời điểm):
 \begin{itemize}
@@ -1046,7 +1046,7 @@ Pipeline Dice được tính trên \textit{toàn bộ ảnh có liên quan đế
         \hline
         Ảnh TP đưa vào PGA & 166 ảnh (209 polygon, tb. 1.26 polygon/ảnh) \\
         \hline
-        Dice trung bình thuần trên ảnh TP (tham khảo, có điều kiện gác cổng đúng) & \textbf{0.8635} \\
+        Dice trung bình thuần trên ảnh TP (tham khảo, có điều kiện Gatekeeper phân loại đúng) & \textbf{0.8635} \\
         \hline
         Ảnh FP (Dice = 0) & 24 ảnh \\
         \hline
@@ -1065,14 +1065,14 @@ Pipeline Dice được tính trên \textit{toàn bộ ảnh có liên quan đế
 
 \textbf{Nhận xét:} Pipeline Dice end-to-end~=~\textbf{0.6793} (mẫu số 211 đơn vị cấp độ ảnh: 166 ảnh TP, 24 ảnh FP và 21 ảnh FN, với cả FP lẫn FN đều bị gán Dice~=~0) phản ánh đúng và đủ hiệu năng tổng thể của luồng xử lý khi xử lý luồng ảnh hỗn hợp, kể cả các ca bệnh bị Gatekeeper bỏ sót hoàn toàn. Con số này thấp hơn PGA-UNet độc lập (Dice~=~0.8584) do hai nguồn suy giảm: (1) 24 ảnh bình thường bị phân loại sai (FP, Specificity~=~87.23\%) đóng góp Dice~=~0 vào mẫu số; (2) 21 ảnh bệnh bị bỏ sót hoàn toàn (FN, Sensitivity~=~88.77\%) cũng đóng góp Dice~=~0 vào mẫu số thay vì bị loại khỏi phép tính. So với cách tính trước đây (loại hẳn 21 ảnh FN khỏi mẫu số, cho Dice~=~0.7544), chỉ số đầu cuối đã sửa lại này thấp hơn 0.0751 điểm Dice, phản ánh trung thực hơn rủi ro lâm sàng thực sự: một ca bệnh bị Gatekeeper bỏ sót gây hậu quả tương đương một ca phân đoạn sai hoàn toàn (Dice~=~0), không phải một trường hợp ``không tính''. Đây là \textbf{kết quả thực nghiệm đầy đủ} trên dữ liệu hỗn hợp thực tế, minh chứng cho sai số tích lũy tất yếu của kiến trúc hai tầng.
 
-Mô hình phân lớp gác cổng đạt AUC-ROC~=~0.9405 trên dataset\_online là bản lề để toàn bộ hệ thống vận hành ổn định. Cải thiện đồng thời Sensitivity và Specificity (hiện tương đương nhau ở mức $\sim$88\%) nhằm giảm cả FN lẫn FP là hướng ưu tiên phát triển tiếp theo (xem Chương~\ref{Chapter5}).
+Gatekeeper đạt AUC-ROC~=~0.9405 trên dataset\_online là bản lề để toàn bộ hệ thống vận hành ổn định. Cải thiện đồng thời Sensitivity và Specificity (hiện tương đương nhau ở mức $\sim$88\%) nhằm giảm cả FN lẫn FP là hướng ưu tiên phát triển tiếp theo (xem Chương~\ref{Chapter5}).
 
 % ------------------------------------------------------------
 \subsection{Các chỉ số đầu cuối bổ sung: Sensitivity bệnh lý, FNR và Recall cấp độ tổn thương}
 \label{subsec:additional_e2e_metrics}
 % ------------------------------------------------------------
 
-Pipeline Dice end-to-end (Mục~\ref{sec:pipeline_eval}) là một chỉ số tổng hợp duy nhất; với một hệ thống sàng lọc y khoa, một con số tổng hợp không đủ để thể hiện rủi ro lâm sàng cụ thể. Phần này báo cáo bổ sung các chỉ số an toàn ở cấp độ ảnh (cấp độ ảnh) và cấp độ từng tổn thương (lesion-level), tách bạch rõ nguồn gốc rủi ro thay vì chỉ dựa vào Pipeline Dice.
+Pipeline Dice end-to-end (Mục~\ref{sec:pipeline_eval}) là một chỉ số tổng hợp duy nhất; với một hệ thống sàng lọc y khoa, một con số tổng hợp không đủ để thể hiện rủi ro lâm sàng cụ thể. Phần này báo cáo bổ sung các chỉ số an toàn ở cấp độ ảnh và cấp độ từng tổn thương (lesion-level), tách bạch rõ nguồn gốc rủi ro thay vì chỉ dựa vào Pipeline Dice.
 
 \textbf{Cấp độ ảnh:} Sensitivity bệnh lý (Recall)~=~\textbf{88.77\%} (166/187 ảnh bệnh được Gatekeeper phát hiện đúng); False Negative Rate (FNR)~=~\textbf{11.23\%} (21/187 ảnh bệnh bị Gatekeeper bỏ sót hoàn toàn, không được PGA-UNet xử lý).
 
