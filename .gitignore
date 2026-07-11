@@ -1,1 +1,4 @@
 /.claude
+
+# Kết quả CSV sinh ra từ các notebook ablation (results/per-image) — không cần commit
+**/Ablation/**/*.csv
