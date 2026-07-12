@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUL 2026 23:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  12 JUL 2026 23:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1958,8 +1958,8 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.4.4})
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.762 
-       <./images/chart_fracatlas_pga_full.png>] [72
+l.759 \end{table}
+                  <./images/chart_fracatlas_pga_full.png>] [72
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.17}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -2270,7 +2270,7 @@ fonts/type1/vntex/vnr/vnr12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr
 17.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnti10.pfb></home/thongluc/t
 exmf/fonts/type1/vntex/vnr/vnti12.pfb></home/thongluc/texmf/fonts/type1/vntex/v
 nr/vntt12.pfb>
-Output written on main.pdf (141 pages, 4773651 bytes).
+Output written on main.pdf (141 pages, 4773711 bytes).
 PDF statistics:
  1868 PDF objects out of 2073 (max. 8388607)
  1611 compressed objects within 17 object streams

@@ -428,4 +428,18 @@ User cung cấp `/home/thongluc/Khóa Luận Tốt Nghiệp/PGA_Unet2D/dataset_j
 **Kế hoạch lớn E — chỉ còn 1 mục tạm hoãn:**
 - **E.7** — Đổi tên đề tài khóa luận, chờ xác nhận/cho phép từ trường (không tự sửa).
 
+## Cập nhật: Rà soát toàn diện định lượng + ký tự lạ + thuật ngữ (fork review)
+
+Theo yêu cầu user "rà soát report, đặc biệt định lượng chính xác, Anh ngữ và dấu lạ vô nghĩa", đã tự sửa 2 chỗ dấu em-dash "—" dùng sai làm dấu câu (trong nội dung mới thêm ở Chapter4, mục threshold sweep BTXRD), rồi chạy 1 fork đọc toàn bộ main.tex + mọi file include (Chapter1-5, Appendix) đối chiếu số liệu. Fork phát hiện và đã sửa:
+
+1. **[Lỗi số liệu, nghiêm trọng nhất]** ΔDice BTXRD trích sai "+0,3794" (số CŨ trước khi đồng bộ dataset gốc) ở 2 chỗ (Chapter4 dòng ~728, ~1081, phần thảo luận FracAtlas) — đáng lẽ phải là **+0,3867** (0.8607−0.4740, khớp `tab:baseline_comparison`). Đã sửa cả 2.
+2. **[Lỗi số liệu do lẫn đơn vị, tự phát hiện thêm khi rà lại]** Câu so sánh "quy mô huấn luyện FracAtlas chỉ bằng ≈49% BTXRD" xuất hiện **3 lần** (dòng 665, 696, 1081) — lỗi vì so sánh nhầm đơn vị: `\NtrainFA`=730 là **mẫu per-polygon**, trong khi `\Ntrain`=1493 là **số ảnh** (khác cột trong `tab:dataset_stats`), 730/1493=49% chỉ là trùng hợp số học từ phép so sánh sai đơn vị. Đã sửa cả 3 chỗ dùng so sánh nhất quán đơn vị: 573 ảnh vs 1493 ảnh = **≈38%** (hoặc 730 vs 1848 mẫu per-polygon = ≈39%).
+3. **[Mâu thuẫn nội dung còn sót từ việc xóa tiền xử lý]** 3 chỗ vẫn ngầm ý còn tiền xử lý/ảnh "sạch": `decuong.tex` dòng 118 ("Tập ảnh BTXRD sạch nhiễu kỹ thuật") và dòng 138 (Giai đoạn 2 kế hoạch "Tiền xử lý để loại bỏ nhiễu"); `chapter3.tex` dòng 22 ("Ảnh X-quang sạch..."). Đã sửa cả 3 cho khớp quyết định "không tiền xử lý".
+4. **[Rounding nội bộ, mức thấp]** 2 số liệu Wilcoxon (+0.1064→+0.1065, +0.0387→+0.0388) lệch 0.0001 do khác đường tính (trừ trực tiếp bảng đã làm tròn vs tính từ dữ liệu thô) — đã thống nhất theo số của `tab:wilcoxon_ablation` (nguồn chính xác hơn) ở các câu không có phép trừ tường minh đi kèm; giữ nguyên các câu có hiển thị tường minh "X → Y" để không tạo mâu thuẫn toán học ngay trong câu.
+5. Cụm "bị loại trong bước tiền xử lý" (nói về lọc polygon lỗi của FracAtlas, khác với tiền xử lý BTXRD đã xóa) đổi thành "bị loại khi lọc dữ liệu" để tránh gây hiểu lầm.
+
+**Không phát hiện thêm vấn đề gì khác** (ký tự encoding lỗi, "---"/"$-$" dùng sai, thuật ngữ Anh-Việt lộn xộn) — báo cáo của fork xác nhận sạch ở các phần còn lại (Chapter2, danh mục thuật ngữ, bảng mới tính từ JSON đều khớp 100% khi kiểm tra thủ công).
+
+**Build:** sạch, 141 trang, không lỗi/undefined reference.
+
 **Mọi mục khác trong toàn bộ file này đều đã ✅ ĐÃ LÀM.**
