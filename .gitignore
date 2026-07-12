@@ -2,3 +2,6 @@
 
 # Kết quả CSV sinh ra từ các notebook ablation (results/per-image) — không cần commit
 **/Ablation/**/*.csv
+
+# JSON annotation gốc của dataset (tải riêng, không cần commit)
+/dataset_json/
