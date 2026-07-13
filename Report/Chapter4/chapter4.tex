@@ -308,6 +308,13 @@ Mục~\ref{subsec:sam_comparison} vừa chứng minh PGA-UNet vượt SAM-Med2D 
 
 Kết hợp với Mục~\ref{subsec:sam_comparison} (PGA-256 đã vượt SAM-256 ở mọi kịch bản), khi PGA-UNet được chạy ở độ phân giải gốc $512\times512$ (không bị giới hạn cứng như ViT-B của SAM-Med2D, cố định ở $256\times256$), khoảng cách với SAM-Med2D thực tế \textbf{còn lớn hơn} mức đã chứng minh ở Bảng~\ref{tab:sam_comparison} -- suy luận bắc cầu (PGA-512 $>$ PGA-256 $>$ SAM-256), tránh phải dựng một bảng trộn lẫn hai độ phân giải dễ gây hiểu lầm khi so HD95 thô.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/chart_pga_256_512.png}
+    \caption{PGA-UNet trên BTXRD: 256×256 và 512×512, ba kịch bản câu nhắc (Bảng~\ref{tab:pga_256_512}).}
+    \label{fig:chart_pga_256_512}
+\end{figure}
+
 % ------------------------------------------------------------
 \subsection{So sánh hiệu quả tính toán}
 \label{subsec:efficiency}
@@ -557,6 +564,12 @@ Các chỉ số cross-validation rất gần tập test chính (Dice Zoom-out: 0
 
 Kết quả Bảng~\ref{tab:subcat_baseline} xác nhận rõ giả thuyết. Ở nhóm \textit{Dễ} (top-50), U-Net đạt Dice~=~0.8488 trong khi PGA-UNet đạt 0.8972 ($\Delta=+0.0484$), cải thiện có ý nghĩa nhưng không đột biến vì tổn thương đã rõ. Ở nhóm \textit{Khó} (bottom-50), U-Net gần như sụp đổ, chỉ còn Dice~=~0.0211 (HD95~=~284.72~px); PGA-UNet \textbf{duy trì ổn định ở 0.8261} ($\Delta=+0.8050$) -- cho thấy cổng không gian câu nhắc có vai trò quan trọng trong xử lý nhất quán các ca bệnh phức tạp.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/chart_subcat_baseline_btxrd.png}
+    \caption{So sánh U-Net và PGA-UNet theo độ khó tác vụ trên BTXRD (Bảng~\ref{tab:subcat_baseline}).}
+    \label{fig:chart_subcat_baseline_btxrd}
+\end{figure}
 
 \subsubsection*{PGA-UNet so với SAM-Med2D theo đặc tính lâm sàng}
 
@@ -1096,12 +1109,12 @@ Bên cạnh các đánh giá định lượng bằng số liệu thống kê, vi
 \FloatBarrier
 \subsection{Trực quan hóa các kịch bản phân đoạn tiêu biểu}
 
-Hình~\ref{fig:vis_pga_sample} minh họa một ca kiểm thử tiêu biểu của PGA-UNet (kịch bản Zoom-out): mặt nạ phân đoạn bám sát đường biên tổn thương nhờ cơ chế PSG và CAD dẫn đường từ bản đồ nhiệt câu nhắc.
+Hình~\ref{fig:vis_pga_sample} minh họa hai ca kiểm thử tiêu biểu của PGA-UNet (kịch bản Zoom-out): mặt nạ phân đoạn bám sát đường biên tổn thương nhờ cơ chế PSG và CAD dẫn đường từ bản đồ nhiệt câu nhắc.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{images/vis_pga_01.png}
-    \caption{PGA-UNet kịch bản Zoom-out: ảnh gốc (trái), Ground Truth (giữa), mặt nạ dự đoán (phải).}
+    \caption{Hai ca kiểm thử PGA-UNet, kịch bản Zoom-out. Từ trái sang phải: ảnh gốc, ảnh kèm hộp giới hạn câu nhắc, mặt nạ dự đoán (Dice/IoU), Ground Truth, lớp phủ đối chiếu TP/FP/FN (Precision/Recall).}
     \label{fig:vis_pga_sample}
 \end{figure}
 
@@ -1275,6 +1288,7 @@ Như vậy hơn một nửa số ca FN (11/20) không phải lỗi ``suýt đún
     \caption{So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}
     \label{tab:fn_area_compare}
     \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|}
         \hline
         \textbf{Thống kê diện tích tổn thương} & \textbf{Nhóm FN (n=22)} & \textbf{Nhóm TP (n=210)} \\
@@ -1285,7 +1299,8 @@ Như vậy hơn một nửa số ca FN (11/20) không phải lỗi ``suýt đún
         \hline
         Nhỏ nhất / Lớn nhất & 0.019\% / 1.389\% & 0.003\% / 18.256\% \\
         \hline
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 Trung vị diện tích tổn thương ở nhóm FN chỉ bằng khoảng 18,5\% trung vị nhóm TP (0.186\% so với 1.005\% diện tích ảnh); kiểm định Mann--Whitney U một phía (diện tích FN nhỏ hơn TP) cho $p = 2{,}4\times10^{-5}$, khác biệt rất có ý nghĩa. Các ca bị Gatekeeper bỏ sót \textbf{không phải lỗi ngẫu nhiên}, mà tương quan rõ với tổn thương kích thước nhỏ, nhất quán với hạn chế đã biết của mô hình phân loại toàn ảnh khi tín hiệu bất thường chỉ chiếm phần rất nhỏ diện tích đầu vào.

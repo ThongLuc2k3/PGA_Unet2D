@@ -241,7 +241,7 @@ Trong luồng xử lý hệ thống (Mục~\ref{sec:tong_the}), Gatekeeper chạ
 \For{mỗi vòng lặp $e = 1, 2, \ldots, E_{\max}$}
     \For{mỗi lô nhỏ $(\mathbf{I}_i, \mathbf{M}_i)$}
         \State Trích hộp giới hạn $\mathbf{B}_i$ từ $\mathbf{M}_i$ (hộp giới hạn bao sát mặt nạ + đệm 5~px)
-        \State Chọn kịch bản câu nhắc ngẫu nhiên: \textit{zoom-out} (70\%) hoặc \textit{shift} (30\%)
+        \State Chọn kịch bản câu nhắc ngẫu nhiên: \textit{Zoom-out} (70\%) hoặc \textit{Shift} (30\%)
         \State Sinh bản đồ nhiệt: $\mathbf{H}_i = \text{GaussianBlur}(\mathbf{B}_{i,\text{mask}},\; k{=}31)$ \hfill (Phương trình~\eqref{eq:plateau_heatmap})
         \State Tính đầu ra dự đoán: $\hat{\mathbf{y}}_i = f_{\text{PGA}}(\mathbf{I}_i, \mathbf{H}_i;\; \boldsymbol{\theta})$
         \State Tính hàm mất mát: $\mathcal{L} = \mathcal{L}_{\text{BCE}} + \mathcal{L}_{\text{Dice}}$ \hfill (Phương trình~\eqref{eq:loss_seg})

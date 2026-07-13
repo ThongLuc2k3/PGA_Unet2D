@@ -66,12 +66,14 @@
     \strng{fullhash}{ROFPBT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention (MICCAI)}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted
+  Intervention (MICCAI)}
     \verb{doi}
     \verb 10.1007/978-3-319-24574-4_28
     \endverb
     \field{pages}{234\bibrangedash 241}
-    \field{title}{{U-Net: Convolutional Networks for Biomedical Image Segmentation}}
+    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
+  Segmentation}}
     \field{year}{2015}
   \endentry
 
@@ -150,12 +152,14 @@
     \field{labeltitlesource}{title}
     \field{number}{7}
     \field{pages}{1559\bibrangedash 1572}
-    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation}}
+    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical
+  Image Segmentation}}
     \verb{url}
     \verb https://arxiv.org/abs/1707.00652
     \endverb
     \field{volume}{41}
-    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}
     \field{year}{2019}
   \endentry
 
@@ -214,7 +218,8 @@
     \strng{fullhash}{XCZLWLPXMPQGWZWY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{title}{{Boundary-Aware Test-Time Adaptation for Zero-Shot Medical Image Segmentation}}
+    \field{title}{{Boundary-Aware Test-Time Adaptation for Zero-Shot Medical
+  Image Segmentation}}
     \verb{url}
     \verb https://arxiv.org/abs/2512.04520
     \endverb
@@ -511,7 +516,8 @@
     \verb 10.1038/s41597-024-04311-y
     \endverb
     \field{pages}{88}
-    \field{title}{{A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}}
+    \field{title}{{A Radiograph Dataset for the Classification, Localization,
+  and Segmentation of Primary Bone Tumors}}
     \field{volume}{12}
     \field{journaltitle}{Scientific Data}
     \field{year}{2025}
@@ -614,7 +620,8 @@
     \strng{fullhash}{YHLXLZSYHZXXDBHJZSHLZJWSMRYQTT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{title}{{Prompt Mechanisms in Medical Imaging: A Comprehensive Survey}}
+    \field{title}{{Prompt Mechanisms in Medical Imaging: A Comprehensive
+  Survey}}
     \verb{url}
     \verb https://arxiv.org/abs/2507.01055
     \endverb
@@ -671,7 +678,8 @@
     \verb 10.1038/s41597-023-02432-4
     \endverb
     \field{pages}{521}
-    \field{title}{{FracAtlas: A Dataset for Fracture Classification, Localization and Segmentation of Musculoskeletal Radiographs}}
+    \field{title}{{FracAtlas: A Dataset for Fracture Classification,
+  Localization and Segmentation of Musculoskeletal Radiographs}}
     \field{volume}{10}
     \field{journaltitle}{Scientific Data}
     \field{year}{2023}
@@ -698,7 +706,8 @@
     \field{labeltitlesource}{title}
     \field{booktitle}{International Conference on Machine Learning (ICML)}
     \field{pages}{6105\bibrangedash 6114}
-    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}}
+    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional
+  Neural Networks}}
     \verb{url}
     \verb https://arxiv.org/abs/1905.11946
     \endverb
