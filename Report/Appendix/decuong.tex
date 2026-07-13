@@ -61,7 +61,7 @@ Chẩn đoán hình ảnh qua X-quang là phương thức cận lâm sàng phổ
 
 Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả quan trong phân đoạn ảnh y khoa, nhưng gặp khó khăn đặc thù trên ảnh X-quang xương: độ tương phản thấp, cấu trúc giải phẫu chồng lấp khiến vùng tổn thương dễ nhầm với mô xương lành. Các mô hình nền tảng dạng câu nhắc như SAM-Med2D~[2] mở ra hướng tiếp cận tương tác nhưng kiến trúc rất nặng ($\sim$91M tham số), chi phí tính toán cao, không phù hợp triển khai trên phần cứng y tế thông thường.
 
-Đề tài đề xuất xây dựng kiến trúc \textbf{PGA-UNet} (Prompt-Guided Attention U-Net): mô hình U-Net nhẹ tích hợp sâu câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa và bộ giải mã, kết hợp module phân lớp sàng lọc để tạo thành luồng xử lý đầu cuối hoàn chỉnh. Toàn bộ hệ thống được huấn luyện và đánh giá trên bộ dữ liệu BTXRD (Bone Tumor X-Ray Dataset)~[3].
+Đề tài đề xuất xây dựng kiến trúc \textbf{PGA-UNet} (Prompt-Guided Attention U-Net): mô hình U-Net nhẹ tích hợp sâu câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa và bộ giải mã. Để minh họa khả năng ứng dụng thực tế, PGA-UNet được kết hợp thêm với một module phân lớp sàng lọc, tạo thành một luồng xử lý đầu cuối minh họa (không phải đóng góp kiến trúc riêng biệt). Toàn bộ hệ thống được huấn luyện và đánh giá trên bộ dữ liệu BTXRD (Bone Tumor X-Ray Dataset)~[3].
 
 \medskip
 \noindent{\bfseries 2.2\quad Mục tiêu đề tài}
@@ -70,7 +70,7 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \begin{enumerate}
     \item \textbf{Đề xuất và xây dựng kiến trúc PGA-UNet:} Thiết kế mô hình phân đoạn nhẹ ($\sim$3M tham số) tích hợp câu nhắc hộp giới hạn qua Cổng không gian (PSG) tại bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) tại bộ giải mã; huấn luyện từ đầu trên BTXRD với chiến lược tăng cường câu nhắc (câu nhắc rỗng/nhiễu) để tăng tính bền bỉ.
 
-    \item \textbf{Phát triển module sàng lọc (Gatekeeper):} Xây dựng mô hình phân lớp nhị phân EfficientNet\_B3~[4] để tự động phân biệt ảnh bình thường và ảnh có bệnh lý, ghép với PGA-UNet thành luồng xử lý đầu cuối.
+    \item \textbf{Minh họa khả năng ứng dụng thực tế của PGA-UNet:} Kết hợp PGA-UNet với một mô hình phân lớp nhị phân sàng lọc (Gatekeeper, EfficientNet\_B3~[4]) thành luồng xử lý hai giai đoạn, nhằm minh họa cách hệ thống có thể hỗ trợ bác sĩ trên luồng ảnh hỗn hợp thực tế (không phải đóng góp kiến trúc riêng biệt).
 
     \item \textbf{Thực nghiệm và đánh giá đa khía cạnh:} So sánh PGA-UNet với U-Net~[1] và SAM-Med2D~[2] trên Dice, IoU, Precision, Recall; đánh giá tính bền bỉ với câu nhắc không hoàn hảo; đánh giá luồng xử lý toàn hệ thống trên tập dữ liệu hỗn hợp mô phỏng một phần điều kiện lâm sàng.
 
@@ -84,7 +84,7 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \textbf{Phạm vi thực hiện:}
 \begin{itemize}
     \item Dữ liệu: Bộ dữ liệu BTXRD~[3] (ảnh X-quang xương 2D thực tế, công bố trên Nature Scientific Data) làm dữ liệu chính; bộ dữ liệu FracAtlas~[5] (X-quang gãy xương) dùng để đánh giá bổ sung khả năng tổng quát hóa.
-    \item Bài toán: Phân đoạn nhị phân vùng khối u xương (pixel-level mask) với câu nhắc hộp giới hạn; phân lớp nhị phân bình thường/bệnh lý.
+    \item Bài toán: Phân đoạn nhị phân vùng khối u xương (mặt nạ cấp độ pixel) với câu nhắc hộp giới hạn; phân lớp nhị phân bình thường/bệnh lý.
     \item Đánh giá: So sánh với các mô hình nền tảng (U-Net~[1], SAM-Med2D~[2]) và đánh giá luồng xử lý đầu cuối trên tập kiểm tra hỗn hợp.
 \end{itemize}
 
@@ -101,11 +101,11 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \medskip
 \textbf{Giai đoạn 1: Nghiên cứu tài liệu:} Khảo sát kiến trúc U-Net~[1], Attention U-Net~[6], SAM-Med2D~[2]; tìm hiểu cơ chế tích hợp câu nhắc không gian vào mạng tích chập; phân tích đặc điểm bộ dữ liệu BTXRD~[3].
 
-\textbf{Giai đoạn 2: Chuẩn bị dữ liệu:} Tạo các tệp mặt nạ nhị phân tương ứng với ảnh từ các tệp chú thích và chia tập huấn luyện/xác thực/kiểm tra; huấn luyện trực tiếp trên ảnh X-quang gốc, không qua bước tiền xử lý loại bỏ nhiễu kỹ thuật.
+\textbf{Giai đoạn 2: Chuẩn bị dữ liệu:} Tạo các tệp mặt nạ nhị phân tương ứng với ảnh từ các tệp chú thích, chuẩn hóa kích thước ảnh và chia tập huấn luyện/xác thực/kiểm tra.
 
 \textbf{Giai đoạn 3: Thiết kế và huấn luyện mô hình:}
 \begin{itemize}
-    \item Biểu diễn câu nhắc hộp giới hạn dưới dạng bản đồ nhiệt (heatmap) làm mịn biên.
+    \item Biểu diễn câu nhắc hộp giới hạn dưới dạng bản đồ nhiệt làm mịn biên.
     \item PGA-UNet: tích hợp câu nhắc qua Cổng không gian (PSG) tại bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) tại bộ giải mã.
     \item Huấn luyện từ đầu với hàm mất mát Dice + BCE, kết hợp tăng cường dữ liệu và tăng cường câu nhắc để cải thiện tính bền bỉ.
     \item EfficientNet\_B3 tinh chỉnh hai giai đoạn cho bài toán phân lớp sàng lọc.
@@ -141,7 +141,7 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \hline
 1 & Nghiên cứu tài liệu; phân tích bộ dữ liệu BTXRD & Tuần 1--3 (01/2026) \\
 \hline
-2 & Tạo nhãn mặt nạ phân đoạn từ các tệp dữ liệu; chia tập dữ liệu (huấn luyện trực tiếp trên ảnh gốc, không qua bước tiền xử lý loại nhiễu) & Tuần 4--7 (02/2026) \\
+2 & Tạo nhãn mặt nạ phân đoạn từ các tệp dữ liệu; chuẩn hóa kích thước ảnh; chia tập dữ liệu & Tuần 4--7 (02/2026) \\
 \hline
 3 & Thiết kế và huấn luyện PGA-UNet; module phân lớp EfficientNet\_B3 & Tuần 8--14 (03--04/2026) \\
 \hline

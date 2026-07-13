@@ -11,9 +11,9 @@
  
 Chẩn đoán hình ảnh qua tia X (X-quang) là một trong những phương thức cận lâm sàng phổ biến và quan trọng nhất của y khoa hiện đại: hiển thị trực tiếp cấu trúc xương mà không cần can thiệp xâm lấn, được dùng rộng rãi để phát hiện và theo dõi gãy xương, rạn xương, thoái hóa khớp và khối u xương. Tại các cơ sở y tế lớn, số ca chụp X-quang mỗi ngày lên đến hàng trăm ca -- Cambridge University Hospitals (Anh) thực hiện hơn 174.000 ca/năm, riêng khoa ngoại trú tiếp nhận 200--300 bệnh nhân/ngày~\cite{cuh2024xray}, đặt áp lực đáng kể lên bác sĩ chẩn đoán hình ảnh và tăng nguy cơ sai sót do mỏi mắt, quá tải.
 
-Trong hệ thống hỗ trợ chẩn đoán bằng máy tính, bước xác định và khoanh vùng tổn thương (\textit{phân đoạn ảnh}, image segmentation) là tiền đề để đo kích thước tổn thương, theo dõi diễn tiến và lập kế hoạch điều trị. Phân đoạn thủ công trên hệ thống PACS (Picture Archiving and Communication System) tốn nhiều thời gian, phụ thuộc lớn vào kinh nghiệm cá nhân và tiềm ẩn sai sót do mỏi mắt hoặc áp lực công việc.
+Trong hệ thống hỗ trợ chẩn đoán bằng máy tính, bước xác định và khoanh vùng tổn thương (\textit{phân đoạn ảnh}) là tiền đề để đo kích thước tổn thương, theo dõi diễn tiến và lập kế hoạch điều trị. Phân đoạn thủ công trên hệ thống PACS tốn nhiều thời gian, phụ thuộc lớn vào kinh nghiệm cá nhân và tiềm ẩn sai sót do mỏi mắt hoặc áp lực công việc.
 
-Những hạn chế trên thúc đẩy cộng đồng nghiên cứu tìm giải pháp hỗ trợ chẩn đoán tự động dựa trên học sâu (deep learning). Khoảng một thập kỷ qua, các kiến trúc mạng nơ-ron tích chập như U-Net~\cite{ronneberger2015unet} đạt kết quả đáng khích lệ trong phân đoạn ảnh y khoa; song song đó, các mô hình nền tảng như SAM (Segment Anything Model) phổ biến hóa phân đoạn dựa trên câu nhắc trực quan và thúc đẩy hướng nghiên cứu tương tác người-máy -- nền tảng khoa học mà khóa luận này kế thừa và phát triển.
+Những hạn chế trên thúc đẩy cộng đồng nghiên cứu tìm giải pháp hỗ trợ chẩn đoán tự động dựa trên học sâu. Khoảng một thập kỷ qua, các kiến trúc mạng nơ-ron tích chập như U-Net~\cite{ronneberger2015unet} đạt kết quả đáng khích lệ trong phân đoạn ảnh y khoa; song song đó, các mô hình nền tảng như SAM phổ biến hóa phân đoạn dựa trên câu nhắc trực quan và thúc đẩy hướng nghiên cứu tương tác người-máy -- nền tảng khoa học mà khóa luận này kế thừa và phát triển.
  
 % ------------------------------------------------------------
 \section{Động lực nghiên cứu}
@@ -64,7 +64,7 @@ Luồng xử lý gồm hai bước tuần tự. Bước đầu, ảnh X-quang qu
 trong đó các ký hiệu được định nghĩa như sau:
 \begin{itemize}
     \item $\hat{\mathbf{M}} \in \{0,1\}^{H \times W}$: mặt nạ phân đoạn nhị phân đầu ra ($1$ = tổn thương, $0$ = nền).
-    \item $\mathbf{1}[\cdot]$: hàm chỉ thị (indicator function), trả về $1$ nếu điều kiện bên trong đúng và $0$ nếu sai; ở đây dùng để nhị phân hóa xác suất đầu ra theo ngưỡng $0.5$.
+    \item $\mathbf{1}[\cdot]$: hàm chỉ thị, trả về $1$ nếu điều kiện bên trong đúng và $0$ nếu sai; ở đây dùng để nhị phân hóa xác suất đầu ra theo ngưỡng $0.5$.
     \item $f_{\text{seg}}(\cdot\,;\,\boldsymbol{\theta}_{\text{seg}})$: mô hình phân đoạn PGA-UNet, xuất xác suất thuộc tổn thương $\in [0,1]$ cho từng pixel.
     \item $\mathbf{I} \in \mathbb{R}^{H \times W}$: ảnh X-quang đầu vào.
     \item $\mathbf{H}(\mathbf{B}) \in [0,1]^{H \times W}$: bản đồ nhiệt câu nhắc được tạo từ hộp giới hạn $\mathbf{B}=(x_1,y_1,x_2,y_2)$ do bác sĩ vẽ (chi tiết tại Mục~\ref{subsec:heatmap}).
@@ -72,7 +72,7 @@ trong đó các ký hiệu được định nghĩa như sau:
     \item $0.5$: ngưỡng nhị phân hóa, pixel được dự đoán là tổn thương khi xác suất đạt từ $0.5$ trở lên.
 \end{itemize}
 
-Thiết kế này phản ánh triết lý \textit{con người luôn giám sát trong vòng lặp} xuyên suốt cả hai bước: ở bước sàng lọc, mô hình chỉ đề xuất gợi ý còn bác sĩ mới xác nhận quyết định (thiết kế \textit{triage mềm}, không phải bộ chặn tự động loại ảnh mà không cho phép can thiệp); ở bước phân đoạn, bác sĩ trực tiếp cung cấp định hướng không gian qua hộp giới hạn -- tri thức lâm sàng của chuyên gia luôn tham gia toàn bộ vòng lặp quyết định, không chỉ riêng bước phân đoạn. Chi tiết kiến trúc và huấn luyện ngoại tuyến của hai mô hình tại Chương~\ref{Chapter3}.
+Thiết kế này phản ánh triết lý \textit{con người luôn giám sát trong vòng lặp} xuyên suốt cả hai bước: ở bước sàng lọc, mô hình chỉ đề xuất gợi ý còn bác sĩ mới xác nhận quyết định (thiết kế \textit{triage mềm}, không phải bộ chặn tự động loại ảnh mà không cho phép can thiệp); ở bước phân đoạn, bác sĩ trực tiếp cung cấp định hướng không gian qua hộp giới hạn -- tri thức lâm sàng của chuyên gia luôn tham gia toàn bộ vòng lặp quyết định, không chỉ riêng bước phân đoạn. Chi tiết kiến trúc PGA-UNet, module sàng lọc hỗ trợ và huấn luyện ngoại tuyến tại Chương~\ref{Chapter3}.
  
 % ------------------------------------------------------------
 \section{Thách thức của bài toán}
@@ -81,7 +81,7 @@ Thiết kế này phản ánh triết lý \textit{con người luôn giám sát 
  
 Việc xây dựng hệ thống như phát biểu ở trên đối mặt với bốn nhóm thách thức chính:
 
-\textbf{Thách thức về dữ liệu:} Tập dữ liệu X-quang xương thực tế thường không sạch, chứa nhiễu kỹ thuật như ký hiệu R/L, dòng văn bản thông tin bệnh nhân, thiết bị cố định xương -- đều có thể ảnh hưởng tiêu cực đến quá trình học nếu không xử lý cẩn thận, một thách thức kỹ thuật phòng thí nghiệm nhưng ảnh hưởng đáng kể đến chất lượng toàn hệ thống.
+\textbf{Thách thức về dữ liệu:} Ảnh X-quang xương gán nhãn đầy đủ ba cấp (phân lớp, định vị, mặt nạ phân đoạn) còn hạn chế về quy mô so với các bài toán thị giác máy tính phổ thông; dữ liệu cần được xử lý đúng cấu trúc đầu vào (tạo mặt nạ từ chú thích, chuẩn hóa kích thước ảnh, phân chia tập huấn luyện/xác thực/kiểm tra) trước khi đưa vào huấn luyện mô hình.
 
 \textbf{Thách thức về mô hình hóa:} Ảnh X-quang xương có độ tương phản thấp và nhiều cấu trúc giải phẫu chồng lấp; vùng tổn thương thường tương phản thấp hoặc hình thái gần giống mô xương lành lân cận, gây khó khăn trích xuất đặc trưng phân biệt. Thách thức là tích hợp thông tin câu nhắc vào kiến trúc mạng hiệu quả, sao cho mô hình thực sự \textit{sử dụng} câu nhắc để định hướng phân đoạn chứ không bỏ qua nó.
 
@@ -94,21 +94,19 @@ Việc xây dựng hệ thống như phát biểu ở trên đối mặt với b
 \label{sec:dong_gop}
 % ------------------------------------------------------------
 
-Khóa luận có hai đóng góp chính:
+Đóng góp cốt lõi và xuyên suốt của khóa luận là đề xuất kiến trúc \textbf{PGA-UNet}:
 
-\begin{enumerate}
-    \item \textbf{Đề xuất biểu diễn câu nhắc dạng heatmap và kiến trúc PGA-UNet điều kiện hóa bởi câu nhắc:} Đóng góp trọng tâm là \textbf{mã hóa hộp giới hạn thành Gaussian Plateau Heatmap}: kênh 2D liên tục đồng kích thước với bản đồ đặc trưng, cung cấp tín hiệu định hướng với đạo hàm liên tục thay vì vector rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân. Biểu diễn này tương thích cấu trúc với phép tích chập CNN, cho phép tín hiệu câu nhắc lan truyền qua toàn bộ các tầng mạng. Kiến trúc PGA-UNet ($\sim$3 triệu tham số) hiện thực hóa đóng góp này trên nền U-Net qua hai thành phần:
+\textbf{Đề xuất biểu diễn câu nhắc dạng heatmap và kiến trúc PGA-UNet điều kiện hóa bởi câu nhắc:} Đóng góp trọng tâm là \textbf{mã hóa hộp giới hạn thành Gaussian Plateau Heatmap}: kênh 2D liên tục đồng kích thước với bản đồ đặc trưng, cung cấp tín hiệu định hướng với đạo hàm liên tục thay vì vector rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân. Biểu diễn này tương thích cấu trúc với phép tích chập CNN, cho phép tín hiệu câu nhắc lan truyền qua toàn bộ các tầng mạng. Kiến trúc PGA-UNet ($\sim$3 triệu tham số) hiện thực hóa đóng góp này trên nền U-Net qua hai thành phần:
 
-    \begin{itemize}
-        \item \textit{Cổng không gian tại bộ mã hóa (PSG):} không tồn tại trong U-Net hay Attention U-Net gốc, tích hợp bản đồ heatmap vào từng tầng bộ mã hóa theo cơ chế khuếch đại có chọn lọc (chỉ khuếch đại, không triệt tiêu), tăng cường đặc trưng trong vùng câu nhắc mà không mất thông tin ngoài vùng. Hướng đưa bản đồ không gian vào CNN đã được gợi mở ở các công trình trước~\cite{wang2019deepigeos,xu2025boundaryaware}; PSG cụ thể hóa thành cơ chế gate nhân huấn luyện từ đầu trên CNN nhẹ (đối chiếu tại Bảng~\ref{tab:inheritance_contribution}, Chương~\ref{Chapter3}).
+\begin{itemize}
+    \item \textit{Cổng không gian tại bộ mã hóa (PSG):} không tồn tại trong U-Net hay Attention U-Net gốc, tích hợp bản đồ heatmap vào từng tầng bộ mã hóa theo cơ chế khuếch đại có chọn lọc (chỉ khuếch đại, không triệt tiêu), tăng cường đặc trưng trong vùng câu nhắc mà không mất thông tin ngoài vùng. Hướng đưa bản đồ không gian vào CNN đã được gợi mở ở các công trình trước~\cite{wang2019deepigeos,xu2025boundaryaware}; PSG cụ thể hóa thành cơ chế gate nhân huấn luyện từ đầu trên CNN nhẹ (đối chiếu tại Bảng~\ref{tab:inheritance_contribution}, Chương~\ref{Chapter3}).
 
-        \item \textit{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD):} Kế thừa Cổng chú ý từ Attention U-Net~\cite{oktay2018attentionunet}, mở rộng bằng cách đưa heatmap câu nhắc trực tiếp vào tín hiệu cổng $\mathbf{g}$, thay vì chỉ dựa vào đặc trưng ảnh như thiết kế gốc.
-    \end{itemize}
+    \item \textit{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD):} Kế thừa Cổng chú ý từ Attention U-Net~\cite{oktay2018attentionunet}, mở rộng bằng cách đưa heatmap câu nhắc trực tiếp vào tín hiệu cổng $\mathbf{g}$, thay vì chỉ dựa vào đặc trưng ảnh như thiết kế gốc.
+\end{itemize}
 
-    Ablation study xác nhận: Gaussian Heatmap so với câu nhắc nhị phân cải thiện Dice Shift $+0.10$ (PGA-UNet đề xuất vs PGA-UNet Binary, cùng kiến trúc PSG+CAD); PSG+CAD kết hợp Gaussian tạo hiệu ứng tương hỗ, cải thiện Dice Shift $+0.11$ so với chỉ nối kênh heatmap đơn giản (PGA-UNet đề xuất vs U-Net+Concat); chi tiết tại Bảng~\ref{tab:ablation_arch}, Chương~\ref{Chapter4}. Toàn hệ thống được so sánh với U-Net và SAM-Med2D trên bộ dữ liệu BTXRD.
+Ablation study xác nhận: Gaussian Heatmap so với câu nhắc nhị phân cải thiện Dice Shift $+0.10$ (PGA-UNet đề xuất vs PGA-UNet Binary, cùng kiến trúc PSG+CAD); PSG+CAD kết hợp Gaussian tạo hiệu ứng tương hỗ, cải thiện Dice Shift $+0.11$ so với chỉ nối kênh heatmap đơn giản (PGA-UNet đề xuất vs U-Net+Concat); chi tiết tại Bảng~\ref{tab:ablation_arch}, Chương~\ref{Chapter4}. Toàn hệ thống được so sánh với U-Net và SAM-Med2D trên bộ dữ liệu BTXRD.
 
-    \item \textbf{Đánh giá thực nghiệm toàn luồng xử lý:} Xây dựng kịch bản đánh giá đầu cuối kết hợp module phân lớp sàng lọc (Gatekeeper, EfficientNet\_B3) và PGA-UNet trên tập dữ liệu hỗn hợp gồm cả ảnh bình thường và bệnh lý, phân bố gần thực tế hơn so với đánh giá phân đoạn đơn lẻ trên tập ảnh bệnh thuần túy. Gatekeeper đạt AUC-ROC~=~0.9421; hệ thống hai tầng cho Pipeline Dice end-to-end~=~0.6763, thấp hơn PGA-UNet độc lập do sai số tích lũy từ bước phân lớp (phân tích chi tiết ở cấp độ ảnh, cấp độ tổn thương và các ca lỗi cụ thể tại Chương~\ref{Chapter4}, Phần II). Đây là kịch bản \textbf{thận trọng nhất} đo cận dưới hiệu năng hệ thống (giả định gợi ý Gatekeeper được làm theo tuyệt đối, chưa mô phỏng bước bác sĩ xác nhận của thiết kế triage mềm thực tế, Chương~\ref{Chapter3}).
-\end{enumerate}
+\textbf{Thực nghiệm minh họa khả năng ứng dụng thực tế:} PGA-UNet cần câu nhắc do bác sĩ cung cấp nên không thể tự vận hành trên một luồng ảnh chưa qua sàng lọc. Để hình dung cách mô hình có thể được tích hợp vào quy trình hỗ trợ bác sĩ trong thực tế, khóa luận bổ sung một \textbf{thực nghiệm minh họa} (không phải đóng góp kỹ thuật riêng biệt): kết hợp PGA-UNet với một module phân lớp sàng lọc (Gatekeeper, EfficientNet\_B3) thành luồng xử lý hai giai đoạn, đánh giá trên tập dữ liệu hỗn hợp gồm cả ảnh bình thường và bệnh lý, phân bố gần thực tế hơn so với đánh giá phân đoạn đơn lẻ trên tập ảnh bệnh thuần túy. Gatekeeper đạt AUC-ROC~=~0.9421; hệ thống hai tầng cho Pipeline Dice end-to-end~=~0.6763, thấp hơn PGA-UNet độc lập do sai số tích lũy từ bước phân lớp (phân tích chi tiết ở cấp độ ảnh, cấp độ tổn thương và các ca lỗi cụ thể tại Chương~\ref{Chapter4}, Phần II). Đây là kịch bản \textbf{thận trọng nhất} đo cận dưới hiệu năng hệ thống (giả định gợi ý Gatekeeper được làm theo tuyệt đối, chưa mô phỏng bước bác sĩ xác nhận của thiết kế triage mềm thực tế, Chương~\ref{Chapter3}).
 
 % ------------------------------------------------------------
 \section{Bố cục của khóa luận}
@@ -123,6 +121,6 @@ Khóa luận được tổ chức thành năm chương:
 
 \textbf{Chương 3: Mô hình và hệ thống đề xuất} trình bày chi tiết kỹ thuật kiến trúc PGA-UNet (Cổng không gian, Cơ chế chú ý có điều kiện), đặc điểm bộ dữ liệu và module phân lớp sàng lọc.
 
-\textbf{Chương 4: Thực nghiệm và đánh giá kết quả} mô tả thiết lập thực nghiệm, kết quả so sánh với U-Net và SAM-Med2D, tính bền bỉ câu nhắc, ablation study, kiểm định chéo (cross-validation) và phân tích theo đặc tính tổn thương (sub-category) trên BTXRD; đồng thời trình bày thực nghiệm bổ sung kiểm tra khả năng tổng quát hóa trên bộ dữ liệu độc lập thứ hai (FracAtlas), cùng đánh giá module sàng lọc và luồng xử lý đầu cuối.
+\textbf{Chương 4: Thực nghiệm và đánh giá kết quả} mô tả thiết lập thực nghiệm, kết quả so sánh với U-Net và SAM-Med2D, tính bền bỉ câu nhắc, ablation study, đánh giá chéo và phân tích theo đặc tính tổn thương (nhóm nhỏ) trên BTXRD; đồng thời trình bày thực nghiệm bổ sung kiểm tra khả năng tổng quát hóa trên bộ dữ liệu độc lập thứ hai (FracAtlas), cùng đánh giá module sàng lọc và luồng xử lý đầu cuối.
 
 \textbf{Chương 5: Kết luận và hướng phát triển} tóm tắt kết quả đạt được, nhìn nhận khách quan hạn chế và đề xuất hướng nghiên cứu tiếp theo.
