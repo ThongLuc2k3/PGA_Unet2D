@@ -8,6 +8,5 @@ OUTPUT decuong.log
 INPUT /usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbxti10.tfm
 OUTPUT decuong.pdf
-INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+INPUT /home/thongluc/.texlive2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map
