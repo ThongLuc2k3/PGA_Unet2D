@@ -77,155 +77,6 @@
     \field{year}{2015}
   \endentry
 
-  \entry{wang2019deepigeos}{article}{}{}
-    \name{author}{11}{}{%
-      {{hash=WG}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Guotai},
-         giveni={G\bibinitperiod},
-      }}%
-      {{hash=ZMA}{%
-         family={Zuluaga},
-         familyi={Z\bibinitperiod},
-         given={Maria\bibnamedelima A.},
-         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
-      }}%
-      {{hash=LW}{%
-         family={Li},
-         familyi={L\bibinitperiod},
-         given={Wenqi},
-         giveni={W\bibinitperiod},
-      }}%
-      {{hash=PR}{%
-         family={Pratt},
-         familyi={P\bibinitperiod},
-         given={Rosalind},
-         giveni={R\bibinitperiod},
-      }}%
-      {{hash=PPA}{%
-         family={Patel},
-         familyi={P\bibinitperiod},
-         given={Premal\bibnamedelima A.},
-         giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod},
-      }}%
-      {{hash=AM}{%
-         family={Aertsen},
-         familyi={A\bibinitperiod},
-         given={Michael},
-         giveni={M\bibinitperiod},
-      }}%
-      {{hash=DT}{%
-         family={Doel},
-         familyi={D\bibinitperiod},
-         given={Tom},
-         giveni={T\bibinitperiod},
-      }}%
-      {{hash=DAL}{%
-         family={David},
-         familyi={D\bibinitperiod},
-         given={Anna\bibnamedelima L.},
-         giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
-      }}%
-      {{hash=DJ}{%
-         family={Deprest},
-         familyi={D\bibinitperiod},
-         given={Jan},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=OS}{%
-         family={Ourselin},
-         familyi={O\bibinitperiod},
-         given={Sebastien},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=VT}{%
-         family={Vercauteren},
-         familyi={V\bibinitperiod},
-         given={Tom},
-         giveni={T\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{WGZMALW+1}
-    \strng{fullhash}{WGZMALWPRPPAAMDTDALDJOSVT1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{number}{7}
-    \field{pages}{1559\bibrangedash 1572}
-    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical
-  Image Segmentation}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1707.00652
-    \endverb
-    \field{volume}{41}
-    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
-  Intelligence}
-    \field{year}{2019}
-  \endentry
-
-  \entry{xu2025boundaryaware}{misc}{}{}
-    \name{author}{8}{}{%
-      {{hash=XC}{%
-         family={Xu},
-         familyi={X\bibinitperiod},
-         given={Chenlin},
-         giveni={C\bibinitperiod},
-      }}%
-      {{hash=ZL}{%
-         family={Zhang},
-         familyi={Z\bibinitperiod},
-         given={Lei},
-         giveni={L\bibinitperiod},
-      }}%
-      {{hash=WL}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Lituan},
-         giveni={L\bibinitperiod},
-      }}%
-      {{hash=PX}{%
-         family={Pu},
-         familyi={P\bibinitperiod},
-         given={Xinyu},
-         giveni={X\bibinitperiod},
-      }}%
-      {{hash=MP}{%
-         family={Ma},
-         familyi={M\bibinitperiod},
-         given={Pengfei},
-         giveni={P\bibinitperiod},
-      }}%
-      {{hash=QG}{%
-         family={Qian},
-         familyi={Q\bibinitperiod},
-         given={Guangwu},
-         giveni={G\bibinitperiod},
-      }}%
-      {{hash=WZ}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Zizhou},
-         giveni={Z\bibinitperiod},
-      }}%
-      {{hash=WY}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Yan},
-         giveni={Y\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{XCZLWL+1}
-    \strng{fullhash}{XCZLWLPXMPQGWZWY1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{title}{{Boundary-Aware Test-Time Adaptation for Zero-Shot Medical
-  Image Segmentation}}
-    \verb{url}
-    \verb https://arxiv.org/abs/2512.04520
-    \endverb
-    \field{year}{2025}
-  \endentry
-
   \entry{oktay2018attentionunet}{inproceedings}{}{}
     \name{author}{12}{}{%
       {{hash=OO}{%
@@ -418,108 +269,152 @@
     \field{year}{2023}
   \endentry
 
-  \entry{btxrd2024}{article}{}{}
-    \name{author}{14}{}{%
-      {{hash=YS}{%
-         family={Yao},
-         familyi={Y\bibinitperiod},
-         given={Shunhan},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=HY}{%
-         family={Huang},
-         familyi={H\bibinitperiod},
-         given={Yuanxiang},
-         giveni={Y\bibinitperiod},
-      }}%
-      {{hash=WX}{%
+  \entry{wang2019deepigeos}{article}{}{}
+    \name{author}{11}{}{%
+      {{hash=WG}{%
          family={Wang},
          familyi={W\bibinitperiod},
-         given={Xiaoyu},
-         giveni={X\bibinitperiod},
+         given={Guotai},
+         giveni={G\bibinitperiod},
       }}%
-      {{hash=ZY}{%
+      {{hash=ZMA}{%
+         family={Zuluaga},
+         familyi={Z\bibinitperiod},
+         given={Maria\bibnamedelima A.},
+         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=LW}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Wenqi},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=PR}{%
+         family={Pratt},
+         familyi={P\bibinitperiod},
+         given={Rosalind},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=PPA}{%
+         family={Patel},
+         familyi={P\bibinitperiod},
+         given={Premal\bibnamedelima A.},
+         giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=AM}{%
+         family={Aertsen},
+         familyi={A\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DT}{%
+         family={Doel},
+         familyi={D\bibinitperiod},
+         given={Tom},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=DAL}{%
+         family={David},
+         familyi={D\bibinitperiod},
+         given={Anna\bibnamedelima L.},
+         giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Deprest},
+         familyi={D\bibinitperiod},
+         given={Jan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=OS}{%
+         family={Ourselin},
+         familyi={O\bibinitperiod},
+         given={Sebastien},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=VT}{%
+         family={Vercauteren},
+         familyi={V\bibinitperiod},
+         given={Tom},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WGZMALW+1}
+    \strng{fullhash}{WGZMALWPRPPAAMDTDALDJOSVT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{7}
+    \field{pages}{1559\bibrangedash 1572}
+    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical
+  Image Segmentation}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1707.00652
+    \endverb
+    \field{volume}{41}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}
+    \field{year}{2019}
+  \endentry
+
+  \entry{xu2025boundaryaware}{misc}{}{}
+    \name{author}{8}{}{%
+      {{hash=XC}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Chenlin},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=ZL}{%
          family={Zhang},
          familyi={Z\bibinitperiod},
-         given={Yiwen},
-         giveni={Y\bibinitperiod},
+         given={Lei},
+         giveni={L\bibinitperiod},
       }}%
-      {{hash=PIC}{%
-         family={Paixao},
+      {{hash=WL}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Lituan},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=PX}{%
+         family={Pu},
          familyi={P\bibinitperiod},
-         given={Ian\bibnamedelima Costa},
-         giveni={I\bibinitperiod\bibinitdelim C\bibinitperiod},
+         given={Xinyu},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Ma},
+         familyi={M\bibinitperiod},
+         given={Pengfei},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=QG}{%
+         family={Qian},
+         familyi={Q\bibinitperiod},
+         given={Guangwu},
+         giveni={G\bibinitperiod},
       }}%
       {{hash=WZ}{%
          family={Wang},
          familyi={W\bibinitperiod},
-         given={Zhikang},
+         given={Zizhou},
          giveni={Z\bibinitperiod},
       }}%
-      {{hash=CCL}{%
-         family={Chai},
-         familyi={C\bibinitperiod},
-         given={Charla\bibnamedelima Lu},
-         giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod},
-      }}%
-      {{hash=WH}{%
+      {{hash=WY}{%
          family={Wang},
          familyi={W\bibinitperiod},
-         given={Hongtao},
-         giveni={H\bibinitperiod},
-      }}%
-      {{hash=LD}{%
-         family={Lu},
-         familyi={L\bibinitperiod},
-         given={Dinggui},
-         giveni={D\bibinitperiod},
-      }}%
-      {{hash=WGI}{%
-         family={Webb},
-         familyi={W\bibinitperiod},
-         given={Geoffrey\bibnamedelima I.},
-         giveni={G\bibinitperiod\bibinitdelim I\bibinitperiod},
-      }}%
-      {{hash=LS}{%
-         family={Li},
-         familyi={L\bibinitperiod},
-         given={Shanshan},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=GY}{%
-         family={Guo},
-         familyi={G\bibinitperiod},
-         given={Yuming},
+         given={Yan},
          giveni={Y\bibinitperiod},
       }}%
-      {{hash=CQ}{%
-         family={Chen},
-         familyi={C\bibinitperiod},
-         given={Qingfeng},
-         giveni={Q\bibinitperiod},
-      }}%
-      {{hash=SJ}{%
-         family={Song},
-         familyi={S\bibinitperiod},
-         given={Jiangning},
-         giveni={J\bibinitperiod},
-      }}%
     }
-    \list{publisher}{1}{%
-      {Nature Publishing Group}%
-    }
-    \strng{namehash}{YSHYWX+1}
-    \strng{fullhash}{YSHYWXZYPICWZCCLWHLDWGILSGYCQSJ1}
+    \strng{namehash}{XCZLWL+1}
+    \strng{fullhash}{XCZLWLPXMPQGWZWY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \verb{doi}
-    \verb 10.1038/s41597-024-04311-y
+    \field{title}{{Boundary-Aware Test-Time Adaptation for Zero-Shot Medical
+  Image Segmentation}}
+    \verb{url}
+    \verb https://arxiv.org/abs/2512.04520
     \endverb
-    \field{pages}{88}
-    \field{title}{{A Radiograph Dataset for the Classification, Localization,
-  and Segmentation of Primary Bone Tumors}}
-    \field{volume}{12}
-    \field{journaltitle}{Scientific Data}
     \field{year}{2025}
   \endentry
 
@@ -625,6 +520,111 @@
     \verb{url}
     \verb https://arxiv.org/abs/2507.01055
     \endverb
+    \field{year}{2025}
+  \endentry
+
+  \entry{btxrd2024}{article}{}{}
+    \name{author}{14}{}{%
+      {{hash=YS}{%
+         family={Yao},
+         familyi={Y\bibinitperiod},
+         given={Shunhan},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=HY}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Yuanxiang},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=WX}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Xiaoyu},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Yiwen},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=PIC}{%
+         family={Paixao},
+         familyi={P\bibinitperiod},
+         given={Ian\bibnamedelima Costa},
+         giveni={I\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+      {{hash=WZ}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Zhikang},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=CCL}{%
+         family={Chai},
+         familyi={C\bibinitperiod},
+         given={Charla\bibnamedelima Lu},
+         giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=WH}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Hongtao},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=LD}{%
+         family={Lu},
+         familyi={L\bibinitperiod},
+         given={Dinggui},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=WGI}{%
+         family={Webb},
+         familyi={W\bibinitperiod},
+         given={Geoffrey\bibnamedelima I.},
+         giveni={G\bibinitperiod\bibinitdelim I\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Shanshan},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=GY}{%
+         family={Guo},
+         familyi={G\bibinitperiod},
+         given={Yuming},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CQ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Qingfeng},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Song},
+         familyi={S\bibinitperiod},
+         given={Jiangning},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{YSHYWX+1}
+    \strng{fullhash}{YSHYWXZYPICWZCCLWHLDWGILSGYCQSJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1038/s41597-024-04311-y
+    \endverb
+    \field{pages}{88}
+    \field{title}{{A Radiograph Dataset for the Classification, Localization,
+  and Segmentation of Primary Bone Tumors}}
+    \field{volume}{12}
+    \field{journaltitle}{Scientific Data}
     \field{year}{2025}
   \endentry
 
