@@ -4,28 +4,28 @@
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="title" value="SAM-Med2D Fine-tuning Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=20;fontStyle=1;" parent="1" vertex="1">
+                <mxCell id="title" value="Kiến trúc tinh chỉnh SAM-Med2D" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=20;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="250" y="15" width="800" height="35" as="geometry"/>
                 </mxCell>
-                <mxCell id="img_in" value="&lt;b&gt;Input Image&lt;/b&gt;&lt;br&gt;256×256×3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="img_in" value="&lt;b&gt;Ảnh đầu vào&lt;/b&gt;&lt;br&gt;256×256×3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="40" y="142.5" width="130" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="bbox_in" value="&lt;b&gt;Noisy BBox&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="bbox_in" value="&lt;b&gt;Hộp giới hạn nhiễu&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="40" y="295" width="130" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="img_enc" value="&lt;b&gt;Image Encoder (ViT-B)&lt;/b&gt;&lt;br&gt;Trainable Adapters" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="img_enc" value="&lt;b&gt;Bộ mã hóa ảnh (ViT-B)&lt;/b&gt;&lt;br&gt;Tầng thích ứng học được" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="220" y="120" width="180" height="95" as="geometry"/>
                 </mxCell>
-                <mxCell id="prompt_enc" value="&lt;b&gt;Prompt Encoder&lt;/b&gt;&lt;br&gt;Box → embeddings&lt;br&gt;🔒 Frozen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="prompt_enc" value="&lt;b&gt;Bộ mã hóa câu nhắc&lt;/b&gt;&lt;br&gt;Hộp → vector nhúng&lt;br&gt;🔒 Đóng băng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="220" y="290" width="180" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="mask_dec" value="&lt;b&gt;Mask Decoder&lt;/b&gt;&lt;br&gt;2-way Transformer&lt;br&gt;✏️ Trainable" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="mask_dec" value="&lt;b&gt;Bộ giải mã mặt nạ&lt;/b&gt;&lt;br&gt;Transformer hai chiều&lt;br&gt;✏️ Học được" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="530" y="180" width="180" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="output" value="&lt;b&gt;3 Masks + IoU&lt;/b&gt;&lt;br&gt;→ argmax IoU&lt;br&gt;→ LCC extract" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="output" value="&lt;b&gt;3 mặt nạ + IoU&lt;/b&gt;&lt;br&gt;→ argmax IoU&lt;br&gt;→ trích xuất LCC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="800" y="190" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="loss" value="&lt;b&gt;Loss&lt;/b&gt;&lt;br&gt;FocalDice + IoU" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                <mxCell id="loss" value="&lt;b&gt;Hàm mất mát&lt;/b&gt;&lt;br&gt;FocalDice + IoU" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
                     <mxGeometry x="1030" y="190" width="150" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="img_in" target="img_enc" edge="1">
@@ -34,10 +34,10 @@
                 <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="bbox_in" target="prompt_enc" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="e3" value="image embed" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="img_enc" target="mask_dec" edge="1">
+                <mxCell id="e3" value="vector nhúng ảnh" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="img_enc" target="mask_dec" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="e4" value="sparse embed" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="prompt_enc" target="mask_dec" edge="1">
+                <mxCell id="e4" value="vector nhúng thưa" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;" parent="1" source="prompt_enc" target="mask_dec" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="mask_dec" target="output" edge="1">
@@ -46,7 +46,7 @@
                 <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="output" target="loss" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="e7" value="backprop → update&lt;br&gt;Adapter + Decoder" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#b85450;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="loss" target="mask_dec" edge="1">
+                <mxCell id="e7" value="lan truyền ngược → cập nhật&lt;br&gt;Tầng thích ứng + Bộ giải mã" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#b85450;fontSize=11;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="loss" target="mask_dec" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="1105" y="420"/>
@@ -54,7 +54,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="iter_loop" value="Iterative Point Refinement (lặp N lần)" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#9673a6;strokeWidth=2;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=#fffde7;" parent="1" source="output" target="prompt_enc" edge="1">
+                <mxCell id="iter_loop" value="Tinh chỉnh điểm theo vòng lặp (lặp N lần)" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#9673a6;strokeWidth=2;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=#fffde7;" parent="1" source="output" target="prompt_enc" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="875" y="390"/>
