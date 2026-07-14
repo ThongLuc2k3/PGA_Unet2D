@@ -47,7 +47,7 @@ Luồng xử lý gồm hai bước tuần tự. Bước đầu, ảnh X-quang qu
 \begin{equation}
     \hat{\mathbf{M}} = \mathbf{1}\!\left[f_{\text{seg}}\!\left(\mathbf{I},\, \mathbf{H}(\mathbf{B});\, \boldsymbol{\theta}_{\text{seg}}\right) \geq 0.5\right]
 \end{equation}
-trong đó $f_{\text{seg}}(\cdot\,;\,\boldsymbol{\theta}_{\text{seg}})$ là mô hình phân đoạn PGA-UNet (tham số $\boldsymbol{\theta}_{\text{seg}}$ học được ở giai đoạn huấn luyện ngoại tuyến), xuất xác suất tổn thương $\in [0,1]$ cho từng pixel; $\mathbf{H}(\mathbf{B}) \in [0,1]^{H \times W}$ là bản đồ nhiệt câu nhắc tạo từ hộp giới hạn $\mathbf{B}$ (chi tiết tại Mục~\ref{subsec:heatmap}); $\mathbf{1}[\cdot]$ nhị phân hóa xác suất đầu ra theo ngưỡng $0.5$.
+trong đó $f_{\text{seg}}(\cdot\,;\,\boldsymbol{\theta}_{\text{seg}})$ là mô hình phân đoạn PGA-UNet (tham số $\boldsymbol{\theta}_{\text{seg}}$ học được ở giai đoạn huấn luyện ngoại tuyến), xuất xác suất tổn thương $\in [0,1]$ cho từng pixel; $\mathbf{H}(\mathbf{B}) \in [0,1]^{H \times W}$ là Bản đồ nhiệt câu nhắc tạo từ hộp giới hạn $\mathbf{B}$ (chi tiết tại Mục~\ref{subsec:heatmap}); $\mathbf{1}[\cdot]$ nhị phân hóa xác suất đầu ra theo ngưỡng $0.5$.
 
 Thiết kế này phản ánh triết lý \textit{con người luôn giám sát trong vòng lặp} xuyên suốt cả hai bước: ở bước sàng lọc, mô hình chỉ đề xuất gợi ý còn bác sĩ mới xác nhận quyết định (thiết kế \textit{triage mềm}, không phải bộ chặn tự động loại ảnh mà không cho phép can thiệp); ở bước phân đoạn, bác sĩ trực tiếp cung cấp định hướng không gian qua hộp giới hạn; tri thức lâm sàng của chuyên gia luôn tham gia toàn bộ vòng lặp quyết định, không chỉ riêng bước phân đoạn. Chi tiết kiến trúc PGA-UNet, module sàng lọc hỗ trợ và huấn luyện ngoại tuyến tại Chương~\ref{Chapter3}.
  

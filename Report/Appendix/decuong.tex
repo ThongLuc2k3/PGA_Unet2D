@@ -10,7 +10,7 @@
 \hfill
 \begin{minipage}[c]{0.45\textwidth}
     \centering
-    \scriptsizeTRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\\KHOA CÔNG NGHỆ THÔNG TIN
+    \scriptsize TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\\KHOA CÔNG NGHỆ THÔNG TIN
 \end{minipage}
 
 \vspace{0.8cm}
@@ -70,7 +70,7 @@ Các mô hình học sâu tự động như U-Net~[1] thường gặp khó khăn
 \begin{enumerate}
     \item Đề xuất và xây dựng kiến trúc PGA-UNet: Thiết kế mô hình phân đoạn nhẹ ($\sim$3M tham số) tích hợp câu nhắc hộp giới hạn qua Cổng không gian (PSG) tại bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) tại bộ giải mã; mô hình được huấn luyện từ đầu trên cả hai bộ dữ liệu BTXRD~[3] và FracAtlas~[5] (đặc tính tổn thương khác nhau), kết hợp tăng cường câu nhắc (hộp giới hạn to hơn hoặc lệch nhẹ so với tổn thương) để tăng tính bền bỉ.
 
-    \item Mở rộng khả năng ứng dụng thực tế của PGA-UNet: Kết hợp PGA-UNet với một mô hình phân lớp nhị phân sàng lọc (EfficientNet\-B3~[4]) thành một hệ thống hai giai đoạn nhằm hỗ trợ bác sĩ tốt hơn trên luồng ảnh hỗn hợp thực tế.
+    \item Mở rộng khả năng ứng dụng thực tế của PGA-UNet: Kết hợp PGA-UNet với một mô hình phân lớp nhị phân sàng lọc (EfficientNet-B3~[4]) thành một hệ thống hai giai đoạn nhằm hỗ trợ bác sĩ tốt hơn trên luồng ảnh hỗn hợp thực tế.
 
     \item Thực nghiệm và đánh giá đa khía cạnh: So sánh PGA-UNet với U-Net~[1], Attention U-Net~[6] và SAM-Med2D~[2] trên Dice, IoU, Precision, Recall, HD95 và CBL; phân tích bóc tách từng thành phần kiến trúc (PSG, CAD) và ảnh hưởng của kích thước ảnh đầu vào; đánh giá tính bền bỉ với câu nhắc không hoàn hảo nhưng nằm trong phạm vi hợp lý; đánh giá hệ thống trên tập dữ liệu hỗn hợp mô phỏng một phần điều kiện lâm sàng.
 \end{enumerate}
@@ -103,10 +103,10 @@ Giai đoạn 2: Chuẩn bị dữ liệu: Tạo các tệp mặt nạ nhị phâ
 
 Giai đoạn 3: Thiết kế và huấn luyện mô hình:
 \begin{itemize}
-    \item Biểu diễn câu nhắc hộp giới hạn dưới dạng bản đồ nhiệt làm mịn biên.
+    \item Biểu diễn câu nhắc hộp giới hạn dưới dạng Bản đồ nhiệt làm mịn biên.
     \item PGA-UNet: tích hợp câu nhắc qua Cổng không gian (PSG) tại bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) tại bộ giải mã.
     \item Huấn luyện từ đầu với hàm mất mát Dice + BCE, kết hợp tăng cường dữ liệu và tăng cường câu nhắc để cải thiện tính bền bỉ.
-    \item EfficientNet\-B3 tinh chỉnh hai giai đoạn cho bài toán phân lớp sàng lọc.
+    \item EfficientNet-B3 tinh chỉnh hai giai đoạn cho bài toán phân lớp sàng lọc.
 \end{itemize}
 
 \needspace{7\baselineskip}
@@ -119,7 +119,7 @@ Giai đoạn 4: Thực nghiệm và đánh giá trên hai bộ dữ liệu: So s
 \begin{itemize}
     \item Bộ dữ liệu đã xử lý: Tập ảnh BTXRD và FracAtlas gốc kèm nhãn phân đoạn và câu nhắc hộp giới hạn, chia sẵn tập huấn luyện/xác thực/kiểm tra cho cả hai bộ dữ liệu.
     \item Mô hình PGA-UNet: Kiến trúc $\sim$3M tham số, dự kiến đạt Dice $\geq 0{,}80$ và IoU $\geq 0{,}70$ trên tập kiểm tra với câu nhắc hợp lệ; thể hiện tính bền bỉ khi câu nhắc bị lệch tâm.
-    \item Hệ thống: EfficientNet\-B3 đạt AUC-ROC $\geq 0{,}90$; đánh giá hệ thống (Dice, IoU tính trên cả trường hợp âm tính giả) phản ánh sát điều kiện lâm sàng.
+    \item Hệ thống: EfficientNet-B3 đạt AUC-ROC $\geq 0{,}90$; đánh giá hệ thống (Dice, IoU tính trên cả trường hợp âm tính giả) phản ánh sát điều kiện lâm sàng.
     \item Kết quả tổng quát hóa: Kỳ vọng kiến trúc PSG+CAD duy trì ưu thế so với các mô hình so sánh trên cả hai bộ dữ liệu, qua đó xác nhận mức độ tổng quát của thiết kế trên nhiều dạng tổn thương khác nhau.
     \item Báo cáo và mã nguồn: Báo cáo khóa luận hoàn chỉnh; bộ mã nguồn có chú thích đầy đủ, tái tạo được toàn bộ kết quả thực nghiệm.
 \end{itemize}
@@ -141,7 +141,7 @@ Giai đoạn 4: Thực nghiệm và đánh giá trên hai bộ dữ liệu: So s
 \hline
 2 & Tạo nhãn mặt nạ phân đoạn từ các tệp dữ liệu; chuẩn hóa kích thước ảnh; chia tập dữ liệu cho cả hai bộ dữ liệu & Tuần 4--7 (02/2026) \\
 \hline
-3 & Thiết kế và huấn luyện PGA-UNet trên hai bộ dữ liệu; mô hình phân lớp EfficientNet\-B3 & Tuần 8--14 (03--04/2026) \\
+3 & Thiết kế và huấn luyện PGA-UNet trên hai bộ dữ liệu; mô hình phân lớp EfficientNet-B3 & Tuần 8--14 (03--04/2026) \\
 \hline
 4 & Thực nghiệm so sánh; thử nghiệm bóc tách; đánh giá tính bền bỉ trên hai bộ dữ liệu & Tuần 15--18 (04--05/2026) \\
 \hline
@@ -179,14 +179,14 @@ Giai đoạn 4: Thực nghiệm và đánh giá trên hai bộ dữ liệu: So s
 \noindent
 \begin{minipage}[t]{0.45\textwidth}
     \centering
-    \footnotesizeXÁC NHẬN\\
-    \footnotesizeCỦA NGƯỜI HƯỚNG DẪN\\[0.1cm]
+    \footnotesize XÁC NHẬN\\
+    \footnotesize CỦA NGƯỜI HƯỚNG DẪN\\[0.1cm]
     \footnotesize\textit{(Ký và ghi rõ họ tên)}\\[1.2cm]
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.50\textwidth}
     \centering
     \footnotesize\textit{TP. Hồ Chí Minh, ngày... tháng... năm...}\\
-    \footnotesizeNHÓM SINH VIÊN THỰC HIỆN\\[0.1cm]
+    \footnotesize NHÓM SINH VIÊN THỰC HIỆN\\[0.1cm]
     \footnotesize\textit{(Ký và ghi rõ họ tên)}\\[1.2cm]
 \end{minipage}
