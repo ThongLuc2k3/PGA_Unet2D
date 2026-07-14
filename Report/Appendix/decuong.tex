@@ -19,9 +19,9 @@
 \end{center}
 
 \begin{center}
-    \textbf{\Large PHÁT TRIỂN HỆ THỐNG PHÂN ĐOẠN ẢNH X-QUANG VỀ XƯƠNG DỰA VÀO CÂU NHẮC TRỰC QUAN}
+    \textbf{\Large PHÁT TRIỂN HỆ THỐNG PHÂN ĐOẠN TỔN THƯƠNG XƯƠNG TRÊN ẢNH X-QUANG DỰA TRÊN CÂU NHẮC TRỰC QUAN}
     \\[0.3cm]
-    \small\textit{(Developing a bone X-ray image segmentation system based on visual prompts)}
+    \small\textit{(Developing a bone lesion segmentation system on X-ray images based on visual prompts)}
 \end{center}
 
 \vspace{0.5cm}
@@ -57,24 +57,22 @@
 \noindent{\bfseries 2.1\quad Giới thiệu về đề tài}
 
 \medskip
-Chẩn đoán hình ảnh qua X-quang là phương thức cận lâm sàng phổ biến, quan trọng trong phát hiện tổn thương xương như gãy xương, rạn xương và khối u xương nguyên phát. Tại các cơ sở y tế lớn, số ca chụp X-quang mỗi ngày lên đến hàng trăm, đặt áp lực đáng kể lên đội ngũ bác sĩ về tốc độ đọc phim và độ chính xác chẩn đoán. Bước khoanh vùng tổn thương (phân đoạn ảnh) là cơ sở để đo kích thước khối u, theo dõi diễn tiến bệnh và lập kế hoạch điều trị; tuy nhiên hiện vẫn thực hiện thủ công trên hệ thống PACS, tốn thời gian và phụ thuộc kinh nghiệm cá nhân.
+Chẩn đoán hình ảnh qua X-quang là phương thức cận lâm sàng phổ biến, quan trọng trong phát hiện tổn thương xương như gãy xương, rạn xương và khối u xương nguyên phát. Tại các cơ sở y tế lớn, số ca chụp X-quang mỗi ngày lên đến hàng trăm, gây áp lực lớn lên tốc độ và độ chính xác chẩn đoán của bác sĩ. Bước khoanh vùng tổn thương là cơ sở để đo kích thước, theo dõi diễn tiến bệnh và lập kế hoạch điều trị, nhưng hiện vẫn thực hiện thủ công trên hệ thống PACS, tốn thời gian và phụ thuộc kinh nghiệm cá nhân.
 
-Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả quan trong phân đoạn ảnh y khoa, nhưng gặp khó khăn đặc thù trên ảnh X-quang xương: độ tương phản thấp, cấu trúc giải phẫu chồng lấp khiến vùng tổn thương dễ nhầm với mô xương lành. Các mô hình nền tảng dạng câu nhắc như SAM-Med2D~[2] mở ra hướng tiếp cận tương tác nhưng kiến trúc rất nặng ($\sim$91M tham số), chi phí tính toán cao, không phù hợp triển khai trên phần cứng y tế thông thường.
+Các mô hình học sâu tự động như U-Net~[1] thường gặp khó khăn trên ảnh X-quang xương do độ tương phản thấp, cấu trúc giải phẫu chồng lấp khiến vùng tổn thương dễ nhầm với mô xương lành. Các mô hình nền tảng dạng câu nhắc như SAM-Med2D~[2] mở ra hướng tiếp cận tương tác nhưng kiến trúc nặng ($\sim$91M tham số), khó triển khai trên phần cứng y tế thông thường.
 
-Đề tài đề xuất xây dựng kiến trúc \textbf{PGA-UNet} (Prompt-Guided Attention U-Net): mô hình U-Net nhẹ tích hợp sâu câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa và bộ giải mã. Để minh họa khả năng ứng dụng thực tế, PGA-UNet được kết hợp thêm với một module phân lớp sàng lọc, tạo thành một luồng xử lý đầu cuối minh họa (không phải đóng góp kiến trúc riêng biệt). Toàn bộ hệ thống được huấn luyện và đánh giá trên bộ dữ liệu BTXRD (Bone Tumor X-Ray Dataset)~[3].
+Đề tài đề xuất xây dựng kiến trúc \textbf{PGA-UNet} (Prompt-Guided Attention U-Net): mô hình U-Net nhẹ tích hợp sâu câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa và bộ giải mã. Để hỗ trợ tốt hơn cho chẩn đoán thực tế, PGA-UNet còn được kết hợp với một module phân lớp sàng lọc, tạo thành một hệ thống khả thi trong thực tế.
 
 \medskip
 \noindent{\bfseries 2.2\quad Mục tiêu đề tài}
 
 \medskip
 \begin{enumerate}
-    \item \textbf{Đề xuất và xây dựng kiến trúc PGA-UNet:} Thiết kế mô hình phân đoạn nhẹ ($\sim$3M tham số) tích hợp câu nhắc hộp giới hạn qua Cổng không gian (PSG) tại bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) tại bộ giải mã; huấn luyện từ đầu trên BTXRD với chiến lược tăng cường câu nhắc (câu nhắc rỗng/nhiễu) để tăng tính bền bỉ.
+    \item \textbf{Đề xuất và xây dựng kiến trúc PGA-UNet:} Thiết kế mô hình phân đoạn nhẹ ($\sim$3M tham số) tích hợp câu nhắc hộp giới hạn qua Cổng không gian (PSG) tại bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) tại bộ giải mã; huấn luyện từ đầu trên cả hai bộ dữ liệu BTXRD~[3] và FracAtlas~[5] (đặc tính tổn thương khác nhau), kết hợp tăng cường câu nhắc (hộp giới hạn to hơn hoặc lệch nhẹ so với tổn thương) để tăng tính bền bỉ.
 
-    \item \textbf{Minh họa khả năng ứng dụng thực tế của PGA-UNet:} Kết hợp PGA-UNet với một mô hình phân lớp nhị phân sàng lọc (Gatekeeper, EfficientNet\_B3~[4]) thành luồng xử lý hai giai đoạn, nhằm minh họa cách hệ thống có thể hỗ trợ bác sĩ trên luồng ảnh hỗn hợp thực tế (không phải đóng góp kiến trúc riêng biệt).
+    \item \textbf{Mở rộng khả năng ứng dụng thực tế của PGA-UNet:} Kết hợp PGA-UNet với một mô hình phân lớp nhị phân sàng lọc (Gatekeeper, EfficientNet\_B3~[4]) thành một hệ thống hai giai đoạn, hỗ trợ bác sĩ tốt hơn trên luồng ảnh hỗn hợp thực tế.
 
-    \item \textbf{Thực nghiệm và đánh giá đa khía cạnh:} So sánh PGA-UNet với U-Net~[1] và SAM-Med2D~[2] trên Dice, IoU, Precision, Recall; đánh giá tính bền bỉ với câu nhắc không hoàn hảo; đánh giá luồng xử lý toàn hệ thống trên tập dữ liệu hỗn hợp mô phỏng một phần điều kiện lâm sàng.
-
-    \item \textbf{Đánh giá khả năng tổng quát hóa:} Huấn luyện lại toàn bộ kiến trúc và luồng xử lý trên một bộ dữ liệu X-quang xương độc lập thứ hai, FracAtlas~[5] (đặc tính tổn thương gãy xương, khác biệt với khối u BTXRD), nhằm kiểm chứng thiết kế PSG+CAD không chỉ phù hợp với một bộ dữ liệu cụ thể.
+    \item \textbf{Thực nghiệm và đánh giá đa khía cạnh:} So sánh PGA-UNet với U-Net~[1], Attention U-Net~[6] và SAM-Med2D~[2] trên Dice, IoU, Precision, Recall, HD95 và CBL; ablation từng thành phần kiến trúc (PSG, CAD) và ảnh hưởng của kích thước resize ảnh đầu vào; đánh giá tính bền bỉ với câu nhắc không hoàn hảo nhưng nằm trong phạm vi hợp lý; đánh giá hệ thống trên tập dữ liệu hỗn hợp mô phỏng một phần điều kiện lâm sàng.
 \end{enumerate}
 
 \medskip
@@ -83,9 +81,9 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \medskip
 \textbf{Phạm vi thực hiện:}
 \begin{itemize}
-    \item Dữ liệu: Bộ dữ liệu BTXRD~[3] (ảnh X-quang xương 2D thực tế, công bố trên Nature Scientific Data) làm dữ liệu chính; bộ dữ liệu FracAtlas~[5] (X-quang gãy xương) dùng để đánh giá bổ sung khả năng tổng quát hóa.
-    \item Bài toán: Phân đoạn nhị phân vùng khối u xương (mặt nạ cấp độ pixel) với câu nhắc hộp giới hạn; phân lớp nhị phân bình thường/bệnh lý.
-    \item Đánh giá: So sánh với các mô hình nền tảng (U-Net~[1], SAM-Med2D~[2]) và đánh giá luồng xử lý đầu cuối trên tập kiểm tra hỗn hợp.
+    \item Dữ liệu: Hai bộ dữ liệu X-quang xương công khai, BTXRD~[3] (khối u xương) và FracAtlas~[5] (gãy xương), mang lại cái nhìn tổng quan hơn với nhiều dạng tổn thương khác nhau để khảo nghiệm kiến trúc.
+    \item Bài toán: Phân đoạn nhị phân vùng tổn thương xương (mặt nạ cấp độ pixel) với câu nhắc hộp giới hạn.
+    \item Đánh giá: So sánh với các mô hình (U-Net~[1], Attention U-Net~[6], SAM-Med2D~[2]) và đánh giá hệ thống trên tập kiểm tra hỗn hợp.
 \end{itemize}
 
 \textbf{Giới hạn:}
@@ -99,7 +97,7 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \noindent{\bfseries 2.4\quad Cách tiếp cận thực hiện}
 
 \medskip
-\textbf{Giai đoạn 1: Nghiên cứu tài liệu:} Khảo sát kiến trúc U-Net~[1], Attention U-Net~[6], SAM-Med2D~[2]; tìm hiểu cơ chế tích hợp câu nhắc không gian vào mạng tích chập; phân tích đặc điểm bộ dữ liệu BTXRD~[3].
+\textbf{Giai đoạn 1: Nghiên cứu tài liệu:} Khảo sát kiến trúc U-Net~[1], Attention U-Net~[6], SAM-Med2D~[2]; tìm hiểu cơ chế tích hợp câu nhắc không gian vào mạng tích chập; phân tích đặc điểm hai bộ dữ liệu BTXRD~[3] và FracAtlas~[5].
 
 \textbf{Giai đoạn 2: Chuẩn bị dữ liệu:} Tạo các tệp mặt nạ nhị phân tương ứng với ảnh từ các tệp chú thích, chuẩn hóa kích thước ảnh và chia tập huấn luyện/xác thực/kiểm tra.
 
@@ -112,17 +110,17 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \end{itemize}
 
 \needspace{7\baselineskip}
-\textbf{Giai đoạn 4: Thực nghiệm và đánh giá:} So sánh định lượng Dice/IoU/Precision/Recall/HD95 với các mô hình baseline; ablation study từng thành phần kiến trúc; đánh giá tính bền bỉ kịch bản câu nhắc lệch tâm; đánh giá luồng xử lý toàn hệ thống trên tập hỗn hợp; lặp lại các thực nghiệm cốt lõi sau khi huấn luyện lại trên FracAtlas~[5] để kiểm chứng tổng quát hóa.
+\textbf{Giai đoạn 4: Thực nghiệm và đánh giá trên hai bộ dữ liệu:} So sánh định lượng Dice/IoU/Precision/Recall/HD95/CBL với các mô hình baseline; ablation study từng thành phần kiến trúc; đánh giá tính bền bỉ kịch bản câu nhắc lệch tâm; đánh giá luồng xử lý toàn hệ thống trên tập hỗn hợp.
 
 \medskip
 \noindent{\bfseries 2.5\quad Kết quả dự kiến của đề tài}
 
 \medskip
 \begin{itemize}
-    \item \textbf{Bộ dữ liệu đã xử lý:} Tập ảnh BTXRD gốc kèm nhãn phân đoạn polygon và câu nhắc hộp giới hạn, chia sẵn tập huấn luyện/xác thực/kiểm tra.
+    \item \textbf{Bộ dữ liệu đã xử lý:} Tập ảnh BTXRD và FracAtlas gốc kèm nhãn phân đoạn polygon và câu nhắc hộp giới hạn, chia sẵn tập huấn luyện/xác thực/kiểm tra cho cả hai bộ dữ liệu.
     \item \textbf{Mô hình PGA-UNet:} Kiến trúc $\sim$3M tham số, dự kiến đạt Dice $\geq 0{,}80$ và IoU $\geq 0{,}70$ trên tập kiểm tra với câu nhắc hợp lệ; thể hiện tính bền bỉ khi câu nhắc bị lệch tâm.
-    \item \textbf{Luồng xử lý đầu cuối:} EfficientNet\_B3 đạt AUC-ROC $\geq 0{,}92$; đánh giá luồng xử lý toàn hệ thống (Dice, IoU tính trên cả trường hợp âm tính giả) phản ánh sát điều kiện lâm sàng.
-    \item \textbf{Kết quả tổng quát hóa:} Kỳ vọng kiến trúc PSG+CAD huấn luyện lại trên FracAtlas vẫn duy trì ưu thế so với các mô hình so sánh, qua đó đánh giá mức độ tổng quát của thiết kế ngoài phạm vi BTXRD.
+    \item \textbf{Hệ thống:} EfficientNet\_B3 đạt AUC-ROC $\geq 0{,}92$; đánh giá hệ thống (Dice, IoU tính trên cả trường hợp âm tính giả) phản ánh sát điều kiện lâm sàng.
+    \item \textbf{Kết quả tổng quát hóa:} Kỳ vọng kiến trúc PSG+CAD duy trì ưu thế so với các mô hình so sánh trên cả hai bộ dữ liệu, qua đó xác nhận mức độ tổng quát của thiết kế trên nhiều dạng tổn thương khác nhau.
     \item \textbf{Báo cáo và mã nguồn:} Báo cáo khóa luận hoàn chỉnh; bộ mã nguồn có chú thích đầy đủ, tái tạo được toàn bộ kết quả thực nghiệm.
 \end{itemize}
 
@@ -139,15 +137,15 @@ Các mô hình học sâu tự động như U-Net~[1] đạt kết quả khả q
 \hline
 \textbf{Giai đoạn} & \textbf{Nội dung} & \textbf{Thời gian} \\
 \hline
-1 & Nghiên cứu tài liệu; phân tích bộ dữ liệu BTXRD & Tuần 1--3 (01/2026) \\
+1 & Nghiên cứu tài liệu; phân tích hai bộ dữ liệu BTXRD và FracAtlas & Tuần 1--3 (01/2026) \\
 \hline
-2 & Tạo nhãn mặt nạ phân đoạn từ các tệp dữ liệu; chuẩn hóa kích thước ảnh; chia tập dữ liệu & Tuần 4--7 (02/2026) \\
+2 & Tạo nhãn mặt nạ phân đoạn từ các tệp dữ liệu; chuẩn hóa kích thước ảnh; chia tập dữ liệu cho cả hai bộ dữ liệu & Tuần 4--7 (02/2026) \\
 \hline
-3 & Thiết kế và huấn luyện PGA-UNet; module phân lớp EfficientNet\_B3 & Tuần 8--14 (03--04/2026) \\
+3 & Thiết kế và huấn luyện PGA-UNet trên hai bộ dữ liệu; module phân lớp EfficientNet\_B3 & Tuần 8--14 (03--04/2026) \\
 \hline
-4 & Thực nghiệm so sánh; ablation study; đánh giá tính bền bỉ; đánh giá tổng quát hóa trên FracAtlas & Tuần 15--18 (04--05/2026) \\
+4 & Thực nghiệm so sánh; ablation study; đánh giá tính bền bỉ trên hai bộ dữ liệu & Tuần 15--18 (04--05/2026) \\
 \hline
-5 & Đánh giá luồng xử lý đầu cuối trên tập hỗn hợp & Tuần 19--21 (05/2026) \\
+5 & Đánh giá hệ thống trên tập hỗn hợp & Tuần 19--21 (05/2026) \\
 \hline
 6 & Viết báo cáo khóa luận; chuẩn bị bảo vệ & Tuần 22--26 (06--07/2026) \\
 \hline

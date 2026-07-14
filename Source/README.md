@@ -1,7 +1,7 @@
 # PGA-UNet: Prompt-Guided Attention U-Net for Bone X-Ray Segmentation
 
 Mã nguồn thực nghiệm cho khóa luận tốt nghiệp:
-**"Phát triển hệ thống phân đoạn ảnh X-quang về xương dựa vào câu nhắc trực quan"**
+**"Phát triển hệ thống phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan"**
 
 Sinh viên: Nguyễn Hữu Bình (22120031) — Thông Lúc (22120196)
 Người hướng dẫn: PGS.TS. Lý Quốc Ngọc — ThS. Đỗ Thị Thanh Hà

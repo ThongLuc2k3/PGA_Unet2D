@@ -1020,3 +1020,52 @@ User thêm 8 folder ảnh thô mới (PGA vs SAM-Med2D nhỏ/mờ/rõ, PGA vs U-
 - **`Lời cam đoan`** dùng "chúng tôi" nhất quán với khung nhóm 2 người.
 
 **Kết luận:** không phát hiện sai lệch/lỗi thời nào giữa đề cương và báo cáo cuối cùng — không cần sửa.
+
+---
+
+## Đổi tên đề tài
+
+Đổi tên đề tài từ "Phát triển hệ thống phân đoạn ảnh X-quang về xương dựa vào câu nhắc trực quan" (cụm "ảnh X-quang về xương" không tự nhiên, đã ghi nhận trước đó) sang **"Phát triển hệ thống phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan"**, áp dụng xuyên suốt toàn bộ report:
+- `Title/title.tex` (2 trang bìa).
+- `Appendix/decuong.tex` (tiêu đề đề cương + bản dịch tiếng Anh, đổi thành "Developing a bone lesion segmentation system on X-ray images based on visual prompts").
+- `proposal.tex` và `MUCLUC.tex` (2 file không nằm trong `main.tex`/không thuộc bản build hiện tại nhưng vẫn được git track) — đổi luôn cho nhất quán toàn repo; tiện thể sửa lỗi chính tả "CẦU NHẮC" → "CÂU NHẮC" có sẵn trong `MUCLUC.tex`.
+- `README.md` và `Source/README.md` (dòng mô tả đề tài ở đầu file).
+- Không đổi `Xư_ly.md` (giữ nguyên câu ghi chú lịch sử đề xuất tên mới) và không đổi `Decuong_KhoaLuan.pdf` (văn bản đã nộp, không phải nguồn LaTeX build được).
+
+**Build:** sạch, 130 trang (không đổi), 0 undefined reference/lỗi. Đã render trực quan 2 trang bìa + trang đầu đề cương xác nhận tên mới hiển thị đúng, xuống dòng đẹp, không tràn khung.
+
+---
+
+## Sửa từ ngữ trong đề cương (`Appendix/decuong.tex`)
+
+Theo yêu cầu user, sửa 2 điểm chỉ trong đề cương:
+- **Bỏ từ "đầu cuối":** thay "luồng xử lý đầu cuối" → "hệ thống" ở 4 chỗ (2.1 giới thiệu, 2.3 phạm vi đánh giá, 2.5 kết quả dự kiến — gộp luôn "đánh giá luồng xử lý toàn hệ thống" thành "đánh giá hệ thống" để tránh lặp từ "hệ thống" 2 lần liền, 2.6 bảng kế hoạch giai đoạn 5).
+- **Sửa câu phạm vi dữ liệu ở 2.1:** "Toàn bộ hệ thống được huấn luyện và đánh giá trên bộ dữ liệu BTXRD~[3]" (chỉ nhắc 1 dataset) → "...trên hai bộ dữ liệu X-quang xương có đặc tính tổn thương khác nhau: BTXRD~[3] và FracAtlas~[5]" — khớp đúng thực tế đã làm (huấn luyện lại từ đầu và đánh giá đầy đủ trên cả 2 bộ).
+- Không đổi câu ở 2.3 "Phạm vi thực hiện" (BTXRD là dữ liệu chính, FracAtlas dùng đánh giá bổ sung) vì user không yêu cầu và đây là mô tả hợp lệ về vai trò 2 bộ dữ liệu trong đề cương gốc.
+
+**Build:** sạch, 130 trang (không đổi), 0 undefined reference/lỗi. Đã render trực quan trang đầu Mục 2.1 xác nhận câu văn mới đọc tự nhiên, không còn "đầu cuối".
+
+---
+
+## Chỉnh câu văn 2.1/2.2 đề cương: bỏ ngoặc phòng thủ, tổng quát hóa "khối u"
+
+Theo yêu cầu user:
+- **Bỏ "(phân đoạn ảnh)"** ở câu "Bước khoanh vùng tổn thương (phân đoạn ảnh) là cơ sở..." (2.1) — câu đã đủ rõ nghĩa không cần chú thích lại.
+- **Tổng quát hóa "khối u" → "tổn thương"** ở 2 chỗ mang tính mô tả chung, không đặc thù riêng BTXRD: "đo kích thước khối u" → "đo kích thước tổn thương" (2.1); "Phân đoạn nhị phân vùng khối u xương" → "...vùng tổn thương xương" (2.3, Bài toán) — vì phạm vi bài toán giờ bao gồm cả gãy xương (FracAtlas), không chỉ u xương. **Giữ nguyên** 2 chỗ "khối u" còn lại vì là tên loại tổn thương cụ thể, không phải cách gọi chung: "khối u xương nguyên phát" (liệt kê loại tổn thương ở 2.1) và "khác biệt với khối u BTXRD" (đối chiếu đặc tính BTXRD vs FracAtlas ở 2.2, mục tiêu 4).
+- **Viết lại câu "Để minh họa khả năng ứng dụng thực tế..." (2.1)** bỏ hẳn ngoặc phòng thủ "(không phải đóng góp kiến trúc riêng biệt)", đổi khung diễn đạt từ "minh họa" sang tích cực hơn: "Để hỗ trợ tốt hơn cho quy trình chẩn đoán thực tế, PGA-UNet còn được kết hợp thêm với một module phân lớp sàng lọc, tạo thành một hệ thống khả thi trong thực tế."
+- **Áp dụng nhất quán cho mục tiêu 2 (2.2)**: đổi tiêu đề in đậm "Minh họa khả năng ứng dụng thực tế của PGA-UNet" → "Mở rộng khả năng ứng dụng thực tế của PGA-UNet", bỏ luôn ngoặc phòng thủ ở cuối câu, đổi "luồng xử lý hai giai đoạn" → "một hệ thống hai giai đoạn" (khớp quy ước "hệ thống" thay "luồng xử lý"/"đầu cuối" vừa thống nhất trước đó), "minh họa cách hệ thống có thể hỗ trợ" → "hỗ trợ bác sĩ tốt hơn".
+
+**Build:** sạch, 130 trang (không đổi), 0 undefined reference/lỗi. Đã render trực quan 2 trang (Mục 2.1, Mục 2.2-2.3) xác nhận câu văn mới đọc tự nhiên, mạch lạc, không còn ngoặc phòng thủ.
+
+---
+
+## Tinh gọn Mục 2.1 đề cương (cắt 2 hàng)
+
+Theo yêu cầu user, nén 3 đoạn của Mục 2.1 mà không bỏ nội dung cốt lõi:
+- Đoạn 1: "đặt áp lực đáng kể lên đội ngũ bác sĩ về tốc độ đọc phim và độ chính xác chẩn đoán" → "gây áp lực lớn lên tốc độ và độ chính xác chẩn đoán của bác sĩ"; bỏ lặp "tổn thương" ở "đo kích thước tổn thương" → "đo kích thước"; "tuy nhiên hiện vẫn thực hiện thủ công" → "nhưng hiện vẫn thực hiện thủ công".
+- Đoạn 2: bỏ "đặc thù" (thừa); "chi phí tính toán cao, không phù hợp triển khai" → "khó triển khai" (giữ nguyên ý, ngắn hơn).
+- Đoạn 3: gộp câu "Toàn bộ hệ thống được huấn luyện và đánh giá..." làm mệnh đề nối tiếp thay vì câu riêng; bỏ "thêm" thừa trong "kết hợp thêm với"; "cho quy trình chẩn đoán thực tế" → "cho chẩn đoán thực tế".
+
+**Kết quả đo bằng render trực quan (so 2 bản trước/sau):** Mục 2.1 giảm từ 23 dòng xuống 21 dòng (tiết kiệm đúng 2 dòng theo yêu cầu), không mất ý nào (vẫn đủ: bối cảnh lâm sàng, hạn chế PACS thủ công, hạn chế U-Net/SAM-Med2D, đề xuất PGA-UNet+Gatekeeper, 2 bộ dữ liệu).
+
+**Build:** sạch, 130 trang (không đổi), 0 undefined reference/lỗi.
