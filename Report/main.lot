@@ -29,7 +29,7 @@
 \contentsline {table}{\numberline {4.24}{\ignorespaces So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}}{70}{table.4.24}%
 \contentsline {table}{\numberline {4.25}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}}{71}{table.4.25}%
 \contentsline {table}{\numberline {4.26}{\ignorespaces Kết quả luồng xử lý hai giai đoạn trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{73}{table.4.26}%
-\contentsline {table}{\numberline {4.27}{\ignorespaces Các chỉ số bổ sung ở cấp độ tổn thương, tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}}{76}{table.4.27}%
+\contentsline {table}{\numberline {4.27}{\ignorespaces Các chỉ số bổ sung ở cấp độ tổn thương, tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}}{77}{table.4.27}%
 \contentsline {table}{\numberline {4.28}{\ignorespaces Kết quả đánh giá hiệu năng của Gatekeeper trên tập kiểm thử FracAtlas (N=409: 72 bệnh lý + 337 bình thường)}}{78}{table.4.28}%
 \contentsline {table}{\numberline {4.29}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN trên FracAtlas theo khoảng cách tới ngưỡng 0.5}}{79}{table.4.29}%
 \contentsline {table}{\numberline {4.30}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper trên FracAtlas}}{80}{table.4.30}%

@@ -1,23 +1,23 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2.1}{\ignorespaces Kiến trúc SAM-Med2D~\blx@tocontentsinit {0}\cite {2023-SAMMed2D-Cheng} (tham số đóng băng {\color {cyan}$\bullet $}, tham số học được qua lớp thích ứng {\color {orange}$\bullet $}).}}{8}{figure.2.1}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc U-Net, 4 cấp độ phân giải.}}{10}{figure.2.2}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net: Cổng chú ý (AG) tại các kết nối tắt.}}{11}{figure.2.3}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc U-Net, 4 cấp độ phân giải.}}{9}{figure.2.2}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net: Cổng chú ý (AG) tại các kết nối tắt.}}{10}{figure.2.3}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc PGA-UNet: PSG tại bộ mã hóa, CAD tại bộ giải mã.}}{18}{figure.3.1}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Luồng xử lý tổng thể: EfficientNet\_B3 $\to $ PGA-UNet.}}{25}{figure.3.2}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Luồng xử lý tổng thể: EfficientNet-B3 $\to $ PGA-UNet.}}{25}{figure.3.2}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces Hai ca kiểm thử PGA-UNet, kịch bản Bao trọn. Từ trái sang phải: ảnh gốc, ảnh kèm hộp giới hạn câu nhắc, mặt nạ dự đoán (Dice/IoU), Ground Truth, lớp phủ đối chiếu TP/FP/FN (Precision/Recall).}}{35}{figure.4.1}%
 \contentsline {figure}{\numberline {4.2}{\ignorespaces So sánh Điểm Dice kịch bản Bao trọn: U-Net (512, không câu nhắc), PGA-UNet (256, đề xuất) và SAM-Med2D (đã/chưa tinh chỉnh, 256), trên BTXRD và FracAtlas (Bảng~\ref {tab:baseline_comparison},~\ref {tab:fracatlas_baseline},~\ref {tab:sam_comparison},~\ref {tab:fracatlas_sam_comparison}).}}{37}{figure.4.2}%
 \contentsline {figure}{\numberline {4.3}{\ignorespaces PGA-UNet tại 256×256 và 512×512, ba kịch bản câu nhắc: BTXRD so với FracAtlas (Bảng~\ref {tab:pga_256_512},~\ref {tab:fracatlas_pga_full}).}}{39}{figure.4.3}%
 \contentsline {figure}{\numberline {4.4}{\ignorespaces Cùng một ca kiểm thử ở kịch bản Bao trọn so với Lệch tâm, trên BTXRD (trên) và FracAtlas (dưới).}}{40}{figure.4.4}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Nghiên cứu loại bỏ thành phần: Điểm Dice của 8 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc (Bảng~\ref {tab:ablation_arch}). PGA-UNet (đề xuất) tô xanh dương, các biến thể còn lại tô xám.}}{46}{figure.4.5}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Nghiên cứu loại bỏ thành phần: Điểm Dice của 8 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc (Bảng~\ref {tab:ablation_arch}). PGA-UNet (đề xuất) đánh dấu bằng gạch chéo để phân biệt cả khi in trắng đen.}}{46}{figure.4.5}%
 \contentsline {figure}{\numberline {4.6}{\ignorespaces PGA-UNet/V6 (CAD) so với U-Net+PSG+Attention gốc/V7 trên cùng một ca, BTXRD, kịch bản Bao trọn.}}{47}{figure.4.6}%
 \contentsline {figure}{\numberline {4.7}{\ignorespaces So sánh U-Net và PGA-UNet theo độ khó tác vụ trên BTXRD (Bảng~\ref {tab:subcat_baseline}).}}{49}{figure.4.7}%
 \contentsline {figure}{\numberline {4.8}{\ignorespaces PGA-UNet so với U-Net trên cùng ca đại diện nhóm dễ (TOP-DICE) và khó (BOTTOM-DICE), BTXRD (Bảng~\ref {tab:subcat_baseline}).}}{50}{figure.4.8}%
 \contentsline {figure}{\numberline {4.9}{\ignorespaces So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref {tab:subcat_sam}).}}{52}{figure.4.9}%
 \contentsline {figure}{\numberline {4.10}{\ignorespaces PGA-UNet so với SAM-Med2D trên cùng ca đại diện của ba nhóm đặc tính lâm sàng, BTXRD (Bảng~\ref {tab:subcat_sam}).}}{53}{figure.4.10}%
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Nghiên cứu loại bỏ thành phần: Điểm Dice của 8 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc trên FracAtlas (Bảng~\ref {tab:fracatlas_ablation_arch}). PGA-UNet (đề xuất) tô xanh dương, các biến thể còn lại tô xám.}}{55}{figure.4.11}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Nghiên cứu loại bỏ thành phần: Điểm Dice của 8 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc trên FracAtlas (Bảng~\ref {tab:fracatlas_ablation_arch}). PGA-UNet (đề xuất) đánh dấu bằng gạch chéo để phân biệt cả khi in trắng đen.}}{55}{figure.4.11}%
 \contentsline {figure}{\numberline {4.12}{\ignorespaces PGA-UNet/V6 (CAD) so với U-Net+PSG+Attention gốc/V7 trên cùng một ca, FracAtlas, kịch bản Bao trọn.}}{56}{figure.4.12}%
 \contentsline {figure}{\numberline {4.13}{\ignorespaces So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline}).}}{58}{figure.4.13}%
 \contentsline {figure}{\numberline {4.14}{\ignorespaces PGA-UNet so với U-Net trên cùng ca đại diện nhóm dễ (TOP-DICE) và khó (BOTTOM-DICE), FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline}).}}{59}{figure.4.14}%
