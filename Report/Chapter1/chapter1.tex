@@ -74,14 +74,14 @@ Về khả năng triển khai: Hệ thống cần thời gian phản hồi đủ
 Đóng góp cốt lõi và xuyên suốt của khóa luận là đề xuất kiến trúc PGA-UNet, cụ thể hóa qua ba điểm sau:
 
 \begin{enumerate}
-    \item Biểu diễn câu nhắc dạng Gaussian Plateau Heatmap: Khóa luận đề xuất mã hóa hộp giới hạn do bác sĩ vẽ thành một kênh 2D liên tục, đồng kích thước với bản đồ đặc trưng, thay vì vector nhúng vị trí rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân truyền thống, cung cấp tín hiệu định hướng có đạo hàm liên tục, tương thích trực tiếp với phép tích chập của CNN, không tạo đạo hàm giả tạo tại đường biên hộp giới hạn.
+    \item Biểu diễn câu nhắc dạng Bản đồ nhiệt Gaussian dạng cao nguyên: Khóa luận đề xuất mã hóa hộp giới hạn do bác sĩ vẽ thành một kênh hai chiều liên tục, đồng kích thước với bản đồ đặc trưng, thay vì vector nhúng vị trí rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân truyền thống, cung cấp tín hiệu định hướng có đạo hàm liên tục, tương thích trực tiếp với phép tích chập của CNN, không tạo đạo hàm giả tạo tại đường biên hộp giới hạn.
 
     \item Kiến trúc PGA-UNet điều kiện hóa bởi câu nhắc: Trên nền U-Net, khóa luận đề xuất hai thành phần tích hợp câu nhắc vào cả hai nhánh của mạng:
     \begin{itemize}
-        \item \textit{Cổng không gian tại bộ mã hóa (PSG):} tích hợp bản đồ heatmap vào từng tầng bộ mã hóa theo cơ chế khuếch đại có chọn lọc, không tồn tại trong U-Net hay Attention U-Net gốc (đối chiếu chi tiết tại Bảng~\ref{tab:inheritance_contribution}, Chương~\ref{Chapter3}).
-        \item \textit{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD):} mở rộng Cổng chú ý của Attention U-Net~\cite{oktay2018attentionunet} bằng cách đưa heatmap câu nhắc trực tiếp vào tín hiệu cổng, thay vì chỉ dựa vào đặc trưng ảnh như thiết kế gốc.
+        \item \textit{Cổng không gian tại bộ mã hóa (PSG):} tích hợp Bản đồ nhiệt vào từng tầng bộ mã hóa theo cơ chế khuếch đại có chọn lọc, không tồn tại trong U-Net hay Attention U-Net gốc (đối chiếu chi tiết tại Bảng~\ref{tab:inheritance_contribution}, Chương~\ref{Chapter3}).
+        \item \textit{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD):} mở rộng Cổng chú ý của Attention U-Net~\cite{oktay2018attentionunet} bằng cách đưa Bản đồ nhiệt câu nhắc trực tiếp vào tín hiệu cổng, thay vì chỉ dựa vào đặc trưng ảnh như thiết kế gốc.
     \end{itemize}
-    Hai thành phần phối hợp để mô hình thực sự \textit{sử dụng} câu nhắc xuyên suốt quá trình trích xuất và tái tạo đặc trưng; hiệu quả của biểu diễn heatmap cùng đóng góp riêng của PSG, CAD được kiểm chứng qua nghiên cứu loại bỏ thành phần và so sánh với U-Net, SAM-Med2D trên cả BTXRD và FracAtlas (chi tiết tại Chương~\ref{Chapter4}).
+    Hai thành phần phối hợp để mô hình thực sự \textit{sử dụng} câu nhắc xuyên suốt quá trình trích xuất và tái tạo đặc trưng; hiệu quả của biểu diễn Bản đồ nhiệt cùng đóng góp riêng của PSG, CAD được kiểm chứng qua nghiên cứu loại bỏ thành phần và so sánh với U-Net, SAM-Med2D trên cả BTXRD và FracAtlas (chi tiết tại Chương~\ref{Chapter4}).
 
     \item Thực nghiệm minh họa khả năng ứng dụng thực tế: Vì PGA-UNet cần câu nhắc do bác sĩ cung cấp, khóa luận bổ sung một thực nghiệm minh họa (không phải đóng góp kỹ thuật riêng biệt) để hình dung cách tích hợp vào thực tế: kết hợp PGA-UNet với một module phân lớp sàng lọc (Gatekeeper) thành luồng xử lý hai giai đoạn, đánh giá trên tập dữ liệu hỗn hợp gồm cả ảnh bình thường và bệnh lý, phản ánh phân bố gần thực tế hơn đánh giá phân đoạn đơn lẻ trên tập ảnh bệnh thuần túy. Kết quả tại Chương~\ref{Chapter4}.
 \end{enumerate}
