@@ -1,10 +1,10 @@
 \contentsline {chapter}{Lời cam đoan}{i}{Doc-Start}%
 \contentsline {chapter}{Lời cảm ơn}{ii}{chapter*.1}%
 \contentsline {chapter}{Đề cương chi tiết}{iii}{chapter*.2}%
-\contentsline {chapter}{Mục lục}{x}{Item.12}%
-\contentsline {chapter}{Danh mục các ký hiệu và chữ viết tắt}{xviii}{chapter*.5}%
-\contentsline {chapter}{Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}{xxii}{table.0.1}%
-\contentsline {chapter}{Tóm tắt}{xxv}{table.0.2}%
+\contentsline {chapter}{Mục lục}{ix}{Item.11}%
+\contentsline {chapter}{Danh mục các ký hiệu và chữ viết tắt}{xvii}{chapter*.5}%
+\contentsline {chapter}{Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}{xxi}{table.0.1}%
+\contentsline {chapter}{Tóm tắt}{xxiv}{table.0.2}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh chung}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%

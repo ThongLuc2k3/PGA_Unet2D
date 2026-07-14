@@ -1,6 +1,6 @@
 # PGA-UNet2D — Khóa Luận Tốt Nghiệp
 
-**Đề tài:** Phát triển hệ thống phân đoạn ảnh X-quang về xương dựa vào câu nhắc trực quan  
+**Đề tài:** Phát triển hệ thống phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan  
 **Dataset:** BTXRD (Nature Scientific Data 2024) — bone tumor X-ray, 248 test samples  
 **Kết quả chính:** PGA-UNet Dice=0.8606 > SAM-Med2D Dice=0.7554 (+13.3%), ~4M params (25× nhỏ hơn SAM)
 
