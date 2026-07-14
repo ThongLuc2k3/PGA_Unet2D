@@ -1,39 +1,38 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Kế thừa và đóng góp trong kiến trúc PGA-UNet}}{25}{table.3.1}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces So sánh chiến lược huấn luyện giữa PGA-UNet và SAM-Med2D}}{32}{table.3.2}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Kế thừa và đóng góp trong kiến trúc PGA-UNet}}{17}{table.3.1}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố dữ liệu thực nghiệm}}{38}{table.4.1}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces U-Net (tự động) so PGA-UNet (Zoom-out, câu nhắc), N=187~ảnh, cấp độ ảnh}}{43}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Tính bền bỉ của PGA-UNet trên ba kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh)}}{45}{table.4.3}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces PGA-UNet so SAM-Med2D (đã/chưa tinh chỉnh), ba kịch bản câu nhắc, cùng $256\times 256$, cấp độ ảnh (N=187~ảnh).}}{46}{table.4.4}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces PGA-UNet tại 256×256 và 512×512 trên BTXRD, ba kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh)}}{48}{table.4.5}%
-\contentsline {table}{\numberline {4.6}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{50}{table.4.6}%
-\contentsline {table}{\numberline {4.7}{\ignorespaces Ablation study: Dice Score của 8 biến thể kiến trúc PGA-UNet, ba kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh). PGA-UNet (đề xuất) là mô hình chính xuyên suốt khóa luận.}}{52}{table.4.7}%
-\contentsline {table}{\numberline {4.8}{\ignorespaces Wilcoxon signed-rank, 6 cặp so sánh trọng tâm, ba kịch bản câu nhắc, trên BTXRD (N=187) và FracAtlas (N=72). $\Delta $Dice = Dice(vế trái) $-$ Dice(vế phải); *** $p<0{,}001$, ** $p<0{,}01$, * $p<0{,}05$, ns = không ý nghĩa.}}{55}{table.4.8}%
-\contentsline {table}{\numberline {4.9}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{57}{table.4.9}%
-\contentsline {table}{\numberline {4.10}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}}{57}{table.4.10}%
-\contentsline {table}{\numberline {4.11}{\ignorespaces PGA-UNet so U-Net theo độ khó tác vụ (50 ảnh/nhóm, cấp độ ảnh; nhóm dễ/khó theo Dice của U-Net)}}{58}{table.4.11}%
-\contentsline {table}{\numberline {4.12}{\ignorespaces PGA-UNet so SAM-Med2D theo ba nhóm đặc tính lâm sàng (Zoom-out, 50 ảnh/nhóm, cấp độ ảnh)}}{60}{table.4.12}%
-\contentsline {table}{\numberline {4.13}{\ignorespaces PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng, cùng 256×256 (Zoom-out, 50 ảnh/nhóm, cấp độ ảnh)}}{61}{table.4.13}%
-\contentsline {table}{\numberline {4.14}{\ignorespaces Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu cấp độ đa giác)}}{64}{table.4.14}%
-\contentsline {table}{\numberline {4.15}{\ignorespaces PGA-UNet trên FracAtlas: 256×256 và 512×512, ba kịch bản câu nhắc (N=72~ảnh, cấp độ ảnh)}}{65}{table.4.15}%
-\contentsline {table}{\numberline {4.16}{\ignorespaces U-Net (tự động) so PGA-UNet (512, Zoom-out) trên FracAtlas, cùng 512×512 (N=72~ảnh, cấp độ ảnh)}}{66}{table.4.16}%
-\contentsline {table}{\numberline {4.17}{\ignorespaces PGA-UNet (256) so SAM-Med2D (đã/chưa tinh chỉnh) trên FracAtlas, ba kịch bản câu nhắc, cùng 256×256, cấp độ ảnh (N=72~ảnh)}}{67}{table.4.17}%
-\contentsline {table}{\numberline {4.18}{\ignorespaces PGA-UNet so U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh/nhóm, cấp độ ảnh; nhóm dễ/khó theo Dice U-Net, Zoom-out)}}{69}{table.4.18}%
-\contentsline {table}{\numberline {4.19}{\ignorespaces SAM-Med2D (FT, 256), PGA-UNet (256), PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (Zoom-out, 24 ảnh/nhóm, cấp độ ảnh)}}{70}{table.4.19}%
-\contentsline {table}{\numberline {4.20}{\ignorespaces Ablation study: Dice Score của 8 biến thể kiến trúc PGA-UNet trên FracAtlas, ba kịch bản câu nhắc (N=72~ảnh, cấp độ ảnh)}}{72}{table.4.20}%
-\contentsline {table}{\numberline {4.21}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet trên FracAtlas (kịch bản Zoom-out / Shift / Mixed)}}{74}{table.4.21}%
-\contentsline {table}{\numberline {4.22}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên FracAtlas, 3 kịch bản câu nhắc (trung bình 4 fold)}}{75}{table.4.22}%
-\contentsline {table}{\numberline {4.23}{\ignorespaces Kết quả đánh giá hiệu năng của Gatekeeper trên tập kiểm thử FracAtlas (N=409: 72 bệnh lý + 337 bình thường)}}{76}{table.4.23}%
-\contentsline {table}{\numberline {4.24}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN trên FracAtlas theo khoảng cách tới ngưỡng 0.5}}{77}{table.4.24}%
-\contentsline {table}{\numberline {4.25}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper trên FracAtlas}}{77}{table.4.25}%
-\contentsline {table}{\numberline {4.26}{\ignorespaces Kết quả luồng xử lý đầu cuối trên tập kiểm thử hỗn hợp FracAtlas (409 ảnh)}}{79}{table.4.26}%
-\contentsline {table}{\numberline {4.27}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{88}{table.4.27}%
-\contentsline {table}{\numberline {4.28}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 20 ảnh FN theo khoảng cách tới ngưỡng 0.5}}{90}{table.4.28}%
-\contentsline {table}{\numberline {4.29}{\ignorespaces So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}}{90}{table.4.29}%
-\contentsline {table}{\numberline {4.30}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}}{91}{table.4.30}%
-\contentsline {table}{\numberline {4.31}{\ignorespaces Kết quả luồng xử lý đầu cuối trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{95}{table.4.31}%
-\contentsline {table}{\numberline {4.32}{\ignorespaces Các chỉ số đầu cuối bổ sung ở cấp độ tổn thương, tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}}{97}{table.4.32}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố dữ liệu thực nghiệm}}{31}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Thống kê phân bố bộ dữ liệu FracAtlas dùng trong thực nghiệm (đơn vị: mẫu cấp độ đa giác)}}{32}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces U-Net (tự động) so PGA-UNet (Zoom-out, câu nhắc) trên BTXRD, N=187~ảnh, cấp độ ảnh}}{38}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces U-Net (tự động) so PGA-UNet (512, Zoom-out) trên FracAtlas, N=72~ảnh, cấp độ ảnh}}{38}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Tính bền bỉ của PGA-UNet trên ba kịch bản câu nhắc, BTXRD (N=187~ảnh, cấp độ ảnh)}}{41}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces PGA-UNet so SAM-Med2D (đã/chưa tinh chỉnh) trên BTXRD, ba kịch bản câu nhắc, cùng $256\times 256$, cấp độ ảnh (N=187~ảnh).}}{43}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces PGA-UNet (256) so SAM-Med2D (đã/chưa tinh chỉnh) trên FracAtlas, ba kịch bản câu nhắc, cùng 256×256, cấp độ ảnh (N=72~ảnh)}}{45}{table.4.7}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces PGA-UNet tại 256×256 và 512×512 trên BTXRD, ba kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh)}}{47}{table.4.8}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces PGA-UNet trên FracAtlas: 256×256 và 512×512, ba kịch bản câu nhắc (N=72~ảnh, cấp độ ảnh)}}{47}{table.4.9}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces So sánh hiệu quả tính toán: PGA-UNet vs SAM-Med2D}}{50}{table.4.10}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Ablation study: Dice Score của 8 biến thể kiến trúc PGA-UNet, ba kịch bản câu nhắc (N=187~ảnh, cấp độ ảnh).}}{52}{table.4.11}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Zoom-out / Shift / Mixed)}}{56}{table.4.12}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}}{56}{table.4.13}%
+\contentsline {table}{\numberline {4.14}{\ignorespaces PGA-UNet so U-Net theo độ khó tác vụ (50 ảnh/nhóm, cấp độ ảnh; nhóm dễ/khó theo Dice của U-Net)}}{57}{table.4.14}%
+\contentsline {table}{\numberline {4.15}{\ignorespaces PGA-UNet so SAM-Med2D theo ba nhóm đặc tính lâm sàng (Zoom-out, 50 ảnh/nhóm, cấp độ ảnh)}}{60}{table.4.15}%
+\contentsline {table}{\numberline {4.16}{\ignorespaces PGA-UNet$_{256}$ vs SAM-Med2D theo đặc tính lâm sàng, cùng 256×256 (Zoom-out, 50 ảnh/nhóm, cấp độ ảnh)}}{63}{table.4.16}%
+\contentsline {table}{\numberline {4.17}{\ignorespaces Ablation study: Dice Score của 8 biến thể kiến trúc PGA-UNet trên FracAtlas, ba kịch bản câu nhắc (N=72~ảnh, cấp độ ảnh)}}{64}{table.4.17}%
+\contentsline {table}{\numberline {4.18}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet trên FracAtlas (kịch bản Zoom-out / Shift / Mixed)}}{66}{table.4.18}%
+\contentsline {table}{\numberline {4.19}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên FracAtlas, 3 kịch bản câu nhắc (trung bình 4 fold)}}{66}{table.4.19}%
+\contentsline {table}{\numberline {4.20}{\ignorespaces PGA-UNet so U-Net theo độ khó tác vụ trên FracAtlas (36 ảnh/nhóm, cấp độ ảnh; nhóm dễ/khó theo Dice U-Net, Zoom-out)}}{67}{table.4.20}%
+\contentsline {table}{\numberline {4.21}{\ignorespaces SAM-Med2D (FT, 256), PGA-UNet (256), PGA-UNet (512) theo đặc tính tổn thương trên FracAtlas (Zoom-out, 24 ảnh/nhóm, cấp độ ảnh)}}{69}{table.4.21}%
+\contentsline {table}{\numberline {4.22}{\ignorespaces Wilcoxon signed-rank, 6 cặp so sánh trọng tâm, ba kịch bản câu nhắc, trên BTXRD (N=187) và FracAtlas (N=72). $\Delta $Dice = Dice(vế trái) $-$ Dice(vế phải); *** $p<0{,}001$, ** $p<0{,}01$, * $p<0{,}05$, ns = không ý nghĩa.}}{72}{table.4.22}%
+\contentsline {table}{\numberline {4.23}{\ignorespaces Kết quả đánh giá hiệu năng của mô hình phân lớp sàng lọc trên tập kiểm thử}}{77}{table.4.23}%
+\contentsline {table}{\numberline {4.24}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 20 ảnh FN theo khoảng cách tới ngưỡng 0.5}}{79}{table.4.24}%
+\contentsline {table}{\numberline {4.25}{\ignorespaces So sánh diện tích tổn thương (\% diện tích ảnh) giữa nhóm FN và nhóm TP}}{80}{table.4.25}%
+\contentsline {table}{\numberline {4.26}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper}}{81}{table.4.26}%
+\contentsline {table}{\numberline {4.27}{\ignorespaces Kết quả luồng xử lý đầu cuối trên tập dataset\_online (hỗn hợp bình thường + có bệnh)}}{85}{table.4.27}%
+\contentsline {table}{\numberline {4.28}{\ignorespaces Các chỉ số đầu cuối bổ sung ở cấp độ tổn thương, tính trên 232 tổn thương của 187 ảnh bệnh lý trong dataset\_online}}{88}{table.4.28}%
+\contentsline {table}{\numberline {4.29}{\ignorespaces Kết quả đánh giá hiệu năng của Gatekeeper trên tập kiểm thử FracAtlas (N=409: 72 bệnh lý + 337 bình thường)}}{90}{table.4.29}%
+\contentsline {table}{\numberline {4.30}{\ignorespaces Phân bố xác suất dự đoán (cls\_prob) của 21 ảnh FN trên FracAtlas theo khoảng cách tới ngưỡng 0.5}}{91}{table.4.30}%
+\contentsline {table}{\numberline {4.31}{\ignorespaces Đánh đổi Sensitivity/Specificity khi dịch chuyển ngưỡng phân loại của Gatekeeper trên FracAtlas}}{91}{table.4.31}%
+\contentsline {table}{\numberline {4.32}{\ignorespaces Kết quả luồng xử lý đầu cuối trên tập kiểm thử hỗn hợp FracAtlas (409 ảnh)}}{93}{table.4.32}%
 \addvspace {10\p@ }
