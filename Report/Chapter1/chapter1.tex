@@ -24,13 +24,13 @@ Những hạn chế trên thúc đẩy cộng đồng nghiên cứu tìm giải 
  
 Mặc dù đã đạt nhiều tiến bộ, các phương pháp phân đoạn hoàn toàn tự động vẫn tồn tại hạn chế cốt lõi: hoạt động như \textit{hộp đen}, suy luận tự động trên toàn ảnh mà không có thông tin định hướng nào từ chuyên gia. Trong ảnh X-quang xương, nơi các cấu trúc giải phẫu chồng lấp và vùng tổn thương thường có độ tương phản thấp hoặc đặc điểm hình thái gần giống mô lành lân cận, cách tiếp cận này dễ dẫn đến phân đoạn sai lệch (dương tính giả) hoặc bỏ sót tổn thương (âm tính giả).
 
-Một hướng nghiên cứu đang được quan tâm là \textit{phân đoạn tương tác}, nơi người dùng cung cấp tín hiệu không gian sơ bộ (ví dụ hộp giới hạn) để định hướng mô hình tập trung vào vùng mục tiêu, cải thiện độ chính xác khi câu nhắc phù hợp, đồng thời đặt con người vào vị trí kiểm soát trong vòng lặp suy luận, có ý nghĩa đặc biệt quan trọng trong ứng dụng y tế.
+\textit{Phân đoạn tương tác} đang là một hướng tiếp cận hứa hẹn, nơi chuyên gia cung cấp tín hiệu không gian sơ bộ (ví dụ hộp giới hạn) để định hướng mô hình tập trung vào vùng mục tiêu. Cơ chế này vừa cải thiện độ chính xác khi câu nhắc phù hợp, vừa đảm bảo chuyên gia y tế luôn nắm quyền kiểm soát trong vòng lặp suy luận.
 
-Tuy nhiên, cách tích hợp hiệu quả tín hiệu định hướng vào kiến trúc mạng nơ-ron vẫn là hướng nghiên cứu đang được quan tâm, đặc biệt trong ảnh y khoa chuyên biệt.
+Tuy nhiên, cách tích hợp hiệu quả định hướng này vào mạng nơ-ron chuyên biệt cho ảnh y khoa vẫn là một thách thức lớn.
 
 \subsection{Động lực thực tiễn}
 
-Trong thực tế lâm sàng, không thể kỳ vọng mọi thao tác của bác sĩ đều hoàn hảo: câu nhắc có thể bị lệch tâm do chú ý không tập trung, hoặc đặt sai vị trí hoàn toàn do nhầm lẫn. Một hệ thống phân đoạn đáng tin cậy cần khả năng \textit{chịu đựng sai sót}: nhận biết khi câu nhắc có vấn đề và phản hồi phù hợp, thay vì im lặng trả về kết quả sai lệch; đồng thời cần tốc độ suy luận thời gian thực và khả năng giải thích quyết định, hai yếu tố thường chưa được cân nhắc đồng thời với độ chính xác khi tích hợp vào quy trình thực tế.
+Trong thực tế lâm sàng, không thể kỳ vọng mọi thao tác của bác sĩ đều hoàn hảo: câu nhắc có thể bị lệch tâm do chú ý không tập trung, hoặc đặt sai vị trí hoàn toàn do nhầm lẫn. Một hệ thống phân đoạn đáng tin cậy cần có \textit{tính bền bỉ}: hoạt động ổn định khi câu nhắc bị sai lệch và phản hồi phù hợp, thay vì im lặng trả về kết quả sai lệch; đồng thời cần tốc độ suy luận thời gian thực và khả năng giải thích quyết định, hai yếu tố thường chưa được cân nhắc đồng thời với độ chính xác khi tích hợp vào quy trình thực tế.
 
 Hai động lực trên định hình mục tiêu của khóa luận: không chỉ một mô hình phân đoạn chính xác, mà là một \textit{hệ thống} hỗ trợ tương tác, bền bỉ và minh bạch để thực sự hỗ trợ bác sĩ trong phòng khám.
  
@@ -49,7 +49,7 @@ Luồng xử lý gồm hai bước tuần tự. Bước đầu, ảnh X-quang qu
 \end{equation}
 trong đó $f_{\text{seg}}(\cdot\,;\,\boldsymbol{\theta}_{\text{seg}})$ là mô hình phân đoạn PGA-UNet (tham số $\boldsymbol{\theta}_{\text{seg}}$ học được ở giai đoạn huấn luyện ngoại tuyến), xuất xác suất tổn thương $\in [0,1]$ cho từng pixel; $\mathbf{H}(\mathbf{B}) \in [0,1]^{H \times W}$ là Bản đồ nhiệt câu nhắc tạo từ hộp giới hạn $\mathbf{B}$ (chi tiết tại Mục~\ref{subsec:heatmap}); $\mathbf{1}[\cdot]$ nhị phân hóa xác suất đầu ra theo ngưỡng $0.5$.
 
-Thiết kế này phản ánh triết lý \textit{con người luôn giám sát trong vòng lặp} xuyên suốt cả hai bước: ở bước sàng lọc, mô hình chỉ đề xuất gợi ý còn bác sĩ mới xác nhận quyết định (thiết kế \textit{triage mềm}, không phải bộ chặn tự động loại ảnh mà không cho phép can thiệp); ở bước phân đoạn, bác sĩ trực tiếp cung cấp định hướng không gian qua hộp giới hạn; tri thức lâm sàng của chuyên gia luôn tham gia toàn bộ vòng lặp quyết định, không chỉ riêng bước phân đoạn. Chi tiết kiến trúc PGA-UNet, module sàng lọc hỗ trợ và huấn luyện ngoại tuyến tại Chương~\ref{Chapter3}.
+Thiết kế này tuân thủ nguyên tắc \textit{human-in-the-loop} (con người luôn trong vòng lặp) xuyên suốt cả hai bước: ở bước sàng lọc, mô hình chỉ đề xuất gợi ý còn bác sĩ mới xác nhận quyết định (thiết kế \textit{triage mềm}, không phải bộ chặn tự động loại ảnh mà không cho phép can thiệp); ở bước phân đoạn, bác sĩ trực tiếp cung cấp định hướng không gian qua hộp giới hạn; tri thức lâm sàng của chuyên gia luôn tham gia toàn bộ vòng lặp quyết định, không chỉ riêng bước phân đoạn. Chi tiết kiến trúc PGA-UNet, module sàng lọc hỗ trợ và huấn luyện ngoại tuyến tại Chương~\ref{Chapter3}.
  
 % ------------------------------------------------------------
 \section{Thách thức của bài toán}
@@ -74,7 +74,7 @@ Về khả năng triển khai: Hệ thống cần thời gian phản hồi đủ
 Đóng góp cốt lõi và xuyên suốt của khóa luận là đề xuất kiến trúc PGA-UNet, cụ thể hóa qua ba điểm sau:
 
 \begin{enumerate}
-    \item Biểu diễn câu nhắc dạng Bản đồ nhiệt Gaussian dạng cao nguyên: Khóa luận đề xuất mã hóa hộp giới hạn do bác sĩ vẽ thành một kênh hai chiều liên tục, đồng kích thước với bản đồ đặc trưng, thay vì vector nhúng vị trí rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân truyền thống, cung cấp tín hiệu định hướng có đạo hàm liên tục, tương thích trực tiếp với phép tích chập của CNN, không tạo đạo hàm giả tạo tại đường biên hộp giới hạn.
+    \item Biểu diễn câu nhắc dạng Bản đồ nhiệt Gaussian dạng cao nguyên: Khóa luận đề xuất mã hóa hộp giới hạn do bác sĩ vẽ thành một kênh hai chiều liên tục, đồng kích thước với bản đồ đặc trưng, thay vì vector nhúng vị trí rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân truyền thống, cung cấp tín hiệu định hướng có đạo hàm liên tục, tương thích trực tiếp với phép tích chập của CNN, hạn chế sự biến thiên gradient đột ngột tại đường biên hộp giới hạn.
 
     \item Kiến trúc PGA-UNet điều kiện hóa bởi câu nhắc: Trên nền U-Net, khóa luận đề xuất hai thành phần tích hợp câu nhắc vào cả hai nhánh của mạng:
     \begin{itemize}
