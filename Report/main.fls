@@ -534,6 +534,10 @@ INPUT ./images/arch_pga_unet2d.png
 INPUT ./images/arch_pga_unet2d.png
 INPUT ./images/arch_pga_unet2d.png
 INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vnr7.tfm
+INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
+INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
+INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
+INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vntt12.tfm
 INPUT ./images/pipeline_pga_app_inference.png
 INPUT ./images/pipeline_pga_app_inference.png
 INPUT ./images/pipeline_pga_app_inference.png
@@ -611,10 +615,6 @@ INPUT ./images/qual_overlap_case.png
 INPUT ./images/qual_overlap_case.png
 INPUT ./images/qual_overlap_case.png
 INPUT ./images/qual_overlap_case.png
-INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
-INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
-INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
-INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vntt12.tfm
 INPUT ./images/qual_pipeline_tp.png
 INPUT ./images/qual_pipeline_tp.png
 INPUT ./images/qual_pipeline_tp.png

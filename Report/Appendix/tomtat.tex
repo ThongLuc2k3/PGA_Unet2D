@@ -2,10 +2,10 @@
 
 Khóa luận nghiên cứu và phát triển một hệ thống phân đoạn tương tác ảnh X-quang xương dựa trên câu nhắc trực quan, giúp bác sĩ khoanh vùng tổn thương nhanh và chính xác hơn.
 
-Bài toán: Các mô hình phân đoạn tự động (U-Net, Attention U-Net) không tận dụng được tri thức của bác sĩ nên dễ nhận diện sai trên ảnh X-quang có độ tương phản thấp, trong khi SAM-Med2D lại quá nặng để triển khai thực tế tại cơ sở y tế.
+Bài toán: Các mô hình phân đoạn tự động (U-Net, Attention U-Net) không tận dụng được tri thức của bác sĩ nên dễ nhận diện sai trên ảnh X-quang có độ tương phản thấp, trong khi SAM-Med2D sử dụng kiến trúc nền tảng có quy mô tham số và yêu cầu tài nguyên lớn hơn các mạng CNN chuyên biệt.
 
 Giải pháp: Khóa luận đề xuất PGA-UNet (Prompt-Guided Attention U-Net), kiến trúc CNN hạng nhẹ tích hợp trực tiếp câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa (qua Cổng không gian) lẫn bộ giải mã (qua Cơ chế chú ý có điều kiện). Một mô-đun sàng lọc (EfficientNet-B3) được thêm vào để phân loại ảnh trước khi phân đoạn, tạo thành luồng xử lý hai giai đoạn hoàn chỉnh.
 
-Kết quả: PGA-UNet đạt Dice = 0.8607 trên tập kiểm thử 187 ảnh, vượt trội U-Net (0.4740) và SAM-Med2D đã tinh chỉnh (0.7541) dù ít tham số hơn nhiều lần, và giữ Dice = 0.8423 khi câu nhắc bị lệch tâm. Huấn luyện lại trên bộ dữ liệu độc lập thứ hai (FracAtlas, gãy xương) xác nhận đóng góp của kiến trúc nhất quán xuyên hai miền dữ liệu. Mô-đun sàng lọc đạt AUC-ROC = 0.9421; đánh giá cả luồng xử lý cho thấy hệ thống còn sai số tích lũy cần cải thiện (Pipeline Dice = 0.6763), rõ hơn trên FracAtlas do mô-đun sàng lọc kém tin cậy hơn trên miền dữ liệu mới. Hệ thống đã được tích hợp vào một ứng dụng minh họa quy trình phân đoạn tương tác.
+Kết quả: PGA-UNet đạt Dice = 0.8607 trên tập kiểm thử 187 ảnh, cao hơn U-Net ($0{,}4740$) và SAM-Med2D đã tinh chỉnh ($0{,}7541$), trong khi PGA-UNet có khoảng 3 triệu tham số, và giữ Dice = 0.8423 khi câu nhắc bị lệch tâm. Huấn luyện lại trên bộ dữ liệu độc lập thứ hai (FracAtlas, gãy xương) xác nhận đóng góp của kiến trúc nhất quán xuyên hai miền dữ liệu. Mô-đun sàng lọc đạt AUC-ROC = 0.9421; đánh giá cả luồng xử lý cho thấy hệ thống còn sai số tích lũy cần cải thiện (Pipeline Dice = 0.6763), rõ hơn trên FracAtlas do mô-đun sàng lọc kém tin cậy hơn trên miền dữ liệu mới. Luồng xử lý hỗ trợ hai giai đoạn được mô phỏng trên dữ liệu hỗn hợp để minh họa khả năng tích hợp PGA-UNet vào quy trình phân đoạn tương tác.
 
 Từ khóa: Phân đoạn ảnh y khoa, câu nhắc trực quan, X-quang xương, U-Net, phân đoạn tương tác.
