@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  15 JUL 2026 14:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.4.21)  15 JUL 2026 16:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1242,8 +1242,8 @@ l.28
 pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.38 
-      [2] [3] [4] [5] [6] [7]) [8]
+l.37 \newpage
+              [2] [3] [4] [5] [6] [7]) [8]
 \openout2 = `Chapter2/chapter2.aux'.
 
  (./Chapter2/chapter2.tex
@@ -1263,13 +1263,13 @@ Package pdftex.def Info: images/arch_sammed2d.png  used on input line 42.
 <images/arch_unet2d.png, id=721, 867.24pt x 126.4725pt>
 File: images/arch_unet2d.png Graphic file (type png)
 <use images/arch_unet2d.png>
-Package pdftex.def Info: images/arch_unet2d.png  used on input line 71.
+Package pdftex.def Info: images/arch_unet2d.png  used on input line 72.
 (pdftex.def)             Requested size: 409.71692pt x 59.75084pt.
  [12 <./images/arch_unet2d.png (PNG copy)>]
 <images/arch_attention_unet2d.png, id=727, 927.465pt x 302.12875pt>
 File: images/arch_attention_unet2d.png Graphic file (type png)
 <use images/arch_attention_unet2d.png>
-Package pdftex.def Info: images/arch_attention_unet2d.png  used on input line 135.
+Package pdftex.def Info: images/arch_attention_unet2d.png  used on input line 136.
 (pdftex.def)             Requested size: 400.61703pt x 130.50752pt.
  [13] [14 <./images/arch_attention_unet2d.png (PNG copy)>] [15] [16] [17] [18]) [19]
 \openout2 = `Chapter3/chapter3.aux'.
@@ -1304,7 +1304,7 @@ Package microtype Warning: I cannot find a protrusion list for font
 
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 286.
 [25] [26] [27]
-<images/pipeline_pga_app_inference.png, id=856, 596.2275pt x 1007.765pt>
+<images/pipeline_pga_app_inference.png, id=853, 596.2275pt x 1007.765pt>
 File: images/pipeline_pga_app_inference.png Graphic file (type png)
 <use images/pipeline_pga_app_inference.png>
 Package pdftex.def Info: images/pipeline_pga_app_inference.png  used on input line 408.
@@ -1329,103 +1329,95 @@ Underfull \hbox (badness 1215) in paragraph at lines 67--68
  []
 
 [32] [33] [34] [35]
-<images/vis_pga_01.png, id=916, 1424.4417pt x 616.4631pt>
+<images/vis_pga_01.png, id=913, 1424.4417pt x 616.4631pt>
 File: images/vis_pga_01.png Graphic file (type png)
 <use images/vis_pga_01.png>
 Package pdftex.def Info: images/vis_pga_01.png  used on input line 203.
 (pdftex.def)             Requested size: 432.48051pt x 187.16028pt.
  [36 <./images/vis_pga_01.png>] [37]
-<images/chart_sam_comparison_256.png, id=930, 785.93625pt x 463.43138pt>
+<images/chart_sam_comparison_256.png, id=928, 785.93625pt x 463.43138pt>
 File: images/chart_sam_comparison_256.png Graphic file (type png)
 <use images/chart_sam_comparison_256.png>
 Package pdftex.def Info: images/chart_sam_comparison_256.png  used on input line 300.
 (pdftex.def)             Requested size: 341.43307pt x 201.32938pt.
  [38 <./images/chart_sam_comparison_256.png>]
-<images/chart_resolution_btxrd_fracatlas.png, id=938, 1071.0414pt x 549.7338pt>
+<images/chart_resolution_btxrd_fracatlas.png, id=936, 1071.0414pt x 549.7338pt>
 File: images/chart_resolution_btxrd_fracatlas.png Graphic file (type png)
 <use images/chart_resolution_btxrd_fracatlas.png>
 Package pdftex.def Info: images/chart_resolution_btxrd_fracatlas.png  used on input line 373.
 (pdftex.def)             Requested size: 432.48051pt x 221.97829pt.
  [39] [40 <./images/chart_resolution_btxrd_fracatlas.png>]
-<images/qual_robustness_zoom_shift.png, id=950, 1979.395pt x 1814.78pt>
+<images/qual_robustness_zoom_shift.png, id=948, 1979.395pt x 1814.78pt>
 File: images/qual_robustness_zoom_shift.png Graphic file (type png)
 <use images/qual_robustness_zoom_shift.png>
 Package pdftex.def Info: images/qual_robustness_zoom_shift.png  used on input line 388.
 (pdftex.def)             Requested size: 409.71692pt x 375.63217pt.
  [41 <./images/qual_robustness_zoom_shift.png (PNG copy)>] [42] [43] [44] [45]
-<images/chart_ablation.png, id=979, 1431.9096pt x 586.3506pt>
+<images/chart_ablation.png, id=977, 1431.9096pt x 586.3506pt>
 File: images/chart_ablation.png Graphic file (type png)
 <use images/chart_ablation.png>
-Package pdftex.def Info: images/chart_ablation.png  used on input line 505.
+Package pdftex.def Info: images/chart_ablation.png  used on input line 506.
 (pdftex.def)             Requested size: 432.48051pt x 177.09648pt.
  [46 <./images/chart_ablation.png>] [47] [48]
-<images/chart_subcat_baseline_btxrd.png, id=1001, 565.1514pt x 564.6696pt>
+<images/chart_subcat_baseline_btxrd.png, id=999, 565.1514pt x 564.6696pt>
 File: images/chart_subcat_baseline_btxrd.png Graphic file (type png)
 <use images/chart_subcat_baseline_btxrd.png>
-Package pdftex.def Info: images/chart_subcat_baseline_btxrd.png  used on input line 634.
+Package pdftex.def Info: images/chart_subcat_baseline_btxrd.png  used on input line 637.
 (pdftex.def)             Requested size: 227.62206pt x 227.42336pt.
  [49 <./images/chart_subcat_baseline_btxrd.png>]
-<images/qual_subcat_baseline_btxrd.png, id=1010, 1978.39125pt x 1932.21875pt>
+<images/qual_subcat_baseline_btxrd.png, id=1008, 1978.39125pt x 1932.21875pt>
 File: images/qual_subcat_baseline_btxrd.png Graphic file (type png)
 <use images/qual_subcat_baseline_btxrd.png>
-Package pdftex.def Info: images/qual_subcat_baseline_btxrd.png  used on input line 643.
-(pdftex.def)             Requested size: 273.14923pt x 266.7644pt.
+Package pdftex.def Info: images/qual_subcat_baseline_btxrd.png  used on input line 646.
+(pdftex.def)             Requested size: 364.19667pt x 355.68588pt.
  [50 <./images/qual_subcat_baseline_btxrd.png>] [51]
-<images/chart_subcat_pga256_sam256_btxrd.png, id=1021, 785.93625pt x 463.43138pt>
+<images/chart_subcat_pga256_sam256_btxrd.png, id=1019, 785.93625pt x 463.43138pt>
 File: images/chart_subcat_pga256_sam256_btxrd.png Graphic file (type png)
 <use images/chart_subcat_pga256_sam256_btxrd.png>
-Package pdftex.def Info: images/chart_subcat_pga256_sam256_btxrd.png  used on input line 725.
+Package pdftex.def Info: images/chart_subcat_pga256_sam256_btxrd.png  used on input line 728.
 (pdftex.def)             Requested size: 409.71692pt x 241.59384pt.
  [52 <./images/chart_subcat_pga256_sam256_btxrd.png>]
-<images/chart_subcat_pga_resolution_btxrd.png, id=1027, 785.93625pt x 463.43138pt>
+<images/chart_subcat_pga_resolution_btxrd.png, id=1025, 785.93625pt x 463.43138pt>
 File: images/chart_subcat_pga_resolution_btxrd.png Graphic file (type png)
 <use images/chart_subcat_pga_resolution_btxrd.png>
-Package pdftex.def Info: images/chart_subcat_pga_resolution_btxrd.png  used on input line 797.
-(pdftex.def)             Requested size: 409.71692pt x 241.59384pt.
+Package pdftex.def Info: images/chart_subcat_pga_resolution_btxrd.png  used on input line 800.
+(pdftex.def)             Requested size: 364.19667pt x 214.75793pt.
  [53] [54 <./images/chart_subcat_pga_resolution_btxrd.png>] [55] [56]
-<images/chart_fracatlas_ablation.png, id=1048, 1431.9096pt x 586.3506pt>
+<images/chart_fracatlas_ablation.png, id=1046, 1431.9096pt x 586.3506pt>
 File: images/chart_fracatlas_ablation.png Graphic file (type png)
 <use images/chart_fracatlas_ablation.png>
-Package pdftex.def Info: images/chart_fracatlas_ablation.png  used on input line 906.
+Package pdftex.def Info: images/chart_fracatlas_ablation.png  used on input line 909.
 (pdftex.def)             Requested size: 432.48051pt x 177.09648pt.
  [57 <./images/chart_fracatlas_ablation.png>] [58] [59]
-<images/chart_fracatlas_pga256_sam256.png, id=1071, 785.93625pt x 463.43138pt>
+<images/chart_fracatlas_pga256_sam256.png, id=1069, 785.93625pt x 463.43138pt>
 File: images/chart_fracatlas_pga256_sam256.png Graphic file (type png)
 <use images/chart_fracatlas_pga256_sam256.png>
-Package pdftex.def Info: images/chart_fracatlas_pga256_sam256.png  used on input line 1058.
+Package pdftex.def Info: images/chart_fracatlas_pga256_sam256.png  used on input line 1061.
 (pdftex.def)             Requested size: 409.71692pt x 241.59384pt.
  [60 <./images/chart_fracatlas_pga256_sam256.png>]
-<images/chart_fracatlas_pga_resolution.png, id=1077, 785.93625pt x 463.43138pt>
+<images/chart_fracatlas_pga_resolution.png, id=1075, 785.93625pt x 463.43138pt>
 File: images/chart_fracatlas_pga_resolution.png Graphic file (type png)
 <use images/chart_fracatlas_pga_resolution.png>
-Package pdftex.def Info: images/chart_fracatlas_pga_resolution.png  used on input line 1128.
+Package pdftex.def Info: images/chart_fracatlas_pga_resolution.png  used on input line 1131.
 (pdftex.def)             Requested size: 409.71692pt x 241.59384pt.
- [61]
-Overfull \vbox (9.4141pt too high) detected at line 1197
- []
-
-
-Overfull \vbox (6.8002pt too high) detected at line 1197
- []
-
-[62 <./images/chart_fracatlas_pga_resolution.png>] [63] [64] [65]
-<images/qual_overlap_case.png, id=1103, 1978.39125pt x 363.3575pt>
+ [61] [62 <./images/chart_fracatlas_pga_resolution.png>] [63] [64] [65]
+<images/qual_overlap_case.png, id=1101, 1978.39125pt x 363.3575pt>
 File: images/qual_overlap_case.png Graphic file (type png)
 <use images/qual_overlap_case.png>
-Package pdftex.def Info: images/qual_overlap_case.png  used on input line 1244.
+Package pdftex.def Info: images/qual_overlap_case.png  used on input line 1247.
 (pdftex.def)             Requested size: 418.82375pt x 76.92274pt.
  [66 <./images/qual_overlap_case.png>]
-Underfull \hbox (badness 1527) in paragraph at lines 1280--1281
+Underfull \hbox (badness 1527) in paragraph at lines 1283--1284
 []\T5/cmr/m/n/14.4 Gatekeeper sû döng EfficientNet-B3 ^^_÷ñc ti·n hu§n luy»n tr¶n
  []
 
-[67] [68]
-<images/qual_pipeline_tp.png, id=1127, 1978.39125pt x 2369.85374pt>
+[67] [68] [69]
+<images/qual_pipeline_tp.png, id=1130, 1978.39125pt x 2369.85374pt>
 File: images/qual_pipeline_tp.png Graphic file (type png)
 <use images/qual_pipeline_tp.png>
-Package pdftex.def Info: images/qual_pipeline_tp.png  used on input line 1360.
-(pdftex.def)             Requested size: 418.82375pt x 501.69785pt.
- [69] [70 <./images/qual_pipeline_tp.png (PNG copy)>] [71] [72] [73]) [74]
+Package pdftex.def Info: images/qual_pipeline_tp.png  used on input line 1365.
+(pdftex.def)             Requested size: 295.90588pt x 354.45021pt.
+ [70 <./images/qual_pipeline_tp.png (PNG copy)>] [71] [72] [73]) [74]
 \openout2 = `Chapter5/chapter5.aux'.
 
  (./Chapter5/chapter5.tex
@@ -1435,12 +1427,12 @@ ChÆ°Æ¡ng 5.
 
 
 
-] [76] [77]) [78] [79] [80
+] [76] [77]) [78] [79
 
 
 
 
-] [81] [82] (./main.aux (./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux) (./Chapter3/chapter3.aux) (./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux))
+] [80] [81] (./main.aux (./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux) (./Chapter3/chapter3.aux) (./Chapter4/chapter4.aux) (./Chapter5/chapter5.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -1461,18 +1453,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 35472 strings out of 476182
- 666958 string characters out of 5795595
+ 35471 strings out of 476182
+ 666951 string characters out of 5795595
  1964975 words of memory out of 5000000
  56561 multiletter control sequences out of 15000+600000
  584001 words of font info for 95 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,16n,87p,1913b,1496s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1440.600pk> </home/thongluc/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1440.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnbx12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vncsc10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr17.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnr8.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnti10.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vnti12.pfb></home/thongluc/texmf/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (106 pages, 6642702 bytes).
+Output written on main.pdf (105 pages, 6641008 bytes).
 PDF statistics:
- 1381 PDF objects out of 1440 (max. 8388607)
- 1188 compressed objects within 12 object streams
- 309 named destinations out of 1000 (max. 500000)
+ 1375 PDF objects out of 1440 (max. 8388607)
+ 1183 compressed objects within 12 object streams
+ 308 named destinations out of 1000 (max. 500000)
  15537 words of extra memory for PDF output out of 17280 (max. 10000000)
 
