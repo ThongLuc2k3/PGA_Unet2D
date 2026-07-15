@@ -1,11 +1,11 @@
 \chapter*{Tóm tắt khóa luận}
 
-Khóa luận nghiên cứu và phát triển một hệ thống phân đoạn tương tác ảnh X-quang xương dựa trên câu nhắc trực quan, giúp bác sĩ khoanh vùng tổn thương nhanh và chính xác hơn.
+Khóa luận nghiên cứu mô hình phân đoạn tương tác tổn thương xương trên ảnh X-quang nhằm hỗ trợ bác sĩ xác định vùng bất thường. Các mô hình tự động thường gặp khó khăn với tổn thương nhỏ, tương phản thấp hoặc nằm trong vùng giải phẫu chồng lấp; do đó, hộp giới hạn được sử dụng để định hướng quá trình phân đoạn.
 
-Bài toán: Các mô hình phân đoạn tự động (U-Net, Attention U-Net) không tận dụng được tri thức của bác sĩ nên dễ nhận diện sai trên ảnh X-quang có độ tương phản thấp, trong khi SAM-Med2D sử dụng kiến trúc nền tảng có quy mô tham số và yêu cầu tài nguyên lớn hơn các mạng CNN chuyên biệt.
+Khóa luận đề xuất PGA-UNet (\textit{Prompt-Guided Attention U-Net}), một kiến trúc CNN hạng nhẹ với khoảng 3 triệu tham số. Hộp giới hạn được chuyển thành Bản đồ nhiệt câu nhắc dạng cao nguyên có đường biên làm mềm bằng bộ lọc Gaussian. Tín hiệu này được tích hợp vào bộ mã hóa qua Cổng không gian câu nhắc (PSG) và vào bộ giải mã qua Cơ chế chú ý có điều kiện (CAD).
 
-Giải pháp: Khóa luận đề xuất PGA-UNet (Prompt-Guided Attention U-Net), kiến trúc CNN hạng nhẹ tích hợp trực tiếp câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa (qua Cổng không gian) lẫn bộ giải mã (qua Cơ chế chú ý có điều kiện). Một mô-đun sàng lọc (EfficientNet-B3) được thêm vào để phân loại ảnh trước khi phân đoạn, tạo thành luồng xử lý hai giai đoạn hoàn chỉnh.
+Mô hình được đánh giá trên hai bộ dữ liệu BTXRD và FracAtlas thông qua so sánh mô hình cơ sở, nghiên cứu loại bỏ thành phần, đánh giá chéo và các kịch bản câu nhắc sai lệch. Trên BTXRD ở độ phân giải $512\times512$, PGA-UNet đạt Dice $0{,}8607$, so với $0{,}4740$ của U-Net, và duy trì Dice $0{,}8423$ khi câu nhắc bị lệch tâm. Trong so sánh cùng độ phân giải $256\times256$, PGA-UNet đạt Dice $0{,}8433$, cao hơn SAM-Med2D đã tinh chỉnh với $0{,}7541$. Trên FracAtlas, mô hình đạt Dice $0{,}8169$ và tiếp tục thể hiện xu hướng cải thiện tương tự. Nghiên cứu loại bỏ thành phần cho thấy sự kết hợp PSG, CAD và Bản đồ nhiệt câu nhắc giúp tăng tính bền bỉ trước sai lệch câu nhắc.
 
-Kết quả: PGA-UNet đạt Dice = 0.8607 trên tập kiểm thử 187 ảnh, cao hơn U-Net ($0{,}4740$) và SAM-Med2D đã tinh chỉnh ($0{,}7541$), trong khi PGA-UNet có khoảng 3 triệu tham số, và giữ Dice = 0.8423 khi câu nhắc bị lệch tâm. Huấn luyện lại trên bộ dữ liệu độc lập thứ hai (FracAtlas, gãy xương) xác nhận đóng góp của kiến trúc nhất quán xuyên hai miền dữ liệu. Mô-đun sàng lọc đạt AUC-ROC = 0.9421; đánh giá cả luồng xử lý cho thấy hệ thống còn sai số tích lũy cần cải thiện (Pipeline Dice = 0.6763), rõ hơn trên FracAtlas do mô-đun sàng lọc kém tin cậy hơn trên miền dữ liệu mới. Luồng xử lý hỗ trợ hai giai đoạn được mô phỏng trên dữ liệu hỗn hợp để minh họa khả năng tích hợp PGA-UNet vào quy trình phân đoạn tương tác.
+Khóa luận cũng khảo sát luồng xử lý hai giai đoạn bằng cách đặt mô-đun sàng lọc EfficientNet-B3 trước PGA-UNet. Kết quả cho thấy hiệu năng toàn luồng vẫn phụ thuộc vào độ nhạy của mô-đun sàng lọc.
 
-Từ khóa: Phân đoạn ảnh y khoa, câu nhắc trực quan, X-quang xương, U-Net, phân đoạn tương tác.
+\noindent\textbf{Từ khóa:} Phân đoạn ảnh y khoa, phân đoạn tương tác, câu nhắc trực quan, ảnh X-quang xương, PGA-UNet.
