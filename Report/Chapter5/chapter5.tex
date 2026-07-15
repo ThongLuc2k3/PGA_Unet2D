@@ -19,7 +19,7 @@ Nhìn chung, PGA-UNet là kiến trúc phân đoạn tương tác hạng nhẹ, 
 Mặc dù đạt được nhiều kết quả khả quan, hệ thống đề xuất vẫn còn tồn tại một số giới hạn cần được nhìn nhận khách quan:
 
 \begin{itemize}
-    \item Sai số tích lũy luồng xử lý hai giai đoạn: Gatekeeper và PGA-UNet là hai module độc lập nên sai số phân lớp lan truyền sang phân đoạn, kéo hiệu năng đầu cuối xuống đáng kể so với PGA-UNet đơn lẻ (Mục~\ref{sec:ket_luan}), hạn chế cố hữu của kiến trúc hai giai đoạn. Con số này đo kịch bản thận trọng nhất chưa qua xác nhận bác sĩ; trong thiết kế triage mềm thực tế (Mục~\ref{sec:tong_the}, Chương~\ref{Chapter3}), rủi ro này được giảm nhẹ nhưng chưa được đánh giá đầy đủ.
+    \item Sai số tích lũy luồng xử lý hai giai đoạn: Gatekeeper và PGA-UNet là hai module độc lập nên sai số phân lớp lan truyền sang phân đoạn, kéo hiệu năng đầu cuối xuống đáng kể so với PGA-UNet đơn lẻ (Mục~\ref{subsec:cascading_error}, Chương~\ref{Chapter4}), hạn chế cố hữu của kiến trúc hai giai đoạn. Con số này đo kịch bản thận trọng nhất chưa qua xác nhận bác sĩ; trong thiết kế triage mềm thực tế (Mục~\ref{sec:tong_the}, Chương~\ref{Chapter3}), rủi ro này được giảm nhẹ nhưng chưa được đánh giá đầy đủ.
 
     \item Hạn chế của thông tin không gian 2D: Ảnh X-quang là hình chiếu 2D của cấu trúc xương 3D; chồng lấp khớp xương dày đặc đôi khi gây nhiễu tín hiệu, và hộp giới hạn dù chuyển thành Bản đồ nhiệt Gaussian vẫn là ước lượng viền thô, khó khăn với tổn thương hình dáng kéo dài hoặc phân nhánh phức tạp.
 
