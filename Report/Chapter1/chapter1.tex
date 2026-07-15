@@ -24,20 +24,17 @@ Phân đoạn dựa trên câu nhắc tạo ra một hướng kết hợp giữa
 
 \subsection{Động lực khoa học}
 
-Trong cấu hình phân đoạn hoàn toàn tự động, mô hình chỉ nhận ảnh đầu vào và phải đồng thời xác định vị trí, loại bỏ nhiễu nền và khôi phục đường biên tổn thương. Nhiệm vụ này đặc biệt khó đối với ảnh X-quang xương vì đây là ảnh chiếu hai chiều của cấu trúc ba chiều, thường xuất hiện hiện tượng xương chồng lấp, độ tương phản không đồng đều và vùng tổn thương có kích thước nhỏ.
+Trong cấu hình phân đoạn tự động, việc định vị tổn thương trên ảnh X-quang xương rất phức tạp do cấu trúc giải phẫu chồng lấp và độ tương phản thấp. Phân đoạn tương tác giúp giảm bớt khó khăn này bằng cách cho phép người dùng cung cấp thông tin không gian. Tuy nhiên, nếu câu nhắc chỉ được ghép với ảnh tại đầu vào, tín hiệu định hướng dễ bị suy giảm qua các tầng mạng tích chập. Vì vậy, động lực khoa học đầu tiên là cần nghiên cứu cơ chế tích hợp sâu nhằm duy trì ảnh hưởng của câu nhắc xuyên suốt cả bộ mã hóa và bộ giải mã.
 
-Phân đoạn tương tác giảm độ khó của bước định vị bằng cách cho phép người dùng cung cấp thông tin không gian. Tuy nhiên, hiệu quả của mô hình không chỉ phụ thuộc vào dạng câu nhắc mà còn phụ thuộc vào cách tín hiệu này được tích hợp vào mạng. Nếu câu nhắc chỉ được ghép với ảnh tại đầu vào, thông tin định hướng có thể thay đổi hoặc suy giảm qua nhiều tầng tích chập. Vì vậy, cần nghiên cứu cơ chế duy trì ảnh hưởng của câu nhắc tại cả bộ mã hóa và bộ giải mã.
-
-Một yêu cầu khác là tính bền bỉ trước sai lệch câu nhắc. Hộp giới hạn trong thực tế không phải lúc nào cũng bao sát tổn thương: hộp có thể rộng hơn cần thiết, bị lệch tâm hoặc chỉ bao phủ một phần vùng mục tiêu. Mô hình phụ thuộc cứng vào đường biên hoặc tâm hộp có thể suy giảm đáng kể khi thao tác của người dùng không hoàn hảo.
+Một yêu cầu thiết yếu khác là tính bền bỉ của mô hình trước các sai lệch thao tác. Trong thực tế, hộp giới hạn do bác sĩ cung cấp không phải lúc nào cũng bao sát hoàn hảo mà có thể quá rộng hoặc bị lệch tâm. Nếu kiến trúc phụ thuộc cứng vào đường biên hộp, độ chính xác sẽ suy giảm đáng kể. Do đó, hệ thống cần một cơ chế biểu diễn và tiếp nhận câu nhắc linh hoạt hơn để đảm bảo hiệu năng phân đoạn luôn ổn định dù thao tác của người dùng không hoàn toàn chính xác.
 
 \subsection{Động lực thực tiễn}
 
-Các mô hình nền tảng dựa trên Transformer có khả năng phân đoạn linh hoạt nhưng thường có số lượng tham số và chi phí tính toán lớn. Điều này có thể gây khó khăn khi triển khai trên phần cứng có tài nguyên hạn chế hoặc khi cần thời gian phản hồi ngắn trong quá trình tương tác.
+Các mô hình nền tảng Transformer tuy linh hoạt nhưng đòi hỏi tài nguyên tính toán lớn, gây khó khăn khi triển khai trên phần cứng y tế và làm chậm thời gian phản hồi tương tác. Thay vào đó, một kiến trúc CNN hạng nhẹ nhận trực tiếp hộp giới hạn sẽ khả thi hơn trong thực tế. Bác sĩ chỉ cần khoanh vùng sơ bộ; nếu kết quả chưa sát, có thể điều chỉnh hộp giới hạn và mô hình sẽ chạy lại suy luận ngay lập tức. 
 
-Một kiến trúc CNN hạng nhẹ, nhận trực tiếp hộp giới hạn và trả về mặt nạ sau một lượt suy luận, có thể phù hợp hơn với yêu cầu này. Người dùng chỉ cần chỉ định vùng nghi ngờ thay vì vẽ chính xác toàn bộ đường biên; nếu kết quả chưa phù hợp, hộp giới hạn có thể được điều chỉnh và mô hình được chạy lại mà không cần cập nhật tham số.
+Từ những động lực khoa học và thực tiễn nêu trên, khóa luận tập trung phát triển một hệ thống phân đoạn ảnh X-quang xương đáp ứng ba tiêu chí cốt lõi: khai thác hiệu quả thông tin hộp giới hạn, duy trì tính bền bỉ trước các sai lệch thao tác và sở hữu một kiến trúc tinh gọn.
 
-Từ các động lực trên, khóa luận tập trung phát triển một mô hình phân đoạn tương tác ảnh X-quang xương có ba đặc điểm: khai thác hiệu quả hộp giới hạn, duy trì tính bền bỉ trước sai lệch câu nhắc và sử dụng kiến trúc gọn nhẹ.
-
+\newpage
 % ------------------------------------------------------------
 \section{Phát biểu bài toán}
 \label{sec:phat_bieu}
@@ -97,13 +94,14 @@ trong đó $f_{\mathrm{PGA}}$ là PGA-UNet,
 $\boldsymbol{\theta}$ là bộ tham số học được và
 $\mathbf{1}[\cdot]$ là phép nhị phân hóa đầu ra xác suất tại ngưỡng 0,5.
 
+\newpage
 Mô hình cần thỏa mãn các yêu cầu sau:
 
 \begin{itemize}
-    \item dự đoán mặt nạ có mức độ chồng lấp cao với nhãn tham chiếu;
-    \item duy trì đường biên và vị trí vùng tổn thương;
-    \item bền bỉ khi hộp giới hạn rộng hơn hoặc bị lệch khỏi vị trí lý tưởng;
-    \item có số lượng tham số và chi phí suy luận phù hợp với quá trình tương tác.
+    \item Dự đoán mặt nạ có mức độ chồng lấp cao với nhãn tham chiếu;
+    \item Duy trì đường biên và vị trí vùng tổn thương;
+    \item Bền bỉ khi hộp giới hạn rộng hơn hoặc bị lệch khỏi vị trí lý tưởng;
+    \item Có số lượng tham số và chi phí suy luận phù hợp với quá trình tương tác.
 \end{itemize}
 
 Trong giai đoạn huấn luyện, hộp giới hạn được tạo từ mặt nạ nhãn gốc và biến đổi theo các kịch bản mô phỏng. Trong giai đoạn suy luận, hộp được cung cấp trực tiếp bởi người dùng. Phạm vi thực nghiệm của khóa luận sử dụng câu nhắc mô phỏng có kiểm soát; việc đánh giá với hộp giới hạn do bác sĩ vẽ trực tiếp được xác định là hướng phát triển tiếp theo.
@@ -120,7 +118,7 @@ Việc xây dựng mô hình phân đoạn tương tác ảnh X-quang xương đ
 \begin{itemize}
     \item \textbf{Dữ liệu và chú thích:}
     Mặt nạ phân đoạn ở cấp độ điểm ảnh tốn nhiều thời gian để xây dựng, trong khi số lượng ảnh bệnh lý có chú thích thường hạn chế. Ngoài ra, một ảnh có thể chứa nhiều vùng tổn thương được biểu diễn bởi các đa giác riêng biệt, đòi hỏi quy trình tiền xử lý và đánh giá nhất quán.
-
+\newpage
     \item \textbf{Đặc điểm ảnh X-quang:}
     Ảnh X-quang có độ tương phản không đồng đều và chứa nhiều cấu trúc giải phẫu chồng lấp. Vùng khối u có thể có hình dạng bất thường, trong khi đường gãy thường nhỏ, mảnh và khó phân biệt với các đường biên xương tự nhiên.
 
@@ -142,7 +140,7 @@ Việc xây dựng mô hình phân đoạn tương tác ảnh X-quang xương đ
     \item \textbf{Biểu diễn hộp giới hạn bằng bản đồ nhiệt dạng cao nguyên.}
 
     Hộp giới hạn được chuyển thành một bản đồ hai chiều có vùng giá trị cao tương đối đồng đều bên trong hộp và đường biên được làm mềm bằng bộ lọc Gaussian. Biểu diễn này duy trì thông tin trên toàn bộ vùng câu nhắc và tạo vùng chuyển tiếp liên tục hơn so với mặt nạ nhị phân. Hiệu quả của biểu diễn Gaussian và nhị phân được đối chiếu bằng nghiên cứu loại bỏ thành phần.
-
+\newpage
     \item \textbf{Tích hợp câu nhắc vào bộ mã hóa bằng PSG.}
 
     Cổng không gian PSG (\textit{Prompt Spatial Gate}) sử dụng bản đồ nhiệt để điều biến đặc trưng tại các tầng mã hóa. Cơ chế cổng nhân có kết nối dư giúp ưu tiên vùng được chỉ định trong khi vẫn duy trì đường truyền của đặc trưng ảnh ban đầu.
@@ -161,7 +159,7 @@ Việc xây dựng mô hình phân đoạn tương tác ảnh X-quang xương đ
 \end{enumerate}
 
 Trong các nội dung trên, đóng góp kỹ thuật trọng tâm nằm ở sự phối hợp giữa biểu diễn câu nhắc, PSG và CAD. Hiệu quả của từng thành phần được kiểm chứng định lượng tại Chương~\ref{Chapter4}.
-
+\newpage
 % ------------------------------------------------------------
 \section{Phạm vi nghiên cứu}
 \label{sec:pham_vi}
@@ -180,7 +178,7 @@ Khóa luận giới hạn trong phạm vi sau:
 \end{itemize}
 
 Kết quả của khóa luận phản ánh hiệu năng kỹ thuật trong điều kiện thực nghiệm có kiểm soát, không được sử dụng để đưa ra kết luận chẩn đoán hoặc khẳng định mức độ sẵn sàng triển khai lâm sàng.
-
+\newpage
 % ------------------------------------------------------------
 \section{Bố cục khóa luận}
 \label{sec:bo_cuc}
