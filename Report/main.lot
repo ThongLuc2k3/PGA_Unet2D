@@ -5,19 +5,19 @@
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố hai bộ dữ liệu dùng trong thực nghiệm}}{32}{table.4.1}%
 \contentsline {table}{\numberline {4.2}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên BTXRD ở độ phân giải $512\times 512$ (N=187~ảnh)}}{35}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên FracAtlas ở độ phân giải $512\times 512$ (N=72~ảnh)}}{35}{table.4.3}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên FracAtlas ở độ phân giải $512\times 512$ (N=72~ảnh)}}{36}{table.4.3}%
 \contentsline {table}{\numberline {4.4}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên BTXRD ở độ phân giải $256\times 256$ (N=187~ảnh)}}{37}{table.4.4}%
 \contentsline {table}{\numberline {4.5}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên FracAtlas ở độ phân giải $256\times 256$ (N=72~ảnh)}}{37}{table.4.5}%
 \contentsline {table}{\numberline {4.6}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trên BTXRD (N=187~ảnh)}}{39}{table.4.6}%
 \contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trên FracAtlas (N=72~ảnh)}}{39}{table.4.7}%
 \contentsline {table}{\numberline {4.8}{\ignorespaces Kết quả nghiên cứu loại bỏ thành phần trên BTXRD trong ba kịch bản câu nhắc (N=187~ảnh)}}{43}{table.4.8}%
-\contentsline {table}{\numberline {4.9}{\ignorespaces Dice Score từng fold trong đánh giá chéo 4-fold PGA-UNet (kịch bản Bao trọn / Lệch tâm / Hỗn hợp)}}{47}{table.4.9}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Dice Score từng Phân vùng trong đánh giá chéo 4-fold PGA-UNet (kịch bản Bao trọn / Lệch tâm / Hỗn hợp)}}{47}{table.4.9}%
 \contentsline {table}{\numberline {4.10}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}}{47}{table.4.10}%
 \contentsline {table}{\numberline {4.11}{\ignorespaces So sánh PGA-UNet với U-Net theo mức hiệu năng của U-Net trên BTXRD (50 ảnh/nhóm)}}{49}{table.4.11}%
 \contentsline {table}{\numberline {4.12}{\ignorespaces So sánh PGA-UNet với SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{51}{table.4.12}%
-\contentsline {table}{\numberline {4.13}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{52}{table.4.13}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{53}{table.4.13}%
 \contentsline {table}{\numberline {4.14}{\ignorespaces Kết quả nghiên cứu loại bỏ thành phần trên FracAtlas trong ba kịch bản câu nhắc (N=72~ảnh)}}{55}{table.4.14}%
-\contentsline {table}{\numberline {4.15}{\ignorespaces Dice của PGA-UNet trên từng fold của FracAtlas trong ba kịch bản câu nhắc}}{58}{table.4.15}%
+\contentsline {table}{\numberline {4.15}{\ignorespaces Dice của PGA-UNet trên từng Phân vùng của FracAtlas trong ba kịch bản câu nhắc}}{58}{table.4.15}%
 \contentsline {table}{\numberline {4.16}{\ignorespaces Kết quả trung bình của kiểm định chéo 4-fold trên FracAtlas}}{58}{table.4.16}%
 \contentsline {table}{\numberline {4.17}{\ignorespaces So sánh PGA-UNet với SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên FracAtlas (Bao trọn, 24 ảnh/nhóm)}}{59}{table.4.17}%
 \contentsline {table}{\numberline {4.18}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên FracAtlas (Bao trọn, 24 ảnh/nhóm)}}{61}{table.4.18}%
@@ -25,5 +25,5 @@
 \contentsline {table}{\numberline {4.20}{\ignorespaces Kết quả phân loại của Gatekeeper trên BTXRD}}{68}{table.4.20}%
 \contentsline {table}{\numberline {4.21}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên BTXRD}}{69}{table.4.21}%
 \contentsline {table}{\numberline {4.22}{\ignorespaces Kết quả phân loại của Gatekeeper trên FracAtlas}}{71}{table.4.22}%
-\contentsline {table}{\numberline {4.23}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên FracAtlas}}{73}{table.4.23}%
+\contentsline {table}{\numberline {4.23}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên FracAtlas}}{72}{table.4.23}%
 \addvspace {10\p@ }

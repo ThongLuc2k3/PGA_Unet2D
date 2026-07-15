@@ -13,7 +13,7 @@ Chụp X-quang là một phương thức chẩn đoán hình ảnh phổ biến,
 
 Trong phân tích ảnh y khoa, phân đoạn có nhiệm vụ xác định vùng tổn thương ở cấp độ điểm ảnh. Mặt nạ phân đoạn có thể hỗ trợ quan sát hình dạng, ước lượng kích thước và theo dõi sự thay đổi của vùng bất thường. Tuy nhiên, việc khoanh vùng thủ công đòi hỏi thao tác chi tiết và kết quả có thể phụ thuộc vào kinh nghiệm của người thực hiện, đặc biệt khi tổn thương có độ tương phản thấp hoặc nằm tại vùng giải phẫu chồng lấp.
 
-Sự phát triển của học sâu đã tạo ra nhiều phương pháp hỗ trợ tự động hóa quá trình này. U-Net~\cite{ronneberger2015unet} và các biến thể đạt kết quả tích cực trên nhiều bài toán phân đoạn ảnh y khoa. Gần đây, Segment Anything Model (SAM)~\cite{2023-SAM-Kirillov} và các mô hình thích nghi cho ảnh y khoa như SAM-Med2D~\cite{2023-SAMMed2D-Cheng} mở rộng hướng phân đoạn dựa trên câu nhắc trực quan, trong đó người dùng cung cấp điểm, hộp giới hạn hoặc mặt nạ thô để xác định vùng cần xử lý.
+Sự phát triển của học sâu đã tạo ra nhiều phương pháp hỗ trợ tự động hóa quá trình này. U-Net~\cite{ronneberger2015unet} và các biến thể đạt kết quả tích cực trên nhiều bài toán phân đoạn ảnh y khoa. Gần đây, Segment Anything Model (SAM)~\cite{2023-SAM-Kirillov} và các mô hình thích nghi cho ảnh y khoa như SAM-Med2D~\cite{2023-SAMMed2D-Cheng} mở rộng hướng phân đoạn dựa trên câu nhắc trực quan, trong đó người dùng cung cấp điểm, hộp giới hạn để xác định vùng cần xử lý.
 
 Phân đoạn dựa trên câu nhắc tạo ra một hướng kết hợp giữa khả năng định vị của con người và khả năng phân đoạn ở cấp độ điểm ảnh của mô hình. Thay vì yêu cầu mô hình tự động tìm mọi vùng bất thường trên toàn ảnh, người dùng có thể cung cấp một hộp giới hạn sơ bộ, còn mô hình thực hiện phần khoanh đường biên chi tiết.
 

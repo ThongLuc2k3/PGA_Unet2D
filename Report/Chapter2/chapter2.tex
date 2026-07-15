@@ -63,8 +63,7 @@ Từ đó, khóa luận hướng đến một kiến trúc CNN hạng nhẹ có 
 
 U-Net~\cite{ronneberger2015unet} là mạng nơ-ron tích chập có cấu trúc đối xứng hình chữ U, gồm bộ mã hóa, bộ giải mã và các kết nối tắt.
 
-Bộ mã hóa thực hiện các phép tích chập và giảm mẫu để tăng dần phạm vi tiếp nhận, qua đó trích xuất đặc trưng từ mức cục bộ đến mức ngữ nghĩa. Khi độ phân giải giảm, số kênh đặc trưng thường tăng để mô hình biểu diễn thông tin phức tạp hơn.
-
+Bộ mã hóa thực hiện các phép tích chập và giảm mẫu để tăng dần phạm vi tiếp nhận, qua đó trích xuất đặc trưng từ mức cục bộ đến mức ngữ nghĩa. Khi độ phân giải không gian giảm, số kênh đặc trưng thường được tăng để mô hình biểu diễn thông tin ở mức trừu tượng cao hơn.
 Bộ giải mã tăng dần độ phân giải của đặc trưng và kết hợp chúng với đặc trưng tương ứng từ bộ mã hóa. Các kết nối tắt giúp khôi phục thông tin vị trí bị mất trong quá trình giảm mẫu, đặc biệt hữu ích đối với bài toán phân đoạn yêu cầu dự đoán ở cấp độ điểm ảnh.
 
 \begin{figure}[htbp]
