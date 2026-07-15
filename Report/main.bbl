@@ -17,7 +17,7 @@
 \endgroup
 
 \datalist[entry]{none/global//global/global/global}
-  \entry{cuh2024xray}{misc}{}{}
+  \entry{cuh2024xray}{online}{}{}
     \name{author}{1}{}{%
       {{hash=C}{%
          family={{Cambridge University Hospitals NHS Foundation Trust}},
@@ -32,10 +32,9 @@
     \verb{url}
     \verb https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/
     \endverb
-    \field{year}{2024}
-    \field{urlday}{01}
-    \field{urlmonth}{01}
-    \field{urlyear}{2025}
+    \field{urlday}{15}
+    \field{urlmonth}{07}
+    \field{urlyear}{2026}
   \endentry
 
   \entry{ronneberger2015unet}{inproceedings}{}{}
@@ -66,100 +65,110 @@
     \strng{fullhash}{ROFPBT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention (MICCAI)}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2015}
     \verb{doi}
     \verb 10.1007/978-3-319-24574-4_28
     \endverb
     \field{pages}{234\bibrangedash 241}
+    \field{series}{Lecture Notes in Computer Science}
     \field{title}{{U-Net: Convolutional Networks for Biomedical Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1007/978-3-319-24574-4_28
+    \endverb
+    \field{volume}{9351}
     \field{year}{2015}
   \endentry
 
-  \entry{oktay2018attentionunet}{inproceedings}{}{}
+  \entry{2023-SAM-Kirillov}{inproceedings}{}{}
     \name{author}{12}{}{%
-      {{hash=OO}{%
-         family={Oktay},
-         familyi={O\bibinitperiod},
-         given={Ozan},
-         giveni={O\bibinitperiod},
+      {{hash=KA}{%
+         family={Kirillov},
+         familyi={K\bibinitperiod},
+         given={Alexander},
+         giveni={A\bibinitperiod},
       }}%
-      {{hash=SJ}{%
-         family={Schlemper},
-         familyi={S\bibinitperiod},
-         given={Jo},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=FLL}{%
-         family={Folgoc},
-         familyi={F\bibinitperiod},
-         given={Loic\bibnamedelima Le},
-         giveni={L\bibinitperiod\bibinitdelim L\bibinitperiod},
-      }}%
-      {{hash=LM}{%
-         family={Lee},
-         familyi={L\bibinitperiod},
-         given={Matthew},
-         giveni={M\bibinitperiod},
-      }}%
-      {{hash=HM}{%
-         family={Heinrich},
-         familyi={H\bibinitperiod},
-         given={Mattias},
-         giveni={M\bibinitperiod},
-      }}%
-      {{hash=MK}{%
-         family={Misawa},
+      {{hash=ME}{%
+         family={Mintun},
          familyi={M\bibinitperiod},
-         given={Kazunari},
-         giveni={K\bibinitperiod},
+         given={Eric},
+         giveni={E\bibinitperiod},
       }}%
-      {{hash=MK}{%
-         family={Mori},
-         familyi={M\bibinitperiod},
-         given={Kensaku},
-         giveni={K\bibinitperiod},
+      {{hash=RN}{%
+         family={Ravi},
+         familyi={R\bibinitperiod},
+         given={Nikhila},
+         giveni={N\bibinitperiod},
       }}%
-      {{hash=MS}{%
-         family={McDonagh},
+      {{hash=MH}{%
+         family={Mao},
          familyi={M\bibinitperiod},
-         given={Steven},
+         given={Hanzi},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=RC}{%
+         family={Rolland},
+         familyi={R\bibinitperiod},
+         given={Chloe},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=GL}{%
+         family={Gustafson},
+         familyi={G\bibinitperiod},
+         given={Laura},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=XT}{%
+         family={Xiao},
+         familyi={X\bibinitperiod},
+         given={Tegan},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=WS}{%
+         family={Whitehead},
+         familyi={W\bibinitperiod},
+         given={Spencer},
          giveni={S\bibinitperiod},
       }}%
-      {{hash=HNY}{%
-         family={Hammerla},
-         familyi={H\bibinitperiod},
-         given={Nils\bibnamedelima Y.},
-         giveni={N\bibinitperiod\bibinitdelim Y\bibinitperiod},
+      {{hash=BAC}{%
+         family={Berg},
+         familyi={B\bibinitperiod},
+         given={Alexander\bibnamedelima C.},
+         giveni={A\bibinitperiod\bibinitdelim C\bibinitperiod},
       }}%
-      {{hash=KB}{%
-         family={Kainz},
-         familyi={K\bibinitperiod},
-         given={Bernhard},
-         giveni={B\bibinitperiod},
+      {{hash=LWY}{%
+         family={Lo},
+         familyi={L\bibinitperiod},
+         given={Wan-Yen},
+         giveni={W\bibinithyphendelim Y\bibinitperiod},
       }}%
-      {{hash=GB}{%
-         family={Glocker},
+      {{hash=DP}{%
+         family={Doll{\'a}r},
+         familyi={D\bibinitperiod},
+         given={Piotr},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=GR}{%
+         family={Girshick},
          familyi={G\bibinitperiod},
-         given={Ben},
-         giveni={B\bibinitperiod},
-      }}%
-      {{hash=RD}{%
-         family={Rueckert},
-         familyi={R\bibinitperiod},
-         given={Daniel},
-         giveni={D\bibinitperiod},
+         given={Ross},
+         giveni={R\bibinitperiod},
       }}%
     }
-    \strng{namehash}{OOSJFLL+1}
-    \strng{fullhash}{OOSJFLLLMHMMKMKMSHNYKBGBRD1}
+    \strng{namehash}{KAMERN+1}
+    \strng{fullhash}{KAMERNMHRCGLXTWSBACLWYDPGR1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Medical Imaging with Deep Learning (MIDL)}
-    \field{title}{{Attention U-Net: Learning Where to Look for the Pancreas}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1804.03999
+    \field{booktitle}{Proceedings of the IEEE/CVF International Conference on Computer Vision}
+    \verb{doi}
+    \verb 10.1109/ICCV51070.2023.00371
     \endverb
-    \field{year}{2018}
+    \field{pages}{4015\bibrangedash 4026}
+    \field{title}{{Segment Anything}}
+    \verb{url}
+    \verb https://openaccess.thecvf.com/content/ICCV2023/html/Kirillov_Segmen
+    \verb t_Anything_ICCV_2023_paper.html
+    \endverb
+    \field{year}{2023}
   \endentry
 
   \entry{2023-SAMMed2D-Cheng}{article}{}{}
@@ -259,12 +268,115 @@
     \strng{fullhash}{CJYJDZCJLTWHSYHZCJJLSHHJZSZMQY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.48550/arXiv.2308.16184
+    \endverb
+    \verb{eprint}
+    \verb 2308.16184
+    \endverb
     \field{title}{{SAM-Med2D}}
     \verb{url}
     \verb https://arxiv.org/abs/2308.16184
     \endverb
     \field{journaltitle}{arXiv preprint arXiv:2308.16184}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
     \field{year}{2023}
+  \endentry
+
+  \entry{oktay2018attentionunet}{inproceedings}{}{}
+    \name{author}{12}{}{%
+      {{hash=OO}{%
+         family={Oktay},
+         familyi={O\bibinitperiod},
+         given={Ozan},
+         giveni={O\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Schlemper},
+         familyi={S\bibinitperiod},
+         given={Jo},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=FLL}{%
+         family={Folgoc},
+         familyi={F\bibinitperiod},
+         given={Loic\bibnamedelima Le},
+         giveni={L\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=LM}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Matthew},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=HM}{%
+         family={Heinrich},
+         familyi={H\bibinitperiod},
+         given={Mattias},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=MK}{%
+         family={Misawa},
+         familyi={M\bibinitperiod},
+         given={Kazunari},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MK}{%
+         family={Mori},
+         familyi={M\bibinitperiod},
+         given={Kensaku},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MS}{%
+         family={McDonagh},
+         familyi={M\bibinitperiod},
+         given={Steven},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=HNY}{%
+         family={Hammerla},
+         familyi={H\bibinitperiod},
+         given={Nils\bibnamedelima Y.},
+         giveni={N\bibinitperiod\bibinitdelim Y\bibinitperiod},
+      }}%
+      {{hash=KB}{%
+         family={Kainz},
+         familyi={K\bibinitperiod},
+         given={Bernhard},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=GB}{%
+         family={Glocker},
+         familyi={G\bibinitperiod},
+         given={Ben},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=RD}{%
+         family={Rueckert},
+         familyi={R\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{OOSJFLL+1}
+    \strng{fullhash}{OOSJFLLLMHMMKMKMSHNYKBGBRD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Medical Imaging with Deep Learning}
+    \verb{doi}
+    \verb 10.48550/arXiv.1804.03999
+    \endverb
+    \verb{eprint}
+    \verb 1804.03999
+    \endverb
+    \field{title}{{Attention U-Net: Learning Where to Look for the Pancreas}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1804.03999
+    \endverb
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2018}
   \endentry
 
   \entry{wang2019deepigeos}{article}{}{}
@@ -340,181 +452,116 @@
     \strng{fullhash}{WGZMALWPRPPAAMDTDALDJOSVT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2018.2840695
+    \endverb
     \field{number}{7}
     \field{pages}{1559\bibrangedash 1572}
     \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation}}
     \verb{url}
-    \verb https://arxiv.org/abs/1707.00652
+    \verb https://doi.org/10.1109/TPAMI.2018.2840695
     \endverb
     \field{volume}{41}
     \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
     \field{year}{2019}
   \endentry
 
-  \entry{xu2025boundaryaware}{misc}{}{}
-    \name{author}{8}{}{%
-      {{hash=XC}{%
-         family={Xu},
-         familyi={X\bibinitperiod},
-         given={Chenlin},
-         giveni={C\bibinitperiod},
-      }}%
-      {{hash=ZL}{%
-         family={Zhang},
-         familyi={Z\bibinitperiod},
-         given={Lei},
-         giveni={L\bibinitperiod},
-      }}%
-      {{hash=WL}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Lituan},
-         giveni={L\bibinitperiod},
-      }}%
-      {{hash=PX}{%
-         family={Pu},
+  \entry{perez2018film}{inproceedings}{}{}
+    \name{author}{5}{}{%
+      {{hash=PE}{%
+         family={Perez},
          familyi={P\bibinitperiod},
-         given={Xinyu},
-         giveni={X\bibinitperiod},
+         given={Ethan},
+         giveni={E\bibinitperiod},
       }}%
-      {{hash=MP}{%
-         family={Ma},
-         familyi={M\bibinitperiod},
-         given={Pengfei},
-         giveni={P\bibinitperiod},
+      {{hash=SF}{%
+         family={Strub},
+         familyi={S\bibinitperiod},
+         given={Florian},
+         giveni={F\bibinitperiod},
       }}%
-      {{hash=QG}{%
-         family={Qian},
-         familyi={Q\bibinitperiod},
-         given={Guangwu},
-         giveni={G\bibinitperiod},
-      }}%
-      {{hash=WZ}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Zizhou},
-         giveni={Z\bibinitperiod},
-      }}%
-      {{hash=WY}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Yan},
-         giveni={Y\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{XCZLWL+1}
-    \strng{fullhash}{XCZLWLPXMPQGWZWY1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{title}{{Boundary-Aware Test-Time Adaptation for Zero-Shot Medical Image Segmentation}}
-    \verb{url}
-    \verb https://arxiv.org/abs/2512.04520
-    \endverb
-    \field{year}{2025}
-  \endentry
-
-  \entry{yang2025promptmechanisms}{misc}{}{}
-    \name{author}{15}{}{%
-      {{hash=YH}{%
-         family={Yang},
-         familyi={Y\bibinitperiod},
-         given={Hao},
+      {{hash=dVH}{%
+         prefix={de},
+         prefixi={d\bibinitperiod},
+         family={Vries},
+         familyi={V\bibinitperiod},
+         given={Harm},
          giveni={H\bibinitperiod},
       }}%
-      {{hash=LX}{%
-         family={Liang},
-         familyi={L\bibinitperiod},
-         given={Xinlong},
-         giveni={X\bibinitperiod},
-      }}%
-      {{hash=LZ}{%
-         family={Li},
-         familyi={L\bibinitperiod},
-         given={Zhang},
-         giveni={Z\bibinitperiod},
-      }}%
-      {{hash=SY}{%
-         family={Sun},
-         familyi={S\bibinitperiod},
-         given={Yue},
-         giveni={Y\bibinitperiod},
-      }}%
-      {{hash=HZ}{%
-         family={Hu},
-         familyi={H\bibinitperiod},
-         given={Zheyu},
-         giveni={Z\bibinitperiod},
-      }}%
-      {{hash=XX}{%
-         family={Xie},
-         familyi={X\bibinitperiod},
-         given={Xinghe},
-         giveni={X\bibinitperiod},
-      }}%
-      {{hash=DB}{%
-         family={Dashtbozorg},
+      {{hash=DV}{%
+         family={Dumoulin},
          familyi={D\bibinitperiod},
-         given={Behdad},
-         giveni={B\bibinitperiod},
+         given={Vincent},
+         giveni={V\bibinitperiod},
       }}%
-      {{hash=HJ}{%
-         family={Huang},
-         familyi={H\bibinitperiod},
-         given={Jincheng},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=ZS}{%
-         family={Zhu},
-         familyi={Z\bibinitperiod},
-         given={Shiwei},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=HL}{%
-         family={Han},
-         familyi={H\bibinitperiod},
-         given={Luyi},
-         giveni={L\bibinitperiod},
-      }}%
-      {{hash=ZJ}{%
-         family={Zhang},
-         familyi={Z\bibinitperiod},
-         given={Jiong},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=WS}{%
-         family={Wang},
-         familyi={W\bibinitperiod},
-         given={Shanshan},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=MR}{%
-         family={Mann},
-         familyi={M\bibinitperiod},
-         given={Ritse},
-         giveni={R\bibinitperiod},
-      }}%
-      {{hash=YQ}{%
-         family={Yu},
-         familyi={Y\bibinitperiod},
-         given={Qifeng},
-         giveni={Q\bibinitperiod},
-      }}%
-      {{hash=TT}{%
-         family={Tan},
-         familyi={T\bibinitperiod},
-         given={Tao},
-         giveni={T\bibinitperiod},
+      {{hash=CA}{%
+         family={Courville},
+         familyi={C\bibinitperiod},
+         given={Aaron},
+         giveni={A\bibinitperiod},
       }}%
     }
-    \strng{namehash}{YHLXLZ+1}
-    \strng{fullhash}{YHLXLZSYHZXXDBHJZSHLZJWSMRYQTT1}
+    \strng{namehash}{PESFVHd+1}
+    \strng{fullhash}{PESFVHdDVCA1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{title}{{Prompt Mechanisms in Medical Imaging: A Comprehensive Survey}}
-    \verb{url}
-    \verb https://arxiv.org/abs/2507.01055
+    \field{booktitle}{Proceedings of the AAAI Conference on Artificial Intelligence}
+    \verb{doi}
+    \verb 10.1609/aaai.v32i1.11671
     \endverb
-    \field{year}{2025}
+    \field{number}{1}
+    \field{pages}{3942\bibrangedash 3951}
+    \field{title}{{FiLM: Visual Reasoning with a General Conditioning Layer}}
+    \verb{url}
+    \verb https://ojs.aaai.org/index.php/AAAI/article/view/11671
+    \endverb
+    \field{volume}{32}
+    \field{year}{2018}
+  \endentry
+
+  \entry{park2019spade}{inproceedings}{}{}
+    \name{author}{4}{}{%
+      {{hash=PT}{%
+         family={Park},
+         familyi={P\bibinitperiod},
+         given={Taesung},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=LMY}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Ming-Yu},
+         giveni={M\bibinithyphendelim Y\bibinitperiod},
+      }}%
+      {{hash=WTC}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Ting-Chun},
+         giveni={T\bibinithyphendelim C\bibinitperiod},
+      }}%
+      {{hash=ZJY}{%
+         family={Zhu},
+         familyi={Z\bibinitperiod},
+         given={Jun-Yan},
+         giveni={J\bibinithyphendelim Y\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{PTLMYWTC+1}
+    \strng{fullhash}{PTLMYWTCZJY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition}
+    \verb{doi}
+    \verb 10.1109/CVPR.2019.00244
+    \endverb
+    \field{pages}{2337\bibrangedash 2346}
+    \field{title}{{Semantic Image Synthesis with Spatially-Adaptive Normalization}}
+    \verb{url}
+    \verb https://openaccess.thecvf.com/content_CVPR_2019/html/Park_Semantic_
+    \verb Image_Synthesis_With_Spatially-Adaptive_Normalization_CVPR_2019_pap
+    \verb er.html
+    \endverb
+    \field{year}{2019}
   \endentry
 
   \entry{btxrd2024}{article}{}{}
@@ -604,9 +651,6 @@
          giveni={J\bibinitperiod},
       }}%
     }
-    \list{publisher}{1}{%
-      {Nature Publishing Group}%
-    }
     \strng{namehash}{YSHYWX+1}
     \strng{fullhash}{YSHYWXZYPICWZCCLWHLDWGILSGYCQSJ1}
     \field{labelnamesource}{author}
@@ -614,8 +658,12 @@
     \verb{doi}
     \verb 10.1038/s41597-024-04311-y
     \endverb
-    \field{pages}{88}
+    \field{eid}{88}
+    \field{number}{1}
     \field{title}{{A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}}
+    \verb{url}
+    \verb https://www.nature.com/articles/s41597-024-04311-y
+    \endverb
     \field{volume}{12}
     \field{journaltitle}{Scientific Data}
     \field{year}{2025}
@@ -635,11 +683,11 @@
          given={Md.\bibnamedelima Ashiqur},
          giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
       }}%
-      {{hash=ZPF}{%
-         family={Zohra\bibnamedelima Prottyasha},
-         familyi={Z\bibinitperiod\bibinitdelim P\bibinitperiod},
-         given={Fatema},
-         giveni={F\bibinitperiod},
+      {{hash=PFZ}{%
+         family={Prottyasha},
+         familyi={P\bibinitperiod},
+         given={Fatema\bibnamedelima Zohra},
+         giveni={F\bibinitperiod\bibinitdelim Z\bibinitperiod},
       }}%
       {{hash=AT}{%
          family={Ahmed},
@@ -660,18 +708,19 @@
          giveni={S\bibinitperiod},
       }}%
     }
-    \list{publisher}{1}{%
-      {Nature Publishing Group}%
-    }
-    \strng{namehash}{AIRMAZPF+1}
-    \strng{fullhash}{AIRMAZPFATCTMSS1}
+    \strng{namehash}{AIRMAPFZ+1}
+    \strng{fullhash}{AIRMAPFZATCTMSS1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \verb{doi}
     \verb 10.1038/s41597-023-02432-4
     \endverb
-    \field{pages}{521}
+    \field{eid}{521}
+    \field{number}{1}
     \field{title}{{FracAtlas: A Dataset for Fracture Classification, Localization and Segmentation of Musculoskeletal Radiographs}}
+    \verb{url}
+    \verb https://www.nature.com/articles/s41597-023-02432-4
+    \endverb
     \field{volume}{10}
     \field{journaltitle}{Scientific Data}
     \field{year}{2023}
@@ -692,16 +741,21 @@
          giveni={Q\bibinitperiod\bibinitdelim V\bibinitperiod},
       }}%
     }
+    \list{publisher}{1}{%
+      {PMLR}%
+    }
     \strng{namehash}{TMLQV1}
     \strng{fullhash}{TMLQV1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{International Conference on Machine Learning (ICML)}
+    \field{booktitle}{Proceedings of the 36th International Conference on Machine Learning}
     \field{pages}{6105\bibrangedash 6114}
+    \field{series}{Proceedings of Machine Learning Research}
     \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}}
     \verb{url}
-    \verb https://arxiv.org/abs/1905.11946
+    \verb https://proceedings.mlr.press/v97/tan19a.html
     \endverb
+    \field{volume}{97}
     \field{year}{2019}
   \endentry
 \enddatalist

@@ -1,127 +1,227 @@
 %%
-%% references.bib — 8 tài liệu, thông tin lấy trực tiếp từ file PDF
+%% references.bib
+%% Tài liệu tham khảo của khóa luận
 %%
 
-% ── Bối cảnh lâm sàng ────────────────────────────────────────────────────────
+% ============================================================================
+% BỐI CẢNH ỨNG DỤNG
+% ============================================================================
 
-@misc{cuh2024xray,
+@online{cuh2024xray,
   author  = {{Cambridge University Hospitals NHS Foundation Trust}},
   title   = {{X-ray -- Imaging \& Radiology}},
-  year    = {2024},
   url     = {https://www.cuh.nhs.uk/our-services/imaging-radiology/x-ray/},
-  urldate = {2025-01-01}
+  urldate = {2026-07-15}
 }
 
-% ── Kiến trúc nền tảng ───────────────────────────────────────────────────────
+
+% ============================================================================
+% KIẾN TRÚC PHÂN ĐOẠN NỀN TẢNG
+% ============================================================================
 
 @inproceedings{ronneberger2015unet,
   author    = {Olaf Ronneberger and Philipp Fischer and Thomas Brox},
   title     = {{U-Net: Convolutional Networks for Biomedical Image Segmentation}},
-  booktitle = {Medical Image Computing and Computer-Assisted Intervention (MICCAI)},
-  year      = {2015},
+  booktitle = {Medical Image Computing and Computer-Assisted Intervention
+               -- MICCAI 2015},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {9351},
   pages     = {234--241},
   publisher = {Springer},
-  doi       = {10.1007/978-3-319-24574-4_28}
+  year      = {2015},
+  doi       = {10.1007/978-3-319-24574-4_28},
+  url       = {https://doi.org/10.1007/978-3-319-24574-4_28}
 }
 
 @inproceedings{oktay2018attentionunet,
-  author    = {Ozan Oktay and Jo Schlemper and Loic Le Folgoc and Matthew Lee
-               and Mattias Heinrich and Kazunari Misawa and Kensaku Mori
-               and Steven McDonagh and Nils Y. Hammerla and Bernhard Kainz
-               and Ben Glocker and Daniel Rueckert},
+  author    = {Ozan Oktay and Jo Schlemper and Loic Le Folgoc
+               and Matthew Lee and Mattias Heinrich and Kazunari Misawa
+               and Kensaku Mori and Steven McDonagh and Nils Y. Hammerla
+               and Bernhard Kainz and Ben Glocker and Daniel Rueckert},
   title     = {{Attention U-Net: Learning Where to Look for the Pancreas}},
-  booktitle = {Medical Imaging with Deep Learning (MIDL)},
+  booktitle = {Medical Imaging with Deep Learning},
   year      = {2018},
+  doi       = {10.48550/arXiv.1804.03999},
+  eprint    = {1804.03999},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
   url       = {https://arxiv.org/abs/1804.03999}
 }
 
-% ── Mô hình so sánh ──────────────────────────────────────────────────────────
+
+% ============================================================================
+% MÔ HÌNH NỀN TẢNG DỰA TRÊN CÂU NHẮC
+% ============================================================================
+
+@inproceedings{2023-SAM-Kirillov,
+  author    = {Alexander Kirillov and Eric Mintun and Nikhila Ravi
+               and Hanzi Mao and Chloe Rolland and Laura Gustafson
+               and Tegan Xiao and Spencer Whitehead and Alexander C. Berg
+               and Wan-Yen Lo and Piotr Doll{\'a}r and Ross Girshick},
+  title     = {{Segment Anything}},
+  booktitle = {Proceedings of the IEEE/CVF International Conference
+               on Computer Vision},
+  pages     = {4015--4026},
+  year      = {2023},
+  doi       = {10.1109/ICCV51070.2023.00371},
+  url       = {https://openaccess.thecvf.com/content/ICCV2023/html/Kirillov_Segment_Anything_ICCV_2023_paper.html}
+}
 
 @article{2023-SAMMed2D-Cheng,
-  author    = {Junlong Cheng and Jin Ye and Zhongying Deng and Jianpin Chen
-               and Tianbin Li and Haoyu Wang and Yanzhou Su and Ziyan Huang
-               and Jilong Chen and Lei Jiang and Hui Sun and Junjun He
-               and Shaoting Zhang and Min Zhu and Yu Qiao},
-  title     = {{SAM-Med2D}},
-  journal   = {arXiv preprint arXiv:2308.16184},
-  year      = {2023},
-  url       = {https://arxiv.org/abs/2308.16184}
+  author  = {Junlong Cheng and Jin Ye and Zhongying Deng and Jianpin Chen
+             and Tianbin Li and Haoyu Wang and Yanzhou Su and Ziyan Huang
+             and Jilong Chen and Lei Jiang and Hui Sun and Junjun He
+             and Shaoting Zhang and Min Zhu and Yu Qiao},
+  title   = {{SAM-Med2D}},
+  journal = {arXiv preprint arXiv:2308.16184},
+  year    = {2023},
+  doi     = {10.48550/arXiv.2308.16184},
+  eprint  = {2308.16184},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url     = {https://arxiv.org/abs/2308.16184}
 }
 
-% ── Khảo sát liên quan (bảo vệ mức claim novelty của PSG/CAD) ─────────────────
+
+% ============================================================================
+% PHÂN ĐOẠN TƯƠNG TÁC
+% ============================================================================
 
 @article{wang2019deepigeos,
-  author    = {Guotai Wang and Maria A. Zuluaga and Wenqi Li and Rosalind Pratt
-               and Premal A. Patel and Michael Aertsen and Tom Doel and Anna L. David
-               and Jan Deprest and Sebastien Ourselin and Tom Vercauteren},
-  title     = {{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation}},
-  journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  author  = {Guotai Wang and Maria A. Zuluaga and Wenqi Li
+             and Rosalind Pratt and Premal A. Patel and Michael Aertsen
+             and Tom Doel and Anna L. David and Jan Deprest
+             and Sebastien Ourselin and Tom Vercauteren},
+  title   = {{DeepIGeoS: A Deep Interactive Geodesic Framework
+              for Medical Image Segmentation}},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume  = {41},
+  number  = {7},
+  pages   = {1559--1572},
+  year    = {2019},
+  doi     = {10.1109/TPAMI.2018.2840695},
+  url     = {https://doi.org/10.1109/TPAMI.2018.2840695}
+}
+
+
+% ============================================================================
+% ĐIỀU BIẾN ĐẶC TRƯNG THEO TÍN HIỆU ĐIỀU KIỆN
+% ============================================================================
+
+@inproceedings{perez2018film,
+  author    = {Ethan Perez and Florian Strub and Harm de Vries
+               and Vincent Dumoulin and Aaron Courville},
+  title     = {{FiLM: Visual Reasoning with a General Conditioning Layer}},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {32},
+  number    = {1},
+  pages     = {3942--3951},
+  year      = {2018},
+  doi       = {10.1609/aaai.v32i1.11671},
+  url       = {https://ojs.aaai.org/index.php/AAAI/article/view/11671}
+}
+
+@inproceedings{park2019spade,
+  author    = {Taesung Park and Ming-Yu Liu and Ting-Chun Wang
+               and Jun-Yan Zhu},
+  title     = {{Semantic Image Synthesis with Spatially-Adaptive Normalization}},
+  booktitle = {Proceedings of the IEEE/CVF Conference
+               on Computer Vision and Pattern Recognition},
+  pages     = {2337--2346},
   year      = {2019},
-  volume    = {41},
-  number    = {7},
-  pages     = {1559--1572},
-  url       = {https://arxiv.org/abs/1707.00652}
+  doi       = {10.1109/CVPR.2019.00244},
+  url       = {https://openaccess.thecvf.com/content_CVPR_2019/html/Park_Semantic_Image_Synthesis_With_Spatially-Adaptive_Normalization_CVPR_2019_paper.html}
 }
 
-@misc{xu2025boundaryaware,
-  author = {Chenlin Xu and Lei Zhang and Lituan Wang and Xinyu Pu and Pengfei Ma
-            and Guangwu Qian and Zizhou Wang and Yan Wang},
-  title  = {{Boundary-Aware Test-Time Adaptation for Zero-Shot Medical Image Segmentation}},
-  year   = {2025},
-  url    = {https://arxiv.org/abs/2512.04520}
+
+% ============================================================================
+% CÁC NGHIÊN CỨU VỀ CƠ CHẾ CÂU NHẮC
+% ============================================================================
+
+@article{xu2025boundaryaware,
+  author  = {Chenlin Xu and Lei Zhang and Lituan Wang and Xinyu Pu
+             and Pengfei Ma and Guangwu Qian and Zizhou Wang and Yan Wang},
+  title   = {{Boundary-Aware Test-Time Adaptation for Zero-Shot
+              Medical Image Segmentation}},
+  journal = {arXiv preprint arXiv:2512.04520},
+  year    = {2025},
+  doi     = {10.48550/arXiv.2512.04520},
+  eprint  = {2512.04520},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url     = {https://arxiv.org/abs/2512.04520}
 }
 
-@misc{yang2025promptmechanisms,
-  author = {Hao Yang and Xinlong Liang and Zhang Li and Yue Sun and Zheyu Hu
-            and Xinghe Xie and Behdad Dashtbozorg and Jincheng Huang and Shiwei Zhu
-            and Luyi Han and Jiong Zhang and Shanshan Wang and Ritse Mann
-            and Qifeng Yu and Tao Tan},
-  title  = {{Prompt Mechanisms in Medical Imaging: A Comprehensive Survey}},
-  year   = {2025},
-  url    = {https://arxiv.org/abs/2507.01055}
+@article{yang2025promptmechanisms,
+  author  = {Hao Yang and Xinlong Liang and Zhang Li and Yue Sun
+             and Zheyu Hu and Xinghe Xie and Behdad Dashtbozorg
+             and Jincheng Huang and Shiwei Zhu and Luyi Han
+             and Jiong Zhang and Shanshan Wang and Ritse Mann
+             and Qifeng Yu and Tao Tan},
+  title   = {{Prompt Mechanisms in Medical Imaging:
+              A Comprehensive Survey}},
+  journal = {arXiv preprint arXiv:2507.01055},
+  year    = {2025},
+  doi     = {10.48550/arXiv.2507.01055},
+  eprint  = {2507.01055},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url     = {https://arxiv.org/abs/2507.01055}
 }
 
-% ── Mô hình phân lớp ─────────────────────────────────────────────────────────
+
+% ============================================================================
+% MÔ HÌNH PHÂN LOẠI
+% ============================================================================
 
 @inproceedings{tan2019efficientnet,
   author    = {Mingxing Tan and Quoc V. Le},
-  title     = {{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}},
-  booktitle = {International Conference on Machine Learning (ICML)},
-  year      = {2019},
+  title     = {{EfficientNet: Rethinking Model Scaling
+                for Convolutional Neural Networks}},
+  booktitle = {Proceedings of the 36th International Conference
+               on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {97},
   pages     = {6105--6114},
-  url       = {https://arxiv.org/abs/1905.11946}
+  year      = {2019},
+  publisher = {PMLR},
+  url       = {https://proceedings.mlr.press/v97/tan19a.html}
 }
 
 
-% ── Bộ dữ liệu ───────────────────────────────────────────────────────────────
+% ============================================================================
+% BỘ DỮ LIỆU
+% ============================================================================
 
 @article{btxrd2024,
-  author    = {Shunhan Yao and Yuanxiang Huang and Xiaoyu Wang
-               and Yiwen Zhang and Ian Costa Paixao and Zhikang Wang
-               and Charla Lu Chai and Hongtao Wang and Dinggui Lu
-               and Geoffrey I. Webb and Shanshan Li and Yuming Guo
-               and Qingfeng Chen and Jiangning Song},
-  title     = {{A Radiograph Dataset for the Classification, Localization,
-               and Segmentation of Primary Bone Tumors}},
-  journal   = {Scientific Data},
-  year      = {2025},
-  volume    = {12},
-  pages     = {88},
-  doi       = {10.1038/s41597-024-04311-y},
-  publisher = {Nature Publishing Group}
+  author  = {Shunhan Yao and Yuanxiang Huang and Xiaoyu Wang
+             and Yiwen Zhang and Ian Costa Paixao and Zhikang Wang
+             and Charla Lu Chai and Hongtao Wang and Dinggui Lu
+             and Geoffrey I. Webb and Shanshan Li and Yuming Guo
+             and Qingfeng Chen and Jiangning Song},
+  title   = {{A Radiograph Dataset for the Classification, Localization,
+              and Segmentation of Primary Bone Tumors}},
+  journal = {Scientific Data},
+  volume  = {12},
+  number  = {1},
+  eid     = {88},
+  year    = {2025},
+  doi     = {10.1038/s41597-024-04311-y},
+  url     = {https://www.nature.com/articles/s41597-024-04311-y}
 }
 
 @article{fracatlas2023,
-  author    = {Abedeen, Iftekharul and Rahman, Md. Ashiqur
-               and Zohra Prottyasha, Fatema and Ahmed, Tasnim
-               and Chowdhury, Tareque Mohmud and Shatabda, Swakkhar},
-  title     = {{FracAtlas: A Dataset for Fracture Classification, Localization
-               and Segmentation of Musculoskeletal Radiographs}},
-  journal   = {Scientific Data},
-  year      = {2023},
-  volume    = {10},
-  pages     = {521},
-  doi       = {10.1038/s41597-023-02432-4},
-  publisher = {Nature Publishing Group}
+  author  = {Iftekharul Abedeen and Md. Ashiqur Rahman
+             and Fatema Zohra Prottyasha and Tasnim Ahmed
+             and Tareque Mohmud Chowdhury and Swakkhar Shatabda},
+  title   = {{FracAtlas: A Dataset for Fracture Classification,
+              Localization and Segmentation
+              of Musculoskeletal Radiographs}},
+  journal = {Scientific Data},
+  volume  = {10},
+  number  = {1},
+  eid     = {521},
+  year    = {2023},
+  doi     = {10.1038/s41597-023-02432-4},
+  url     = {https://www.nature.com/articles/s41597-023-02432-4}
 }
-

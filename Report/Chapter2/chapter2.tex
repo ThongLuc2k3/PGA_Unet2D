@@ -3,198 +3,414 @@
 % ============================================================
 \chapter{CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}
 \label{Chapter2}
- 
-Chương này gồm hai phần. Phần đầu (Mục~\ref{sec:related_work}) khảo sát các công trình liên quan, đặt khóa luận trong bức tranh nghiên cứu hiện tại và làm rõ khoảng trống cần giải quyết. Phần sau (Mục~\ref{sec:cnn}--\ref{sec:metrics}) trình bày cơ sở lý thuyết cần thiết để hiểu kiến trúc và cơ chế hoạt động của hệ thống đề xuất ở Chương~\ref{Chapter3}.
- 
+
+Chương này gồm hai nội dung chính. Phần đầu khảo sát các phương pháp phân đoạn ảnh y khoa tự động, phân đoạn tương tác dựa trên CNN và mô hình nền tảng dựa trên câu nhắc, qua đó xác định khoảng trống nghiên cứu của khóa luận. Phần sau trình bày cơ sở lý thuyết về U-Net, cơ chế chú ý, biểu diễn và tích hợp câu nhắc trực quan, cùng các độ đo được sử dụng để đánh giá mô hình.
+
 % ------------------------------------------------------------
 \section{Các công trình liên quan}
 \label{sec:related_work}
 % ------------------------------------------------------------
- 
-\subsection{Các phương pháp phân đoạn ảnh y khoa tự động}
- 
-Trong phân tích hình ảnh y khoa, kiến trúc U-Net~\cite{ronneberger2015unet} là nền tảng cốt lõi cho nhiều nghiên cứu về sau. Thiết kế mã hóa - giải mã đối xứng kết hợp kết nối tắt cho phép trích xuất đặc trưng ngữ nghĩa nhiều cấp độ đồng thời bảo toàn thông tin vị trí không gian, giúp mô hình đạt hiệu năng khả quan ngay cả khi huấn luyện trên dữ liệu y khoa quy mô nhỏ và thiếu nhãn.
 
-Để tập trung vào vùng đặc trưng quan trọng và giảm nhiễu nền, Attention U-Net~\cite{oktay2018attentionunet} tích hợp Cổng chú ý (Attention Gates) tại các kết nối tắt, cho phép mô hình tự động làm nổi bật khu vực chứa đặc trưng quan trọng và ức chế vùng nhiễu nền trước khi đưa vào bộ giải mã.
+\subsection{Phân đoạn ảnh y khoa tự động}
 
-Tuy nhiên, cả U-Net và Attention U-Net đều có giới hạn chung khi triển khai trên ảnh X-quang xương: phân đoạn hoàn toàn tự động. Mô hình chỉ nhận ảnh thô và phải tự tìm vùng tổn thương, không có thông tin định hướng hay tri thức lâm sàng từ bác sĩ; với ảnh có độ tương phản thấp và cấu trúc xương chồng lấp, cách tiếp cận này khó xác định chính xác vùng tổn thương, nhất là khi mô lành có đặc trưng hình thái tương tự.
- 
-\FloatBarrier
-\subsection{Phương pháp học máy tương tác trong y khoa}
- 
-Để khắc phục hạn chế của các phương pháp tự động, xu hướng nghiên cứu gần đây quan tâm hơn đến phân đoạn có tương tác, cho phép bác sĩ cung cấp tín hiệu định hướng (hộp giới hạn, điểm bấm) để mô hình tập trung đúng vùng cần phân tích.
+U-Net~\cite{ronneberger2015unet} là một trong những kiến trúc nền tảng của phân đoạn ảnh y khoa. Mô hình sử dụng cấu trúc mã hóa--giải mã đối xứng kết hợp các kết nối tắt, cho phép khai thác đặc trưng ngữ nghĩa ở tầng sâu đồng thời duy trì thông tin không gian từ các tầng nông. Thiết kế này đặc biệt phù hợp với dữ liệu y khoa, nơi số lượng ảnh và mặt nạ phân đoạn thường hạn chế.
 
-Đại diện tiêu biểu trong y khoa là SAM-Med2D~\cite{2023-SAMMed2D-Cheng}, mô hình được chọn làm đối sánh trực tiếp trong khóa luận. SAM-Med2D kế thừa kiến trúc Segment Anything Model (SAM) với bộ mã hóa ảnh Vision Transformer (ViT-B, $\sim$91 triệu tham số), tinh chỉnh trên khoảng 4,6 triệu ảnh y khoa 2D đa phương thức bằng chiến lược chèn lớp thích ứng, giữ nguyên phần lớn trọng số nền tảng, chỉ cập nhật tầng thích ứng và bộ giải mã. Mô hình tiếp nhận hộp giới hạn thông qua bộ mã hóa câu nhắc để xuất ra mặt nạ phân đoạn (Hình~\ref{fig:sammed2d_architecture}).
+Attention U-Net~\cite{oktay2018attentionunet} mở rộng U-Net bằng cách bổ sung Cổng chú ý tại các kết nối tắt. Các cổng này học cách tăng trọng số của đặc trưng liên quan đến vùng mục tiêu và giảm ảnh hưởng của vùng ít liên quan trước khi chuyển đặc trưng sang bộ giải mã. Nhờ đó, mô hình có thể tập trung tốt hơn vào cấu trúc cần phân đoạn mà không sử dụng thêm một mạng định vị độc lập.
+
+Tuy nhiên, trong cấu hình nguyên bản, U-Net và Attention U-Net hoạt động hoàn toàn tự động: mô hình chỉ nhận ảnh và phải tự xác định vùng cần phân đoạn. Đối với ảnh X-quang xương có độ tương phản thấp, vùng tổn thương nhỏ hoặc nhiều cấu trúc chồng lấp, việc định vị tự động có thể gặp khó khăn. Kết quả mô hình cũng khó được điều chỉnh theo vùng mà người dùng đang quan tâm tại thời điểm suy luận.
+
+% ------------------------------------------------------------
+\subsection{Phân đoạn tương tác dựa trên CNN}
+
+Phân đoạn tương tác cho phép người dùng cung cấp thông tin bổ sung như điểm bấm, nét vẽ hoặc hộp giới hạn để hướng mô hình đến vùng cần xử lý. Thông tin tương tác thường được chuyển thành một hoặc nhiều bản đồ không gian và đưa vào CNN cùng với ảnh.
+
+DeepIGeoS~\cite{wang2019deepigeos} là một phương pháp tiêu biểu trong phân đoạn ảnh y khoa tương tác. Phương pháp gồm một mạng tạo phân đoạn ban đầu và một mạng tinh chỉnh dựa trên tương tác của người dùng. Các điểm hoặc nét vẽ được chuyển thành bản đồ khoảng cách trắc địa, sau đó ghép với ảnh và kết quả dự đoán trước để sửa những khu vực phân đoạn chưa chính xác.
+
+Các phương pháp thuộc nhóm này cho thấy thao tác người dùng có thể được mã hóa thành bản đồ hai chiều và xử lý trực tiếp bởi CNN. Tuy nhiên, cách ghép bản đồ tương tác tại đầu vào không bảo đảm tín hiệu định hướng được duy trì rõ qua tất cả các tầng của mạng. Đây là cơ sở để nghiên cứu những cơ chế tích hợp câu nhắc sâu hơn vào quá trình mã hóa và giải mã đặc trưng.
+
+% ------------------------------------------------------------
+\subsection{Mô hình nền tảng dựa trên câu nhắc}
+
+Segment Anything Model (SAM)~\cite{2023-SAM-Kirillov} là mô hình nền tảng cho phân đoạn ảnh tự nhiên, hỗ trợ nhiều dạng câu nhắc như điểm, hộp giới hạn và mặt nạ. Kiến trúc gồm bộ mã hóa ảnh, bộ mã hóa câu nhắc và bộ giải mã mặt nạ. Cách tổ chức này cho phép một mô hình thực hiện nhiều tác vụ phân đoạn mà không cần thiết kế lại kiến trúc cho từng loại đối tượng.
+
+Do được huấn luyện chủ yếu trên ảnh tự nhiên, SAM có thể gặp khoảng cách miền khi áp dụng trực tiếp vào ảnh y khoa. SAM-Med2D~\cite{2023-SAMMed2D-Cheng} được phát triển để thích nghi SAM với ảnh y khoa 2D. Mô hình bổ sung các lớp thích ứng vào bộ mã hóa ảnh và được huấn luyện trên tập dữ liệu quy mô lớn gồm khoảng 4,6 triệu ảnh và 19,7 triệu mặt nạ thuộc nhiều phương thức ảnh và cấu trúc giải phẫu.
+
+SAM-Med2D tiếp nhận câu nhắc thông qua bộ mã hóa riêng và kết hợp biểu diễn câu nhắc với đặc trưng ảnh để sinh mặt nạ. Trong khóa luận, hộp giới hạn được sử dụng làm câu nhắc nhằm bảo đảm điều kiện so sánh thống nhất với PGA-UNet.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.88\textwidth]{images/arch_sammed2d.png}
-    \caption{Kiến trúc SAM-Med2D~\cite{2023-SAMMed2D-Cheng} (tham số đóng băng {\color{cyan}$\bullet$}, tham số học được qua lớp thích ứng {\color{orange}$\bullet$}).}
+    \caption{Kiến trúc tổng quát của SAM-Med2D~\cite{2023-SAMMed2D-Cheng}.}
     \label{fig:sammed2d_architecture}
 \end{figure}
 
-Tuy nhiên, SAM-Med2D vẫn có giới hạn triển khai: bộ mã hóa ViT-B $\sim$91M tham số đòi hỏi VRAM cao hơn đáng kể so với CNN hạng nhẹ, và độ phân giải đầu vào cố định $256\times256$ (do vector nhúng vị trí không đổi được) giới hạn khả năng phân đoạn chi tiết trên ảnh X-quang xương vốn cần độ phân giải cao.
+SAM-Med2D có khả năng khai thác kiến thức tiền huấn luyện trên dữ liệu y khoa đa dạng nhưng sử dụng kiến trúc nền tảng có quy mô lớn hơn CNN chuyên biệt. Trong cấu hình thực nghiệm của khóa luận, SAM-Med2D nhận ảnh kích thước $256\times256$, trong khi PGA-UNet được đánh giá ở cả $256\times256$ và $512\times512$. Vì vậy, các thí nghiệm tại cùng độ phân giải được bổ sung ở Chương~\ref{Chapter4} nhằm hạn chế ảnh hưởng của khác biệt kích thước đầu vào.
 
-Khoảng trống nghiên cứu: U-Net và Attention U-Net thiếu hoàn toàn cơ chế tiếp nhận định hướng từ bác sĩ; SAM-Med2D tuy có câu nhắc nhưng kiến trúc ViT-B nặng tài nguyên và giới hạn độ phân giải. Khóa luận lấp đầy khoảng trống đó bằng cách tích hợp câu nhắc trực quan trực tiếp vào kiến trúc CNN hạng nhẹ chuyên biệt cho ảnh X-quang 2D, huấn luyện hoàn toàn từ đầu trên miền dữ liệu đặc thù với chi phí tính toán thấp hơn đáng kể.
- 
 % ------------------------------------------------------------
-\section{Cơ sở lý thuyết nền tảng}
+\subsection{Khoảng trống nghiên cứu}
+
+Các phương pháp được khảo sát có những ưu điểm và giới hạn khác nhau. U-Net và Attention U-Net có kiến trúc gọn nhưng không tiếp nhận câu nhắc trong thiết kế nguyên bản. Các phương pháp tương tác dựa trên CNN có thể sử dụng bản đồ không gian, nhưng thường tích hợp tín hiệu bằng ghép kênh tại đầu vào hoặc tại một giai đoạn tinh chỉnh. SAM-Med2D hỗ trợ nhiều dạng câu nhắc và tận dụng tiền huấn luyện quy mô lớn, nhưng có chi phí tính toán cao hơn các CNN chuyên biệt.
+
+Từ đó, khóa luận hướng đến một kiến trúc CNN hạng nhẹ có khả năng tiếp nhận hộp giới hạn và duy trì thông tin câu nhắc qua cả bộ mã hóa lẫn bộ giải mã. PGA-UNet được đề xuất theo hướng này với ba thành phần chính: bản đồ nhiệt câu nhắc dạng cao nguyên, Cổng không gian tại bộ mã hóa (PSG) và Cơ chế chú ý có điều kiện tại bộ giải mã (CAD). Thiết kế chi tiết được trình bày tại Chương~\ref{Chapter3}.
+
+% ------------------------------------------------------------
+\section{Cơ sở kiến trúc nền tảng}
 \label{sec:cnn}
 % ------------------------------------------------------------
- 
-\subsection{Kiến trúc U-Net và Attention U-Net}
-\label{subsec:unet}
-\label{subsec:attention_unet}
 
-U-Net~\cite{ronneberger2015unet} là kiến trúc mạng nơ-ron tích chập đối xứng hình chữ U cho phân đoạn ảnh y khoa, gồm bộ mã hóa giảm mẫu để trích đặc trưng, bộ giải mã tăng mẫu để khôi phục độ phân giải ảnh gốc, và các kết nối tắt nối trực tiếp đặc trưng cùng cấp độ phân giải giữa hai nhánh nhằm bù đắp thông tin không gian bị mất (Hình~\ref{fig:unet_architecture}).
+\subsection{Kiến trúc U-Net}
+\label{subsec:unet}
+
+U-Net~\cite{ronneberger2015unet} là mạng nơ-ron tích chập có cấu trúc đối xứng hình chữ U, gồm bộ mã hóa, bộ giải mã và các kết nối tắt.
+
+Bộ mã hóa thực hiện các phép tích chập và giảm mẫu để tăng dần phạm vi tiếp nhận, qua đó trích xuất đặc trưng từ mức cục bộ đến mức ngữ nghĩa. Khi độ phân giải giảm, số kênh đặc trưng thường tăng để mô hình biểu diễn thông tin phức tạp hơn.
+
+Bộ giải mã tăng dần độ phân giải của đặc trưng và kết hợp chúng với đặc trưng tương ứng từ bộ mã hóa. Các kết nối tắt giúp khôi phục thông tin vị trí bị mất trong quá trình giảm mẫu, đặc biệt hữu ích đối với bài toán phân đoạn yêu cầu dự đoán ở cấp độ điểm ảnh.
 
 \begin{figure}[htbp]
-\centering
-\includegraphics[width=0.90\textwidth]{images/arch_unet2d.png}
-\caption{Kiến trúc U-Net, 4 cấp độ phân giải.}
-\label{fig:unet_architecture}
+    \centering
+    \includegraphics[width=0.90\textwidth]{images/arch_unet2d.png}
+    \caption{Kiến trúc U-Net với bốn cấp độ phân giải.}
+    \label{fig:unet_architecture}
 \end{figure}
 
-Dù kết nối tắt trong U-Net bảo toàn thông tin không gian hiệu quả, chúng cũng có thể truyền sang bộ giải mã các đặc trưng ít liên quan hoặc nhiễu nền. Cơ chế chú ý được áp dụng để tăng cường vùng ảnh mang thông tin hữu ích và giảm trọng số vùng ít quan trọng cho nhiệm vụ phân đoạn.
+Kết nối tắt giúp bảo toàn thông tin không gian nhưng đồng thời có thể truyền cả đặc trưng ít liên quan hoặc nhiễu nền sang bộ giải mã. Attention U-Net giải quyết một phần hạn chế này bằng cách điều chỉnh đặc trưng tại kết nối tắt trước khi thực hiện phép ghép.
 
-Kiến trúc Attention U-Net~\cite{oktay2018attentionunet} cụ thể hóa cơ chế này bằng cách chèn Cổng chú ý (AG) tại các kết nối tắt. Cổng chú ý nhận hai luồng tín hiệu: bản đồ đặc trưng từ tầng mã hóa $\mathbf{x}^l$ và tín hiệu cổng $\mathbf{g}$ lấy từ tầng sâu hơn của bộ giải mã (chứa thông tin ngữ nghĩa mạnh).
- 
-Hệ số chú ý không gian $\boldsymbol{\alpha}^l \in [0,1]^{H \times W}$ được tính toán như sau:
+% ------------------------------------------------------------
+\subsection{Kiến trúc Attention U-Net}
+\label{subsec:attention_unet}
+
+Attention U-Net~\cite{oktay2018attentionunet} chèn Cổng chú ý tại các kết nối tắt của U-Net. Mỗi cổng nhận đặc trưng
+$\mathbf{x}^{l}$ từ bộ mã hóa và tín hiệu cổng
+$\mathbf{g}^{l}$ từ tầng sâu hơn của bộ giải mã.
+
+Hai đặc trưng được chiếu về cùng không gian trung gian và kết hợp để tạo bản đồ chú ý:
+
 \begin{equation}
-    \boldsymbol{\alpha}^l = \sigma_2 \left( \mathbf{W}_\psi^{\top} \cdot \sigma_1 \left( \mathbf{W}_x\mathbf{x}^l + \mathbf{W}_g\mathbf{g} + \mathbf{b}_g \right) + b_\psi \right)
+    \mathbf{q}^{l}
+    =
+    \boldsymbol{\psi}^{l}
+    \ast
+    \delta
+    \left(
+        \mathbf{W}^{l}_{x}\ast\mathbf{x}^{l}
+        +
+        \mathbf{W}^{l}_{g}\ast\mathbf{g}^{l}
+        +
+        \mathbf{b}^{l}
+    \right),
+    \label{eq:attention_gate_score}
+\end{equation}
+
+trong đó $\delta$ là hàm ReLU,
+$\mathbf{W}^{l}_{x}$ và $\mathbf{W}^{l}_{g}$ là các phép chiếu học được. Hệ số chú ý được xác định bởi:
+
+\begin{equation}
+    \boldsymbol{\alpha}^{l}
+    =
+    \sigma
+    \left(
+        \mathbf{q}^{l}
+    \right),
     \label{eq:attention_gate}
 \end{equation}
-trong đó $\sigma_1$ là hàm kích hoạt ReLU, $\sigma_2$ là hàm Sigmoid, và $\{\mathbf{W}_x, \mathbf{W}_g, \mathbf{W}_\psi, \mathbf{b}_g, b_\psi\}$ là các tham số học được của Cổng chú ý. Bản đồ đặc trưng sau đó được nhân vô hướng với hệ số chú ý để làm nổi bật các khu vực cần thiết: $\hat{\mathbf{x}}^l = \boldsymbol{\alpha}^l \odot \mathbf{x}^l$.
- 
-Nhận xét: Cổng chú ý giúp bộ giải mã tập trung tốt hơn vào vùng tổn thương. Tuy nhiên, tín hiệu cổng g vẫn được trích xuất hoàn toàn từ ảnh đầu vào, nên việc xác định vùng quan tâm chưa có sự hỗ trợ trực tiếp từ định hướng của người dùng. Hạn chế này đòi hỏi một cơ chế điều kiện hóa mạnh hơn từ tri thức chuyên gia, tạo tiền đề cho kiến trúc chú ý có điều kiện dựa trên câu nhắc ở Chương~\ref{Chapter3} (Hình~\ref{fig:attunet_architecture}).
+
+với $\sigma$ là hàm Sigmoid. Đặc trưng tại kết nối tắt được điều chỉnh theo:
+
+\begin{equation}
+    \widehat{\mathbf{x}}^{l}
+    =
+    \boldsymbol{\alpha}^{l}
+    \odot
+    \mathbf{x}^{l},
+    \label{eq:attention_skip}
+\end{equation}
+
+trong đó $\odot$ là phép nhân theo phần tử.
+
+Cổng chú ý cho phép bộ giải mã điều chỉnh lượng thông tin nhận từ bộ mã hóa theo vị trí không gian. Tuy nhiên, cả
+$\mathbf{x}^{l}$ và $\mathbf{g}^{l}$ đều được hình thành từ ảnh đầu vào; cơ chế không nhận trực tiếp thông tin định hướng của người dùng. PGA-UNet mở rộng điểm này bằng cách điều kiện hóa tín hiệu cổng bằng đặc trưng câu nhắc.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.88\textwidth]{images/arch_attention_unet2d.png}
-    \caption{Kiến trúc Attention U-Net: Cổng chú ý (AG) tại các kết nối tắt.}
+    \caption{Kiến trúc Attention U-Net với Cổng chú ý tại các kết nối tắt.}
     \label{fig:attunet_architecture}
 \end{figure}
- 
+
 % ------------------------------------------------------------
-\section{Học máy dựa trên câu nhắc trong thị giác máy tính}
+\section{Biểu diễn và tích hợp câu nhắc trực quan}
 \label{sec:prompt}
 % ------------------------------------------------------------
 
-Khái niệm câu nhắc, phổ biến trong Xử lý ngôn ngữ tự nhiên, đã dần mở rộng sang Thị giác máy tính. Thay vì huấn luyện một mô hình tĩnh giải quyết tác vụ cố định, học máy dựa trên câu nhắc cho phép mô hình linh hoạt điều chỉnh dự đoán theo thông tin định hướng bổ sung (văn bản, điểm ảnh, hộp giới hạn) do người dùng cung cấp ở pha suy luận.
+Câu nhắc trực quan là thông tin bổ sung do người dùng cung cấp để xác định đối tượng hoặc vùng cần phân đoạn. Các dạng câu nhắc phổ biến gồm điểm bấm, nét vẽ, hộp giới hạn và mặt nạ thô. Khóa luận lựa chọn hộp giới hạn vì thao tác này cung cấp đồng thời vị trí và phạm vi tương đối của vùng nghi ngờ nhưng không yêu cầu người dùng vẽ chính xác đường biên ở cấp độ điểm ảnh.
 
-\FloatBarrier
-\subsection{Biểu diễn không gian của câu nhắc trực quan}
+% ------------------------------------------------------------
+\subsection{Biểu diễn không gian của câu nhắc}
 \label{subsec:heatmap}
 
-Trong phần mềm chẩn đoán hình ảnh, thao tác tương tác tự nhiên nhất của chuyên gia y tế là kéo chuột tạo hộp giới hạn bao quanh vùng tổn thương nghi ngờ, định nghĩa bởi tọa độ hai góc đối diện $\mathbf{B} = (x_1, y_1, x_2, y_2)$. Thách thức là mã hóa tọa độ hình học này thành định dạng mà CNN xử lý được đồng thời với ảnh đầu vào.
+Hộp giới hạn được xác định bởi tọa độ hai góc đối diện:
 
-Cách tiếp cận phổ biến là chuyển hộp giới hạn thành Bản đồ nhiệt câu nhắc $\mathbf{H} \in [0,1]^{H \times W}$, cùng độ phân giải không gian với ảnh X-quang. Thay vì mặt nạ nhị phân cứng ($1$ bên trong, $0$ bên ngoài hộp), Bản đồ nhiệt dùng phân phối chuẩn Gaussian hai chiều để biểu diễn mức độ tin cậy không gian.
-
-Tâm hình học của hộp giới hạn là $(\mu_x, \mu_y)$ với $\mu_x = \frac{x_1 + x_2}{2}$, $\mu_y = \frac{y_1 + y_2}{2}$. Phân phối không gian của Bản đồ nhiệt:
 \begin{equation}
-    H(x, y) = \exp \left( - \frac{(x - \mu_x)^2}{2\sigma_x^2} - \frac{(y - \mu_y)^2}{2\sigma_y^2} \right)
+    \mathbf{B}
+    =
+    (x_1,y_1,x_2,y_2).
+\end{equation}
+
+Để xử lý bằng CNN, hộp có thể được chuyển thành bản đồ không gian
+$\mathbf{H}\in[0,1]^{H\times W}$ có cùng kích thước với ảnh đầu vào.
+
+Một cách biểu diễn là phân phối Gaussian hai chiều có tâm tại tâm hình học của hộp:
+
+\begin{equation}
+    \mu_x
+    =
+    \frac{x_1+x_2}{2},
+    \qquad
+    \mu_y
+    =
+    \frac{y_1+y_2}{2}.
+\end{equation}
+
+Giá trị tại vị trí $(x,y)$ được xác định bởi:
+
+\begin{equation}
+    H(x,y)
+    =
+    \exp
+    \left(
+        -
+        \frac{(x-\mu_x)^2}{2\sigma_x^2}
+        -
+        \frac{(y-\mu_y)^2}{2\sigma_y^2}
+    \right),
     \label{eq:gaussian_heatmap}
 \end{equation}
-trong đó $\sigma_x$, $\sigma_y$ là độ lệch chuẩn kiểm soát độ rộng Gaussian theo trục $x$, $y$, thường cấu hình tỉ lệ thuận kích thước hộp giới hạn (ví dụ $\sigma_x = \frac{x_2 - x_1}{4}$, $\sigma_y = \frac{y_2 - y_1}{4}$).
 
-Cách biểu diễn này mang ý nghĩa lâm sàng: $H(x,y)$ đạt cực đại ($1.0$) tại tâm vùng bác sĩ khoanh (độ chắc chắn cao nhất) và giảm mềm mại về phía cạnh, giúp mô hình không bị ép buộc học đường biên sắc nét giả tạo từ nét khoanh tay người dùng, mà coi đó là tín hiệu định hướng không gian hỗ trợ học và suy luận.
+trong đó $\sigma_x$ và $\sigma_y$ điều chỉnh độ phân tán theo hai trục. Bản đồ đạt giá trị lớn nhất tại tâm và giảm dần theo khoảng cách.
 
-Biến thể Bản đồ nhiệt dạng cao nguyên: Khác với phân phối chuẩn Gaussian, biến thể này gán đồng nhất giá trị $1.0$ cho toàn bộ vùng trong hộp giới hạn (vùng cao nguyên phẳng), sau đó làm mềm đường biên bằng bộ lọc Gaussian. Cách này duy trì tín hiệu mạnh, đồng đều trong vùng câu nhắc (không suy giảm về tâm), phù hợp hơn khi kích thước câu nhắc sát kích thước tổn thương. Khóa luận dùng biến thể này (Mục~\ref{sec:pga_unet}); phương trình Gaussian~\eqref{eq:gaussian_heatmap} là nền tảng lý thuyết cho cả hai biến thể.
+Một cách khác là mặt nạ hộp giới hạn nhị phân, trong đó toàn bộ vùng bên trong hộp được gán giá trị 1 và vùng bên ngoài được gán giá trị 0. Biểu diễn này duy trì tín hiệu đồng đều trong hộp nhưng tạo ra thay đổi đột ngột tại đường biên.
 
-Đối trọng với mã hóa vị trí rời rạc: Cách mã hóa câu nhắc thành bản đồ nhiệt 2D nói trên khác biệt về bản chất so với hướng tiếp cận của các mô hình nền tảng dựa trên Transformer như SAM/SAM-Med2D~\cite{2023-SAMMed2D-Cheng}, nơi hộp giới hạn được mã hóa thành vector nhúng vị trí rời rạc rồi kết hợp với đặc trưng ảnh qua cơ chế chú ý. Vector nhúng vị trí gắn với một kích thước lưới đặc trưng cố định, nên khi đổi độ phân giải đầu vào phải tính toán lại toàn bộ phép nhúng, kéo theo ràng buộc độ phân giải cố định của kiến trúc ($256\times256$ ở SAM-Med2D). Ngược lại, bản đồ nhiệt là một kênh không gian 2D cùng độ phân giải với ảnh đầu vào, xử lý trực tiếp bằng phép tích chập giống mọi kênh đặc trưng khác của CNN, nên tương thích tự nhiên với độ phân giải bất kỳ mà bộ mã hóa CNN hỗ trợ, không cần thiết kế lại khi thay đổi kích thước ảnh. Đặc tính này là tiền đề để PGA-UNet vận hành ở $512\times512$ mà không cần thêm module thích ứng (Chương~\ref{Chapter3}).
+PGA-UNet sử dụng dạng kết hợp, gọi là bản đồ nhiệt dạng cao nguyên. Trước tiên, vùng bên trong hộp được gán giá trị 1; sau đó đường biên được làm mềm bằng bộ lọc Gaussian. Cách biểu diễn này duy trì tín hiệu trên toàn bộ vùng được chỉ định và tạo vùng chuyển tiếp liên tục tại đường biên. Công thức và cấu hình cụ thể được trình bày tại Mục~\ref{subsec:plateau_heatmap}, Chương~\ref{Chapter3}.
 
-\FloatBarrier
+So với vector tọa độ hoặc biểu diễn nhúng vị trí, bản đồ nhiệt giữ cấu trúc không gian hai chiều và có thể được thay đổi kích thước bằng nội suy để phù hợp với các mức đặc trưng của CNN. Đặc điểm này cho phép câu nhắc được sử dụng tại nhiều tầng thay vì chỉ tại đầu vào.
+
+% ------------------------------------------------------------
+\subsection{Điều biến đặc trưng theo tín hiệu điều kiện}
+\label{subsec:feature_modulation}
+
+Điều biến đặc trưng là cơ chế thay đổi đặc trưng trung gian dựa trên một tín hiệu điều kiện. Với đặc trưng ảnh $\mathbf{x}$ và điều kiện $\mathbf{z}$, dạng tổng quát có thể được biểu diễn bởi:
+
+\begin{equation}
+    \widetilde{\mathbf{x}}
+    =
+    \boldsymbol{\gamma}(\mathbf{z})
+    \odot
+    \mathbf{x}
+    +
+    \boldsymbol{\beta}(\mathbf{z}),
+    \label{eq:feature_modulation}
+\end{equation}
+
+trong đó $\boldsymbol{\gamma}$ điều chỉnh tỷ lệ và
+$\boldsymbol{\beta}$ điều chỉnh độ lệch của đặc trưng.
+
+FiLM~\cite{perez2018film} sử dụng tín hiệu điều kiện để sinh các hệ số điều biến theo kênh. SPADE~\cite{park2019spade} mở rộng ý tưởng này bằng cách sinh tham số điều biến phụ thuộc vị trí không gian từ bản đồ ngữ nghĩa. Hai phương pháp cho thấy tín hiệu điều kiện không nhất thiết chỉ được ghép với đầu vào mà có thể tác động trực tiếp lên đặc trưng trung gian.
+
+PSG trong PGA-UNet thuộc cùng hướng tiếp cận điều biến đặc trưng có điều kiện, nhưng sử dụng bản đồ nhiệt câu nhắc để sinh trọng số khuếch đại theo không gian. Kết nối dư trong PSG duy trì đường truyền đặc trưng gốc, trong khi cổng học mức điều biến phù hợp tại từng tầng mã hóa. Thiết kế chi tiết được trình bày tại Mục~\ref{subsec:psg}, Chương~\ref{Chapter3}.
+
+% ------------------------------------------------------------
 \subsection{Cơ chế chú ý có điều kiện}
 \label{subsec:conditioned_attention}
 
-Sau khi có Bản đồ nhiệt câu nhắc $\mathbf{H}$, bài toán tiếp theo là tích hợp thông tin này vào U-Net. Cách đơn giản nhất là ghép kênh trực tiếp $\mathbf{H}$ với ảnh X-quang gốc ở tầng đầu vào (hòa trộn sớm), nhưng tín hiệu định hướng ghép sớm có thể suy giảm khi lan truyền qua nhiều tầng tích chập sâu, khiến mô hình khai thác chưa hiệu quả thông tin câu nhắc.
+Cách đơn giản nhất để tích hợp câu nhắc vào CNN là ghép bản đồ câu nhắc với ảnh như một kênh đầu vào bổ sung. Tuy nhiên, tín hiệu ghép tại tầng đầu có thể thay đổi hoặc suy giảm qua nhiều phép tích chập và giảm mẫu.
 
-Một hướng khác là Cơ chế chú ý có điều kiện: tích hợp thông tin câu nhắc trực tiếp vào tính toán trọng số chú ý, bằng cách mở rộng Cổng chú ý truyền thống (Mục~\ref{subsec:attention_unet}, vốn chỉ nhận đặc trưng ảnh) để chấp nhận thêm tín hiệu định hướng bên ngoài làm điều kiện. Hệ số chú ý $\boldsymbol{\alpha}$ khi đó được ràng buộc rõ bởi ma trận định hướng $\mathbf{H}$, thay vì chỉ phụ thuộc đặc trưng ảnh như thiết kế gốc.
+Cơ chế chú ý có điều kiện đưa thông tin câu nhắc trực tiếp vào quá trình tính trọng số chú ý. Về khái niệm, hệ số chú ý tại tầng thứ $l$ được biểu diễn bởi:
 
-Về khái niệm, bản đồ chú ý được biểu diễn dưới dạng xác suất có điều kiện: $\boldsymbol{\alpha} = f(\mathbf{x}, \mathbf{g} \mid \mathbf{H})$. Tại mỗi tầng giải mã, trọng số chú ý được định hướng bởi cả đặc trưng ảnh và thông tin không gian người dùng cung cấp; tín hiệu ngoài vùng câu nhắc ưu tiên nhận trọng số thấp hơn, giảm hiện tượng phân đoạn lấn sang mô lành. Cơ sở lý thuyết này là nền tảng thiết kế kiến trúc PGA-UNet ở Chương~\ref{Chapter3}.
- 
+\begin{equation}
+    \boldsymbol{\alpha}^{l}
+    =
+    f
+    \left(
+        \mathbf{x}^{l},
+        \mathbf{g}^{l}
+        \mid
+        \mathbf{H}^{l}
+    \right),
+    \label{eq:conditioned_attention_general}
+\end{equation}
+
+trong đó $\mathbf{x}^{l}$ là đặc trưng bộ mã hóa,
+$\mathbf{g}^{l}$ là tín hiệu bộ giải mã và
+$\mathbf{H}^{l}$ là biểu diễn câu nhắc tại cùng mức không gian.
+
+Khác với Cổng chú ý nguyên bản chỉ sử dụng đặc trưng nội bộ của mạng, cơ chế có điều kiện cho phép trọng số chú ý phụ thuộc đồng thời vào ảnh và tín hiệu định hướng bên ngoài. CAD trong PGA-UNet hiện thực hóa nguyên lý này bằng cách mã hóa bản đồ nhiệt và dung hợp đặc trưng câu nhắc vào tín hiệu cổng tại từng tầng giải mã. Cấu trúc cụ thể được trình bày tại Mục~\ref{subsec:cad}, Chương~\ref{Chapter3}.
+
 % ------------------------------------------------------------
-\section{Các độ đo đánh giá hiệu năng}
+\section{Các độ đo đánh giá}
 \label{sec:metrics}
 % ------------------------------------------------------------
 
-Trong phân đoạn ảnh y khoa, chỉ dùng một độ đo duy nhất thường không phản ánh đầy đủ chất lượng mô hình: một mô hình có thể chồng lấp diện tích tốt nhưng vẫn sai lệch đáng kể ở đường biên, hoặc ngược lại. Do đó, khóa luận dùng bộ độ đo toàn diện: diện tích vùng (Dice, IoU), xu hướng phân loại (Precision, Recall), chất lượng đường biên (HD95) và độ chuẩn xác vị trí tâm (CBL).
+Không có một độ đo duy nhất phản ánh đầy đủ chất lượng phân đoạn. Vì vậy, khóa luận sử dụng Dice và IoU để đánh giá mức độ chồng lấp, Precision và Recall để phân tích xu hướng dự đoán, HD95 để đo sai lệch đường biên và CBL như một chỉ số bổ sung về độ lệch tâm.
 
+% ------------------------------------------------------------
 \subsection{Hệ số Dice và chỉ số IoU}
 \label{subsec:dice_iou}
 
-Hệ số Dice (viết tắt DSC) và chỉ số Giao trên Hợp (viết tắt IoU, còn gọi là Jaccard Index) là hai thang đo tiêu chuẩn phổ biến nhất để đánh giá mức độ chồng lấp không gian giữa mặt nạ dự đoán $\hat{Y}$ và mặt nạ nhãn gốc $Y$.
+Gọi $Y$ là mặt nạ nhãn gốc và $\widehat{Y}$ là mặt nạ dự đoán. Hệ số Dice được xác định bởi:
 
-Hệ số Dice: gấp đôi diện tích phần giao chia tổng diện tích hai mặt nạ.
 \begin{equation}
-    \text{Dice}(Y, \hat{Y}) = \frac{2\,|Y \cap \hat{Y}|}{|Y| + |\hat{Y}|}
+    \operatorname{Dice}
+    (Y,\widehat{Y})
+    =
+    \frac{
+        2|Y\cap\widehat{Y}|
+    }{
+        |Y|+|\widehat{Y}|
+    }.
     \label{eq:dice}
 \end{equation}
 
-Chỉ số IoU: diện tích phần giao chia diện tích phần hợp của hai mặt nạ.
+Chỉ số Giao trên Hợp (IoU) được xác định bởi:
+
 \begin{equation}
-    \text{IoU}(Y, \hat{Y}) = \frac{|Y \cap \hat{Y}|}{|Y \cup \hat{Y}|}
+    \operatorname{IoU}
+    (Y,\widehat{Y})
+    =
+    \frac{
+        |Y\cap\widehat{Y}|
+    }{
+        |Y\cup\widehat{Y}|
+    }.
     \label{eq:iou}
 \end{equation}
 
-Cả hai nhận giá trị $[0, 1]$, với $1$ là trùng khớp hoàn hảo. Trong ảnh y khoa, nơi vùng tổn thương thường chiếm tỷ lệ nhỏ so với nền, Dice và IoU được ưu tiên hơn độ chính xác tổng thể vì phản ánh trực tiếp mức độ chồng lấp vùng quan tâm và ít bị ảnh hưởng bởi mất cân bằng nền/đối tượng.
+Cả hai chỉ số nhận giá trị trong khoảng $[0,1]$; giá trị càng lớn biểu thị mức độ chồng lấp càng cao. So với Accuracy ở cấp độ điểm ảnh, Dice và IoU ít bị chi phối hơn bởi số lượng lớn điểm ảnh nền.
 
-\subsection{Độ chính xác (Precision) và Độ bao phủ (Recall)}
+% ------------------------------------------------------------
+\subsection{Precision và Recall}
 \label{subsec:precision_recall}
- 
-Bên cạnh Dice và IoU, Precision và Recall (Sensitivity) cho góc nhìn chi tiết hơn về xu hướng dự đoán sai (cắt lấn nhầm hay bỏ sót u). Gọi $TP$ là số điểm ảnh dương tính thật (dự đoán đúng tổn thương), $FP$ là số điểm ảnh dương tính giả (dự đoán nhầm nền thành tổn thương), $FN$ là số điểm ảnh âm tính giả (bỏ sót tổn thương thực sự).
 
-Precision: tỷ lệ điểm ảnh tổn thương thực sự trên tổng số điểm ảnh mô hình đã khoanh vùng.
+Gọi $TP$ là số điểm ảnh tổn thương được dự đoán đúng, $FP$ là số điểm ảnh nền bị dự đoán nhầm thành tổn thương và $FN$ là số điểm ảnh tổn thương bị bỏ sót.
+
+Precision biểu thị tỷ lệ dự đoán dương tính chính xác:
+
 \begin{equation}
-    \text{Precision} = \frac{TP}{TP + FP}
+    \operatorname{Precision}
+    =
+    \frac{TP}{TP+FP}.
     \label{eq:precision}
 \end{equation}
 
-Recall: tỷ lệ điểm ảnh tổn thương thực sự được mô hình nhận diện thành công.
+Recall biểu thị tỷ lệ vùng tổn thương được phát hiện:
+
 \begin{equation}
-    \text{Recall} = \frac{TP}{TP + FN}
+    \operatorname{Recall}
+    =
+    \frac{TP}{TP+FN}.
     \label{eq:recall}
 \end{equation}
 
-Trong lâm sàng, cân bằng Precision/Recall rất quan trọng: mô hình phân đoạn quá rộng (bao gồm nhiều mô lành) thường tăng Recall nhưng giảm Precision; ngược lại, phân đoạn quá bảo thủ (bỏ sót tổn thương) tăng Precision nhưng giảm Recall.
+Mặt nạ dự đoán quá rộng thường có Recall cao nhưng Precision thấp do bao gồm nhiều vùng nền. Ngược lại, mặt nạ quá nhỏ có thể đạt Precision cao nhưng Recall thấp do bỏ sót một phần tổn thương. Vì vậy, hai chỉ số được báo cáo song song với Dice và IoU.
 
-\subsection{Khoảng cách Hausdorff 95\% (HD95)}
+% ------------------------------------------------------------
+\subsection{Khoảng cách Hausdorff 95\%}
 \label{subsec:hd95}
 
-Các thang đo diện tích (Dice, IoU) có điểm yếu: không nhạy với hình dáng đường biên. Một mặt nạ dự đoán có thể chồng lấp diện tích tốt với nhãn nhưng vẫn khác biệt đáng kể về hình dạng, vị trí đường biên. Khoảng cách Hausdorff (HD) giải quyết vấn đề này bằng cách đánh giá sai lệch lớn nhất giữa hai đường biên.
+Dice và IoU đo mức độ chồng lấp diện tích nhưng chưa phản ánh đầy đủ sai lệch đường biên. HD95 đánh giá khoảng cách giữa đường biên dự đoán và đường biên nhãn gốc, đồng thời giảm ảnh hưởng của một số điểm ngoại lai so với khoảng cách Hausdorff cực đại.
 
-Cho $X$, $Y$ là tập điểm ảnh trên đường biên của mặt nạ dự đoán và mặt nạ gốc. Khoảng cách Hausdorff hai chiều cực đại:
+Gọi $X$ và $Y$ lần lượt là tập điểm trên đường biên dự đoán và đường biên nhãn gốc. Tập khoảng cách biên hai chiều được xác định bởi:
+
 \begin{equation}
-    \text{HD}(X, Y) = \max \left( \sup_{x \in X} \inf_{y \in Y} d(x, y), \, \sup_{y \in Y} \inf_{x \in X} d(x, y) \right)
-    \label{eq:hd}
+    \begin{split}
+    \mathcal{D}(X,Y)
+    ={}&
+    \left\{
+        \min_{y\in Y}d(x,y)
+        \mid x\in X
+    \right\}
+    \\
+    &\cup
+    \left\{
+        \min_{x\in X}d(y,x)
+        \mid y\in Y
+    \right\},
+    \end{split}
+    \label{eq:surface_distances}
 \end{equation}
-trong đó $d(x,y)$ là khoảng cách Euclidean giữa $x$ và $y$.
 
-Do dùng hàm cực đại ($\max$, $\sup$), khoảng cách Hausdorff truyền thống cơ bản rất nhạy với điểm nhiễu ngoại lai trên đường biên. Khóa luận dùng Khoảng cách Hausdorff 95\% (HD95), định nghĩa theo phân vị của phân phối khoảng cách biên:
+trong đó $d(\cdot,\cdot)$ là khoảng cách Euclidean. HD95 là phân vị thứ 95 của tập khoảng cách trên:
+
 \begin{equation}
-    \text{HD}_{95} = \inf \left\{ d \in \mathbb{R} \mid P(\text{HD} \le d) \ge 0.95 \right\}
+    \operatorname{HD95}(X,Y)
+    =
+    \operatorname{Percentile}_{95}
+    \left(
+        \mathcal{D}(X,Y)
+    \right).
     \label{eq:hd95}
 \end{equation}
-Đơn vị HD95 là pixel trong phạm vi khóa luận; giá trị càng nhỏ, sai lệch biên giữa dự đoán và nhãn tham chiếu càng thấp.
 
-\subsection{Độ chuẩn xác định vị tâm (CBL)}
+HD95 được báo cáo theo đơn vị điểm ảnh trong khóa luận. Giá trị càng nhỏ cho thấy đường biên dự đoán càng gần đường biên tham chiếu.
+
+% ------------------------------------------------------------
+\subsection{Chỉ số định vị tâm CBL}
 \label{subsec:cbl}
 
-Dice và HD95 đánh giá chất lượng phân đoạn nhưng không phản ánh độ lệch vị trí giữa tâm dự đoán và tâm tổn thương thực tế, thông tin quan trọng khi câu nhắc bị lệch. Các độ đo định vị phổ biến như DIoU và GIoU được thiết kế cho bài toán phát hiện đối tượng, trong đó việc đánh giá dựa trên mối quan hệ giữa hai hộp giới hạn. Do đó, chúng không phản ánh trực tiếp độ lệch tâm không gian giữa các mặt nạ phân đoạn có hình dạng phức tạp ở cấp độ điểm ảnh.
+Bên cạnh các độ đo tiêu chuẩn, khóa luận sử dụng CBL (\textit{Center-Based Localization}) như một chỉ số bổ sung để khảo sát độ lệch tâm giữa mặt nạ dự đoán và nhãn gốc. Chỉ số này đặc biệt hữu ích khi đánh giá mô hình trong kịch bản câu nhắc bị lệch tâm, nhưng không thay thế Dice hoặc HD95.
 
-Vì vậy khóa luận định nghĩa Độ chuẩn xác định vị tâm (viết tắt CBL), đo sai lệch tâm giữa mặt nạ dự đoán và mặt nạ gốc, chuẩn hóa theo kích thước tổn thương:
+Với mặt nạ nhị phân không rỗng $M$, tọa độ tâm được xác định bởi:
+
 \begin{equation}
-    \text{CBL} = \max \left( 0,\; 1 - \frac{\sqrt{(x_p - x_g)^2 + (y_p - y_g)^2}}{D_{gt}} \right)
+    x_M
+    =
+    \frac{
+        \sum_{x,y}xM(x,y)
+    }{
+        \sum_{x,y}M(x,y)
+    },
+    \qquad
+    y_M
+    =
+    \frac{
+        \sum_{x,y}yM(x,y)
+    }{
+        \sum_{x,y}M(x,y)
+    }.
+    \label{eq:mask_centroid}
+\end{equation}
+
+Gọi $(x_p,y_p)$ là tâm mặt nạ dự đoán,
+$(x_g,y_g)$ là tâm nhãn gốc và $D_{\mathrm{GT}}$ là độ dài đường chéo của hộp bao nhỏ nhất quanh nhãn gốc. CBL được xác định bởi:
+
+\begin{equation}
+    \operatorname{CBL}
+    =
+    \max
+    \left(
+        0,\,
+        1-
+        \frac{
+            \sqrt{
+                (x_p-x_g)^2+
+                (y_p-y_g)^2
+            }
+        }{
+            D_{\mathrm{GT}}
+        }
+    \right).
     \label{eq:cbl}
 \end{equation}
-trong đó $(x_p, y_p)$ là tâm mặt nạ dự đoán, $(x_g, y_g)$ là tâm nhãn gốc, $D_{gt}$ là đường chéo hộp bao nhỏ nhất quanh nhãn gốc (đơn vị chuẩn hóa). CBL $= 1.0$ khi tâm dự đoán trùng khớp hoàn toàn; CBL $\to 0$ khi sai lệch vượt kích thước đường chéo tổn thương. Chuẩn hóa theo $D_{gt}$ đảm bảo công bằng khi so sánh tổn thương kích thước khác nhau: sai lệch 10 pixel có ý nghĩa rất khác nhau với khối u nhỏ so với khối u lớn.
 
+CBL bằng 1 khi hai tâm trùng nhau và giảm dần khi khoảng cách tâm tăng. Việc chuẩn hóa theo $D_{\mathrm{GT}}$ giúp diễn giải sai lệch tương đối theo kích thước tổn thương. Khi mặt nạ dự đoán rỗng, CBL được quy ước bằng 0. Với ảnh có nhiều vùng tổn thương, tâm được tính trên mặt nạ hợp nhất theo phương pháp đánh giá cấp độ ảnh tại Chương~\ref{Chapter4}.
+
+Do CBL là chỉ số bổ sung được sử dụng trong phạm vi khóa luận, kết luận chính về chất lượng phân đoạn vẫn dựa trên các độ đo tiêu chuẩn gồm Dice, IoU, Precision, Recall và HD95.
 
 % ------------------------------------------------------------
 \section{Tổng kết chương}
 \label{sec:summary_ch2}
 % ------------------------------------------------------------
- 
-Chương này cung cấp bức tranh toàn cảnh và cơ sở lý thuyết cho khóa luận. Khảo sát U-Net và SAM-Med2D (hai mô hình đối sánh định lượng) cùng cơ chế Attention Gate của Attention U-Net (nền tảng PGA-UNet kế thừa) làm nổi bật khoảng trống nghiên cứu: cần một kiến trúc CNN hạng nhẹ tích hợp câu nhắc trực quan từ bác sĩ, đạt hiệu năng phân đoạn cao và bền bỉ trước câu nhắc không hoàn hảo.
 
-Lý thuyết về biểu diễn hộp giới hạn thành Bản đồ nhiệt và Cổng chú ý có điều kiện là nền tảng cốt lõi được tích hợp trực tiếp vào kiến trúc PGA-UNet ở Chương~\ref{Chapter3}.
+Chương này đã khảo sát các phương pháp phân đoạn tự động, phân đoạn tương tác dựa trên CNN và mô hình nền tảng dựa trên câu nhắc. Qua đó, khoảng trống nghiên cứu được xác định là nhu cầu về một kiến trúc CNN hạng nhẹ có khả năng tiếp nhận và duy trì thông tin câu nhắc trong toàn bộ quá trình phân đoạn.
+
+Các cơ sở lý thuyết về U-Net, Cổng chú ý, bản đồ nhiệt, điều biến đặc trưng và chú ý có điều kiện tạo nền tảng cho thiết kế PGA-UNet tại Chương~\ref{Chapter3}. Chương cũng xác định các độ đo được sử dụng để đánh giá định lượng mô hình tại Chương~\ref{Chapter4}.

@@ -4,41 +4,75 @@
 \chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
 \label{Chapter5}
 
-\section{Kết luận những đóng góp đạt được}
+% ------------------------------------------------------------
+\section{Kết luận và đóng góp đạt được}
 \label{sec:ket_luan}
+% ------------------------------------------------------------
 
-Khóa luận nghiên cứu và phát triển một mô hình phân đoạn tương tác ảnh X-quang xương hỗ trợ bác sĩ khoanh vùng tổn thương, khắc phục hạn chế của phân đoạn tự động hoàn toàn và rào cản tài nguyên của các mô hình nền tảng hạng nặng. Đóng góp kỹ thuật cốt lõi là kiến trúc PGA-UNet (Prompt-Guided Attention U-Net, $\sim$3M tham số), tích hợp Cổng không gian (PSG) ở bộ mã hóa và Cơ chế chú ý có điều kiện (CAD) ở bộ giải mã để biến hộp giới hạn của bác sĩ thành tín hiệu định hướng không gian. Trên cả BTXRD và FracAtlas, PGA-UNet vượt trội rõ rệt so với U-Net và SAM-Med2D dù nhỏ hơn nhiều lần về tham số, đồng thời duy trì hiệu năng ổn định trước sai lệch vị trí câu nhắc trong phạm vi các kịch bản mô phỏng đã kiểm định (Chương~\ref{Chapter4}).
+Khóa luận đã nghiên cứu và xây dựng PGA-UNet, một kiến trúc phân đoạn tương tác ảnh X-quang xương dựa trên câu nhắc hộp giới hạn. Mô hình hướng đến việc hỗ trợ người dùng khoanh vùng tổn thương, giảm sự phụ thuộc vào khả năng định vị hoàn toàn tự động và phù hợp với điều kiện tài nguyên tính toán hạn chế.
 
-Vì PGA-UNet cần câu nhắc do bác sĩ cung cấp, khóa luận bổ sung một thực nghiệm minh họa (không phải đóng góp kỹ thuật riêng biệt), kết hợp Gatekeeper (EfficientNet-B3) và PGA-UNet thành luồng xử lý hai giai đoạn, mô phỏng kịch bản thận trọng nhất chưa có bước bác sĩ xác nhận để đo cận dưới hiệu năng hệ thống. Kết quả cho thấy sai số tích lũy giữa hai module là hạn chế thực sự của kiến trúc hai tầng, và là hướng ưu tiên cải tiến tiếp theo.
+Đóng góp kỹ thuật chính của khóa luận là cơ chế tích hợp câu nhắc vào cả bộ mã hóa và bộ giải mã của U-Net. PSG sử dụng thông tin không gian từ câu nhắc để điều biến đặc trưng tại bộ mã hóa, trong khi CAD tiếp tục điều kiện hóa quá trình tái tạo mặt nạ tại bộ giải mã. Hộp giới hạn được biểu diễn bằng bản đồ nhiệt Gaussian nhằm cung cấp tín hiệu không gian liên tục và giảm sự phụ thuộc cứng vào đường biên của hộp.
 
-Nhìn chung, PGA-UNet là kiến trúc phân đoạn tương tác hạng nhẹ, hiệu quả và có cơ sở kỹ thuật vững chắc trong phạm vi thực nghiệm đã kiểm định, nhưng vẫn là hệ thống ở giai đoạn tiền lâm sàng: đánh giá trên dữ liệu công khai với câu nhắc mô phỏng có kiểm soát, chưa kiểm định trên hộp giới hạn bác sĩ vẽ tay hay dữ liệu lâm sàng thô thu thập trực tiếp tại một cơ sở y tế.
+Kết quả trên BTXRD và FracAtlas cho thấy PGA-UNet cải thiện rõ rệt hiệu năng phân đoạn so với U-Net, Attention U-Net và SAM-Med2D trong phạm vi các cấu hình được đánh giá. Mô hình duy trì kết quả ổn định hơn khi câu nhắc bị lệch tâm, đồng thời đạt hiệu quả rõ rệt trên các trường hợp khó, tổn thương nhỏ hoặc có ranh giới không rõ. Nghiên cứu loại bỏ thành phần cho thấy hiệu quả của mô hình đến từ sự phối hợp giữa PSG, CAD và bản đồ nhiệt Gaussian, trong đó CAD có vai trò nổi bật đối với tính bền bỉ trước sai lệch câu nhắc.
 
-\section{Hạn chế của hệ thống}
+Các kết quả được tái lập khi mô hình được huấn luyện lại độc lập trên FracAtlas, một bộ dữ liệu có quy mô và hình thái tổn thương khác với BTXRD. Điều này cho thấy thiết kế PGA-UNet có tính nhất quán trên hai miền dữ liệu, nhưng chưa tương đương với tổng quát hóa liên miền theo nghĩa huấn luyện trên một bộ dữ liệu và suy luận trực tiếp trên bộ dữ liệu chưa từng quan sát.
+
+Bên cạnh module phân đoạn, khóa luận thực hiện một thử nghiệm mở rộng với Gatekeeper sử dụng EfficientNet-B3 nhằm minh họa khả năng tích hợp PGA-UNet vào quy trình xử lý ảnh hỗn hợp. Kết quả cho thấy sai số tại bước sàng lọc có thể làm giảm đáng kể hiệu năng toàn luồng. Vì vậy, Gatekeeper chỉ phù hợp với vai trò hỗ trợ ưu tiên ca nghi ngờ; quyết định chuyển bước và cung cấp câu nhắc vẫn cần sự xác nhận của người dùng chuyên môn.
+
+Nhìn chung, đóng góp chính của khóa luận nằm ở kiến trúc PGA-UNet hạng nhẹ, gồm khoảng 3 triệu tham số, và phương pháp khai thác câu nhắc trực quan thông qua PSG, CAD và bản đồ nhiệt Gaussian. Mặc dù đạt kết quả tích cực trên hai bộ dữ liệu công khai, mô hình vẫn thuộc phạm vi nghiên cứu thử nghiệm và chưa đủ cơ sở để triển khai trong môi trường lâm sàng.
+
+% ------------------------------------------------------------
+\section{Hạn chế của nghiên cứu}
 \label{sec:han_che}
+% ------------------------------------------------------------
 
-Mặc dù đạt được nhiều kết quả khả quan, hệ thống đề xuất vẫn còn tồn tại một số giới hạn cần được nhìn nhận khách quan:
+Nghiên cứu vẫn còn một số hạn chế cần được xem xét khi diễn giải kết quả:
 
 \begin{itemize}
-    \item Sai số tích lũy luồng xử lý hai giai đoạn: Gatekeeper và PGA-UNet là hai module độc lập nên sai số phân lớp lan truyền sang phân đoạn, kéo hiệu năng đầu cuối xuống đáng kể so với PGA-UNet đơn lẻ (Mục~\ref{subsec:cascading_error}, Chương~\ref{Chapter4}), hạn chế cố hữu của kiến trúc hai giai đoạn. Con số này đo kịch bản thận trọng nhất chưa qua xác nhận bác sĩ; trong thiết kế triage mềm thực tế (Mục~\ref{sec:tong_the}, Chương~\ref{Chapter3}), rủi ro này được giảm nhẹ nhưng chưa được đánh giá đầy đủ.
+    \item \textbf{Câu nhắc được mô phỏng từ nhãn gốc:}
+    Hộp giới hạn trong thực nghiệm được tạo tự động từ mặt nạ nhãn gốc và điều chỉnh theo các kịch bản Bao trọn, Lệch tâm và Hỗn hợp. Cách thiết lập này giúp kiểm soát thí nghiệm nhưng chưa phản ánh đầy đủ sự khác biệt về vị trí, kích thước và thao tác giữa những người dùng trong thực tế.
 
-    \item Hạn chế của thông tin không gian 2D: Ảnh X-quang là hình chiếu 2D của cấu trúc xương 3D; chồng lấp khớp xương dày đặc đôi khi gây nhiễu tín hiệu, và hộp giới hạn dù chuyển thành Bản đồ nhiệt Gaussian vẫn là ước lượng viền thô, khó khăn với tổn thương hình dáng kéo dài hoặc phân nhánh phức tạp.
+    \item \textbf{Phạm vi dữ liệu còn hạn chế:}
+    PGA-UNet được huấn luyện và đánh giá riêng trên BTXRD và FracAtlas. Cả hai đều là bộ dữ liệu công khai đã được chuẩn hóa; nghiên cứu chưa đánh giá trên dữ liệu X-quang thô từ cơ sở y tế, dữ liệu từ thiết bị chụp khác hoặc phép thử liên miền không tinh chỉnh.
 
-    \item Kiểm định đa tập dữ liệu mới ở bước đầu: Hệ thống đã được kiểm định lại trên FracAtlas (gãy xương, khác đặc tính hình thái BTXRD), xác nhận thiết kế PSG+CAD tổng quát tốt ở cấp độ phương pháp, chưa phải kiểm định liên miền theo nghĩa chặt. Tổng quát hóa cũng không đồng đều: Gatekeeper suy giảm rõ rệt trên miền dữ liệu mới, kéo hiệu năng toàn hệ thống xuống theo dù PGA-UNet vẫn tốt (Mục~\ref{subsec:pipeline_eval_fa}, Chương~\ref{Chapter4}); cả hai bộ dữ liệu cũng đều là ảnh công khai đã chuẩn hóa, chưa kiểm định trên dữ liệu thô lâm sàng.
+    \item \textbf{Thông tin không gian chỉ ở dạng hai chiều:}
+    Ảnh X-quang là hình chiếu hai chiều của cấu trúc giải phẫu ba chiều. Hiện tượng chồng lấp giữa các cấu trúc xương có thể làm mờ ranh giới tổn thương. Bản đồ nhiệt Gaussian chỉ cung cấp vùng định hướng tương đối và không biểu diễn trực tiếp hình dạng phức tạp của tổn thương kéo dài, phân nhánh hoặc không liên tục.
 
-    \item Hạn chế về độ phân giải ảnh đầu vào: Ảnh X-quang gốc có độ phân giải cao hơn nhiều so với $512\times512$ dùng để huấn luyện; việc thu nhỏ có thể làm mất chi tiết cấu trúc xương nhỏ, tiềm ẩn hạn chế hiệu năng với tổn thương nhỏ.
+    \item \textbf{Giới hạn về độ phân giải đầu vào:}
+    Ảnh được thay đổi kích thước về $512\times512$ hoặc $256\times256$ để phù hợp với tài nguyên huấn luyện. Quá trình này có thể làm mất chi tiết của đường gãy hoặc tổn thương có kích thước nhỏ so với ảnh gốc.
 
-    \item Câu nhắc lý tưởng: Hộp giới hạn trong thực nghiệm được sinh tự động từ mặt nạ nhãn gốc theo kịch bản mô phỏng có kiểm soát, trong khi bác sĩ vẽ tay thực tế không có nhãn gốc tham chiếu nên có thể khác biệt đáng kể. Mô hình chưa được kiểm định trên câu nhắc do bác sĩ thật vẽ.
+    \item \textbf{Chưa có đánh giá với người dùng chuyên môn:}
+    Nghiên cứu chưa đo thời gian thao tác, mức độ thuận tiện, độ biến thiên giữa người dùng hoặc khả năng hiệu chỉnh kết quả trong một quy trình đọc ảnh thực tế. Vì vậy, hiệu quả hỗ trợ bác sĩ mới được suy luận từ kết quả kỹ thuật, chưa được xác nhận bằng nghiên cứu người dùng.
+
+    \item \textbf{Sai số tại module sàng lọc:}
+    Gatekeeper và PGA-UNet được huấn luyện độc lập nên ảnh bệnh lý bị Gatekeeper bỏ sót sẽ không đến được bước phân đoạn trong kịch bản không có người dùng xác nhận. Hạn chế này thể hiện rõ hơn trên FracAtlas, nơi Gatekeeper có Sensitivity thấp hơn BTXRD. Tuy nhiên, Gatekeeper chỉ là thử nghiệm mở rộng và không thuộc đóng góp kiến trúc chính của PGA-UNet.
 \end{itemize}
 
-\section{Định hướng phát triển tương lai}
+% ------------------------------------------------------------
+\section{Định hướng phát triển}
 \label{sec:tuong_lai}
+% ------------------------------------------------------------
 
-Từ các hạn chế trên, nhóm nghiên cứu đề xuất ba định hướng phát triển tiếp theo:
+Từ các hạn chế trên, nghiên cứu có thể được tiếp tục theo các hướng sau:
 
 \begin{itemize}
-    \item Hướng 1: Mô hình đa phương thức tích hợp thông tin lâm sàng: Hệ thống hiện chỉ xử lý tín hiệu hình ảnh, bỏ qua ngữ cảnh lâm sàng bác sĩ đã có (tuổi, giới tính, vị trí đau, tiền sử, xét nghiệm...). Kết hợp thông tin này với đặc trưng hình ảnh qua cơ chế dung hợp phù hợp có thể cải thiện đồng thời độ chính xác phân lớp ở ca biên giới và khả năng phân đoạn có ngữ cảnh.
+    \item \textbf{Đánh giá với câu nhắc do người dùng cung cấp:}
+    Thực hiện thử nghiệm với bác sĩ hoặc người có chuyên môn trực tiếp vẽ hộp giới hạn trên ảnh X-quang. Kết quả cần được đánh giá theo độ chính xác phân đoạn, thời gian thao tác, mức độ khác biệt giữa người dùng và số lần hiệu chỉnh cần thiết. Đây là bước quan trọng để kiểm chứng tính bền bỉ của PGA-UNet ngoài các kịch bản câu nhắc mô phỏng.
 
-    \item Hướng 2: Xử lý ảnh gốc không chỉnh lại kích thước: Việc thu nhỏ ảnh về $512\times512$ (Mục~\ref{sec:han_che}) có thể làm mất chi tiết tổn thương nhỏ. Các hướng như xử lý theo cửa sổ trượt có nhận biết câu nhắc hoặc dùng bộ mã hóa phân cấp (ví dụ Swin Transformer) có thể giữ được độ phân giải gốc mà không cần đổi module phân đoạn và cơ chế câu nhắc hiện có.
+    \item \textbf{Mở rộng đánh giá trên dữ liệu ngoài:}
+    Kiểm định mô hình trên dữ liệu thu thập từ nhiều cơ sở y tế, thiết bị và điều kiện chụp khác nhau. Ngoài việc huấn luyện lại trên từng bộ dữ liệu, cần bổ sung thí nghiệm huấn luyện trên một miền và suy luận trực tiếp trên miền khác để đánh giá khả năng tổng quát hóa liên miền theo nghĩa chặt.
 
-    \item Hướng 3: Học bán giám sát dựa trên câu nhắc thưa và thông tin lâm sàng: Gán nhãn polygon đầy đủ rất tốn kém và khó mở rộng, trong khi hộp giới hạn (câu nhắc PGA-UNet vốn cần) rẻ hơn nhiều. Có thể mở rộng quy mô huấn luyện bằng cách kết hợp một tập nhỏ có nhãn đầy đủ với một tập lớn hơn chỉ có hộp giới hạn và thông tin lâm sàng, dùng PGA-UNet sinh nhãn giả và thông tin lâm sàng làm bộ lọc độ tin cậy cho nhãn giả đó.
+    \item \textbf{Xử lý ảnh có độ phân giải cao:}
+    Phát triển cơ chế xử lý theo vùng quan tâm hoặc cửa sổ trượt có điều kiện theo câu nhắc, qua đó giữ lại chi tiết của tổn thương nhỏ mà không làm tăng quá mức chi phí tính toán. Các bộ mã hóa phân cấp cũng có thể được khảo sát, nhưng cần bảo đảm kiến trúc vẫn duy trì ưu điểm gọn nhẹ.
+
+    \item \textbf{Học từ nhãn thưa:}
+    Kết hợp một tập nhỏ có mặt nạ phân đoạn đầy đủ với tập lớn hơn chỉ có hộp giới hạn. PGA-UNet có thể được mở rộng theo hướng học bán giám sát hoặc sinh nhãn giả, qua đó giảm chi phí tạo chú thích đa giác ở cấp độ pixel.
+
+    \item \textbf{Kết hợp thông tin lâm sàng:}
+    Khảo sát cơ chế dung hợp đặc trưng hình ảnh với các thông tin như tuổi, giới tính, vị trí đau hoặc tiền sử bệnh. Thông tin bổ sung có thể hỗ trợ phân biệt các trường hợp khó, nhưng cần được đánh giá trên dữ liệu lâm sàng được thu thập và ẩn danh đúng quy trình.
+
+    \item \textbf{Cải thiện bước sàng lọc:}
+    Gatekeeper có thể được cải tiến bằng phương pháp cân bằng lớp, điều chỉnh ngưỡng theo mục tiêu Sensitivity, học tập trung vào vùng tổn thương nhỏ hoặc hiệu chỉnh xác suất dự đoán. Tuy nhiên, module này vẫn nên được duy trì như công cụ hỗ trợ thay vì thay thế quyết định của người dùng chuyên môn.
 \end{itemize}
+
+Tóm lại, hướng phát triển ưu tiên là kiểm định PGA-UNet với câu nhắc thực tế và dữ liệu ngoài. Các hướng về độ phân giải cao, học từ nhãn thưa, thông tin lâm sàng và Gatekeeper là những bước mở rộng tiếp theo nhằm nâng cao khả năng ứng dụng của mô hình trong quy trình hỗ trợ phân đoạn ảnh X-quang xương.
