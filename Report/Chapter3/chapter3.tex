@@ -3,182 +3,401 @@
 % ==========================================
 \chapter{MÔ HÌNH VÀ HỆ THỐNG ĐỀ XUẤT}
 \label{Chapter3}
+
 % ------------------------------------------------------------
-\section{Mô hình phân đoạn PGA-UNet (Prompt-Guided Attention U-Net)}
+\section{Mô hình phân đoạn PGA-UNet}
 \label{sec:pga_unet}
 % ------------------------------------------------------------
 
-Kiến trúc PGA-UNet kế thừa có chọn lọc từ ba công trình nền tảng và bổ sung ba cấu kiện mới. Bảng~\ref{tab:inheritance_contribution} tóm tắt ranh giới kế thừa và đóng góp.
+PGA-UNet (\textit{Prompt-Guided Attention U-Net}) là mô hình phân đoạn tương tác nhận đồng thời ảnh X-quang và hộp giới hạn vùng nghi ngờ. Kiến trúc được phát triển trên khung mã hóa--giải mã của U-Net~\cite{ronneberger2015unet} và cơ chế chú ý tại kết nối tắt của Attention U-Net~\cite{oktay2018attentionunet}. Ba thành phần chính được bổ sung gồm: bản đồ nhiệt câu nhắc dạng cao nguyên, Cổng không gian tại bộ mã hóa (PSG) và Cơ chế chú ý có điều kiện tại bộ giải mã (CAD).
 
-\begin{table}[H]
-    \raggedright
-    \caption{Kế thừa và đóng góp trong kiến trúc PGA-UNet}
+Bảng~\ref{tab:inheritance_contribution} phân biệt các thành phần kế thừa với thiết kế được sử dụng trong PGA-UNet.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Các thành phần kế thừa và thiết kế trong PGA-UNet}
     \label{tab:inheritance_contribution}
     \renewcommand{\arraystretch}{1.3}
-    \begin{tabular}{|p{3.7cm}|p{6.1cm}|p{6.1cm}|}
+    \setlength{\tabcolsep}{4pt}
+    \small
+    \begin{tabular}{|p{3.1cm}|p{5.1cm}|p{6.1cm}|}
         \hline
-        \textbf{Thành phần} & \textbf{Kế thừa từ} & \textbf{Đóng góp mới} \\
+        \textbf{Thành phần}
+        & \textbf{Cơ sở kế thừa}
+        & \textbf{Thiết kế trong PGA-UNet} \\
         \hline
-        Khung bộ mã hóa - bộ giải mã & U-Net~\cite{ronneberger2015unet}: khối tích chập, gộp cực đại, kết nối tắt & Không có \\
+        Khung mạng
+        & U-Net~\cite{ronneberger2015unet}: cấu trúc mã hóa--giải mã và kết nối tắt
+        & Sử dụng làm kiến trúc nền cho mô hình phân đoạn hạng nhẹ \\
         \hline
-        Mã hóa câu nhắc & SAM-Med2D~\cite{2023-SAMMed2D-Cheng}: ý tưởng câu nhắc dẫn đường & Thay biểu diễn rời rạc/nhị phân bằng Bản đồ nhiệt Gaussian dạng cao nguyên 2D \\
+        Biểu diễn câu nhắc
+        & Các phương pháp phân đoạn có hướng dẫn bằng hộp giới hạn
+        & Chuyển hộp giới hạn thành bản đồ nhiệt dạng cao nguyên có biên được làm mềm bằng bộ lọc Gaussian \\
         \hline
-        Cổng không gian (PSG) & Gợi ý từ hướng tích hợp bản đồ không gian vào CNN: ghép kênh trong DeepIGeoS~\cite{wang2019deepigeos}; đưa bản đồ nhiệt Gaussian vào mô hình nền tảng lúc suy luận~\cite{xu2025boundaryaware} & Cơ chế cổng nhân (không ghép kênh), huấn luyện từ đầu trên CNN nhẹ, khuếch đại có chọn lọc vùng câu nhắc (chỉ khuếch đại, không triệt tiêu) \\
+        PSG
+        & Các phương pháp tích hợp bản đồ không gian vào CNN, chẳng hạn DeepIGeoS~\cite{wang2019deepigeos}
+        & Điều biến đặc trưng tại bộ mã hóa bằng cơ chế cổng nhân có kết nối dư \\
         \hline
-        Cổng chú ý không gian mềm & Attention U-Net~\cite{oktay2018attentionunet}: Cổng chú ý không gian mềm tại các kết nối tắt (Attention U-Net bổ sung cơ chế này lên nền U-Net) & Mở rộng thành CAD: bổ sung tri thức câu nhắc vào tín hiệu cổng $\mathbf{g}$ \\
+        CAD
+        & Cổng chú ý tại kết nối tắt của Attention U-Net~\cite{oktay2018attentionunet}
+        & Điều kiện hóa tín hiệu chú ý tại bộ giải mã bằng đặc trưng câu nhắc \\
         \hline
     \end{tabular}
 \end{table}
-\newpage
-\noindent Kiến trúc được phát triển qua ba giai đoạn kế thừa tuyến tính: từ khung bộ mã hóa - bộ giải mã của U-Net~\cite{ronneberger2015unet}, bổ sung Cổng chú ý không gian mềm của Attention U-Net~\cite{oktay2018attentionunet}, đến PGA-UNet hoàn chỉnh (thêm PSG vào bộ mã hóa, mở rộng Cổng chú ý thành CAD, thay mặt nạ nhị phân bằng Bản đồ nhiệt Gaussian dạng cao nguyên).
-Ba thành phần cốt lõi sau đây lần lượt hiện thực hóa đóng góp trên.
 
-\begin{figure}[H]
+Hình~\ref{fig:pga_architecture} trình bày kiến trúc tổng thể. PSG đưa thông tin câu nhắc vào quá trình trích xuất đặc trưng, trong khi CAD duy trì ảnh hưởng của câu nhắc tại các tầng khôi phục mặt nạ. Cách tích hợp này giúp mô hình sử dụng thông tin định vị xuyên suốt mạng thay vì chỉ ghép câu nhắc với ảnh tại đầu vào.
+
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{images/arch_pga_unet2d.png}
-    \caption{Kiến trúc PGA-UNet: PSG tại bộ mã hóa, CAD tại bộ giải mã.}
+    \caption{Kiến trúc PGA-UNet với PSG tại bộ mã hóa và CAD tại bộ giải mã.}
     \label{fig:pga_architecture}
 \end{figure}
 
+% ------------------------------------------------------------
 \subsection{Biểu diễn câu nhắc trực quan}
 \label{subsec:plateau_heatmap}
+% ------------------------------------------------------------
 
-Hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ cung cấp được mã hóa thành Bản đồ nhiệt câu nhắc $\mathbf{H}_{prompt} \in [0, 1]^{H \times W}$ thay vì giữ nguyên dạng tọa độ rời rạc. Thay vì phân phối Gaussian hai chiều thuần túy (Phương trình~\eqref{eq:gaussian_heatmap}, cường độ giảm dần từ tâm) hay mặt nạ nhị phân phẳng, PGA-UNet dùng Bản đồ nhiệt dạng cao nguyên: vùng bên trong hộp giới hạn được gán đồng nhất giá trị $1.0$, sau đó làm mềm đường biên bằng bộ lọc Gaussian:
+Đầu vào tương tác của PGA-UNet là hộp giới hạn
+$\mathbf{B}=(x_1,y_1,x_2,y_2)$ do người dùng cung cấp quanh vùng nghi ngờ. Thay vì sử dụng trực tiếp bốn tọa độ rời rạc, hộp được chuyển thành bản đồ nhiệt câu nhắc
+$\mathbf{H}_{\mathrm{prompt}}\in[0,1]^{H\times W}$ có cùng kích thước không gian với ảnh đầu vào.
+
+Trước tiên, hộp giới hạn được biểu diễn thành mặt nạ nhị phân:
+
 \begin{equation}
-    \mathbf{H}_{prompt} = \mathbf{B}_{\text{mask}} \ast \mathbf{K}_{\text{Gaussian}}(k=31)
+    \mathbf{B}_{\mathrm{mask}}(x,y)
+    =
+    \begin{cases}
+        1, & (x,y)\in\mathbf{B},\\
+        0, & \text{ngược lại}.
+    \end{cases}
+    \label{eq:bbox_mask}
+\end{equation}
+
+Biên của mặt nạ sau đó được làm mềm bằng bộ lọc Gaussian:
+
+\begin{equation}
+    \mathbf{H}_{\mathrm{prompt}}
+    =
+    \mathbf{B}_{\mathrm{mask}}
+    \ast
+    \mathbf{K}_{\mathrm{Gaussian}}(k),
+    \qquad k=31,
     \label{eq:plateau_heatmap}
 \end{equation}
-với $\mathbf{B}_{\text{mask}} \in \{0, 1\}^{H \times W}$ là mặt nạ nhị phân của hộp giới hạn (đệm 5 pixel mỗi phía). Cách này giữ tín hiệu phân bố đều trong vùng câu nhắc, không suy giảm về tâm như Gaussian thuần, đồng thời làm mềm đường biên để hạn chế biến thiên gradient đột ngột qua các tầng tích chập. Điều này khắc phục nhược điểm của mặt nạ nhị phân sắc cạnh, vốn khiến mạng dễ học theo cạnh hộp bao thay vì đặc trưng thực của tổn thương. $k=31$ được chọn qua khảo sát $k \in \{15, 21, 31, 51\}$ trên tập xác thực, cân bằng giữa vùng chuyển tiếp đủ mịn và tránh tín hiệu lan sang cấu trúc xương lân cận, giữ cố định trong toàn bộ thực nghiệm. Bản đồ nhiệt $\mathbf{H}_{prompt}$ đóng vai trò một kênh dữ liệu độc lập, song hành cùng ảnh X-quang đi vào mạng.
 
-So với SAM và SAM-Med2D~\cite{2023-SAMMed2D-Cheng}, vốn mã hóa hộp giới hạn thành vector nhúng vị trí rời rạc (256 chiều, qua bảng tra vị trí sinusoidal) phù hợp kiến trúc Transformer, Bản đồ nhiệt 2D của PGA-UNet giữ cùng cấu trúc không gian $H \times W$ với đặc trưng ảnh, cho phép Cổng không gian nhân trực tiếp theo phần tử (Phương trình~\eqref{eq:spatial_gate}) mà không cần chiếu một vector không mang cấu trúc không gian vào bản đồ đặc trưng 2D.
+trong đó $\ast$ là phép tích chập và
+$\mathbf{K}_{\mathrm{Gaussian}}(k)$ là nhân Gaussian có kích thước $k\times k$. Hộp giới hạn được mở rộng thêm 5 điểm ảnh ở mỗi cạnh trước khi tạo mặt nạ nhằm hạn chế việc cắt sát đường biên tổn thương.
 
-\FloatBarrier
-\subsection{Cổng không gian tại bộ mã hóa (PSG)}
+Cách biểu diễn này tạo ra một vùng giá trị cao tương đối đồng đều bên trong hộp và vùng chuyển tiếp liên tục tại đường biên. So với mặt nạ nhị phân có biên sắc, bản đồ nhiệt cung cấp tín hiệu không gian mềm hơn và giảm sự phụ thuộc cứng vào đường biên hộp. So với phân phối Gaussian tập trung tại một điểm, dạng cao nguyên duy trì thông tin trên toàn bộ vùng được chỉ định thay vì chỉ nhấn mạnh tâm hộp.
 
-Trong U-Net truyền thống, bộ mã hóa trích xuất đặc trưng không có định hướng, dễ lãng phí tài nguyên tính toán vào vùng nền không liên quan. PGA-UNet khắc phục bằng cách tích hợp Cổng không gian (PSG) trực tiếp vào nhánh mã hóa, thành phần không tồn tại trong U-Net hay Attention U-Net gốc. Hướng đưa bản đồ không gian vào CNN đã được gợi mở ở một số công trình trước (ghép kênh trong DeepIGeoS~\cite{wang2019deepigeos}; đưa bản đồ nhiệt Gaussian vào mô hình nền tảng lúc suy luận~\cite{xu2025boundaryaware}), song chủ yếu dùng ghép kênh hoặc áp dụng lên mô hình đã tiền huấn luyện, khác hướng CNN nhẹ huấn luyện từ đầu của khóa luận~\cite{yang2025promptmechanisms}. PSG áp dụng cơ chế cổng nhân (không phải ghép kênh), huấn luyện từ đầu trên CNN nhẹ để tích hợp câu nhắc ngay tại giai đoạn trích xuất đặc trưng. Cơ chế này chỉ khuếch đại đặc trưng vùng câu nhắc mà không triệt tiêu tín hiệu gốc (hệ số $\alpha \in [0,1]$ bên dưới). Tại tầng mã hóa thứ $l$, Bản đồ nhiệt được giảm mẫu bằng nội suy song tuyến tính (bilinear) về cùng độ phân giải với đặc trưng $\mathbf{x}^l$:
-\begin{equation}
-    \mathbf{H}^l = \text{Bilinear}\!\left(\mathbf{H}_{prompt},\; \tfrac{H}{2^l},\; \tfrac{W}{2^l}\right)
-    \label{eq:psg_downsample}
-\end{equation}
-rồi đưa qua bộ lọc cổng để sinh tín hiệu khuếch đại không gian:
-\begin{equation}
-    \tilde{\mathbf{x}}^l = \mathbf{x}^l \odot \left(1 + \alpha \cdot \sigma\!\left(\mathbf{W}_{gate} \ast \mathbf{H}^l\right)\right)
-    \label{eq:spatial_gate}
-\end{equation}
-với $\mathbf{W}_{gate}$ là phép tích chập $1\!\times\!1$ ánh xạ Bản đồ nhiệt (1 kênh) sang không gian kênh đặc trưng $C^l$; $\sigma$ là hàm Sigmoid; $\alpha \in [0,1]$ là tham số học được (khởi tạo $0.1$); $\odot$ là phép nhân theo phần tử.
+Bản đồ nhiệt được sử dụng như một nhánh dữ liệu riêng, song hành cùng ảnh X-quang. Do có cùng cấu trúc không gian $H\times W$ với ảnh, bản đồ có thể được giảm mẫu và áp dụng trực tiếp lên các đặc trưng hai chiều tại nhiều tầng của mạng.
 
-Thiết kế hoạt động theo nguyên lý tăng cường có chọn lọc: đặc trưng trong vùng câu nhắc được nhân hệ số $> 1$, đặc trưng ngoài vùng (nơi $\mathbf{H}^l \approx 0$) giữ nguyên giá trị ban đầu (nhân $\approx 1$), nhờ đó bộ mã hóa không mất thông tin toàn cục nhưng vẫn ưu tiên truyền đặc trưng vùng mục tiêu xuống các tầng sâu hơn.
-
-\FloatBarrier
-\subsection{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD)}
-
-Dù Cổng không gian ở bộ mã hóa đã loại bỏ nhiễu nền đáng kể, tại bộ giải mã, nơi mạng tăng mẫu để khôi phục ranh giới xương, tín hiệu định vị vẫn có nguy cơ bị phân tán. Để dẫn đường xuyên suốt, khóa luận đề xuất Cơ chế chú ý có điều kiện (CAD), thay thế trực tiếp Cổng chú ý cơ sở của Attention U-Net tại từng tầng giải mã.
-
-Khác với Cổng chú ý gốc~\cite{oktay2018attentionunet}, nơi tín hiệu cổng $\mathbf{g}$ được tính hoàn toàn từ đặc trưng tầng giải mã bên dưới và không có thông tin định hướng từ bác sĩ, CAD bổ sung câu nhắc trực tiếp vào $\mathbf{g}$: khối giải mã chú ý có điều kiện tích hợp tri thức câu nhắc vào tín hiệu cổng qua cơ chế dung hợp cộng có trọng số tin cậy. Bản đồ câu nhắc $\mathbf{H}_{prompt}$ được giảm mẫu về kích thước của $\mathbf{g}$, đưa qua bộ mã hóa hai tầng tích chập ($3\times 3$, InstanceNorm, ReLU) để trích xuất biểu diễn $\mathbf{p}_{\text{enc}}$, và một điểm tin cậy vô hướng $c \in (0,1)$ được tính bằng cách áp dụng GAP lên $\mathbf{p}_{\text{enc}}$:
-\begin{equation}
-    \mathbf{p}_{\text{enc}} = f_{\text{enc}}(\mathbf{H}_{prompt}), \quad
-    c = \sigma\!\left(\text{GAP}(\mathbf{p}_{\text{enc}})\right)
-    \label{eq:prompt_confidence}
-\end{equation}
-Tín hiệu cổng được điều kiện hóa bằng phép cộng có trọng số:
-\begin{equation}
-    \mathbf{g}' = \mathbf{g} + c \cdot \alpha \cdot w_l \cdot \mathbf{p}_{\text{enc}}
-    \label{eq:conditioned_gate}
-\end{equation}
-trong đó $\alpha = \sigma(\alpha_{\text{raw}})$ là trọng số pha trộn học được, và $w_l$ là hệ số tỷ lệ theo tầng giải mã $l$, được xác định qua thực nghiệm trên tập xác thực (lịch trình cụ thể tại Chương~\ref{Chapter4}), điều tiết mức độ ảnh hưởng của câu nhắc tại mỗi tầng.
-
-Tín hiệu $\mathbf{g}'$ sau đó được đưa vào Cổng chú ý không gian lưới 2D tiêu chuẩn để tính hệ số chú ý $\boldsymbol{\alpha}_{cond}$ điều chỉnh đặc trưng kết nối tắt $\mathbf{x}^l$, kết hợp cùng kết nối dư tắt và tín hiệu dư câu nhắc tại đầu ra ($+\beta \cdot \mathbf{H}_{prompt}$, $\beta$ học được). Thiết kế đa lớp này đảm bảo câu nhắc được duy trì xuyên suốt bộ giải mã qua hệ số $w_l$ theo từng tầng, không chỉ ảnh hưởng qua một điểm duy nhất. Các siêu tham số cụ thể của PSG và CAD (lịch trình $w_l$, hệ số kết nối dư) là chi tiết triển khai xác định qua thực nghiệm trên tập xác thực, không phải đóng góp kỹ thuật cốt lõi; giá trị chi tiết tại Mục~\ref{subsec:hyperparameters}, Chương~\ref{Chapter4}. Sự kết hợp giữa PSG và CAD là yếu tố chính mang lại cải thiện đáng kể về Dice so với các mạng cơ sở tự động (chi tiết tại Chương~\ref{Chapter4}).
+Khác với các mô hình nền tảng như SAM và SAM-Med2D~\cite{2023-SAM-Kirillov,2023-SAMMed2D-Cheng}, vốn mã hóa hộp giới hạn thành biểu diễn nhúng phù hợp với kiến trúc Transformer, PGA-UNet duy trì câu nhắc dưới dạng bản đồ hai chiều. Thiết kế này phù hợp với CNN và cho phép điều biến đặc trưng trực tiếp theo từng vị trí không gian.
 
 % ------------------------------------------------------------
-\section{Tóm tắt giải thuật hệ thống: Huấn luyện và Suy luận}
+\subsection{Cổng không gian tại bộ mã hóa}
+\label{subsec:psg}
+% ------------------------------------------------------------
+
+Trong U-Net truyền thống, bộ mã hóa trích xuất đặc trưng trên toàn bộ ảnh mà không nhận thông tin về vùng người dùng quan tâm. Đối với ảnh X-quang, đặc trưng từ nền, cấu trúc xương chồng lấp hoặc vùng có độ tương phản cao có thể làm giảm khả năng tập trung vào tổn thương.
+
+PGA-UNet bổ sung Cổng không gian PSG (\textit{Prompt Spatial Gate}) tại các tầng mã hóa. PSG sử dụng bản đồ nhiệt để điều biến đặc trưng theo không gian, qua đó ưu tiên vùng được chỉ định ngay từ quá trình trích xuất đặc trưng.
+
+Tại tầng mã hóa thứ $l$, bản đồ nhiệt được giảm mẫu bằng nội suy song tuyến tính về cùng độ phân giải với đặc trưng $\mathbf{x}^{l}$:
+
+\begin{equation}
+    \mathbf{H}^{l}
+    =
+    \operatorname{Bilinear}
+    \left(
+        \mathbf{H}_{\mathrm{prompt}},
+        \frac{H}{2^{l}},
+        \frac{W}{2^{l}}
+    \right).
+    \label{eq:psg_downsample}
+\end{equation}
+
+Bản đồ sau khi giảm mẫu được đưa qua phép tích chập $1\times1$ và hàm Sigmoid để sinh trọng số điều biến:
+
+\begin{equation}
+    \mathbf{A}^{l}_{\mathrm{PSG}}
+    =
+    \sigma
+    \left(
+        \mathbf{W}^{l}_{\mathrm{gate}}
+        \ast
+        \mathbf{H}^{l}
+    \right),
+    \label{eq:psg_attention}
+\end{equation}
+
+trong đó $\mathbf{W}^{l}_{\mathrm{gate}}$ ánh xạ bản đồ một kênh sang cùng số kênh với đặc trưng $\mathbf{x}^{l}$. Đặc trưng đầu ra của PSG được xác định bởi:
+
+\begin{equation}
+    \widetilde{\mathbf{x}}^{l}
+    =
+    \mathbf{x}^{l}
+    \odot
+    \left(
+        1+
+        \alpha^{l}_{\mathrm{PSG}}
+        \mathbf{A}^{l}_{\mathrm{PSG}}
+    \right),
+    \label{eq:spatial_gate}
+\end{equation}
+
+với $\odot$ là phép nhân theo phần tử và
+$\alpha^{l}_{\mathrm{PSG}}\in[0,1]$ là hệ số học được, được khởi tạo bằng 0,1.
+
+Thành phần $1+$ trong Phương trình~\eqref{eq:spatial_gate} tạo một kết nối dư, giúp duy trì đường truyền của đặc trưng ban đầu. PSG vì vậy không triệt tiêu trực tiếp đặc trưng ảnh mà học mức khuếch đại theo không gian từ câu nhắc. Thiết kế này cho phép bộ mã hóa ưu tiên đặc trưng liên quan đến vùng được chỉ định trong khi vẫn giữ lại thông tin ngữ cảnh của ảnh.
+
+Khác với phương pháp chỉ ghép bản đồ câu nhắc vào ảnh đầu vào, PSG đưa tín hiệu định hướng vào nhiều mức biểu diễn của bộ mã hóa. Hiệu quả riêng của PSG và sự phối hợp giữa PSG với CAD được kiểm chứng bằng nghiên cứu loại bỏ thành phần tại Chương~\ref{Chapter4}.
+
+% ------------------------------------------------------------
+\subsection{Cơ chế chú ý có điều kiện tại bộ giải mã}
+\label{subsec:cad}
+% ------------------------------------------------------------
+
+PSG đưa câu nhắc vào bộ mã hóa, nhưng tín hiệu định vị có thể suy giảm trong quá trình giảm mẫu và truyền qua các tầng sâu. PGA-UNet vì vậy bổ sung CAD (\textit{Conditional Attention Decoder}) tại bộ giải mã để tiếp tục điều kiện hóa quá trình khôi phục mặt nạ bằng câu nhắc.
+
+Trong Attention U-Net~\cite{oktay2018attentionunet}, hệ số chú ý tại kết nối tắt được tính từ đặc trưng bộ mã hóa $\mathbf{x}^{l}$ và tín hiệu cổng $\mathbf{g}^{l}$ của bộ giải mã. Tín hiệu này được hình thành hoàn toàn từ đặc trưng nội bộ của mạng và không nhận trực tiếp thông tin từ câu nhắc.
+
+Trong CAD, bản đồ nhiệt được giảm mẫu về cùng độ phân giải với tín hiệu cổng và đưa qua bộ mã hóa câu nhắc:
+
+\begin{equation}
+    \mathbf{p}^{l}_{\mathrm{enc}}
+    =
+    f^{l}_{\mathrm{enc}}
+    \left(
+        \operatorname{Resize}
+        \left(
+            \mathbf{H}_{\mathrm{prompt}},
+            \operatorname{size}(\mathbf{g}^{l})
+        \right)
+    \right),
+    \label{eq:prompt_encoding}
+\end{equation}
+
+trong đó $f^{l}_{\mathrm{enc}}$ gồm các phép tích chập, chuẩn hóa và hàm kích hoạt, có nhiệm vụ chuyển bản đồ một kênh thành biểu diễn phù hợp với đặc trưng tại tầng giải mã thứ $l$.
+
+Từ biểu diễn này, một hệ số điều chế câu nhắc được xác định:
+
+\begin{equation}
+    c^{l}
+    =
+    \sigma
+    \left(
+        \operatorname{GAP}
+        \left(
+            \mathbf{p}^{l}_{\mathrm{enc}}
+        \right)
+    \right),
+    \label{eq:prompt_confidence}
+\end{equation}
+
+trong đó $\operatorname{GAP}$ là phép gộp trung bình toàn cục. Giá trị $c^{l}$ được sử dụng như hệ số điều chế học được, không được diễn giải là xác suất tin cậy đã hiệu chỉnh.
+
+Tín hiệu cổng được điều kiện hóa bởi đặc trưng câu nhắc:
+
+\begin{equation}
+    \mathbf{g}'^{\,l}
+    =
+    \mathbf{g}^{l}
+    +
+    c^{l}
+    \alpha^{l}_{\mathrm{CAD}}
+    w_l
+    \mathbf{p}^{l}_{\mathrm{enc}},
+    \label{eq:conditioned_gate}
+\end{equation}
+
+trong đó $\alpha^{l}_{\mathrm{CAD}}$ là hệ số pha trộn học được và $w_l$ điều chỉnh mức ảnh hưởng của câu nhắc tại từng tầng giải mã.
+
+Hệ số chú ý tại kết nối tắt được tính bởi:
+
+\begin{equation}
+    \mathbf{A}^{l}_{\mathrm{CAD}}
+    =
+    \sigma
+    \left[
+        \boldsymbol{\psi}^{l}
+        \ast
+        \delta
+        \left(
+            \mathbf{W}^{l}_{x}\ast\widetilde{\mathbf{x}}^{l}
+            +
+            \mathbf{W}^{l}_{g}\ast\mathbf{g}'^{\,l}
+        \right)
+    \right],
+    \label{eq:cad_attention}
+\end{equation}
+
+trong đó $\delta$ là hàm ReLU,
+$\mathbf{W}^{l}_{x}$ và $\mathbf{W}^{l}_{g}$ là các phép chiếu đặc trưng, còn $\boldsymbol{\psi}^{l}$ ánh xạ kết quả về bản đồ chú ý một kênh. Đặc trưng kết nối tắt sau chú ý được xác định bởi:
+
+\begin{equation}
+    \widehat{\mathbf{x}}^{l}
+    =
+    \widetilde{\mathbf{x}}^{l}
+    \odot
+    \mathbf{A}^{l}_{\mathrm{CAD}}.
+    \label{eq:cad_skip}
+\end{equation}
+
+Như vậy, CAD khác cổng chú ý nguyên bản ở chỗ tín hiệu điều khiển được điều kiện hóa trực tiếp bởi câu nhắc bên ngoài. PSG định hướng quá trình mã hóa, còn CAD tiếp tục duy trì thông tin này trong quá trình giải mã. Sự phối hợp giữa hai thành phần giúp câu nhắc tác động xuyên suốt mạng thay vì chỉ tại đầu vào hoặc một tầng đơn lẻ.
+
+Các hệ số $w_l$, tham số khởi tạo và cấu hình huấn luyện được lựa chọn trên tập xác thực và giữ cố định khi đánh giá tập kiểm thử. Giá trị cụ thể được trình bày tại Mục~\ref{subsec:models_compared}, Chương~\ref{Chapter4}; đóng góp của từng thành phần được phân tích tại Mục~\ref{subsec:ablation_arch}.
+
+% ------------------------------------------------------------
+\section{Quy trình huấn luyện và suy luận}
 \label{sec:algorithm_summary}
 % ------------------------------------------------------------
 
-Để làm rõ toàn bộ thiết kế đã trình bày, mục này phát biểu chính thức hai giải thuật cốt lõi: quy trình huấn luyện ngoại tuyến (Algorithm~\ref{alg:offline}) và suy luận trực tuyến (Algorithm~\ref{alg:online}), phân tách rõ giai đoạn ngoại tuyến (sinh Bản đồ nhiệt từ mặt nạ nhãn gốc, tối ưu tham số) và giai đoạn trực tuyến (nhận đầu vào từ bác sĩ, sinh Bản đồ nhiệt từ hộp giới hạn người dùng vẽ, trả mặt nạ phân đoạn).
-
-\begin{algorithm}[H]
-\caption{Quy trình huấn luyện ngoại tuyến}
-\label{alg:offline}
-\begin{algorithmic}[1]
-\Require Tập dữ liệu $\mathcal{D} = \{(\mathbf{I}_i, \mathbf{M}_i)\}_{i=1}^{N}$ (ảnh X-quang và mặt nạ phân đoạn cấp độ điểm ảnh)
-\Ensure Bộ tham số $\boldsymbol{\theta}^*$ của PGA-UNet đã hội tụ
-
-\State Chuẩn hóa kích thước: Chỉnh lại kích thước toàn bộ ảnh trong $\mathcal{D}$ về $512 \times 512$
-\For{mỗi vòng lặp $e = 1, 2, \ldots, E_{\max}$}
-    \For{mỗi lô nhỏ $(\mathbf{I}_i, \mathbf{M}_i)$}
-        \State Trích hộp giới hạn $\mathbf{B}_i$ từ $\mathbf{M}_i$ (hộp giới hạn bao sát mặt nạ + đệm 5~điểm ảnh)
-        \State Chọn kịch bản câu nhắc ngẫu nhiên: \textit{Bao trọn} (70\%) hoặc \textit{Lệch tâm} (30\%)
-        \State Sinh Bản đồ nhiệt: $\mathbf{H}_i = \mathbf{B}_{i,\text{mask}} \ast \mathbf{K}_{\text{Gaussian}}(k{=}31)$
-        \State Tính đầu ra dự đoán: $\hat{\mathbf{y}}_i = f_{\text{PGA}}(\mathbf{I}_i, \mathbf{H}_i;\; \boldsymbol{\theta})$
-        \State Tính hàm mất mát: $\mathcal{L} = \mathcal{L}_{\text{BCE}} + \mathcal{L}_{\text{Dice}}$
-        \State Cập nhật: $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta \nabla_{\boldsymbol{\theta}} \mathcal{L}$ \hfill (AdamW, giới hạn đạo hàm $\leq 1.0$)
-    \EndFor
-    \State Tính Dice xác thực trên tập xác thực; giảm tốc độ học nếu không cải thiện (lịch trình thích ứng)
-    \If{Dice xác thực không cải thiện sau 15 vòng lặp liên tiếp}
-        \State break (dừng sớm)
-    \EndIf
-\EndFor
-\State \Return $\boldsymbol{\theta}^* \leftarrow$ tham số tại vòng lặp có Dice xác thực cao nhất
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\caption{Quy trình suy luận trực tuyến}
-\label{alg:online}
-\begin{algorithmic}[1]
-\Require Ảnh X-quang đầu vào $\mathbf{I}$; hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ vẽ quanh vùng nghi ngờ (có thể rỗng nếu bác sĩ chưa vẽ)
-\Ensure Mặt nạ phân đoạn $\hat{\mathbf{M}}$, hoặc thông báo phù hợp
-
-\If{$\mathbf{B} = \emptyset$}
-    \State \Return $\emptyset$ \Comment{Yêu cầu bác sĩ cung cấp hộp giới hạn; Bản đồ nhiệt toàn giá trị 0 không xác định hành vi phân đoạn}
-\EndIf
-\State Sinh Bản đồ nhiệt: $\mathbf{H} \leftarrow \mathbf{B}_{\text{mask}} \ast \mathbf{K}_{\text{Gaussian}}(k{=}31)$
-\State Tính xác suất phân đoạn: $\hat{\mathbf{y}} \leftarrow f_{\text{PGA}}(\mathbf{I}, \mathbf{H};\; \boldsymbol{\theta}^*)$
-\State Tạo mặt nạ nhị phân: $\hat{\mathbf{M}} \leftarrow \mathbf{1}[\hat{\mathbf{y}} \geq 0.5]$
-\State \Return $\hat{\mathbf{M}}$ (hiển thị chồng lên ảnh gốc $\mathbf{I}$)
-\end{algorithmic}
-\end{algorithm}
-
-Độ phức tạp suy luận: Algorithm~\ref{alg:online} chỉ gồm một lượt truyền xuôi qua PGA-UNet, không có vòng lặp phụ thuộc kích thước hộp giới hạn, nên độ phức tạp thời gian là $\mathcal{O}(HW)$ theo kích thước ảnh đầu vào $H \times W$ ($512 \times 512$ trong khóa luận), tương đương chi phí một lượt suy luận CNN tiêu chuẩn, thấp hơn nhiều so với các mô hình nền tảng dùng Transformer như SAM-Med2D.
-
-Câu nhắc rỗng: Nếu $\mathbf{B} = \emptyset$, hệ thống từ chối phân đoạn thay vì suy luận với Bản đồ nhiệt bằng không, ma trận toàn giá trị 0 không mang thông tin định hướng, khiến Cổng không gian không khuếch đại được vùng nào và Cơ chế chú ý có điều kiện chỉ còn dựa vào tín hiệu bộ giải mã mà không có ràng buộc không gian, cho ra mặt nạ thiếu tin cậy. Từ chối tường minh ở đây ưu tiên an toàn lâm sàng hơn cố phân đoạn với đầu vào không đủ thông tin.
+Phần này tóm tắt hai quy trình chính của PGA-UNet: huấn luyện ngoại tuyến và suy luận với câu nhắc do người dùng cung cấp. Trong giai đoạn huấn luyện, hộp giới hạn được sinh từ mặt nạ nhãn gốc và điều chỉnh để mô phỏng sai lệch thao tác. Trong giai đoạn suy luận, mô hình nhận trực tiếp hộp giới hạn của người dùng.
 
 % ------------------------------------------------------------
-\section{Mở rộng ứng dụng: Mô phỏng quy trình hỗ trợ lâm sàng hai giai đoạn}
+\subsection{Quy trình huấn luyện}
+% ------------------------------------------------------------
+
+Đầu vào huấn luyện gồm ảnh X-quang và mặt nạ phân đoạn. Với mỗi mẫu, hộp giới hạn được trích từ mặt nạ, sau đó biến đổi theo kịch bản câu nhắc Bao trọn hoặc Lệch tâm. Bản đồ nhiệt được tạo từ hộp giới hạn và đưa cùng ảnh vào PGA-UNet. Tham số mô hình được tối ưu bằng tổng của Binary Cross-Entropy và Dice Loss.
+
+\begin{algorithm}[H]
+\caption{Quy trình huấn luyện PGA-UNet}
+\label{alg:offline}
+\begin{algorithmic}[1]
+\Require Tập dữ liệu
+$\mathcal{D}
+=
+\{(\mathbf{I}_i,\mathbf{M}_i)\}_{i=1}^{N}$
+\Ensure Bộ tham số đã huấn luyện $\boldsymbol{\theta}^{*}$
+
+\State Khởi tạo tham số PGA-UNet $\boldsymbol{\theta}$
+\For{mỗi epoch $e=1,2,\ldots,E_{\max}$}
+    \For{mỗi lô nhỏ $(\mathbf{I},\mathbf{M})$}
+        \State Thay đổi kích thước ảnh và mặt nạ về kích thước đầu vào
+        \State Trích hộp giới hạn $\mathbf{B}$ từ mặt nạ $\mathbf{M}$
+        \State Điều chỉnh $\mathbf{B}$ theo kịch bản câu nhắc được chọn
+        \State Tạo bản đồ nhiệt
+        $\mathbf{H}_{\mathrm{prompt}}$
+        từ $\mathbf{B}$
+        \State Dự đoán
+        $\widehat{\mathbf{Y}}
+        \leftarrow
+        f_{\mathrm{PGA}}
+        (\mathbf{I},\mathbf{H}_{\mathrm{prompt}};\boldsymbol{\theta})$
+        \State Tính
+        $\mathcal{L}
+        \leftarrow
+        \mathcal{L}_{\mathrm{BCE}}
+        +
+        \mathcal{L}_{\mathrm{Dice}}$
+        \State Cập nhật $\boldsymbol{\theta}$ bằng bộ tối ưu AdamW
+    \EndFor
+    \State Tính Dice trên tập xác thực
+    \State Điều chỉnh tốc độ học theo kết quả xác thực
+    \If{Dice xác thực không cải thiện trong 15 epoch}
+        \State Dừng quá trình huấn luyện
+    \EndIf
+\EndFor
+\State \Return
+$\boldsymbol{\theta}^{*}
+\leftarrow$
+tham số có Dice xác thực cao nhất
+\end{algorithmic}
+\end{algorithm}
+
+Mô hình được huấn luyện riêng trên từng bộ dữ liệu. Các kịch bản câu nhắc và cấu hình huấn luyện chi tiết được trình bày tại Chương~\ref{Chapter4}.
+
+% ------------------------------------------------------------
+\subsection{Quy trình suy luận}
+% ------------------------------------------------------------
+
+Trong giai đoạn suy luận, người dùng cung cấp ảnh X-quang và hộp giới hạn vùng nghi ngờ. Hộp được chuyển thành bản đồ nhiệt theo cùng phương pháp sử dụng khi huấn luyện. Mô hình trả về bản đồ xác suất, sau đó được nhị phân hóa tại ngưỡng 0,5 để tạo mặt nạ cuối cùng.
+
+\begin{algorithm}[H]
+\caption{Quy trình suy luận PGA-UNet}
+\label{alg:online}
+\begin{algorithmic}[1]
+\Require Ảnh X-quang $\mathbf{I}$ và hộp giới hạn
+$\mathbf{B}=(x_1,y_1,x_2,y_2)$
+\Ensure Mặt nạ phân đoạn $\widehat{\mathbf{M}}$
+
+\If{$\mathbf{B}=\emptyset$}
+    \State \Return thông báo yêu cầu cung cấp hộp giới hạn
+\EndIf
+\State Chuẩn hóa ảnh $\mathbf{I}$ về kích thước đầu vào
+\State Tạo mặt nạ hộp giới hạn $\mathbf{B}_{\mathrm{mask}}$
+\State Tạo bản đồ nhiệt
+$\mathbf{H}_{\mathrm{prompt}}
+\leftarrow
+\mathbf{B}_{\mathrm{mask}}
+\ast
+\mathbf{K}_{\mathrm{Gaussian}}(31)$
+\State Tính xác suất phân đoạn
+$\widehat{\mathbf{Y}}
+\leftarrow
+f_{\mathrm{PGA}}
+(\mathbf{I},\mathbf{H}_{\mathrm{prompt}};\boldsymbol{\theta}^{*})$
+\State Tạo mặt nạ
+$\widehat{\mathbf{M}}
+\leftarrow
+\mathbf{1}[\widehat{\mathbf{Y}}\geq0{,}5]$
+\State \Return $\widehat{\mathbf{M}}$
+\end{algorithmic}
+\end{algorithm}
+
+Nếu người dùng chưa cung cấp hộp giới hạn, hệ thống không thực hiện phân đoạn. Bản đồ nhiệt toàn giá trị 0 không chứa thông tin định vị và không phù hợp với điều kiện sử dụng của PGA-UNet.
+
+Quy trình suy luận chỉ yêu cầu một lượt truyền xuôi qua mô hình. Với kiến trúc và số kênh cố định, chi phí tính toán tăng theo số điểm ảnh đầu vào. So sánh định lượng về số tham số và chi phí suy luận giữa PGA-UNet với các mô hình khác được trình bày tại Mục~\ref{subsec:efficiency}, Chương~\ref{Chapter4}.
+
+% ------------------------------------------------------------
+\section{Mở rộng luồng xử lý với module sàng lọc}
 \label{sec:tong_the}
 % ------------------------------------------------------------
 
-Để kiểm thử PGA-UNet trong điều kiện gần thực tế, nơi luồng ảnh đầu vào gồm cả ca lành tính lẫn bệnh lý chứ không phải tập ảnh bệnh thuần túy, mục này tích hợp thêm một module sàng lọc tiêu chuẩn (Gatekeeper: EfficientNet-B3) trước bước phân đoạn, tạo thành luồng xử lý hai giai đoạn. Cần lưu ý Gatekeeper chỉ đóng vai trò giả định quy trình ứng dụng, không phải đóng góp kiến trúc của khóa luận; đóng góp khoa học cốt lõi vẫn là thiết kế và tối ưu kiến trúc PGA-UNet (Mục~\ref{sec:pga_unet}--\ref{sec:algorithm_summary}). Luồng xử lý bán tự động: bác sĩ luôn xác nhận trước mỗi lần chuyển bước, theo thiết kế \textit{triage mềm} thay vì bộ chặn cứng tự động.
+PGA-UNet được huấn luyện để phân đoạn ảnh bệnh lý khi đã có hộp giới hạn vùng nghi ngờ. Trong thực tế, luồng ảnh đầu vào có thể gồm cả ảnh bình thường và ảnh bệnh lý. Để minh họa khả năng tích hợp PGA-UNet vào điều kiện này, khóa luận bổ sung Gatekeeper sử dụng EfficientNet-B3 trước bước phân đoạn.
 
-\FloatBarrier
-\subsection{Giai đoạn 1: Sàng lọc bệnh lý (Gatekeeper)}
+Gatekeeper chỉ là thành phần hỗ trợ triển khai, không thuộc đóng góp kiến trúc chính của khóa luận. Module trả về xác suất bất thường để người dùng tham khảo, không tự động loại bỏ ảnh hoặc thay thế quyết định của người dùng chuyên môn.
+
+% ------------------------------------------------------------
+\subsection{Sàng lọc ảnh đầu vào}
 \label{sec:phan_lop}
+% ------------------------------------------------------------
 
-PGA-UNet chỉ được huấn luyện trên ảnh có bệnh lý; đưa thẳng ảnh bình thường vào sẽ sinh mặt nạ sai (FP). Vì vậy, một module phân lớp nhị phân (Gatekeeper: EfficientNet-B3, chi tiết kiến trúc, hàm mất mát và kết quả định lượng tại Mục~\ref{sec:danh_gia_phan_lop}, Chương~\ref{Chapter4}) được đặt trước bước phân đoạn, chỉ hiển thị xác suất dự đoán dưới dạng gợi ý kèm độ tin cậy, không tự động loại bỏ ảnh hay quyết định thay bác sĩ.
+Gatekeeper phân loại ảnh thành bình thường hoặc nghi ngờ có bất thường. Với ảnh được gợi ý có bất thường, người dùng kiểm tra và cung cấp hộp giới hạn để chuyển sang PGA-UNet. Với ảnh được gợi ý bình thường, người dùng vẫn có thể xác nhận lại hoặc chủ động khoanh vùng nếu phát hiện dấu hiệu nghi ngờ.
 
-Hai nhánh xử lý tiếp theo không đối xứng:
-\begin{itemize}
-    \item Gợi ý có bệnh lý: bác sĩ khoanh hộp giới hạn, ảnh chuyển thẳng sang giai đoạn phân đoạn (Mục~\ref{subsec:pga_stage}).
-    \item Gợi ý không bệnh: hệ thống phát cảnh báo yêu cầu bác sĩ xác nhận lại một lần nhằm phòng âm tính giả, đáng lưu ý vì Gatekeeper chỉ đạt Sensitivity dưới 90\% (Mục~\ref{sec:danh_gia_phan_lop}, Chương~\ref{Chapter4}). Bác sĩ có thể kết thúc quy trình, hoặc chủ động cung cấp hộp giới hạn để chuyển ảnh sang giai đoạn phân đoạn như nhánh có bệnh lý.
-\end{itemize}
-Quyết định cuối cùng luôn thuộc về chuyên gia y tế; module này không phải đóng góp kỹ thuật trọng tâm, chỉ là thành phần hỗ trợ lấp khoảng trống giữa điều kiện huấn luyện và triển khai thực tế.
+Cơ chế này được thiết kế theo hướng \textit{triage mềm}: Gatekeeper chỉ hỗ trợ ưu tiên ảnh, còn quyết định chuyển sang bước phân đoạn vẫn thuộc về người dùng chuyên môn. Cách tổ chức này hạn chế nguy cơ ảnh bệnh lý bị loại hoàn toàn chỉ do sai số của module phân loại.
 
-\FloatBarrier
-\subsection{Giai đoạn 2: Phân đoạn có hướng dẫn (PGA-UNet)}
+Cấu hình và kết quả thực nghiệm của Gatekeeper trên BTXRD và FracAtlas được trình bày tại Mục~\ref{sec:product_overview}, Chương~\ref{Chapter4}.
+
+% ------------------------------------------------------------
+\subsection{Phân đoạn có hướng dẫn}
 \label{subsec:pga_stage}
+% ------------------------------------------------------------
 
-Bác sĩ khoanh hộp giới hạn quanh vùng nghi ngờ; tọa độ được chuyển ngay thành Bản đồ nhiệt câu nhắc, đưa song song cùng ảnh gốc vào PGA-UNet (kiến trúc chi tiết tại Mục~\ref{sec:pga_unet}), xuất mặt nạ phân đoạn chồng lên ảnh gốc. Bác sĩ xem lại mặt nạ, xác nhận hoàn tất hoặc điều chỉnh hộp giới hạn để phân đoạn lại nếu kết quả chưa đạt; thao tác này chỉ cần cập nhật hộp giới hạn và thực thi lại quy trình suy luận, không đổi kiến trúc hay tham số mô hình.
+Sau khi xác định vùng nghi ngờ, người dùng vẽ hộp giới hạn trên ảnh X-quang. Hệ thống chuyển hộp thành bản đồ nhiệt và đưa đồng thời ảnh với bản đồ câu nhắc vào PGA-UNet. Mặt nạ dự đoán được hiển thị chồng lên ảnh gốc để hỗ trợ quan sát.
 
-\begin{figure}[H]
+Nếu kết quả chưa phù hợp, người dùng có thể điều chỉnh hộp giới hạn và thực hiện lại suy luận. Quá trình hiệu chỉnh chỉ thay đổi câu nhắc đầu vào, không cập nhật kiến trúc hoặc tham số mô hình.
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.88\textwidth, keepaspectratio]{images/pipeline_pga_app_inference.png}
-    \caption{Luồng xử lý tổng thể: EfficientNet-B3 $\to$ PGA-UNet.}
+    \includegraphics[
+        width=0.88\textwidth,
+        keepaspectratio
+    ]{images/pipeline_pga_app_inference.png}
+    \caption{Luồng xử lý hỗ trợ gồm Gatekeeper và PGA-UNet.}
     \label{fig:pipeline_overview}
 \end{figure}
+
+Luồng trên nhằm minh họa cách PGA-UNet có thể được tích hợp vào một quy trình xử lý ảnh hỗn hợp. Do khóa luận chưa thực hiện thử nghiệm có sự tham gia trực tiếp của bác sĩ, đây chưa phải quy trình lâm sàng đã được xác nhận.
 
 % ------------------------------------------------------------
 \section{Tổng kết chương}
 \label{sec:summary_ch3}
 % ------------------------------------------------------------
 
-Chương này trình bày ba thành phần cốt lõi của PGA-UNet (Bản đồ nhiệt dạng cao nguyên, PSG, CAD), đóng góp kỹ thuật trọng tâm của khóa luận, cùng một thực nghiệm minh họa kết hợp module sàng lọc (Gatekeeper) và hai giải thuật hình thức hóa luồng huấn luyện ngoại tuyến lẫn suy luận trực tuyến. Bảng~\ref{tab:inheritance_contribution} phân định ranh giới giữa phần kế thừa (khung U-Net, Cổng chú ý) và phần đóng góp mới (PSG, CAD, biểu diễn Bản đồ nhiệt liên tục), cơ sở kỹ thuật để Chương~\ref{Chapter4} đo lường định lượng hiệu quả từng đóng góp qua thực nghiệm cơ sở, nghiên cứu loại bỏ thành phần và phân tích so sánh chi tiết.
+Chương này đã trình bày PGA-UNet với ba thành phần chính: bản đồ nhiệt câu nhắc dạng cao nguyên, PSG tại bộ mã hóa và CAD tại bộ giải mã. PSG đưa thông tin không gian vào quá trình trích xuất đặc trưng, trong khi CAD tiếp tục điều kiện hóa quá trình khôi phục mặt nạ tại bộ giải mã.
+
+Chương cũng mô tả quy trình huấn luyện, suy luận và khả năng tích hợp PGA-UNet với Gatekeeper trong một luồng xử lý hỗ trợ. Hiệu quả của từng thành phần kiến trúc và kết quả thực nghiệm trên BTXRD, FracAtlas được đánh giá tại Chương~\ref{Chapter4}.

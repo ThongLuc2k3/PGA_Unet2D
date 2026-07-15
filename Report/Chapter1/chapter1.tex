@@ -3,102 +3,204 @@
 % ============================================================
 \chapter{GIỚI THIỆU}
 \label{Chapter1}
- 
+
 % ------------------------------------------------------------
-\section{Bối cảnh chung}
+\section{Bối cảnh nghiên cứu}
 \label{sec:boi_canh}
 % ------------------------------------------------------------
- 
-Chẩn đoán hình ảnh qua tia X (X-quang) là một trong những phương thức cận lâm sàng phổ biến và quan trọng nhất của y khoa hiện đại: hiển thị trực tiếp cấu trúc xương mà không cần can thiệp xâm lấn, được dùng rộng rãi để phát hiện và theo dõi gãy xương, rạn xương, thoái hóa khớp và khối u xương. Tại các cơ sở y tế lớn, số ca chụp X-quang mỗi ngày lên đến hàng trăm ca; Cambridge University Hospitals (Anh) thực hiện hơn 174.000 ca/năm, riêng khoa ngoại trú tiếp nhận 200--300 bệnh nhân/ngày~\cite{cuh2024xray}, đặt áp lực đáng kể lên bác sĩ chẩn đoán hình ảnh và tăng nguy cơ sai sót do mỏi mắt, quá tải.
 
-Trong hệ thống hỗ trợ chẩn đoán bằng máy tính, bước xác định và khoanh vùng tổn thương (\textit{phân đoạn ảnh}) là tiền đề để đo kích thước tổn thương, theo dõi diễn tiến và lập kế hoạch điều trị. Phân đoạn thủ công trên hệ thống PACS tốn nhiều thời gian, phụ thuộc lớn vào kinh nghiệm cá nhân và tiềm ẩn sai sót do mỏi mắt hoặc áp lực công việc.
+Chụp X-quang là một phương thức chẩn đoán hình ảnh phổ biến, cho phép quan sát cấu trúc xương mà không cần can thiệp xâm lấn. Ảnh X-quang được sử dụng trong phát hiện và theo dõi nhiều bất thường cơ xương như gãy xương, rạn xương, thoái hóa khớp và khối u xương. Nhu cầu xử lý loại ảnh này tại các cơ sở y tế có thể rất lớn; Cambridge University Hospitals thực hiện hơn 174.000 lượt chụp X-quang mỗi năm, riêng khoa X-quang ngoại trú tiếp nhận khoảng 200--300 người mỗi ngày~\cite{cuh2024xray}.
 
-Những hạn chế trên thúc đẩy cộng đồng nghiên cứu tìm giải pháp hỗ trợ chẩn đoán tự động dựa trên học sâu. Khoảng một thập kỷ qua, các kiến trúc mạng nơ-ron tích chập như U-Net~\cite{ronneberger2015unet} đạt kết quả đáng khích lệ trong phân đoạn ảnh y khoa; song song đó, các mô hình nền tảng như SAM phổ biến hóa phân đoạn dựa trên câu nhắc trực quan và thúc đẩy hướng nghiên cứu tương tác người-máy, nền tảng khoa học mà khóa luận này kế thừa và phát triển.
- 
+Trong phân tích ảnh y khoa, phân đoạn có nhiệm vụ xác định vùng tổn thương ở cấp độ điểm ảnh. Mặt nạ phân đoạn có thể hỗ trợ quan sát hình dạng, ước lượng kích thước và theo dõi sự thay đổi của vùng bất thường. Tuy nhiên, việc khoanh vùng thủ công đòi hỏi thao tác chi tiết và kết quả có thể phụ thuộc vào kinh nghiệm của người thực hiện, đặc biệt khi tổn thương có độ tương phản thấp hoặc nằm tại vùng giải phẫu chồng lấp.
+
+Sự phát triển của học sâu đã tạo ra nhiều phương pháp hỗ trợ tự động hóa quá trình này. U-Net~\cite{ronneberger2015unet} và các biến thể đạt kết quả tích cực trên nhiều bài toán phân đoạn ảnh y khoa. Gần đây, Segment Anything Model (SAM)~\cite{2023-SAM-Kirillov} và các mô hình thích nghi cho ảnh y khoa như SAM-Med2D~\cite{2023-SAMMed2D-Cheng} mở rộng hướng phân đoạn dựa trên câu nhắc trực quan, trong đó người dùng cung cấp điểm, hộp giới hạn hoặc mặt nạ thô để xác định vùng cần xử lý.
+
+Phân đoạn dựa trên câu nhắc tạo ra một hướng kết hợp giữa khả năng định vị của con người và khả năng phân đoạn ở cấp độ điểm ảnh của mô hình. Thay vì yêu cầu mô hình tự động tìm mọi vùng bất thường trên toàn ảnh, người dùng có thể cung cấp một hộp giới hạn sơ bộ, còn mô hình thực hiện phần khoanh đường biên chi tiết.
+
 % ------------------------------------------------------------
 \section{Động lực nghiên cứu}
 \label{sec:dong_luc}
 % ------------------------------------------------------------
- 
+
 \subsection{Động lực khoa học}
- 
-Mặc dù đã đạt nhiều tiến bộ, các phương pháp phân đoạn hoàn toàn tự động vẫn tồn tại hạn chế cốt lõi: hoạt động như \textit{hộp đen}, suy luận tự động trên toàn ảnh mà không có thông tin định hướng nào từ chuyên gia. Trong ảnh X-quang xương, nơi các cấu trúc giải phẫu chồng lấp và vùng tổn thương thường có độ tương phản thấp hoặc đặc điểm hình thái gần giống mô lành lân cận, cách tiếp cận này dễ dẫn đến phân đoạn sai lệch (dương tính giả) hoặc bỏ sót tổn thương (âm tính giả).
 
-\textit{Phân đoạn tương tác} đang là một hướng tiếp cận hứa hẹn, nơi chuyên gia cung cấp tín hiệu không gian sơ bộ (ví dụ hộp giới hạn) để định hướng mô hình tập trung vào vùng mục tiêu. Cơ chế này vừa cải thiện độ chính xác khi câu nhắc phù hợp, vừa đảm bảo chuyên gia y tế luôn nắm quyền kiểm soát trong vòng lặp suy luận.
+Trong cấu hình phân đoạn hoàn toàn tự động, mô hình chỉ nhận ảnh đầu vào và phải đồng thời xác định vị trí, loại bỏ nhiễu nền và khôi phục đường biên tổn thương. Nhiệm vụ này đặc biệt khó đối với ảnh X-quang xương vì đây là ảnh chiếu hai chiều của cấu trúc ba chiều, thường xuất hiện hiện tượng xương chồng lấp, độ tương phản không đồng đều và vùng tổn thương có kích thước nhỏ.
 
-Tuy nhiên, cách tích hợp hiệu quả định hướng này vào mạng nơ-ron chuyên biệt cho ảnh y khoa vẫn là một thách thức lớn.
+Phân đoạn tương tác giảm độ khó của bước định vị bằng cách cho phép người dùng cung cấp thông tin không gian. Tuy nhiên, hiệu quả của mô hình không chỉ phụ thuộc vào dạng câu nhắc mà còn phụ thuộc vào cách tín hiệu này được tích hợp vào mạng. Nếu câu nhắc chỉ được ghép với ảnh tại đầu vào, thông tin định hướng có thể thay đổi hoặc suy giảm qua nhiều tầng tích chập. Vì vậy, cần nghiên cứu cơ chế duy trì ảnh hưởng của câu nhắc tại cả bộ mã hóa và bộ giải mã.
+
+Một yêu cầu khác là tính bền bỉ trước sai lệch câu nhắc. Hộp giới hạn trong thực tế không phải lúc nào cũng bao sát tổn thương: hộp có thể rộng hơn cần thiết, bị lệch tâm hoặc chỉ bao phủ một phần vùng mục tiêu. Mô hình phụ thuộc cứng vào đường biên hoặc tâm hộp có thể suy giảm đáng kể khi thao tác của người dùng không hoàn hảo.
 
 \subsection{Động lực thực tiễn}
 
-Trong thực tế lâm sàng, không thể kỳ vọng mọi thao tác của bác sĩ đều hoàn hảo: câu nhắc có thể bị lệch tâm do chú ý không tập trung, hoặc đặt sai vị trí hoàn toàn do nhầm lẫn. Một hệ thống phân đoạn đáng tin cậy cần có \textit{tính bền bỉ}: hoạt động ổn định khi câu nhắc bị sai lệch và phản hồi phù hợp, thay vì im lặng trả về kết quả sai lệch; đồng thời cần tốc độ suy luận thời gian thực và khả năng giải thích quyết định, hai yếu tố thường chưa được cân nhắc đồng thời với độ chính xác khi tích hợp vào quy trình thực tế.
+Các mô hình nền tảng dựa trên Transformer có khả năng phân đoạn linh hoạt nhưng thường có số lượng tham số và chi phí tính toán lớn. Điều này có thể gây khó khăn khi triển khai trên phần cứng có tài nguyên hạn chế hoặc khi cần thời gian phản hồi ngắn trong quá trình tương tác.
 
-Hai động lực trên định hình mục tiêu của khóa luận: không chỉ một mô hình phân đoạn chính xác, mà là một \textit{hệ thống} hỗ trợ tương tác, bền bỉ và minh bạch để thực sự hỗ trợ bác sĩ trong phòng khám.
- 
+Một kiến trúc CNN hạng nhẹ, nhận trực tiếp hộp giới hạn và trả về mặt nạ sau một lượt suy luận, có thể phù hợp hơn với yêu cầu này. Người dùng chỉ cần chỉ định vùng nghi ngờ thay vì vẽ chính xác toàn bộ đường biên; nếu kết quả chưa phù hợp, hộp giới hạn có thể được điều chỉnh và mô hình được chạy lại mà không cần cập nhật tham số.
+
+Từ các động lực trên, khóa luận tập trung phát triển một mô hình phân đoạn tương tác ảnh X-quang xương có ba đặc điểm: khai thác hiệu quả hộp giới hạn, duy trì tính bền bỉ trước sai lệch câu nhắc và sử dụng kiến trúc gọn nhẹ.
+
 % ------------------------------------------------------------
 \section{Phát biểu bài toán}
 \label{sec:phat_bieu}
 % ------------------------------------------------------------
 
-Người dùng cuối: Bác sĩ chẩn đoán hình ảnh làm việc trong ca đọc phim, sử dụng hệ thống PACS để xem xét ảnh X-quang từ nhiều bệnh nhân, có chuyên môn lâm sàng nhưng không nhất thiết có kiến thức kỹ thuật về học sâu; thao tác duy nhất cần thực hiện là khoanh vùng nghi ngờ trên màn hình.
+Bài toán chính của khóa luận là phân đoạn tương tác vùng tổn thương trên ảnh X-quang xương. Đầu vào gồm ảnh X-quang:
 
-Bài toán: Cho ảnh X-quang xương mới $\mathbf{I} \in \mathbb{R}^{H \times W}$ (đầu vào) và hộp giới hạn $\mathbf{B} = (x_1, y_1, x_2, y_2)$ do bác sĩ khoanh lên vùng nghi ngờ, hệ thống cần tự động tạo mặt nạ phân đoạn nhị phân $\hat{\mathbf{M}} \in \{0,1\}^{H \times W}$ (đầu ra, pixel giá trị $1$ là vùng được dự đoán tổn thương) xác định chính xác ranh giới tổn thương trong vùng chỉ định, đồng thời bền vững trước sai lệch thực tế khi vẽ hộp (lệch tâm, khác kích thước). Trong đó $H \times W$ là chiều cao/rộng ảnh (pixel); $(x_1, y_1)$, $(x_2, y_2)$ là tọa độ góc trên-trái và dưới-phải của hộp giới hạn.
-
-Luồng xử lý gồm hai bước tuần tự. Bước đầu, ảnh X-quang qua mô hình sàng lọc để đưa ra gợi ý (có bệnh/không bệnh kèm độ tin cậy); bác sĩ xem và chủ động xác nhận trước khi hệ thống tiếp tục; mô hình không tự động dừng hay chuyển bước mà không có xác nhận. Nếu bác sĩ xác nhận không bệnh lý, quy trình kết thúc; nếu xác nhận có bệnh lý (kể cả khi trái với gợi ý), bác sĩ khoanh hộp và bước phân đoạn có hướng dẫn được kích hoạt:
 \begin{equation}
-    \hat{\mathbf{M}} = \mathbf{1}\!\left[f_{\text{seg}}\!\left(\mathbf{I},\, \mathbf{H}(\mathbf{B});\, \boldsymbol{\theta}_{\text{seg}}\right) \geq 0.5\right]
+    \mathbf{I}
+    \in
+    \mathbb{R}^{H\times W}
 \end{equation}
-trong đó $f_{\text{seg}}(\cdot\,;\,\boldsymbol{\theta}_{\text{seg}})$ là mô hình phân đoạn PGA-UNet (tham số $\boldsymbol{\theta}_{\text{seg}}$ học được ở giai đoạn huấn luyện ngoại tuyến), xuất xác suất tổn thương $\in [0,1]$ cho từng pixel; $\mathbf{H}(\mathbf{B}) \in [0,1]^{H \times W}$ là Bản đồ nhiệt câu nhắc tạo từ hộp giới hạn $\mathbf{B}$ (chi tiết tại Mục~\ref{subsec:heatmap}); $\mathbf{1}[\cdot]$ nhị phân hóa xác suất đầu ra theo ngưỡng $0.5$.
 
-Thiết kế này tuân thủ nguyên tắc \textit{human-in-the-loop} (con người luôn trong vòng lặp) xuyên suốt cả hai bước: ở bước sàng lọc, mô hình chỉ đề xuất gợi ý còn bác sĩ mới xác nhận quyết định (thiết kế \textit{triage mềm}, không phải bộ chặn tự động loại ảnh mà không cho phép can thiệp); ở bước phân đoạn, bác sĩ trực tiếp cung cấp định hướng không gian qua hộp giới hạn; tri thức lâm sàng của chuyên gia luôn tham gia toàn bộ vòng lặp quyết định, không chỉ riêng bước phân đoạn. Chi tiết kiến trúc PGA-UNet, module sàng lọc hỗ trợ và huấn luyện ngoại tuyến tại Chương~\ref{Chapter3}.
- 
+và hộp giới hạn vùng nghi ngờ:
+
+\begin{equation}
+    \mathbf{B}
+    =
+    (x_1,y_1,x_2,y_2),
+\end{equation}
+
+trong đó $(x_1,y_1)$ và $(x_2,y_2)$ lần lượt là tọa độ góc trên bên trái và góc dưới bên phải. Hộp giới hạn được chuyển thành bản đồ nhiệt câu nhắc:
+
+\begin{equation}
+    \mathbf{H}(\mathbf{B})
+    \in
+    [0,1]^{H\times W}.
+\end{equation}
+
+Mục tiêu của mô hình là dự đoán mặt nạ nhị phân:
+
+\begin{equation}
+    \widehat{\mathbf{M}}
+    \in
+    \{0,1\}^{H\times W},
+\end{equation}
+
+trong đó giá trị 1 biểu thị điểm ảnh được dự đoán thuộc vùng tổn thương. Quá trình suy luận được biểu diễn bởi:
+
+\begin{equation}
+    \widehat{\mathbf{M}}
+    =
+    \mathbf{1}
+    \left[
+        f_{\mathrm{PGA}}
+        \left(
+            \mathbf{I},
+            \mathbf{H}(\mathbf{B});
+            \boldsymbol{\theta}
+        \right)
+        \geq 0{,}5
+    \right],
+    \label{eq:problem_segmentation}
+\end{equation}
+
+trong đó $f_{\mathrm{PGA}}$ là PGA-UNet,
+$\boldsymbol{\theta}$ là bộ tham số học được và
+$\mathbf{1}[\cdot]$ là phép nhị phân hóa đầu ra xác suất tại ngưỡng 0,5.
+
+Mô hình cần thỏa mãn các yêu cầu sau:
+
+\begin{itemize}
+    \item dự đoán mặt nạ có mức độ chồng lấp cao với nhãn tham chiếu;
+    \item duy trì đường biên và vị trí vùng tổn thương;
+    \item bền bỉ khi hộp giới hạn rộng hơn hoặc bị lệch khỏi vị trí lý tưởng;
+    \item có số lượng tham số và chi phí suy luận phù hợp với quá trình tương tác.
+\end{itemize}
+
+Trong giai đoạn huấn luyện, hộp giới hạn được tạo từ mặt nạ nhãn gốc và biến đổi theo các kịch bản mô phỏng. Trong giai đoạn suy luận, hộp được cung cấp trực tiếp bởi người dùng. Phạm vi thực nghiệm của khóa luận sử dụng câu nhắc mô phỏng có kiểm soát; việc đánh giá với hộp giới hạn do bác sĩ vẽ trực tiếp được xác định là hướng phát triển tiếp theo.
+
+Bên cạnh bài toán phân đoạn chính, khóa luận thực hiện một thử nghiệm mở rộng với Gatekeeper sử dụng EfficientNet-B3. Module này cung cấp gợi ý sàng lọc trước khi người dùng xác nhận và cung cấp hộp giới hạn. Gatekeeper không thuộc đóng góp kiến trúc chính và không tự động thay thế quyết định của người dùng.
+
 % ------------------------------------------------------------
 \section{Thách thức của bài toán}
 \label{sec:thach_thuc}
 % ------------------------------------------------------------
- 
-Việc xây dựng hệ thống như phát biểu ở trên đối mặt với bốn nhóm thách thức chính:
 
-Về dữ liệu: Ảnh X-quang xương gán nhãn đầy đủ ba cấp (phân lớp, định vị, mặt nạ phân đoạn) còn hạn chế về quy mô, đòi hỏi xử lý đúng cấu trúc đầu vào trước khi huấn luyện.
+Việc xây dựng mô hình phân đoạn tương tác ảnh X-quang xương đặt ra bốn nhóm thách thức chính:
 
-Về mô hình hóa: Ảnh X-quang xương có độ tương phản thấp, cấu trúc giải phẫu chồng lấp, vùng tổn thương dễ nhầm lẫn với mô lành lân cận; cần tích hợp câu nhắc vào kiến trúc mạng sao cho mô hình thực sự \textit{sử dụng} câu nhắc để định hướng phân đoạn, không bỏ qua nó.
+\begin{itemize}
+    \item \textbf{Dữ liệu và chú thích:}
+    Mặt nạ phân đoạn ở cấp độ điểm ảnh tốn nhiều thời gian để xây dựng, trong khi số lượng ảnh bệnh lý có chú thích thường hạn chế. Ngoài ra, một ảnh có thể chứa nhiều vùng tổn thương được biểu diễn bởi các đa giác riêng biệt, đòi hỏi quy trình tiền xử lý và đánh giá nhất quán.
 
-Về tính bền bỉ: Câu nhắc của bác sĩ có thể lệch tâm hoặc lệch kích thước tùy thao tác vẽ; hệ thống cần duy trì hiệu năng ổn định ngay cả khi câu nhắc bị lệch, không phụ thuộc cứng nhắc vào vị trí tâm.
+    \item \textbf{Đặc điểm ảnh X-quang:}
+    Ảnh X-quang có độ tương phản không đồng đều và chứa nhiều cấu trúc giải phẫu chồng lấp. Vùng khối u có thể có hình dạng bất thường, trong khi đường gãy thường nhỏ, mảnh và khó phân biệt với các đường biên xương tự nhiên.
 
-Về khả năng triển khai: Hệ thống cần thời gian phản hồi đủ nhanh trên phần cứng lâm sàng thực tế, đòi hỏi độ chính xác cao đi kèm số tham số tối thiểu.
- 
+    \item \textbf{Tích hợp và duy trì câu nhắc:}
+    Mô hình cần khai thác thông tin không gian từ hộp giới hạn tại nhiều mức đặc trưng. Câu nhắc không nên chỉ ảnh hưởng tại đầu vào rồi suy giảm qua các tầng sâu, đồng thời cũng không được khiến mô hình phụ thuộc cứng vào đường biên hộp.
+
+    \item \textbf{Tính bền bỉ và hiệu quả tính toán:}
+    Mô hình cần duy trì hiệu năng khi câu nhắc bị lệch tâm hoặc thay đổi kích thước. Bên cạnh độ chính xác, kiến trúc phải đủ gọn để hỗ trợ suy luận lặp lại khi người dùng điều chỉnh hộp giới hạn.
+\end{itemize}
+
 % ------------------------------------------------------------
 \section{Đóng góp của khóa luận}
 \label{sec:dong_gop}
 % ------------------------------------------------------------
 
-Đóng góp cốt lõi và xuyên suốt của khóa luận là đề xuất kiến trúc PGA-UNet, cụ thể hóa qua ba điểm sau:
+Đóng góp chính của khóa luận là thiết kế và đánh giá PGA-UNet, một kiến trúc CNN hạng nhẹ dành cho phân đoạn tương tác ảnh X-quang xương. Các đóng góp cụ thể gồm:
 
 \begin{enumerate}
-    \item Biểu diễn câu nhắc dạng Bản đồ nhiệt Gaussian dạng cao nguyên: Khóa luận đề xuất mã hóa hộp giới hạn do bác sĩ vẽ thành một kênh hai chiều liên tục, đồng kích thước với bản đồ đặc trưng, thay vì vector nhúng vị trí rời rạc (như SAM/SAM-Med2D) hay mặt nạ nhị phân truyền thống, cung cấp tín hiệu định hướng có đạo hàm liên tục, tương thích trực tiếp với phép tích chập của CNN, hạn chế sự biến thiên gradient đột ngột tại đường biên hộp giới hạn.
+    \item \textbf{Biểu diễn hộp giới hạn bằng bản đồ nhiệt dạng cao nguyên.}
 
-    \item Kiến trúc PGA-UNet điều kiện hóa bởi câu nhắc: Trên nền U-Net, khóa luận đề xuất hai thành phần tích hợp câu nhắc vào cả hai nhánh của mạng:
-    \begin{itemize}
-        \item \textit{Cổng không gian tại bộ mã hóa (PSG):} tích hợp Bản đồ nhiệt vào từng tầng bộ mã hóa theo cơ chế khuếch đại có chọn lọc, không tồn tại trong U-Net hay Attention U-Net gốc (đối chiếu chi tiết tại Bảng~\ref{tab:inheritance_contribution}, Chương~\ref{Chapter3}).
-        \item \textit{Cơ chế chú ý có điều kiện tại bộ giải mã (CAD):} mở rộng Cổng chú ý của Attention U-Net~\cite{oktay2018attentionunet} bằng cách đưa Bản đồ nhiệt câu nhắc trực tiếp vào tín hiệu cổng, thay vì chỉ dựa vào đặc trưng ảnh như thiết kế gốc.
-    \end{itemize}
-    Hai thành phần phối hợp để mô hình thực sự \textit{sử dụng} câu nhắc xuyên suốt quá trình trích xuất và tái tạo đặc trưng; hiệu quả của biểu diễn Bản đồ nhiệt cùng đóng góp riêng của PSG, CAD được kiểm chứng qua nghiên cứu loại bỏ thành phần và so sánh với U-Net, SAM-Med2D trên cả BTXRD và FracAtlas (chi tiết tại Chương~\ref{Chapter4}).
+    Hộp giới hạn được chuyển thành một bản đồ hai chiều có vùng giá trị cao tương đối đồng đều bên trong hộp và đường biên được làm mềm bằng bộ lọc Gaussian. Biểu diễn này duy trì thông tin trên toàn bộ vùng câu nhắc và tạo vùng chuyển tiếp liên tục hơn so với mặt nạ nhị phân. Hiệu quả của biểu diễn Gaussian và nhị phân được đối chiếu bằng nghiên cứu loại bỏ thành phần.
 
-    \item Thực nghiệm minh họa khả năng ứng dụng thực tế: Vì PGA-UNet cần câu nhắc do bác sĩ cung cấp, khóa luận bổ sung một thực nghiệm minh họa (không phải đóng góp kỹ thuật riêng biệt) để hình dung cách tích hợp vào thực tế: kết hợp PGA-UNet với một module phân lớp sàng lọc (Gatekeeper) thành luồng xử lý hai giai đoạn, đánh giá trên tập dữ liệu hỗn hợp gồm cả ảnh bình thường và bệnh lý, phản ánh phân bố gần thực tế hơn đánh giá phân đoạn đơn lẻ trên tập ảnh bệnh thuần túy. Kết quả tại Chương~\ref{Chapter4}.
+    \item \textbf{Tích hợp câu nhắc vào bộ mã hóa bằng PSG.}
+
+    Cổng không gian PSG (\textit{Prompt Spatial Gate}) sử dụng bản đồ nhiệt để điều biến đặc trưng tại các tầng mã hóa. Cơ chế cổng nhân có kết nối dư giúp ưu tiên vùng được chỉ định trong khi vẫn duy trì đường truyền của đặc trưng ảnh ban đầu.
+
+    \item \textbf{Điều kiện hóa bộ giải mã bằng CAD.}
+
+    CAD (\textit{Conditional Attention Decoder}) mở rộng Cổng chú ý của Attention U-Net~\cite{oktay2018attentionunet} bằng cách bổ sung đặc trưng câu nhắc vào tín hiệu điều khiển chú ý. Nhờ đó, trọng số tại kết nối tắt phụ thuộc đồng thời vào đặc trưng ảnh, trạng thái bộ giải mã và thông tin định hướng từ người dùng.
+
+    \item \textbf{Đánh giá thiết kế trên hai bộ dữ liệu và nhiều điều kiện câu nhắc.}
+
+    PGA-UNet được huấn luyện và đánh giá riêng trên BTXRD và FracAtlas, đại diện cho hai hình thái tổn thương khác nhau: khối u xương và gãy xương. Thực nghiệm gồm so sánh với U-Net, Attention U-Net và SAM-Med2D; đánh giá câu nhắc Bao trọn, Lệch tâm và Hỗn hợp; nghiên cứu loại bỏ thành phần; kiểm định chéo và phân tích theo đặc tính tổn thương.
+
+    \item \textbf{Khảo sát khả năng tích hợp vào luồng xử lý hỗ trợ.}
+
+    Khóa luận bổ sung Gatekeeper như một thử nghiệm mở rộng để minh họa cách PGA-UNet có thể được sử dụng trong luồng ảnh hỗn hợp gồm ảnh bình thường và ảnh bệnh lý. Thành phần này chỉ đóng vai trò hỗ trợ sàng lọc và không được xem là đóng góp kiến trúc riêng.
 \end{enumerate}
 
+Trong các nội dung trên, đóng góp kỹ thuật trọng tâm nằm ở sự phối hợp giữa biểu diễn câu nhắc, PSG và CAD. Hiệu quả của từng thành phần được kiểm chứng định lượng tại Chương~\ref{Chapter4}.
+
 % ------------------------------------------------------------
-\section{Bố cục của khóa luận}
+\section{Phạm vi nghiên cứu}
+\label{sec:pham_vi}
+% ------------------------------------------------------------
+
+Khóa luận giới hạn trong phạm vi sau:
+
+\begin{itemize}
+    \item nghiên cứu phân đoạn ảnh X-quang xương hai chiều;
+    \item sử dụng ảnh bệnh lý có mặt nạ cấp độ điểm ảnh để huấn luyện module phân đoạn;
+    \item sử dụng hộp giới hạn làm dạng câu nhắc trực quan chính;
+    \item đánh giá trên hai bộ dữ liệu công khai BTXRD và FracAtlas;
+    \item mô phỏng sai lệch câu nhắc bằng các phép mở rộng và dịch chuyển hộp giới hạn;
+    \item chưa thực hiện thử nghiệm với câu nhắc do bác sĩ vẽ trực tiếp hoặc dữ liệu thô được thu thập tại cơ sở y tế;
+    \item Gatekeeper chỉ được khảo sát như một thành phần hỗ trợ, không phải hệ thống chẩn đoán tự động.
+\end{itemize}
+
+Kết quả của khóa luận phản ánh hiệu năng kỹ thuật trong điều kiện thực nghiệm có kiểm soát, không được sử dụng để đưa ra kết luận chẩn đoán hoặc khẳng định mức độ sẵn sàng triển khai lâm sàng.
+
+% ------------------------------------------------------------
+\section{Bố cục khóa luận}
 \label{sec:bo_cuc}
 % ------------------------------------------------------------
 
 Khóa luận được tổ chức thành năm chương:
 
-Chương 1: Giới thiệu trình bày bối cảnh chung, động lực khoa học và thực tiễn, phát biểu bài toán từ góc nhìn người dùng cuối (bác sĩ chẩn đoán hình ảnh) với đầu vào/đầu ra tại giai đoạn suy luận trực tuyến, thách thức cốt lõi và đóng góp của khóa luận.
+\begin{itemize}
+    \item \textbf{Chương 1 -- Giới thiệu:}
+    Trình bày bối cảnh, động lực, bài toán nghiên cứu, các thách thức, đóng góp và phạm vi của khóa luận.
 
-Chương 2: Các công trình liên quan và cơ sở lý thuyết khảo sát các phương pháp phân đoạn ảnh y khoa tự động và tương tác, xác định khoảng trống nghiên cứu, trình bày nền tảng lý thuyết gồm kiến trúc U-Net, cơ chế chú ý, biểu diễn câu nhắc và các độ đo đánh giá.
+    \item \textbf{Chương 2 -- Các công trình liên quan và cơ sở lý thuyết:}
+    Khảo sát phân đoạn ảnh y khoa tự động, phân đoạn tương tác và mô hình nền tảng dựa trên câu nhắc; trình bày cơ sở về U-Net, cơ chế chú ý, biểu diễn câu nhắc, điều biến đặc trưng và các độ đo đánh giá.
 
-Chương 3: Mô hình và hệ thống đề xuất trình bày chi tiết kỹ thuật kiến trúc PGA-UNet (Cổng không gian, Cơ chế chú ý có điều kiện), module phân lớp sàng lọc và một thực nghiệm minh họa kết hợp hai thành phần thành luồng xử lý ứng dụng thực tế.
+    \item \textbf{Chương 3 -- Mô hình và hệ thống đề xuất:}
+    Trình bày kiến trúc PGA-UNet, gồm bản đồ nhiệt câu nhắc dạng cao nguyên, PSG và CAD; đồng thời mô tả quy trình huấn luyện, suy luận và luồng xử lý hỗ trợ với Gatekeeper.
 
-Chương 4: Thực nghiệm và đánh giá kết quả mô tả đặc điểm hai bộ dữ liệu độc lập (BTXRD, FracAtlas) và thiết lập thực nghiệm chung; trình bày kết quả so sánh với U-Net và SAM-Med2D, cùng tính bền bỉ trước sai lệch câu nhắc, song song trên cả hai bộ dữ liệu theo từng chủ đề; phân tích chuyên sâu kiến trúc (nghiên cứu loại bỏ thành phần, đánh giá chéo, đặc tính tổn thương) tách riêng theo từng bộ dữ liệu, khép lại bằng một mục tổng hợp kết luận về khả năng tổng quát hóa xuyên hai miền dữ liệu; và đánh giá module sàng lọc cùng luồng xử lý hai giai đoạn, cũng trên cả hai bộ dữ liệu.
+    \item \textbf{Chương 4 -- Thực nghiệm và đánh giá:}
+    Trình bày dữ liệu, cấu hình huấn luyện, kết quả so sánh, tính bền bỉ trước sai lệch câu nhắc, nghiên cứu loại bỏ thành phần, kiểm định chéo, phân tích theo đặc tính tổn thương và thử nghiệm mở rộng với Gatekeeper.
 
-Chương 5: Kết luận và hướng phát triển tóm tắt kết quả đạt được, nhìn nhận khách quan hạn chế và đề xuất hướng nghiên cứu tiếp theo.
+    \item \textbf{Chương 5 -- Kết luận và hướng phát triển:}
+    Tổng hợp các kết quả đạt được, chỉ ra hạn chế của nghiên cứu và đề xuất các hướng phát triển tiếp theo.
+\end{itemize}

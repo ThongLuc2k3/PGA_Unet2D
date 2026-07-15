@@ -1,28 +1,24 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Kiến trúc SAM-Med2D~\blx@tocontentsinit {0}\cite {2023-SAMMed2D-Cheng} (tham số đóng băng {\color {cyan}$\bullet $}, tham số học được qua lớp thích ứng {\color {orange}$\bullet $}).}}{8}{figure.2.1}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc U-Net, 4 cấp độ phân giải.}}{9}{figure.2.2}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net: Cổng chú ý (AG) tại các kết nối tắt.}}{10}{figure.2.3}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Kiến trúc tổng quát của SAM-Med2D~\blx@tocontentsinit {0}\cite {2023-SAMMed2D-Cheng}.}}{11}{figure.2.1}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Kiến trúc U-Net với bốn cấp độ phân giải.}}{12}{figure.2.2}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Kiến trúc Attention U-Net với Cổng chú ý tại các kết nối tắt.}}{14}{figure.2.3}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc PGA-UNet: PSG tại bộ mã hóa, CAD tại bộ giải mã.}}{18}{figure.3.1}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Luồng xử lý tổng thể: EfficientNet-B3 $\to $ PGA-UNet.}}{25}{figure.3.2}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc PGA-UNet với PSG tại bộ mã hóa và CAD tại bộ giải mã.}}{21}{figure.3.1}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Luồng xử lý hỗ trợ gồm Gatekeeper và PGA-UNet.}}{29}{figure.3.2}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Kết quả phân đoạn của PGA-UNet trong kịch bản Bao trọn. Từ trái sang phải: ảnh X-quang, hộp giới hạn câu nhắc, mặt nạ dự đoán, mặt nạ nhãn gốc và lớp phủ biểu diễn TP, FP và FN.}}{32}{figure.4.1}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces So sánh Dice của PGA-UNet và SAM-Med2D trong kịch bản Bao trọn trên BTXRD và FracAtlas. Các cấu hình đều sử dụng độ phân giải $256\times 256$ và được đánh giá ở cấp độ ảnh.}}{34}{figure.4.2}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trong ba kịch bản câu nhắc trên BTXRD và FracAtlas.}}{36}{figure.4.3}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Kết quả PGA-UNet với câu nhắc Bao trọn và Lệch tâm trên BTXRD (hàng trên) và FracAtlas (hàng dưới).}}{37}{figure.4.4}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Nghiên cứu loại bỏ thành phần: Điểm Dice của 8 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc (Bảng~\ref {tab:ablation_arch}). PGA-UNet (đề xuất) đánh dấu bằng gạch chéo để phân biệt cả khi in trắng đen.}}{42}{figure.4.5}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces PGA-UNet/V6 (CAD) so với U-Net+PSG+Attention gốc/V7 trên cùng một ca, BTXRD, kịch bản Bao trọn.}}{43}{figure.4.6}%
-\contentsline {figure}{\numberline {4.7}{\ignorespaces So sánh U-Net và PGA-UNet theo độ khó tác vụ trên BTXRD (Bảng~\ref {tab:subcat_baseline}).}}{46}{figure.4.7}%
-\contentsline {figure}{\numberline {4.8}{\ignorespaces PGA-UNet so với U-Net trên cùng ca đại diện nhóm dễ (TOP-DICE) và khó (BOTTOM-DICE), BTXRD (Bảng~\ref {tab:subcat_baseline}).}}{47}{figure.4.8}%
-\contentsline {figure}{\numberline {4.9}{\ignorespaces So sánh PGA-UNet và SAM-Med2D theo ba nhóm đặc tính lâm sàng trên BTXRD (Bảng~\ref {tab:subcat_sam}).}}{49}{figure.4.9}%
-\contentsline {figure}{\numberline {4.10}{\ignorespaces PGA-UNet so với SAM-Med2D trên cùng ca đại diện của ba nhóm đặc tính lâm sàng, BTXRD (Bảng~\ref {tab:subcat_sam}).}}{50}{figure.4.10}%
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Nghiên cứu loại bỏ thành phần: Điểm Dice của 8 biến thể kiến trúc PGA-UNet trên ba kịch bản câu nhắc trên FracAtlas (Bảng~\ref {tab:fracatlas_ablation_arch}). PGA-UNet (đề xuất) đánh dấu bằng gạch chéo để phân biệt cả khi in trắng đen.}}{52}{figure.4.11}%
-\contentsline {figure}{\numberline {4.12}{\ignorespaces PGA-UNet/V6 (CAD) so với U-Net+PSG+Attention gốc/V7 trên cùng một ca, FracAtlas, kịch bản Bao trọn.}}{53}{figure.4.12}%
-\contentsline {figure}{\numberline {4.13}{\ignorespaces So sánh U-Net và PGA-UNet theo độ khó tác vụ trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline}).}}{55}{figure.4.13}%
-\contentsline {figure}{\numberline {4.14}{\ignorespaces PGA-UNet so với U-Net trên cùng ca đại diện nhóm dễ (TOP-DICE) và khó (BOTTOM-DICE), FracAtlas (Bảng~\ref {tab:fracatlas_subcat_baseline}).}}{56}{figure.4.14}%
-\contentsline {figure}{\numberline {4.15}{\ignorespaces So sánh SAM-Med2D (FT), PGA-UNet (256) và PGA-UNet (512) theo ba nhóm đặc tính tổn thương trên FracAtlas (Bảng~\ref {tab:fracatlas_subcat}).}}{58}{figure.4.15}%
-\contentsline {figure}{\numberline {4.16}{\ignorespaces PGA-UNet so với SAM-Med2D trên cùng ca đại diện của ba nhóm đặc tính lâm sàng, FracAtlas (Bảng~\ref {tab:fracatlas_subcat}).}}{59}{figure.4.16}%
-\contentsline {figure}{\numberline {4.17}{\ignorespaces Ca tổn thương tại vùng chồng lấp giải phẫu phức tạp (vai/xương đòn/lồng ngực), Dice=0.762.}}{63}{figure.4.17}%
-\contentsline {figure}{\numberline {4.18}{\ignorespaces 6 ca TP tiêu biểu qua toàn bộ luồng xử lý Gatekeeper $\to $ PGA-UNet trên dataset\_online (BTXRD). Từ trái sang phải: ảnh gốc, hộp giới hạn câu nhắc, mặt nạ dự đoán, Ground Truth, lớp phủ TP/FP/FN.}}{73}{figure.4.18}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Kết quả phân đoạn của PGA-UNet trong kịch bản Bao trọn. Từ trái sang phải: ảnh X-quang, hộp giới hạn câu nhắc, mặt nạ dự đoán, mặt nạ nhãn gốc và lớp phủ biểu diễn TP, FP và FN.}}{36}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces So sánh Dice của PGA-UNet và SAM-Med2D trong kịch bản Bao trọn trên BTXRD và FracAtlas. Các cấu hình đều sử dụng độ phân giải $256\times 256$ và được đánh giá ở cấp độ ảnh.}}{38}{figure.4.2}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trong ba kịch bản câu nhắc trên BTXRD và FracAtlas.}}{40}{figure.4.3}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Kết quả PGA-UNet với câu nhắc Bao trọn và Lệch tâm trên BTXRD (hàng trên) và FracAtlas (hàng dưới).}}{41}{figure.4.4}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Dice của tám cấu hình trong nghiên cứu loại bỏ thành phần trên BTXRD. PGA-UNet đề xuất đạt kết quả cao nhất trong hai kịch bản Lệch tâm và Hỗn hợp.}}{46}{figure.4.5}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Dice của U-Net và PGA-UNet trên nhóm U-Net hoạt động tốt và nhóm U-Net hoạt động kém.}}{50}{figure.4.6}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Kết quả định tính của U-Net và PGA-UNet trên một ảnh thuộc mỗi nhóm hiệu năng của U-Net.}}{50}{figure.4.7}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces So sánh Dice của PGA-UNet và SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên BTXRD.}}{52}{figure.4.8}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Ảnh hưởng của độ phân giải đến Dice của PGA-UNet theo ba nhóm đặc tính tổn thương trên BTXRD.}}{54}{figure.4.9}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Dice của tám cấu hình trong nghiên cứu loại bỏ thành phần trên FracAtlas. PGA-UNet đề xuất đạt kết quả cao nhất trong hai kịch bản Lệch tâm và Hỗn hợp.}}{57}{figure.4.10}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces So sánh Dice của PGA-UNet và SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên FracAtlas.}}{60}{figure.4.11}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Ảnh hưởng của độ phân giải đến Dice của PGA-UNet theo ba nhóm đặc tính tổn thương trên FracAtlas.}}{62}{figure.4.12}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Trường hợp tổn thương tại vùng giải phẫu chồng lấp ở vai, xương đòn và lồng ngực, với Dice đạt 0,762.}}{66}{figure.4.13}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Một số kết quả phân đoạn của ảnh được Gatekeeper chuyển đúng sang PGA-UNet trên BTXRD. Từ trái sang phải: ảnh X-quang, hộp giới hạn, mặt nạ dự đoán, mặt nạ nhãn gốc và lớp phủ TP, FP, FN.}}{70}{figure.4.14}%
 \addvspace {10\p@ }
