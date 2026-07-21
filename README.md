@@ -1,153 +1,135 @@
 # PGA-UNet2D — Khóa Luận Tốt Nghiệp
 
 **Đề tài:** Phát triển hệ thống phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan  
-**Dataset:** BTXRD (Nature Scientific Data 2024) — bone tumor X-ray, 248 test samples  
-**Kết quả chính:** PGA-UNet Dice=0.8606 > SAM-Med2D Dice=0.7554 (+13.3%), ~4M params (25× nhỏ hơn SAM)
+**Bộ dữ liệu chính:** BTXRD và FracAtlas  
+**Kết quả chính:** Trong thiết lập phân đoạn có hướng dẫn bằng hộp giới hạn, PGA-UNet đạt Dice `0.8607` trên BTXRD ở độ phân giải `512x512`, cao hơn U-Net và Attention U-Net; ở so sánh cùng điều kiện câu nhắc và độ phân giải `256x256`, PGA-UNet đạt Dice `0.8433`, cao hơn SAM-Med2D đã tinh chỉnh (`0.7541`). Mô hình trong report hiện được mô tả là có khoảng `3 triệu` tham số.
 
 ---
 
 ## Cấu trúc thư mục
 
-```
+```text
 PGA_Unet2D/
 ├── Report/              # Báo cáo LaTeX
-├── Source/              # Notebook thực nghiệm + code gốc
-│   └── Ablation/        # 5 notebook ablation study
-├── Result/              # Notebook đã chạy xong (có output)
+├── Source/              # Notebook thực nghiệm + mã nguồn
+├── Result/              # Notebook đã chạy xong, có output
 ├── diagrams/            # File DrawIO nguồn của các sơ đồ
-└── Bao_cao_tien_do.md   # Theo dõi tiến độ khóa luận
+├── Xư_ly.md             # Ghi chú xử lý công việc hiện tại
+├── Bao_cao_tien_do.md   # Ghi chú tiến độ hiện hành
+└── Đánh giá.md          # Ghi chú phản biện và nhận xét học thuật
 ```
 
 ---
 
 ## Report/
 
-Báo cáo LaTeX — compile bằng `latexmk -pdf main.tex` tại thư mục `Report/`.
+Báo cáo LaTeX chính nằm trong `Report/`. Nếu môi trường có LaTeX đầy đủ, có thể biên dịch từ `Report/main.tex`.
 
 | File/Folder | Nội dung |
 |---|---|
-| `main.tex` | Entry point — import tất cả chapter |
-| `main.pdf` | PDF đã compile |
-| `Chapter1/chapter1.tex` | Giới thiệu, mục tiêu, phạm vi đề tài |
-| `Chapter4/chapter4.tex` | Thực nghiệm & đánh giá: tất cả bảng số liệu |
-| `Chapter5/chapter5.tex` | Kết luận, hạn chế, hướng phát triển |
-| `Appendix/` | Phụ lục: tóm tắt, cảm ơn, đề cương, cam kết |
-| `References/references.bib` | Danh sách tài liệu tham khảo (BibTeX) |
-| `images/` | Toàn bộ hình ảnh được nhúng vào báo cáo |
+| `main.tex` | File gốc để build toàn bộ báo cáo |
+| `main.pdf` | Bản PDF đã biên dịch gần nhất |
+| `Chapter1/` | Giới thiệu, bài toán, phạm vi, đóng góp |
+| `Chapter2/` | Công trình liên quan và cơ sở lý thuyết |
+| `Chapter3/` | Mô hình PGA-UNet và luồng xử lý |
+| `Chapter4/` | Thực nghiệm và đánh giá |
+| `Chapter5/` | Kết luận, hạn chế, hướng phát triển |
+| `Appendix/` | Tóm tắt, phụ lục phân tích, biểu mẫu kèm theo |
+| `References/references.bib` | Danh mục tài liệu tham khảo |
+| `images/` | Hình dùng trong báo cáo |
 
-### Report/images/ — các file quan trọng
+### Một số hình quan trọng trong `Report/images/`
 
-| File | Dùng ở đâu |
+| File | Vai trò |
 |---|---|
-| `system_architecture.png` | Chapter 3 — kiến trúc tổng thể pipeline |
-| `preprocessing_pipeline.png` | Chapter 3 — quy trình tiền xử lý |
-| `classification_pipeline.png` | Chapter 3 — pipeline phân lớp MobileNetV4 |
-| `classification_evaluation.png` | Chapter 4 — ROC curve + confusion matrix MobileNetV4 |
-| `diagram_pga.png` | Chapter 3 — kiến trúc PGA-UNet chi tiết |
-| `diagram_unet.png` / `diagram_attunet.png` / `diagram_sammed2d.png` | Chapter 2/3 — so sánh kiến trúc |
-| `vis_pga_*.png` / `vis_unet_*.png` / `vis_attunet_*.png` / `vis_sam_*.png` | Chapter 4 — ảnh visualization định tính |
+| `arch_pga_unet2d.png` | Kiến trúc PGA-UNet |
+| `arch_unet2d.png` | Kiến trúc U-Net |
+| `arch_attention_unet2d.png` | Kiến trúc Attention U-Net |
+| `arch_sammed2d.png` | Kiến trúc SAM-Med2D |
+| `pipeline_pga_app_inference.png` | Luồng xử lý có Gatekeeper và PGA-UNet |
+| `chart_sam_comparison_256.png` | So sánh PGA-UNet và SAM-Med2D ở `256x256` |
+| `chart_resolution_btxrd_fracatlas.png` | Ảnh hưởng của độ phân giải |
+| `qual_robustness_zoom_shift.png` | Minh họa phản ứng với câu nhắc lệch tâm |
 
 ---
 
 ## Source/
 
-Notebook thực nghiệm — tất cả chạy trên **Google Colab** (T4 GPU). Clone repo tự động trong Cell 1.
+Thư mục `Source/` chứa notebook huấn luyện, đánh giá và mã nguồn mô hình. Phần lớn notebook được thiết kế để chạy trên Colab hoặc Kaggle.
 
-### Huấn luyện mô hình
-
-| Notebook | Mô hình | Kết quả |
-|---|---|---|
-| `PGA_Unet2D.ipynb` | PGA-UNet (Exp B, PSG+CAD) | Dice=0.8606 (zoom_out), 0.8558 (mixed) |
-| `Unet2D.ipynb` | U-Net 2D baseline | Dice=0.5090 |
-| `Attention_Unet2D.ipynb` | Attention U-Net 2D baseline | Dice=0.4110 |
-| `Finetune_SAMMed2D_test_robust.ipynb` | SAM-Med2D fine-tune trên BTXRD | Dice=0.7554 |
-
-### Đánh giá & phân tích
+### Notebook huấn luyện chính
 
 | Notebook | Nội dung |
 |---|---|
-| `SAMMed2D_ZeroShot.ipynb` | SAM-Med2D zero-shot (không fine-tune) → Dice=0.5289 |
-| `Defense_Comparison_SAM_vs_PGA.ipynb` | So sánh cơ chế phòng vệ SAM vs PGA |
-| `PGA_Extended_Test.ipynb` | Kiểm tra robustness: zoom/shift/mixed prompt |
-| `SubCat_PGA_vs_Baseline.ipynb` | PGA vs U-Net/AttUNet trên nhóm Dễ/Khó (Easy/Hard split) |
-| `SubCat_PGA_vs_SAM.ipynb` | PGA vs SAM trên 3 nhóm: Tổn thương nhỏ / Biên giới mờ / Tổn thương rõ nét |
-| `Test_app.ipynb` | Test Gradio app (`app.py`) |
+| `Source/File_Train/PGA_Unet2D.ipynb` | Huấn luyện PGA-UNet |
+| `Source/File_Train/Unet2D.ipynb` | Huấn luyện U-Net |
+| `Source/File_Train/Attention_Unet2D.ipynb` | Huấn luyện Attention U-Net |
+| `Source/File_Train/Finetune_SAMMed2D_test_robust.ipynb` | Tinh chỉnh SAM-Med2D |
 
-### Source/project/ — Code Python gốc
+### Notebook đánh giá và phân tích
 
+| Notebook | Nội dung |
+|---|---|
+| `Source/File_Test/test-pga-samzs-samft-r256.ipynb` | So sánh PGA-UNet với SAM-Med2D |
+| `Source/File_Test/pga-vs-unet2d-r512.ipynb` | So sánh PGA-UNet với U-Net ở `512x512` |
+| `Source/File_Test/test-subcat-pga-vs-baseline.ipynb` | Phân tích theo nhóm ảnh với baseline |
+| `Source/File_Test/test-subcat-pga-vs-sam-r256-r512.ipynb` | Phân tích theo nhóm ảnh với SAM-Med2D |
+| `Source/File_Test/test-pipeline-evaluation.ipynb` | Đánh giá luồng hai giai đoạn |
+| `PGA_Extended_Test.ipynb` | Kiểm tra thêm về các kịch bản câu nhắc |
+
+### Mã nguồn mô hình
+
+Mã nguồn chính nằm trong:
+
+```text
+Source/Prompt-Guided-XRay-Segmentation/
+├── dataset.py
+├── train.py
+└── models/
+    ├── networks/
+    │   └── prompt_unet_2D.py
+    └── layers/
+        └── grid_attention_layer.py
 ```
-project/
-├── models/
-│   ├── networks/
-│   │   ├── prompt_unet_2D.py      # PGA-UNet: PSG + CAD (model chính)
-│   │   ├── attention_unet_2D.py   # Attention U-Net baseline
-│   │   ├── unet_2D.py             # U-Net baseline
-│   │   └── utils.py               # Helper functions
-│   └── layers/
-│       ├── grid_attention_layer.py  # GridAttentionBlock2D (dùng trong CAD)
-│       └── loss.py                  # BCE + Dice loss
-├── train_pga.py      # Training script cho PGA-UNet
-├── train_unet.py     # Training script cho U-Net
-├── train_attunet.py  # Training script cho Attention U-Net
-├── dataset_pga.py    # Dataset với plateau heatmap prompt
-└── dataset_simple.py # Dataset đơn giản (không có prompt)
-```
 
-> Code được host trên GitHub: `ThongLuc2k3/Prompt-Guided-XRay-Segmentation` (branch `TN_B_ON`). Các notebook tự động clone khi chạy.
-
-### Source/Ablation/ — Ablation study kiến trúc
-
-5 notebook train lại từ đầu để tách đóng góp từng thành phần:
-
-| Notebook | Cấu hình | Mục đích |
-|---|---|---|
-| `V1_NoPSG_NoCAD_Concat.ipynb` | Không PSG, không CAD — heatmap nối kênh | Baseline concat đơn giản |
-| `V2_PSG_Only.ipynb` | Chỉ PSG ở encoder, decoder thường | Đóng góp riêng của PSG |
-| `V3_CAD_Only.ipynb` | Chỉ CAD ở decoder (`use_encoder_prompt=False`) | Đóng góp riêng của CAD |
-| `V4_Full_BinaryPrompt.ipynb` | PSG + CAD, train với prompt nhị phân | Heatmap vs binary prompt |
-| `V5_Full_HeatmapPrompt.ipynb` | PSG + CAD, train với heatmap (chuẩn) | Reference — phải ~Dice 0.86 |
+Trong đó:
+- `prompt_unet_2D.py` chứa triển khai PGA-UNet, gồm PSG và CAD.
+- `grid_attention_layer.py` chứa cổng chú ý nền được tái sử dụng trong decoder.
 
 ---
 
 ## Result/
 
-Bản sao các notebook Source đã chạy xong, **có output đầy đủ**. Dùng để tra cứu số liệu mà không cần chạy lại.
+`Result/` chứa các notebook đã chạy xong, có sẵn output để tra cứu số liệu mà không cần chạy lại toàn bộ thí nghiệm.
 
-| Notebook | Số liệu chính |
+| Thư mục/File | Nội dung |
 |---|---|
-| `pga-unet2d-kq.ipynb` | PGA: Dice=0.8606/0.8380/0.8558 (3 kịch bản prompt) |
-| `unet2d-btxrd.ipynb` | U-Net: Dice=0.5090, HD95=125.12px |
-| `attention-unet2d-btxrd.ipynb` | Att-UNet: Dice=0.4110, HD95=141.23px |
-| `finetune-sammed2d-kq.ipynb` | SAM fine-tuned: Dice=0.7554, HD95=51.84px |
-| `sam-med2d-zero-shot.ipynb` | SAM zero-shot: Dice=0.5289, HD95=114.31px |
-| `defense-comparison-sam-vs-pga.ipynb` | CBL(PGA)=0.2975 vs CBL(SAM)=0.4973 |
-| `pga-extended-test.ipynb` | Robustness test nhiều kịch bản zoom/shift |
-| `SubCat_PGA_vs_Baseline.ipynb` | Easy: PGA=0.8632 / Hard: PGA=0.8521 vs UNet=0.2379 |
-| `SubCat_PGA_vs_SAM.ipynb` | Nhỏ: PGA=0.82 vs SAM=0.25 / Mờ: 0.82 vs 0.46 / Rõ: 0.89 vs 0.85 |
-| `MobileNetV4_BTXRD_dataset.ipynb` | MobileNetV4: Acc=85.77%, AUC-ROC=0.9514 |
+| `Result/Result_BTXRD/` | Kết quả trên BTXRD |
+| `Result/Result_FracAtlas/` | Kết quả trên FracAtlas |
+| `Result/Result_BTXRD/Ablation/` | Kết quả ablation trên BTXRD |
+| `Result/Result_FracAtlas/Ablation/` | Kết quả ablation trên FracAtlas |
+| `Result/Result_BTXRD/pipeline/` | Kết quả luồng có Gatekeeper trên BTXRD |
+| `Result/Result_FracAtlas/pipeline/` | Kết quả luồng có Gatekeeper trên FracAtlas |
 
 ---
 
 ## diagrams/
 
-File nguồn DrawIO cho tất cả sơ đồ trong báo cáo. Export PNG → `Report/images/`.
+Chứa các sơ đồ nguồn DrawIO dùng để xuất hình cho report.
 
-| File | Xuất thành |
+| File | Ghi chú |
 |---|---|
-| `system_architecture.drawio` | `Report/images/system_architecture.png` |
-| `preprocessing_pipeline.drawio` | `Report/images/preprocessing_pipeline.png` |
-| `classification_pipeline.drawio` | `Report/images/classification_pipeline.png` |
-| `arch_pga_unet2d.drawio` | (tham khảo, không nhúng trực tiếp) |
-| `arch_unet2d.drawio` / `arch_attention_unet2d.drawio` / `arch_sammed2d.drawio` | Sơ đồ kiến trúc các mô hình |
-| `pipeline_pga_app_inference.drawio` | Luồng inference của app |
+| `arch_pga_unet2d.drawio` | Sơ đồ PGA-UNet |
+| `arch_unet2d.drawio` | Sơ đồ U-Net |
+| `arch_attention_unet2d.drawio` | Sơ đồ Attention U-Net |
+| `arch_sammed2d.drawio` | Sơ đồ SAM-Med2D |
+| `pipeline_pga_app_inference.drawio` | Luồng suy luận của hệ thống hỗ trợ |
+| `classification_pipeline.drawio` | Sơ đồ phần sàng lọc hỗ trợ |
 
 ---
 
-## Nhiệm vụ còn lại (deadline 12/06/2026)
+## Ghi chú về phạm vi kết quả
 
-| # | Nhiệm vụ | File | Ưu tiên |
-|---|---|---|---|
-| 1 | Chạy 5 ablation notebooks trên Colab | `Source/Ablation/V1–V5` | 🔴 Cao |
-| 2 | Cập nhật `tab:ablation_prompt` trong chapter4.tex với số thật từ ablation | `Report/Chapter4/chapter4.tex` | 🔴 Cao |
-| 3 | Thêm ảnh visualization sub-category vào chapter4.tex | `Report/images/` + chapter4.tex | 🟡 Trung bình |
-| 4 | Compile và kiểm tra `main.pdf` lần cuối | `Report/main.tex` | 🟡 Trung bình |
+- Các kết quả tốt nhất của PGA-UNet trong report hiện được diễn giải trong phạm vi **phân đoạn có hướng dẫn bằng hộp giới hạn**.
+- Với ảnh có nhiều tổn thương, phần đánh giá trong report sử dụng số lượng và vị trí hộp được suy ra từ nhãn gốc để đo chất lượng phân đoạn khi đã có thông tin định vị sơ bộ.
+- Vì vậy, không nên đọc README này như mô tả một hệ thống phát hiện tổn thương hoàn toàn tự động.

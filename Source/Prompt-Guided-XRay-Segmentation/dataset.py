@@ -108,6 +108,20 @@ class BTXRD_Dataset(Dataset):
             heatmap = cv2.GaussianBlur(heatmap, (31, 31), 0)
         return heatmap
 
+    def _resize_and_pad(self, array, interpolation, pad_value=0):
+        orig_h, orig_w = array.shape[:2]
+        scale = min(self.img_size / orig_w, self.img_size / orig_h)
+        new_w = max(1, int(round(orig_w * scale)))
+        new_h = max(1, int(round(orig_h * scale)))
+
+        resized = cv2.resize(array, (new_w, new_h), interpolation=interpolation)
+        padded = np.full((self.img_size, self.img_size), pad_value, dtype=resized.dtype)
+
+        pad_left = (self.img_size - new_w) // 2
+        pad_top = (self.img_size - new_h) // 2
+        padded[pad_top:pad_top + new_h, pad_left:pad_left + new_w] = resized
+        return padded
+
     # ── Main ──────────────────────────────────────────────────────────
 
     def __getitem__(self, idx):
@@ -150,11 +164,10 @@ class BTXRD_Dataset(Dataset):
         prompt_map = self.create_plateau_heatmap(
             [bx_min, by_min, bx_max, by_max], orig_h, orig_w)
 
-        # Resize & normalize
-        image      = cv2.resize(image, (self.img_size, self.img_size))
-        mask       = cv2.resize(mask, (self.img_size, self.img_size),
-                                interpolation=cv2.INTER_NEAREST)
-        prompt_map = cv2.resize(prompt_map, (self.img_size, self.img_size))
+        # Preserve aspect ratio, then pad to a square canvas.
+        image = self._resize_and_pad(image, cv2.INTER_LINEAR, pad_value=0)
+        mask = self._resize_and_pad(mask, cv2.INTER_NEAREST, pad_value=0)
+        prompt_map = self._resize_and_pad(prompt_map, cv2.INTER_LINEAR, pad_value=0.0)
 
         image = (image.astype(np.float32) / 255.0 - 0.5) / 0.5
         mask  = (mask > 127).astype(np.float32)

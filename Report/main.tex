@@ -144,27 +144,32 @@
 % ============================================================
 
 \usepackage{titlesec}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\brokenpenalty=7000
+\emergencystretch=2em
 
 % Section: ví dụ 4.1
 \titleformat{\section}
     {\normalfont\large\bfseries}
     {\thesection}
     {1em}
-    {}
+    {\needspace{8\baselineskip}}
 
 % Subsection: ví dụ 4.1.1
 \titleformat{\subsection}
     {\normalfont\normalsize\bfseries}
     {\thesubsection}
     {1em}
-    {}
+    {\needspace{7\baselineskip}}
 
 % Subsubsection: ví dụ 4.1.1.1
 \titleformat{\subsubsection}
     {\normalfont\normalsize\bfseries}
     {\thesubsubsection}
     {1em}
-    {}
+    {\needspace{6\baselineskip}}
 
 % Paragraph dùng làm tiêu đề chia ý nhỏ:
 % in đậm, không đánh số, không đưa vào mục lục
@@ -172,7 +177,7 @@
     {\normalfont\normalsize\bfseries}
     {}
     {0pt}
-    {}
+    {\needspace{5\baselineskip}}
 
 \titlespacing*{\paragraph}
     {0pt}
@@ -332,6 +337,8 @@
 % ------------------------------------------------------------
 % PHẦN ĐẦU KHÓA LUẬN
 % Đánh số trang La Mã: i, ii, iii, ...
+% Theo mẫu Thesis_Template.pdf, nhưng tạm thời chưa chèn
+% "Nhận xét GV" và "Thuyết minh" vì đây là hai phần chỉ thêm sau bảo vệ.
 % ------------------------------------------------------------
 
 \pagenumbering{roman}
@@ -340,19 +347,19 @@
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Lời cam đoan}
-\input{Appendix/reassurances}
+\input{FrontMatter/reassurances}
 
 % Lời cảm ơn
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Lời cảm ơn}
-\input{Appendix/thanks}
+\input{FrontMatter/thanks}
 
 % Đề cương chi tiết
 \cleardoublepage
 \phantomsection
-\addcontentsline{toc}{chapter}{Đề cương chi tiết}
-\input{Appendix/decuong}
+\addcontentsline{toc}{chapter}{Đề cương}
+\input{FrontMatter/decuong}
 
 % ------------------------------------------------------------
 % MỤC LỤC
@@ -382,6 +389,15 @@
 \listoftables
 
 % ------------------------------------------------------------
+% TÓM TẮT
+% ------------------------------------------------------------
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Tóm tắt}
+\input{FrontMatter/tomtat}
+
+% ------------------------------------------------------------
 % DANH MỤC KÝ HIỆU VÀ CHỮ VIẾT TẮT
 % ------------------------------------------------------------
 
@@ -389,7 +405,7 @@
 \phantomsection
 \addcontentsline{toc}{chapter}
 {Danh mục các ký hiệu và chữ viết tắt}
-\input{Appendix/danhmuctuvietat}
+\input{FrontMatter/danhmuctuvietat}
 
 % ------------------------------------------------------------
 % BẢNG ĐỐI CHIẾU THUẬT NGỮ
@@ -399,16 +415,7 @@
 \phantomsection
 \addcontentsline{toc}{chapter}
 {Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}
-\input{Appendix/doichieuthuatngu}
-
-% ------------------------------------------------------------
-% TÓM TẮT
-% ------------------------------------------------------------
-
-\cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{Tóm tắt}
-\input{Appendix/tomtat}
+\input{FrontMatter/doichieuthuatngu}
 
 % ------------------------------------------------------------
 % PHẦN NỘI DUNG CHÍNH
@@ -445,6 +452,19 @@
 ]
 
 \endgroup
+
+% ------------------------------------------------------------
+% PHỤ LỤC
+% ------------------------------------------------------------
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Phụ lục}
+\chapter*{PHỤ LỤC}
+\appendix
+
+\include{Appendix/phulucA_phantich_kientruc}
+\include{Appendix/phulucB_gatekeeper}
 
 % ============================================================
 % KẾT THÚC TÀI LIỆU

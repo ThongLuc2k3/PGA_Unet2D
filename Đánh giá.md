@@ -1,131 +1,591 @@
-===== PHASE 1: CHƯƠNG 3 =====
+## Ghi chú
 
-🟠 Nên sửaMục 3.1.3, Đoạn 2"...CAD bổ sung câu nhắc trực tiếp vào g: cấu kiện unetUp_PromptAttention tích hợp tri thức câu nhắc..."Đưa trực tiếp tên biến/lớp (class) của mã nguồn vào văn bản học thuật. Trong bài báo chuẩn, kiến trúc mạng cần được mô tả bằng các khái niệm tổng quát, độc lập với ngôn ngữ lập trình."...CAD bổ sung câu nhắc trực tiếp vào g: khối giải mã chú ý có điều kiện tích hợp tri thức câu nhắc..."
-🟠 Nên sửaMục 3.1.3, Đoạn cuối"Tín hiệu g' sau đó được đưa vào Cổng chú ý (GridAttentionBlock2D) tiêu chuẩn để tính..."Tương tự như trên, mang tên lớp lập trình vào bài viết làm giảm tính hàn lâm và tính tổng quát của phương pháp."Tín hiệu g' sau đó được đưa vào Cổng chú ý không gian lưới 2D tiêu chuẩn để tính..."
-🟠 Nên sửaMục 3.1.1, Đoạn 2, Câu 2"Cách này giữ tín hiệu mạnh và đồng đều trong vùng câu nhắc, không suy giảm về tâm như Gaussian thuần, đồng thời làm mềm đường biên để tránh đạo hàm giả tạo khi lan truyền qua các tầng tích chập, hạn chế vốn có của mặt nạ nhị phân sắc cạnh khiến mạng dễ học theo cạnh hộp bao thay vì đặc trưng thực của tổn thương."Câu quá dài (56 chữ), nhồi nhét nhiều ý giải thích liên tiếp gây ngộp cho người đọc. Thuật ngữ "đạo hàm giả tạo" (dịch word-by-word từ artificial gradients) không quen thuộc trong tiếng Việt."Cách này giữ tín hiệu phân bố đều trong vùng câu nhắc và làm mềm đường biên để hạn chế sự biến thiên gradient đột ngột qua các tầng tích chập. Điều này khắc phục nhược điểm của mặt nạ nhị phân sắc cạnh, giúp mạng không học vẹt theo viền hộp bao mà tập trung vào đặc trưng thực của tổn thương."
-🟠 Nên sửaBảng 3.1 (Cột 2) và Mục 3.1.2 (Đoạn 1)"Gợi ý từ hướng tiêm bản đồ không gian vào CNN...""...tiêm bản đồ nhiệt Gaussian..."Từ "tiêm" được dịch thô từ chữ "inject" trong tiếng Anh. Dù hiểu được ý, nhưng từ này mang tính dịch máy (Vietlish) và không phải văn phong học thuật tự nhiên.Thay bằng từ "đưa... vào" hoặc "tích hợp".Ví dụ: "Gợi ý từ hướng tích hợp bản đồ không gian vào CNN..."
-🟡 Có thể cải thiệnMục 3.1, Đoạn 2 (trước Hình 3.1)"Chuỗi kế thừa tuyến tính: U-Net [2] (nền bộ mã hóa - bộ giải mã) → Attention U-Net [3] (bổ sung Cổng chú ý không gian mềm) → PGA-UNet..."Dùng trực tiếp ký hiệu mũi tên (→) để nối các khái niệm trong một đoạn văn xuôi là cách trình bày không chính quy."Kiến trúc được phát triển qua ba giai đoạn: kế thừa khung cơ sở từ U-Net [2], tích hợp Cổng chú ý không gian mềm từ Attention U-Net [3], và cuối cùng hình thành PGA-UNet..."
-🟡 Có thể cải thiệnMục 3.1.2, Đoạn 1"PSG cụ thể hóa hướng này thành một cơ chế cổng nhân (không phải ghép kênh), huấn luyện từ đầu trên CNN nhẹ, đưa tín hiệu câu nhắc vào ngay từ giai đoạn trích xuất đặc trưng, chỉ khuếch đại chứ không triệt tiêu tín hiệu gốc (α ∈ [0, 1] bên dưới)."Câu văn liên tục dùng dấu phẩy để chèn thêm các cụm giải thích phụ, khiến luồng đọc bị vụn và lan man."PSG áp dụng cơ chế cổng nhân (gating mechanism) được huấn luyện từ đầu để tích hợp câu nhắc ngay tại giai đoạn trích xuất. Cơ chế này chỉ khuếch đại đặc trưng vùng mục tiêu mà không triệt tiêu tín hiệu gốc (thông qua hệ số α ∈ [0, 1])."
-🟡 Có thể cải thiệnMục 3.1.1, Đoạn 2, Câu 1"...với Bmask ∈ {0, 1}H×W là mặt nạ nhị phân của hộp giới hạn (đệm 5 px mỗi phía)."Viết tắt "px" phổ biến trong văn bản thông thường, nhưng trong bài báo khoa học nên viết rõ để đảm bảo tính trang trọng."...với Bmask ∈ {0, 1}H×W là mặt nạ nhị phân của hộp giới hạn (đệm 5 pixel mỗi phía)."
+- File này là bản nhận xét/phản biện học thuật, không phải mô tả trạng thái cuối cùng của report.
+- Một số mục dưới đây đã được xử lý trong `Report/`; vì vậy cần đối chiếu với report hiện tại trước khi dùng lại nguyên văn.
+- Cách gọi hiện được ưu tiên trong report:
+  - `câu nhắc` hoặc `câu nhắc trực quan`;
+  - `mô-đun` cho các thành phần hệ thống;
+  - `Gatekeeper` là tên riêng của mô-đun sàng lọc hỗ trợ;
+  - kết quả chính của PGA-UNet được diễn giải trong phạm vi **phân đoạn có hướng dẫn bằng hộp giới hạn**.
 
-🔴 Nghiêm trọng	Mục 3.2, Algorithm 1 (Bước 4) & Algorithm 2 (Bước 3)	Sinh Bản đồ nhiệt: Hi = Gaussian Blur (Bi,mask, k=31)	Sử dụng tên hàm API của thư viện lập trình (Gaussian Blur) trong mã giả thuật toán. IEEE yêu cầu mã giả phải độc lập với ngôn ngữ lập trình và dùng ký hiệu toán học.	Sinh Bản đồ nhiệt: Hi = Bi,mask * KGaussian (k=31)
-🔴 Nghiêm trọng	Mục 3.2, Algorithm 1 (Bước 10)	Tính Dice xác thực trên tập xác thực; cập nhật ReduceLROnPlateau	Viết trực tiếp tên class của thư viện PyTorch (ReduceLROnPlateau) vào thuật toán. Thuật toán chỉ nên mô tả logic, công cụ cụ thể để ở phần "Thiết lập thực nghiệm".	Tính Dice xác thực; cập nhật tốc độ học (giảm tỷ lệ theo cơ chế thích ứng)
-🟠 Nên sửa	Mục 3.2, Algorithm 1 (Bước 8)	Cập nhật: θ ← θ − η∇θL (AdamW, giới hạn đạo hàm ≤ 1.0	Lỗi đánh máy: thiếu dấu đóng ngoặc đơn ở cuối biểu thức.	Cập nhật: θ ← θ − η∇θL (AdamW, giới hạn đạo hàm ≤ 1.0)
-🟠 Nên sửa	Mục 3.2, Algorithm 2 (Bước 2)	return Vui lòng khoanh hộp giới hạn lên vùng nghi ngờ	Thuật toán toán học/logic trả về (return) một câu thoại UI tiếng Việt trực tiếp là không chuẩn mực trong bài báo khoa học.	return ∅ (Khởi tạo yêu cầu người dùng cung cấp hộp giới hạn)
-🟠 Nên sửa	Xuyên suốt Mục 3.3 (vd: Mục 3.3.1)	Efficient Net-B3	Viết sai tên chuẩn của mô hình nền tảng. Tên gốc theo công bố của tác giả (Google) là viết liền.	EfficientNet-B3
-🟠 Nên sửa	Mục 3.3.1, Đoạn 2, Bullet 2	"...hệ thống hỏi lại một lần (Bác sĩ vẫn nghi ngờ, muốn tự thử phân đoạn?) để phòng âm tính giả..."	Đưa trực tiếp câu thoại giao diện (UI text) vào bài báo học thuật làm giảm tính hàn lâm. Cần trừu tượng hóa thành cơ chế logic.	"...hệ thống phát cảnh báo yêu cầu chuyên gia xác nhận lại nhằm phòng tránh rủi ro âm tính giả..."
-🟡 Có thể cải thiện	Mục 3.2, Đoạn 2 (Câu nhắc rỗng)	"...ma trận không không mang thông tin định hướng..."	Hiện tượng lặp từ "không không" (ma trận zero không mang...) gây vấp khi đọc.	"...ma trận zero (toàn trị số 0) không cung cấp thông tin định hướng..."
-🟡 Có thể cải thiện	Mục 3.3.1, Đoạn 2, Bullet 2	"Bác sĩ có thể kết thúc quy trình, hoặc tự khoanh hộp giới hạn để ép ảnh vào giai đoạn phân đoạn..."	Cụm từ "ép ảnh vào" mang sắc thái khẩu ngữ, chưa thực sự phù hợp với văn phong kỹ thuật học thuật.	"Bác sĩ có thể kết thúc quy trình, hoặc chủ động cung cấp hộp giới hạn để chuyển ảnh sang giai đoạn phân đoạn..."
-🟡 Có thể cải thiện	Mục 3.3.2, Đoạn 1	"...thao tác này chỉ vẽ lại hộp giới hạn và gọi lại cùng quy trình suy luận..."	Từ "gọi lại" (gọi hàm - recall/call) mang nặng tư duy lập trình viên.	"...thao tác này chỉ cần cập nhật hộp giới hạn và thực thi lại quy trình suy luận..."
-sửa
+Nêu:
+1.Các đóng góp của luận văn
+2. Nêu các lỗi sai nghiêm trọng của luận văn trong phương pháp, thử nghiệm, cách trình bày.
+Worked for 5m 16s
 
-===== PHASE 2: CHƯƠNG 4 (bao gồm tham chiếu chéo tới Chương 5) =====
+Tôi đánh giá trên toàn bộ bản khóa luận 105 trang, đặc biệt các Chương 3-5. Nhìn chung, khóa luận có ý tưởng kỹ thuật rõ, khối lượng thực nghiệm khá tốt, nhưng một số kết luận hiện đang mạnh hơn mức mà thiết kế thực nghiệm cho phép.
 
-🔴 Nghiêm trọngMục 4.1.2, Đoạn về Attention U-Net"Attention U-Net (mô hình cơ sở có Cổng chú ý, không câu nhắc): Kiến trúc kế thừa trực tiếp của PGA-UNet [3] (Chương 3)..."Viết ngược logic nhân quả. Attention U-Net là mô hình tiền nhiệm ra đời trước (2018), PGA-UNet mới là mô hình kế thừa từ nó. Viết như bản gốc sẽ làm người đọc hiểu lầm Attention U-Net là biến thể sinh ra sau PGA-UNet."...Kiến trúc tiền nhiệm mà PGA-UNet kế thừa trực tiếp [3] (Chương 3)..."
-🔴 Nghiêm trọngMục 4.1.3, Bước 3 (trước PT 4.4)"Tính Dice cấp độ ảnh: Chỉ số Dice được tính một lần duy nhất giữa $M_{pred}$ và $M_{GT}$"Ký hiệu toán học bất nhất. Ở Bước 2 ngay phía trên, mặt nạ dự đoán được định nghĩa có dấu mũ là $\hat{M}_{pred}$. Phương trình (4.4) bên dưới cũng dùng $\hat{M}_{pred}$. Việc thiếu dấu mũ ở câu dẫn gây đứt gãy tính chặt chẽ của biểu thức."...Chỉ số Dice được tính một lần duy nhất giữa $\hat{M}_{pred}$ và $M_{GT}$:"
-🔴 Nghiêm trọngMục 4.1.2, phần Siêu tham số kiến trúc (Bullet 1)"...giảm dần từ tầng gần bottleneck đến tầng gần đầu ra; giảm về các tầng cuối để tránh hình dạng thô..."Lỗi đánh máy làm khuyết mất chủ ngữ/tham số của vế câu. Chữ "giảm" bị đứng chơ vơ khiến người đọc không rõ đại lượng nào đang được nói tới (dù có thể ngầm hiểu là hệ số $w_l$)."...giảm dần từ tầng gần bottleneck đến tầng gần đầu ra; giảm hệ số $w_l$ về các tầng cuối để tránh hình dạng thô..."
-🟠 Nên sửaMục 4.1.3, Bước 1 & Bước 2"...tất cả mask nhị phân GT $\{G_1, G_2, ..., G_K\}$ được hợp nhất thành một mask GT duy nhất...""Mô hình được chạy suy luận riêng cho từng bbox $B_{k}$ tương ứng, sinh ra K mask xác suất..."Bất nhất thuật ngữ. Ở phần đầu khóa luận, tác giả đã có "Bảng đối chiếu thuật ngữ" quy định dịch sang tiếng Việt. Việc chèn lẫn lộn các từ tiếng Anh (mask, bbox, GT) vào câu văn tiếng Việt làm mất đi tính trang trọng của khóa luận IEEE.Sửa Bước 1: "...tất cả mặt nạ nhãn gốc $\{G_1, G_2, ..., G_K\}$ được hợp nhất thành một mặt nạ duy nhất..."Sửa Bước 2: "Mô hình được chạy suy luận riêng cho từng hộp giới hạn $B_{k}$ tương ứng, sinh ra K mặt nạ xác suất..."
-🟠 Nên sửaMục 4.1.2, Đoạn về SAM-Med2D"Được đánh giá ở hai chế độ: chưa tinh chỉnh (dùng thẳng điểm lưu trọng số tiền huấn luyện...) và đã tỉnh chỉnh..."Cụm từ "dùng thẳng" mang văn phong khẩu ngữ (informal), chưa chuẩn học thuật. Ngoài ra có lỗi gõ dấu ngã/hỏi ở chữ "tỉnh chỉnh" (cần sửa thành "tinh chỉnh")."Được đánh giá ở hai chế độ: chưa tinh chỉnh (sử dụng trực tiếp điểm lưu trọng số tiền huấn luyện...) và đã tinh chỉnh..."
-🔴 Nghiêm trọngMục 4.2.2, Đoạn "Ghi chú về điểm lưu trọng số...""...(best_sam.pth, train Dice tăng liên tục $0.6266 \rightarrow 0.8981$ qua 11 vòng lặp)..."Đưa trực tiếp tên file mã nguồn/file trọng số (best_sam.pth) vào văn bản học thuật. Giống như các lỗi ở chương 3, bài báo IEEE cần sự trừu tượng hóa, không nhắc đến file vật lý trên ổ cứng."...(trọng số tốt nhất, Dice huấn luyện tăng liên tục từ $0.6266$ đến $0.8981$ qua 11 vòng lặp)..."
-🟠 Nên sửaMục 4.2.3, Đoạn 1"Mục 4.2.2 đã chứng minh PGA-UNet vượt SAM-Med2D ngay cả khi cùng chạy ở $256 \times 256$ Mục này đánh giá PGA-UNet ở độ phân giải gốc..."Thiếu dấu chấm câu sau "256x256", dẫn đến hai câu độc lập bị dính liền vào nhau (run-on sentence)."...ngay cả khi cùng chạy ở $256 \times 256$. Mục này đánh giá..."
-🟠 Nên sửaMục 4.2.3, Đoạn ngay dưới Hình 4.3"...khoảng cách với SAM-Med2D thực tế còn lớn hơn mức đã chứng minh ở $256 \times 256$ Về tính bền bỉ..."Thiếu dấu chấm câu phân tách hai ý (hiệu năng và tính bền bỉ)."...lớn hơn mức đã chứng minh ở $256 \times 256$. Về tính bền bỉ..."
-🟠 Nên sửaMục 4.2.3, Đoạn ngay dưới Hình 4.3"...suy luận bắc cầu PGA-512 > PGA-256 > SAM-256 cho thấy khoảng cách..."Việc dùng ký hiệu toán học "lớn hơn" (>) nối các mô hình trong một đoạn văn xuôi để diễn đạt ý "hiệu năng tốt hơn" là cách hành văn phi chính quy (informal) và không đạt chuẩn IEEE."...theo tính chất bắc cầu, hiệu năng của PGA-UNet (512) vượt qua PGA-UNet (256) và cao hơn hẳn SAM-Med2D (256), cho thấy khoảng cách..."
-🟠 Nên sửaMục 4.2.2, Đoạn "Ghi chú về điểm lưu trọng số...""Ghi chú về điểm lưu trọng số đã tỉnh chỉnh trên FracAtlas..."Lỗi gõ phím (Typo): sai dấu hỏi/ngã ở từ "tinh chỉnh"."...trọng số đã tinh chỉnh trên FracAtlas..."
-🟡 Có thể cải thiệnMục 4.2.3, Đoạn "Lưu ý HD95...""...do đó cột này không in đậm ở hàng nào trong các bảng dưới đây, không phải độ phân giải cao kém bám biên hơn, chỉ là khác đơn vị đo."Lời giải thích mang tính chất trần thuật, khẩu ngữ, giống như đang nói chuyện trực tiếp với người đọc. Cần viết súc tích và học thuật hơn."...do đó, cột này không được in đậm để tránh hiểu nhầm về hiệu năng bám biên giữa các hệ quy chiếu khác nhau."
-🟡 Có thể cải thiệnBảng 4.3, 4.4, 4.5, 4.6Tiêu đề: "...Attention U-Net (tự động, 512) so PGA-UNet (512, Bao trọn)..."Thiếu giới từ "với" khiến cụm từ "so PGA-UNet" có vẻ cụt ngủn trong văn bản học thuật tiếng Việt."...Attention U-Net (tự động, 512) so với PGA-UNet (512, Bao trọn)..."
-🟡 Có thể cải thiệnMục 4.2.1, Đoạn cuối trang 33"Dấu hiệu đầu tiên của tính tổng quát ở cấp độ thiết kế: lợi ích của câu nhắc không phải hiện tượng quá khớp riêng của BTXRD..."Dịch từ "overfitting" thành "hiện tượng quá khớp" là đúng, nhưng cụm từ "quá khớp riêng của BTXRD" nghe hơi gượng ép. Thường chỉ nói mô hình bị quá khớp trên một tập dữ liệu."...không chỉ là kết quả đặc thù trên BTXRD..."
-Nghiêm trọngMục 4.3.1 (Phân tích ablation, Quan sát 2, 3, 4) và Mục 4.3.3 (Bullet 1, 2)Ví dụ 1: "...Zoom -0.0025, Lệch tâm -0.0050..."Ví dụ 2: "Zoom giảm nhẹ nhưng vẫn có ý nghĩa..."Bất nhất thuật ngữ. Ở đầu Chương 4 và trong tất cả các bảng (Bảng 4.10, 4.11...), bạn sử dụng tên kịch bản là "Bao trọn". Việc tự ý dùng từ "Zoom" (dịch từ Zoom-out) trong văn xuôi làm đứt gãy sự liên kết với bảng biểu, khiến người đọc bối rối không rõ "Zoom" là độ đo mới hay kịch bản nào.Thay thế toàn bộ từ "Zoom" trong các đoạn phân tích văn xuôi thành "Bao trọn".Ví dụ: "...Bao trọn -0.0025, Lệch tâm -0.0050..." và "Bao trọn giảm nhẹ nhưng vẫn có ý nghĩa..."
-🟠 Nên sửaMục 4.3.1, Đoạn 2 (Giải thích tên biến thể)"Đặt tên trực tiếp theo cấu hình kiến trúc (thay vì ký hiệu V1-V8 trung tính, dù các thư mục kết quả gốc vẫn giữ ký hiệu này để truy vết) để thấy ngay đây là một ablation kiến trúc:"Mang văn phong báo cáo tiến độ/đồ án. Việc nhắc đến cấu trúc "thư mục kết quả gốc" (local folders) trong một bài báo khoa học là tối kỵ vì nó không mang thông tin học thuật và không cần thiết cho độc giả."Để làm rõ vai trò của từng thành phần, các biến thể được đặt tên trực tiếp theo cấu hình kiến trúc:"
-🟠 Nên sửaMục 4.3.1, phần "Điểm neo mức không câu nhắc""Giả thuyết lý giải (suy luận lý thuyết, chưa kiểm chứng bằng nghiên cứu loại bỏ thành phần riêng): Không có câu nhắc định hướng..."Cách rào đón quá dài dòng, đặt trong ngoặc đơn gây loãng mạch đọc. Trong phân tích kết quả, việc đưa ra lý giải dựa trên suy luận là bình thường, chỉ cần diễn đạt súc tích."Lý giải tiềm năng: Không có câu nhắc định hướng..."
-🟡 Có thể cải thiệnMục 4.3, Đoạn 1"...nên trình bày riêng từng bộ dữ liệu trước rồi tổng hợp sau sẽ trung thực và rõ ràng hơn là ép vào một bảng gộp."Cụm từ "ép vào một bảng gộp" mang sắc thái văn nói (khẩu ngữ), thiếu tính khách quan của văn phong IEEE."...nên việc phân tích độc lập trên từng bộ dữ liệu trước khi tổng hợp sẽ giúp làm rõ xu hướng và tránh nhiễu thông tin so với việc gộp chung."
-🟡 Có thể cải thiệnMục 4.3.3, Phân tích Bảng 4.21 (Bullet 4)"Khác biệt thật với BTXRD, xác nhận bằng kiểm định: hai đóng góp riêng lẻ biên độ nhỏ đổi chiều dấu có ý nghĩa ở cả hai bộ dữ liệu."Diễn đạt dịch sát nghĩa (word-by-word) từ tiếng Anh (e.g., "real difference", "change sign significantly"), đọc khá gượng ép trong tiếng Việt học thuật."Sự khác biệt có ý nghĩa thống kê so với BTXRD: hai đóng góp riêng lẻ (biên độ nhỏ) có sự đảo chiều xu hướng một cách có ý nghĩa ở cả hai bộ dữ liệu."
-🟡 Có thể cải thiệnMục 4.3.3, Đoạn cuối"...chưa kiểm định tổng quát hóa liên miền theo nghĩa chặt) được tổng hợp thành hướng phát triển tại Chương 5."Dấu đóng ngoặc đơn ) ở cuối câu bị thừa (hoặc do thiếu dấu mở ngoặc trước đó).Bỏ dấu đóng ngoặc đơn: "...chưa kiểm định tổng quát hóa liên miền theo nghĩa chặt được tổng hợp thành hướng phát triển tại Chương 5."
-🔴 Nghiêm trọngMục 4.4.2, Đoạn "Phân tích các ca bỏ sót trên FracAtlas""...dùng dữ liệu cấp độ ảnh (cls_prob, gt_label) từ results/pipeline_detail.csv của lần chạy pipeline FracAtlas."Đưa trực tiếp tên biến trong mã nguồn (cls_prob, gt_label) và đường dẫn file kết quả cục bộ (results/pipeline_detail.csv) vào bài. Đây là lỗi tối kỵ trong văn phong IEEE, làm mất tính hàn lâm và biến bài báo thành báo cáo gỡ lỗi (debug report)."...dựa trên xác suất dự đoán và nhãn gốc ở cấp độ ảnh của FracAtlas."
-🔴 Nghiêm trọngBảng 4.23 và Bảng 4.29 (Tiêu đề bảng)"Phân bố xác suất dự đoán (cls_prob) của..."Tương tự lỗi trên, đưa tên biến code vào tiêu đề bảng."Phân bố xác suất dự đoán ($p$) của..."
-🟠 Nên sửaMục 4.4.1, Đoạn "Kiến trúc: Efficient Net-B3 tinh chỉnh...""Hàm mất mát: BCEWithLogitsLoss; tối ưu: AdamW; dừng sớm: patience = 15 (theo Accuracy); giới hạn đạo hàm: max_norm = 1.0."Dùng trực tiếp tên class và tham số của thư viện PyTorch. IEEE yêu cầu sử dụng khái niệm toán học/thuật ngữ học máy độc lập với framework."Hàm mất mát: Entropy chéo nhị phân (Binary Cross-Entropy); tối ưu: AdamW; dừng sớm sau 15 vòng lặp không cải thiện độ chính xác; cắt xén đạo hàm (gradient clipping) với chuẩn tối đa 1.0."
-🟠 Nên sửaMục 4.4.1, Đoạn "Kiến trúc...", mô tả Giai đoạn 2"Mở khóa toàn bộ, $LR=10^{-5}$, Cosine AnnealingLR."Dùng tên class bộ lập lịch của PyTorch (CosineAnnealingLR)."Mở khóa toàn bộ trọng số, $LR=10^{-5}$, sử dụng lịch trình giảm tốc độ học hình sin (Cosine Annealing)."
-🟠 Nên sửaMục 4.4.1, Đoạn "Tương quan với kích thước tổn thương""...tính bằng công thức shoelace trên tọa độ polygon GT..."Sử dụng từ ghép Vietlish (polygon GT), thiếu sự đồng bộ với các phần trước vốn đã dùng "đa giác" và "nhãn gốc"."...tính bằng công thức Shoelace dựa trên tọa độ đa giác của nhãn gốc..."
-🟡 Có thể cải thiệnMục 4.4.1, Đoạn "Lưu ý về phạm vi số liệu""...cấu hình confusion matrix hiện tại..."Chèn từ tiếng Anh vào giữa câu tiếng Việt trong khi ngành AI đã có thuật ngữ tương đương rất phổ biến."...cấu hình ma trận nhầm lẫn (confusion matrix) hiện tại..."
-🟡 Có thể cải thiệnXuyên suốt Mục 4.4"Efficient Net-B3"Tên mạng nền tảng viết sai quy cách (tương tự Chương 3)."EfficientNet-B3" (viết liền).
-🔴 Nghiêm trọngMục 5.2, Hạn chế 1 (Sai số tích lũy)"...kéo hiệu năng đầu cuối xuống đáng kể so với PGA-UNet đơn lẻ (Mục 5.1), hạn chế cố hữu của kiến trúc hai giai đoạn."Tham chiếu chéo sai. Mục 5.1 là phần tóm tắt kết luận của Chương 5, không chứa số liệu chứng minh sự sụt giảm hiệu năng. Các phân tích về sai số tích lũy kéo hiệu năng đầu cuối xuống nằm ở Mục 4.4 (cụ thể là Bảng 4.26 và 4.31). Việc dẫn nguồn chéo sai trong khóa luận sẽ làm người đọc không thể tra cứu lại lập luận."...kéo hiệu năng đầu cuối xuống đáng kể so với PGA-UNet đơn lẻ (Mục 4.4), hạn chế cố hữu của kiến trúc hai giai đoạn."
-🟠 Nên sửaMục 4.5, Đoạn 2"...đóng góp quyết định đến từ việc điều kiện hóa attention bằng đặc trưng câu nhắc (CAD) chứ không phải bản thân cơ chế attention;"Bất nhất thuật ngữ. Xuyên suốt Chương 2, 3 và 4, khóa luận đã tuân thủ việc dịch "attention mechanism" thành "cơ chế chú ý" (như đã quy định ở Bảng thuật ngữ đầu bài). Việc sử dụng lại tiếng Anh ở phần tổng kết làm giảm tính nhất quán và trang trọng."...đóng góp quyết định đến từ việc điều kiện hóa chú ý bằng đặc trưng câu nhắc (CAD) chứ không phải bản thân cơ chế chú ý;"
-🟠 Nên sửaMục 4.5, Đoạn 4"...kéo Pipeline Dice từ 0.6763 xuống 0.4230 dù bản thân PGA UNet trên các ảnh lọt qua đúng vẫn giữ Dice ≈ 0.82."Lỗi đánh máy: Thiếu dấu gạch nối trong tên mô hình cốt lõi của khóa luận."...kéo Pipeline Dice từ 0.6763 xuống 0.4230 dù bản thân PGA-UNet trên các ảnh lọt qua đúng vẫn giữ Dice ≈ 0.82."
-🟠 Nên sửaMục 5.1, Đoạn 2"Đóng góp kỹ thuật cốt lõi là kiến trúc PGA UNet (Prompt-Guided Attention U-Net, ~3M tham số)..."Tương tự lỗi trên, thiếu dấu gạch nối trong tên mô hình ở ngay phần kết luận trọng tâm."Đóng góp kỹ thuật cốt lõi là kiến trúc PGA-UNet (Prompt-Guided Attention U-Net, ~3M tham số)..." 
+1. Các đóng góp của luận văn
+1.1. Đề xuất mô hình phân đoạn tương tác PGA-UNet
 
-===== PHASE 3: CHƯƠNG 2 =====
+Khóa luận xây dựng PGA-UNet, một mô hình CNN hạng nhẹ nhận hai đầu vào:
 
-🔴 Nghiêm trọngMục 2.4.1, Đoạn dẫn trước PT (2.4)"Chỉ số IoU: diện tích phần giao chia diện tích phần hợp của hai mặt na."Lỗi đánh máy thiếu dấu làm sai chính tả tiếng Việt, ảnh hưởng đến độ chuyên nghiệp của văn bản học thuật."Chỉ số IoU: diện tích phần giao chia diện tích phần hợp của hai mặt nạ."
-🟠 Nên sửaMục 2.3.2, Đoạn 1, Câu 1"Sau khi có Bản đồ nhiệt câu nhắc H, bài toán tiếp theo là tiêm thông tin này vào U-Net."Bất nhất thuật ngữ và văn phong. Ở Chương 3 chúng ta đã thống nhất không dùng từ "tiêm" (dịch thô từ inject) mà dùng "tích hợp" để đảm bảo tính hàn lâm."Sau khi có Bản đồ nhiệt câu nhắc H, bài toán tiếp theo là tích hợp thông tin này vào U-Net."
-🟠 Nên sửaMục 2.3.1, Đoạn ngay dưới PT (2.2)"Cách biểu diễn này mang $\overline{y}$ nghĩa lâm sàng: $H(x,y)$ đạt cực đại..."Lỗi hiển thị/gõ nhầm mã LaTeX. Thay vì gõ chữ "ý", văn bản lại dùng ký hiệu toán học $\overline{y}$ (\bar{y}), làm đứt gãy mạch đọc."Cách biểu diễn này mang ý nghĩa lâm sàng: $H(x,y)$ đạt cực đại..."
-🟡 Có thể cải thiệnMục 2.3.1, Đoạn "Biến thể triển khai...""Biến thể triển khai, Plateau Heatmap: Một biến thể phổ biến là Plateau Heatmap: gán đồng nhất giá trị 1.0..."Lặp cụm từ tiếng Anh và lạm dụng dấu hai chấm (:) liên tiếp trong cùng một câu gây lủng củng."Biến thể Plateau Heatmap: Khác với phân phối chuẩn, biến thể này gán đồng nhất giá trị 1.0..."
-🟡 Có thể cải thiệnMục 2.4.4, Đoạn 1"Các độ đo định vị phổ biến (DIOU, GIoU) đo lệch tâm..."Bất nhất cách viết hoa acronym. Cùng là hậu tố IoU (Intersection over Union) nhưng viết thành DIOU và GIoU."Các độ đo định vị phổ biến (DIoU, GIoU) đo lệch tâm..."
-🟡 Có thể cải thiệnMục 2.3.1, Đoạn cuối"...cho phép Cổng không gian nhân trực tiếp theo phần tử (Phương trình (3.3)) mà không cần chiếu một vector không mang cấu trúc không gian vào bản đồ đặc trưng 2D."Việc lặp lại chữ "không gian" ba lần trong một câu dài khiến câu văn bị nặng nề. Người đọc chuyên ngành chỉ cần dùng từ "rời rạc" là đủ hiểu đặc tính của vector nhúng."...mà không cần chiếu một vector rời rạc vào bản đồ đặc trưng 2D."
+ảnh X-quang;
+hộp giới hạn do người dùng cung cấp quanh vùng nghi ngờ.
 
-===== PHASE 4: CHƯƠNG 1 + TÀI LIỆU THAM KHẢO [6][7] =====
+Điểm hợp lý là mô hình không bắt buộc phải tự động tìm tổn thương trên toàn ảnh, mà khai thác thông tin định vị sơ bộ từ người dùng để thực hiện phân đoạn chính xác ở cấp độ pixel.
 
-🔴 Nghiêm trọngMục 1.3, Phát biểu bài toán, Phương trình (1.1)M = 1[fseg (I, H(B); seg) ≥ 0.5]Mâu thuẫn ký hiệu toán học. Ở câu định nghĩa ngay phía trên, mặt nạ dự đoán đầu ra được ký hiệu là $\hat{M}$. Tuy nhiên, trong công thức lại dùng $M$ (ký hiệu chuẩn thường quy ước là nhãn gốc/Ground Truth), làm đứt gãy sự chặt chẽ của định nghĩa toán học.$\hat{M} = \mathbf{1}[f_{seg}(I, H(B); \theta_{seg}) \ge 0.5]$(Lưu ý: Bổ sung thêm dấu mũ cho $\hat{M}$ và viết đúng ký hiệu trọng số $\theta_{seg}$)
-🟠 Nên sửaMục 1.2.1, Đoạn 3 và Đoạn 4"Một hướng nghiên cứu đang được quan tâm là phân đoạn tương tác... Tuy nhiên, cách tích hợp hiệu quả tín hiệu định hướng vào kiến trúc mạng nơ-ron vẫn là hướng nghiên cứu đang được quan tâm, đặc biệt trong ảnh y khoa chuyên biệt."Lặp cấu trúc từ vựng ở hai đoạn liên tiếp. Câu văn khá dài và mang phong cách sinh văn bản tự động (liệt kê nhiều vế cân đối quá mức). Cần súc tích hơn."Phân đoạn tương tác đang là một hướng tiếp cận hứa hẹn, nơi chuyên gia cung cấp hộp giới hạn để định hướng mô hình. Cơ chế này vừa cải thiện độ chính xác, vừa đảm bảo chuyên gia y tế luôn nắm quyền kiểm soát. Tuy nhiên, cách tích hợp hiệu quả định hướng này vào mạng nơ-ron chuyên biệt cho ảnh y khoa vẫn là một thách thức lớn."
-🟠 Nên sửaMục 1.5, Đóng góp 1"...không tạo đạo hàm giả tạo tại đường biên hộp giới hạn."Bất nhất thuật ngữ (Lỗi này đã được đồng bộ ở Chương 3). "Đạo hàm giả tạo" (dịch word-by-word từ artificial gradients) không phải là thuật ngữ học máy tiếng Việt chuẩn mực."...hạn chế sự biến thiên gradient đột ngột tại đường biên hộp giới hạn."
-🟡 Có thể cải thiệnMục 1.3, Đoạn ngay dưới công thức (1.1)"Thiết kế này phản ánh triết lý con người luôn giám sát trong vòng lặp xuyên suốt cả hai bước..."Dấu hiệu AI/Văn phong nghị luận. Từ "triết lý" (philosophy) mang sắc thái quá hoa mỹ đối với một phát biểu bài toán trong kỹ thuật phần mềm/AI."Thiết kế này tuân thủ nguyên tắc human-in-the-loop (con người luôn trong vòng lặp) xuyên suốt cả hai bước..."
-🟡 Có thể cải thiệnMục 1.2.2, Đoạn 2"Một hệ thống phân đoạn đáng tin cậy cần khả năng chịu đựng sai sót: nhận biết khi câu nhắc có vấn đề và phản hồi phù hợp..."Thiếu đồng bộ với toàn bài. Xuyên suốt Chương 3 và 4, khóa luận đều sử dụng thuật ngữ "tính bền bỉ" (robustness) để chỉ khả năng mô hình chịu được sai lệch câu nhắc. "Chịu đựng sai sót" nghe giống khái niệm fault tolerance của hệ thống phân tán."Một hệ thống phân đoạn đáng tin cậy cần có tính bền bỉ: hoạt động ổn định khi câu nhắc bị sai lệch và phản hồi phù hợp..."
-🔴 Nghiêm trọng	Tài liệu tham khảo, Mục [6] và [7]	
-"[6] C. Xu, L. Zhang, L. Wang, et al., Boundary-Aware Test-Time Adaptation for Zero-Shot Medical Image Segmentation, 2025. [Online]..."
+1.2. Biểu diễn hộp giới hạn bằng bản đồ nhiệt Gaussian dạng cao nguyên
+
+Thay vì sử dụng hộp nhị phân có biên cứng, khóa luận:
+
+chuyển hộp giới hạn thành mặt nạ nhị phân;
+làm mềm biên bằng bộ lọc Gaussian;
+giữ vùng giá trị tương đối cao trong toàn bộ hộp.
+
+Biểu diễn này nhằm giảm sự phụ thuộc cứng vào đường biên hộp và tăng khả năng chịu sai lệch khi người dùng vẽ hộp chưa chính xác.
+
+Đây là một thành phần có ý nghĩa, đặc biệt khi kết hợp với PSG và CAD. Tuy nhiên, chỉ riêng việc làm mịn hộp bằng Gaussian chưa đủ để được xem là đóng góp mới mạnh, vì tư tưởng dùng bản đồ mềm và spatial conditioning đã xuất hiện trong nhiều nghiên cứu trước.
+
+1.3. Tích hợp câu nhắc vào bộ mã hóa bằng PSG
+
+Khóa luận đề xuất Prompt Spatial Gate – PSG, đưa bản đồ câu nhắc vào nhiều tầng của encoder thay vì chỉ nối với ảnh ở đầu vào.
+
+PSG cho phép đặc trưng mã hóa chịu ảnh hưởng trực tiếp của vị trí hộp giới hạn. Đây là cách giải quyết hợp lý cho vấn đề tín hiệu câu nhắc có thể suy giảm sau nhiều tầng tích chập và giảm mẫu.
+
+1.4. Tích hợp câu nhắc vào bộ giải mã bằng CAD
+
+Conditional Attention Decoder – CAD mở rộng Attention Gate bằng cách đưa đặc trưng câu nhắc vào tín hiệu điều khiển tại các skip connection.
+
+Đóng góp kỹ thuật đáng chú ý nhất của khóa luận không phải PSG hoặc CAD đứng riêng, mà là quy trình duy trì câu nhắc xuyên suốt encoder-decoder:
+
+PSG điều biến đặc trưng ở encoder;
+CAD điều kiện hóa attention ở decoder;
+bản đồ Gaussian cung cấp tín hiệu không gian mềm.
+
+Kết quả ablation cho thấy tổ hợp này có lợi rõ nhất khi hộp bị lệch, chứ không nhất thiết đạt kết quả cao nhất khi hộp hoàn toàn lý tưởng.
+
+1.5. Khảo sát tính bền bỉ trước sai lệch câu nhắc
+
+Khóa luận xây dựng ba kịch bản:
+
+Bao trọn;
+Lệch tâm;
+Hỗn hợp 70% Bao trọn và 30% Lệch tâm.
+
+Đây là điểm tốt vì nghiên cứu không chỉ báo cáo kết quả với hộp hoàn hảo mà còn xem xét sai số thao tác người dùng. Kết quả trên cả BTXRD và FracAtlas cho thấy mô hình đầy đủ suy giảm ít hơn một số cấu hình đối sánh khi hộp bị lệch.
+
+1.6. Đánh giá trên hai dạng tổn thương khác nhau
+
+Mô hình được huấn luyện và đánh giá riêng trên:
+
+BTXRD: khối u xương;
+FracAtlas: gãy xương.
+
+Việc tái lập xu hướng trên hai bộ dữ liệu là bằng chứng tốt về tính nhất quán của thiết kế trên hai miền dữ liệu. Tuy nhiên, đây chưa phải tổng quát hóa liên miền, vì mô hình được huấn luyện lại trên từng bộ dữ liệu.
+
+1.7. Thực hiện nhiều phân tích thực nghiệm
+
+Khóa luận có khối lượng thực nghiệm tương đối phong phú:
+
+so sánh với U-Net, Attention U-Net và SAM-Med2D;
+ablation tám cấu hình;
+khảo sát 256×256 và 512×512;
+đánh giá chéo 4-fold;
+Wilcoxon bắt cặp theo ảnh;
+phân tích nhóm tổn thương nhỏ, biên mờ, tổn thương rõ;
+phân tích ảnh mà U-Net hoạt động tốt hoặc thất bại.
+
+Đây là ưu điểm đáng ghi nhận đối với một khóa luận cử nhân.
+
+1.8. Khảo sát luồng hai giai đoạn với Gatekeeper
+
+Khóa luận bổ sung EfficientNet-B3 để sàng lọc ảnh bình thường/bệnh lý trước PGA-UNet. Phần này có giá trị như một khảo sát tích hợp hệ thống, đồng thời chỉ ra rằng lỗi sàng lọc có thể làm giảm mạnh hiệu năng toàn luồng.
+
+Tuy nhiên, Gatekeeper nên được xem là nội dung mở rộng, không phải đóng góp khoa học trung tâm.
+
+2. Các lỗi sai nghiêm trọng
+A. Lỗi nghiêm trọng trong phương pháp
+2.1. Câu nhắc kiểm thử được tạo từ nhãn thật — điều kiện “oracle prompt”
+
+Đây là vấn đề quan trọng nhất.
+
+Ở giai đoạn kiểm thử, hộp giới hạn được sinh từ chính mặt nạ ground truth. Đối với ảnh có nhiều tổn thương, hệ thống còn:
+
+biết trước số lượng tổn thương;
+tạo một hộp cho từng vùng ground truth;
+chạy mô hình riêng cho từng hộp;
+hợp nhất các mặt nạ dự đoán.
+
+Như vậy, mô hình được cung cấp gần như chính xác:
+
+vị trí tổn thương;
+số tổn thương;
+vùng không gian cần xử lý.
+
+Thiết lập này phù hợp để đánh giá chất lượng phân đoạn khi đã có hộp đúng, nhưng không thể đại diện cho toàn bộ hệ thống phát hiện và phân đoạn tổn thương thực tế.
+
+Đặc biệt, việc so sánh PGA-UNet có hộp ground truth với U-Net và Attention U-Net không có bất kỳ thông tin định vị nào là không công bằng. Phần chênh lệch Dice rất lớn chủ yếu phản ánh lợi ích của thông tin hộp, không chỉ phản ánh ưu điểm của PSG và CAD.
+
+Cần sửa:
+
+Tách rõ hai bài toán: phân đoạn tự động và phân đoạn có hộp hướng dẫn.
+Baseline chính phải là các mô hình cùng nhận hộp, chẳng hạn U-Net+Concat, bbox-conditioned U-Net, DeepIGeoS hoặc các mô hình prompt-aware khác.
+Không dùng mức tăng so với U-Net không có hộp làm bằng chứng trực tiếp cho tính mới của kiến trúc.
+2.2. Kết luận “bền bỉ” chưa được kiểm chứng đúng nghĩa
+
+Các hộp sai lệch đều được sinh bằng một quy tắc nhân tạo tương đối đơn giản:
+
+dịch đúng 30% kích thước hộp;
+mở rộng trong khoảng 15-45%;
+Hỗn hợp cố định tỷ lệ 70/30.
+
+Báo cáo còn cho biết quy tắc này được dùng trong cả huấn luyện và đánh giá. Vì vậy, mô hình có thể đã học đúng phân bố nhiễu mà nó gặp ở kiểm thử.
+
+Đây mới là robustness đối với một bộ sinh nhiễu đã biết, chưa phải khả năng bền bỉ trước thao tác người dùng thực tế.
+
+Cần sửa:
+
+Huấn luyện một mô hình duy nhất trên tập nhiễu đa dạng.
+Kiểm thử trên các mức dịch chưa xuất hiện khi huấn luyện: 10%, 20%, 40%, 60%.
+Kiểm thử hộp quá rộng, quá hẹp, chỉ giao một phần, không giao tổn thương.
+Mỗi ảnh cần sinh nhiều hộp ngẫu nhiên và báo cáo trung bình ± độ lệch chuẩn.
+Tốt nhất cần có hộp do nhiều người dùng hoặc bác sĩ vẽ.
+2.3. PSG không thực sự “đóng cổng” hoặc ức chế vùng không liên quan
+
+PSG được định nghĩa gần dạng:
+
+x
+~
+=x⊙(1+αA),
+
+với A qua Sigmoid và α≥0.
+
+Hệ số nhân vì vậy không nhỏ hơn 1. Cơ chế này chỉ có thể:
+
+giữ nguyên;
+hoặc khuếch đại đặc trưng.
+
+Nó không thể giảm đặc trưng nền hoặc ức chế vùng ngoài câu nhắc. Vì thế, cách gọi “gate” và một số diễn giải về việc giảm ảnh hưởng vùng không liên quan chưa hoàn toàn phù hợp với công thức.
+
+Cần sửa:
+
+Gọi đúng là residual spatial amplification; hoặc
+dùng cổng có khả năng cả tăng và giảm, chẳng hạn x⊙(ϵ+A);
+hoặc dùng điều biến affine x⊙γ(H)+β(H);
+trực quan hóa bản đồ PSG để chứng minh vùng nào được tăng hoặc giảm.
+2.4. Các tham số câu nhắc phụ thuộc pixel, gây nhiễu khi so sánh độ phân giải
+
+Khóa luận cố định:
+
+Gaussian kernel k=31;
+mở rộng thêm 5 pixel;
+ngưỡng 0,5;
+
+cho cả ảnh 256×256 và 512×512.
+
+Nhưng 31 pixel và 5 pixel có ý nghĩa tương đối khác nhau ở hai độ phân giải. Bản đồ câu nhắc ở 256×256 sẽ bị làm mịn mạnh hơn về tỷ lệ so với ảnh 512×512.
+
+Do đó, thí nghiệm “ảnh hưởng độ phân giải” không chỉ thay đổi độ phân giải ảnh mà đồng thời thay đổi:
+
+độ rộng tương đối của Gaussian;
+biên mở rộng tương đối;
+mức độ khuếch tán của câu nhắc.
+
+Đây là biến gây nhiễu nghiêm trọng.
+
+Cần sửa: xác định kernel, margin và độ dịch theo tỷ lệ chiều rộng/chiều cao ảnh hoặc kích thước hộp, không dùng số pixel cố định.
+
+2.5. Công thức CAD và mô tả triển khai chưa nhất quán
+
+Trong phần công thức, CAD sử dụng các ký hiệu như:
+
+α
+l
+CAD
+	​
+
+;
+w
+l
+	​
+
+;
+đặc trưng p
+enc
+l
+	​
+
+;
+hệ số c
+l
+	​
+
+.
+
+Nhưng phần cấu hình lại đề cập “hệ số kết nối dư của CAD λ=0,3” mà λ không được thể hiện rõ trong công thức tương ứng.
+
+Ngoài ra chưa mô tả đủ:
+
+số kênh của từng tầng;
+cấu trúc chính xác của f
+enc
+	​
+
+;
+c
+l
+	​
+
+ là scalar, vector theo kênh hay bản đồ;
+vị trí normalization;
+tham số nào học được, tham số nào cố định.
+
+Điều này làm phương pháp khó tái tạo.
+
+2.6. Không xử lý trường hợp câu nhắc sai hoàn toàn hoặc vùng không có tổn thương
+
+Mô hình phân đoạn chỉ được huấn luyện bằng ảnh bệnh lý và hộp sinh từ ground truth. Vì vậy, mô hình chưa học các trường hợp:
+
+hộp không chứa tổn thương;
+người dùng khoanh nhầm vùng;
+ảnh bình thường nhưng vẫn cung cấp hộp;
+hộp chỉ chứa cấu trúc giải phẫu giống tổn thương.
+
+Trong thực tế đây là các trường hợp rất quan trọng. Mô hình có thể bị ép tạo ra một mặt nạ dương tính chỉ vì luôn được huấn luyện với hộp có tổn thương.
+
+Cần bổ sung:
+
+negative boxes;
+ảnh bình thường với mặt nạ rỗng;
+loss phạt diện tích dự đoán sai;
+khả năng trả về “không có vùng phù hợp”;
+confidence hoặc uncertainty map.
+2.7. Thay đổi kích thước ảnh chưa làm rõ việc giữ tỷ lệ hình học
+
+Báo cáo chỉ nói đưa ảnh về 256×256 hoặc 512×512, nhưng không nêu rõ:
+
+resize trực tiếp về hình vuông;
+hay giữ tỷ lệ và padding;
+cách chuẩn hóa cường độ;
+ảnh một kênh được đưa vào mạng ra sao.
+
+Nếu resize méo trực tiếp, hình dạng xương và tổn thương có thể bị biến dạng. Đây là vấn đề đáng kể đối với phân đoạn đường gãy và khối u.
+
+B. Lỗi nghiêm trọng trong thực nghiệm
+2.8. Baseline chính không công bằng
+
+Bảng so sánh chính đặt cạnh nhau:
+
+U-Net/Attention U-Net: chỉ nhận ảnh;
+PGA-UNet: nhận ảnh và hộp gần ground truth.
+
+Vì đầu vào không tương đương, không thể kết luận mức tăng Dice từ 0,47 lên 0,86 chủ yếu do kiến trúc PGA-UNet.
+
+Chính ablation cho thấy chỉ cần U-Net+Concat nhận câu nhắc cũng đạt Dice rất cao trong kịch bản Bao trọn. Trên BTXRD, U-Net+CAD còn đạt 0,8861, cao hơn PGA-UNet 0,8607; trên FracAtlas, PSG+Cổng chú ý nguyên bản cũng cao hơn PGA-UNet khi hộp lý tưởng.
+
+Do đó, kết luận đúng phải là:
+
+PGA-UNet có ưu thế chủ yếu trong kịch bản hộp bị lệch theo bộ sinh nhiễu đã định nghĩa, không phải luôn có độ chính xác cao nhất.
+
+2.9. Phân chia ở cấp độ ảnh, chưa chứng minh không rò rỉ theo bệnh nhân
+
+Khóa luận chỉ xác nhận giữ các polygon của cùng một ảnh trong một phân vùng. Không thấy mô tả:
+
+patient-level split;
+study-level split;
+loại bỏ ảnh trùng hoặc ảnh cùng bệnh nhân;
+kiểm soát nhiều góc chụp của cùng ca.
+
+Nếu một bệnh nhân có nhiều ảnh hoặc nhiều lần chụp, chia ở cấp độ ảnh có thể làm ảnh gần giống nhau xuất hiện ở train và test.
+
+Đây là nguy cơ rò rỉ dữ liệu y khoa nghiêm trọng. Ít nhất báo cáo phải chứng minh mỗi bộ dữ liệu không có patient ID lặp giữa các tập.
+
+2.10. Không đánh giá biến thiên do khởi tạo ngẫu nhiên
+
+Các mô hình dường như chỉ được huấn luyện một lần cho mỗi cấu hình. Không có:
+
+nhiều random seed;
+trung bình ± độ lệch chuẩn giữa các lần chạy;
+khoảng tin cậy bootstrap.
+
+Đánh giá chéo 4-fold chỉ phản ánh thay đổi cách chia dữ liệu, không phản ánh biến thiên do quá trình tối ưu.
+
+Vì vậy, các chênh lệch nhỏ như 0,002-0,02 Dice giữa các kiến trúc có thể chỉ là nhiễu huấn luyện.
+
+2.11. Thực hiện 36 kiểm định nhưng không hiệu chỉnh so sánh nhiều lần
+
+Khóa luận thực hiện sáu cặp cấu hình × ba kịch bản × hai bộ dữ liệu, tổng cộng 36 phép kiểm định Wilcoxon, nhưng dùng p-value thô.
+
+Báo cáo đã thừa nhận chưa hiệu chỉnh, nhưng vẫn diễn giải nhiều kết quả quanh ngưỡng 0,05. Điều này làm tăng xác suất phát hiện dương tính giả.
+
+Cần sửa:
+
+Holm-Bonferroni hoặc Benjamini-Hochberg;
+báo cáo effect size;
+khoảng tin cậy của chênh lệch Dice;
+phân biệt rõ phân tích xác nhận và phân tích thăm dò.
+
+Các kết quả p<0,001 có thể vẫn khá mạnh, nhưng các kết quả khoảng 0,01-0,05 chưa đáng tin nếu chưa hiệu chỉnh.
+
+2.12. Quy trình tinh chỉnh SAM-Med2D chưa đủ để kiểm tra tính công bằng
+
+Báo cáo chỉ nêu lớp adapter và decoder được cập nhật, nhưng thiếu:
+
+loss cụ thể;
+số epoch;
+learning rate;
+scheduler;
+cách sinh prompt khi huấn luyện;
+augmentation;
+checkpoint selection;
+số seed;
+lớp nào đóng băng chính xác.
+
+Do đó, chưa thể biết SAM-Med2D đã được tinh chỉnh tối ưu hay chưa. Kết luận PGA-UNet tốt hơn SAM-Med2D vì vậy chưa hoàn toàn thuyết phục và khó tái lập.
+
+2.13. Phân tích nhóm có tính vòng tròn
+
+Một số nhóm được chọn dựa trên kết quả của chính mô hình đang bị so sánh:
+
+“U-Net hoạt động kém” là 50 ảnh có Dice U-Net thấp nhất;
+“Biên mờ” trên FracAtlas được xác định từ các ảnh có Dice SAM-Med2D thấp.
+
+Sau đó báo cáo PGA-UNet tốt hơn rất nhiều trong đúng các nhóm này. Kết quả như vậy gần như được bảo đảm bởi cách chọn mẫu.
+
+Báo cáo có ghi đây là phân tích mô tả, nhưng tên nhóm “biên mờ” và cách diễn giải vẫn dễ gây hiểu nhầm.
+
+Cần sửa: nhóm tổn thương phải được xác định độc lập bằng:
+
+tỷ lệ diện tích tổn thương;
+độ tương phản định lượng;
+độ phức tạp đường biên;
+đánh giá của bác sĩ;
+hoặc metadata có sẵn.
+2.14. Chỉ số “Dice toàn luồng” là chỉ số tự định nghĩa và dễ gây hiểu sai
+
+Công thức:
+
+N
+TP
+	​
+
++N
+FP
+	​
+
++N
+FN
+	​
+
+∑
+i∈TP
+	​
+
+Dice
+i
+	​
+
+	​
 
 
+không phải Dice segmentation chuẩn. Nó trộn:
 
-"[7] H. Yang... Prompt Mechanisms in Medical Imaging: A Comprehensive Survey, 2025. [Online]..."
+lỗi phân loại của Gatekeeper;
+chất lượng phân đoạn có điều kiện;
+và quy ước gán 0 cho FP/FN.
 
-Thiếu hoàn toàn thông tin nơi xuất bản (Venue). Theo chuẩn IEEE, một bài báo phải ghi rõ được đăng ở Tạp chí (Journal), Hội nghị (Conference) nào, hoặc tối thiểu phải ghi là "arXiv preprint" nếu là bản thảo chưa xuất bản. Chỉ để Tên bài + Năm + Link là sai quy cách trích dẫn học thuật.	
-Bổ sung thông tin xuất bản hoặc arXiv ID. Ví dụ:
+TN lại không tham gia mẫu số. Vì vậy, giá trị này khó so sánh với các nghiên cứu khác và không có diễn giải hình học như Dice thông thường.
 
+Nên báo cáo tách biệt:
 
+sensitivity, specificity, PR-AUC của Gatekeeper;
+Dice trên toàn bộ ảnh bệnh lý;
+Dice có điều kiện trên ảnh được định tuyến đúng;
+tỷ lệ ca bệnh có được mặt nạ đúng ở toàn luồng;
+lesion-level sensitivity hoặc FROC.
 
-"...Medical Image Segmentation, arXiv preprint arXiv:2512.04520, 2025."
+Không nên gọi chỉ số tự định nghĩa này đơn giản là “Dice toàn luồng”.
 
-===== PHASE 5: PHẦN ĐẦU (Tóm tắt, Danh mục Bảng, Tài liệu tham khảo [1], Danh mục ký hiệu, Bảng đối chiếu thuật ngữ) =====
+2.15. Gatekeeper thiếu gần như toàn bộ mô tả huấn luyện
 
-🟠 Nên sửa	Tóm tắt khóa luận, Đoạn 2 và Đoạn 3	
-"...mặt nạ cấp độ pixel."
+Phần Gatekeeper không trình bày rõ:
 
+số ảnh train/validation;
+cách chia dữ liệu;
+xử lý mất cân bằng;
+augmentation;
+optimizer và learning rate;
+số epoch;
+random seed;
+tiêu chí chọn checkpoint;
+ngưỡng 0,5 được chọn trước hay sau khi xem dữ liệu.
 
+Trên FracAtlas, lớp bệnh lý chỉ có 72/409 ảnh kiểm thử, nhưng không báo cáo PR-AUC hoặc calibration. Accuracy 88,26% có thể gây cảm giác tốt trong khi sensitivity chỉ 70,83%.
 
-"Một module sàng lọc..."
+Đây là lỗi tái lập nghiêm trọng.
 
-Sử dụng từ tiếng Anh chêm vào văn bản tiếng Việt ở ngay phần Tóm tắt trang trọng nhất của khóa luận. Cần thuần Việt theo yêu cầu.	
-"...mặt nạ cấp độ điểm ảnh."
+2.16. Chưa định nghĩa cách tính HD95 khi dự đoán rỗng
 
+HD95 không xác định khi một trong hai mặt nạ rỗng. U-Net có nhiều trường hợp gần như không phát hiện tổn thương, nhưng báo cáo vẫn đưa ra các giá trị HD95 hữu hạn rất lớn.
 
+Cần mô tả rõ:
 
-"Một mô-đun sàng lọc..." (hoặc "khối sàng lọc").
+giá trị phạt khi mask rỗng;
+có loại mẫu hay không;
+khoảng cách được tính trước hay sau resize;
+đơn vị pixel hay mm;
+cách xử lý nhiều thành phần liên thông.
 
-🟠 Nên sửa	Tóm tắt khóa luận, Đoạn 2 và 3	
-"...ảnh y tế 2D..."
+Nếu không, kết quả HD95 không tái lập được.
 
+2.17. Kết luận về mô hình hạng nhẹ chưa có bằng chứng thực nghiệm
 
+Động lực chính của PGA-UNet là khả năng triển khai trên phần cứng hạn chế, nhưng khóa luận chỉ báo cáo khoảng ba triệu tham số, không có:
 
-"...nhỏ hơn nhiều lần về số tham số (PGA-UNet ~3M, SAM-Med2D ~91M)."
+FLOPs/MACs;
+thời gian suy luận;
+bộ nhớ cực đại;
+tốc độ trên CPU;
+tốc độ trên GPU;
+so sánh cùng phần cứng với SAM-Med2D.
 
-Viết tắt ký hiệu số lượng (M) và số chiều (2D) theo phong cách tiếng Anh/kỹ thuật. Ở Tóm tắt khóa luận tiếng Việt, nên viết rõ ràng thành chữ.	
-"...ảnh y tế hai chiều..."
+Số tham số nhỏ không đồng nghĩa chắc chắn suy luận nhanh hoặc tiết kiệm bộ nhớ. Do đó, kết luận về khả năng triển khai thực tế chưa được chứng minh.
 
+2.18. Loại bỏ polygon chưa được mô tả minh bạch
 
+FracAtlas loại một số polygon vì “quá nhỏ hoặc lỗi định dạng”, nhưng không nêu:
 
-"...nhỏ hơn nhiều lần về số tham số (PGA-UNet ~3 triệu, SAM-Med2D ~91 triệu)."
+ngưỡng thế nào là quá nhỏ;
+số mẫu theo từng nguyên nhân;
+có phải chính các đường gãy khó nhất bị loại hay không;
+ảnh tương ứng có bị loại hoàn toàn không.
 
-🟠 Nên sửa	Danh mục Bảng, Tiêu đề Bảng 4.18 và Bảng 4.26	"...luồng xử lý Gatekeeper → PGA-UNet trên dataset_online..."	Lỗi "rò rỉ" tên biến mã nguồn (code variable) vào ngay phần Mục lục/Danh mục Bảng đầu tài liệu, gây mất tính hàn lâm ngay trước khi người đọc vào nội dung chính.	"...luồng xử lý Gatekeeper → PGA-UNet trên tập dữ liệu kiểm thử..."
-🟡 Có thể cải thiện	Tài liệu tham khảo, Mục [1]	"...Available: https://www.cuh.nhs.uk... (visited on 01/01/2025)."	Định dạng ngày truy cập tài liệu mạng (URL) không đúng chuẩn IEEE.	"...Available: https://www.cuh.nhs.uk... [Accessed: Jan. 1, 2025]."
-🟡 Có thể cải thiện	Danh mục Bảng, Tiêu đề Bảng 4.15	"PGA-UNet 256 VS SAM-Med2D theo đặc tính lâm sàng..."	Lạm dụng từ viết tắt tiếng Anh (VS = versus) và viết hoa toàn bộ không cần thiết trong văn bản học thuật tiếng Việt.	"PGA-UNet (256) so với SAM-Med2D theo đặc tính lâm sàng..."
-🟡 Có thể cải thiện	Danh mục các ký hiệu và chữ viết tắt	"Efficient Net-B3"	Tên mạng nền tảng viết sai quy cách công bố gốc của tác giả (Google). Lỗi này kéo theo sự sai lệch ở toàn bộ các phần sau.	"EfficientNet-B3" (Viết liền hoàn toàn).
-🟡 Có thể cải thiện	Bảng đối chiếu thuật ngữ chuyên ngành	
-"Bộ mã hóa"
+Việc loại tổn thương rất nhỏ có thể làm kết quả tốt hơn và mâu thuẫn với tuyên bố mô hình hiệu quả trên tổn thương nhỏ.
 
+C. Lỗi nghiêm trọng trong cách trình bày
+2.19. Tuyên bố ứng dụng thực tế và hỗ trợ lâm sàng còn quá mạnh
 
-"Bộ giải mã"
+Các cụm như “khả thi trong thực tế”, “hỗ trợ bác sĩ tốt hơn” chưa được chứng minh vì:
 
+hộp được sinh từ ground truth;
+chưa có bác sĩ tham gia;
+chưa đo thời gian thao tác;
+chưa đánh giá khác biệt giữa người dùng;
+chưa có dữ liệu bệnh viện ngoài;
+chưa đo tốc độ thực thi.
 
-"vector nhúng"
+Nên gọi đây là prototype kỹ thuật hoặc proof-of-concept, không phải hệ thống sẵn sàng ứng dụng.
 
+2.20. Abstract trình bày mức tăng so với U-Net dễ gây hiểu nhầm
 
-"vòng lặp"
+Abstract nhấn mạnh Dice 0,8607 so với 0,4740 của U-Net nhưng không nhấn mạnh đủ rằng:
 
-Không nhất quán trong việc viết hoa chữ cái đầu tiên ở cột "Thuật ngữ tiếng Việt". Chỗ thì viết hoa chữ đầu, chỗ thì viết thường.	Cần đồng bộ viết hoa chữ cái đầu cho toàn bộ danh sách. Sửa thành: "Vector nhúng", "Vòng lặp".
+PGA-UNet nhận hộp gần ground truth;
+U-Net không nhận hộp.
+
+Đây không phải so sánh đầu vào tương đương. Abstract nên ưu tiên so sánh với U-Net+Concat, prompt-aware baselines và SAM-Med2D cùng hộp.
+
+2.21. Related Work quá mỏng để chứng minh tính mới
+
+Toàn bộ khóa luận chỉ có khoảng 11 tài liệu tham khảo. Phần liên quan chủ yếu gồm:
+
+U-Net;
+Attention U-Net;
+DeepIGeoS;
+SAM;
+SAM-Med2D;
+FiLM;
+SPADE.
+
+Chưa có khảo sát đủ về:
+
+interactive medical image segmentation;
+box-guided segmentation;
+prompt-conditioned U-Net;
+lightweight SAM;
+prompt robustness;
+click/box perturbation evaluation;
+segmentation xương và gãy xương gần đây.
+
+Do đó, chưa thể xác định chắc chắn PSG, CAD hoặc tổ hợp của chúng khác gì với các cơ chế conditioning đã có.
+
+2.22. Thiếu thông tin để tái lập
+
+Báo cáo cần bổ sung ít nhất:
+
+bảng chi tiết số kênh và kích thước feature map;
+số tham số từng cấu hình;
+thuật toán preprocessing đầy đủ;
+normalization ảnh;
+augmentation ảnh;
+random seed;
+cách tạo split;
+LR scheduler;
+exact SAM-Med2D fine-tuning;
+exact Gatekeeper training;
+quy tắc xử lý mask rỗng;
+mã nguồn hoặc cấu hình chạy.
+
+Hiện tại Algorithm 1 và 2 chỉ mô tả ở mức khái quát.
+
+2.23. Ký hiệu và thuật ngữ chưa nhất quán
+
+Một số điểm cần sửa:
+
+“Conditioned Attention Decoder” và “Conditional Attention Decoder” dùng không thống nhất;
+α
+gate
+	​
+
+, α
+PSG
+	​
+
+, λ chưa nhất quán;
+λ=0,3 xuất hiện ở phần cấu hình nhưng không rõ trong công thức;
+một số bảng hiển thị ký hiệu “Ö” thay cho dấu không có thành phần;
+lặp câu về chi phí tính toán ở phần suy luận;
+lỗi chính tả “tổn thướng”;
+dùng “đánh giá chéo” và “kiểm định chéo” lẫn nhau;
+viết hoa “Phân vùng” không cần thiết.
+2.24. Hình kiến trúc quá nhỏ và khó kiểm tra
+
+Hình 3.1 chứa nhiều khối, mũi tên và ký hiệu nhưng kích thước chữ rất nhỏ. Người đọc khó xác định:
+
+PSG nằm chính xác ở đâu;
+CAD nhận những tensor nào;
+kích thước và số kênh;
+đường đi của prompt heatmap;
+vị trí residual connection.
+
+Nên tách thành:
+
+sơ đồ tổng quát PGA-UNet;
+hình phóng to PSG;
+hình phóng to CAD;
+bảng kích thước tensor.
+2.25. Chương thực nghiệm dài và lặp kết luận
+
+Các nhận xét về:
+
+CAD tốt khi hộp lệch;
+Gaussian hỗ trợ robustness;
+PSG và CAD bổ trợ;
+Gatekeeper làm giảm toàn luồng;
+
+được lặp lại nhiều lần ở Mục 4.3.1, 4.3.2, 4.3.3, 4.5 và 5.1.
+
+Có thể rút gọn đáng kể bằng:
+
+một bảng tổng hợp kết luận ablation trên hai bộ dữ liệu;
+một mục thống kê chung;
+chuyển các bảng phân nhóm phụ sang phụ lục.
+Kết luận đánh giá
+
+Đóng góp thực chất và có giá trị nhất của khóa luận là:
+
+Một kiến trúc U-Net nhẹ tích hợp hộp câu nhắc vào cả encoder và decoder, cho thấy khả năng chịu được một dạng sai lệch hộp mô phỏng tốt hơn các cấu hình prompt-aware đơn giản trên hai bộ dữ liệu.
+
+Tuy nhiên, khóa luận hiện chưa đủ cơ sở để kết luận rằng:
+
+PGA-UNet vượt trội chung so với các mô hình phân đoạn khác;
+mô hình bền bỉ với thao tác bác sĩ thực tế;
+hệ thống có thể triển khai lâm sàng;
+mô hình có hiệu quả tính toán tốt hơn SAM-Med2D.
+
+Ba nội dung cần sửa ưu tiên trước khi bảo vệ hoặc viết bài báo là:
+
+Thiết kế lại so sánh công bằng với các baseline cùng nhận hộp và giảm sự phụ thuộc vào hộp sinh từ ground truth.
+Làm lại đánh giá robustness theo nhiều mức nhiễu, nhiều hộp trên mỗi ảnh, nhiều seed và hiệu chỉnh thống kê.
+Bổ sung đầy đủ split, preprocessing, SAM-Med2D/Gatekeeper training, efficiency và thu hẹp các tuyên bố lâm sàng.
