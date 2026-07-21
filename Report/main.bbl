@@ -37,6 +37,345 @@
     \field{urlyear}{2026}
   \endentry
 
+  \entry{litjens2017survey}{article}{}{}
+    \name{author}{9}{}{%
+      {{hash=LG}{%
+         family={Litjens},
+         familyi={L\bibinitperiod},
+         given={Geert},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=KT}{%
+         family={Kooi},
+         familyi={K\bibinitperiod},
+         given={Thijs},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=BBE}{%
+         family={Bejnordi},
+         familyi={B\bibinitperiod},
+         given={Babak\bibnamedelima Ehteshami},
+         giveni={B\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=SAAA}{%
+         family={Setio},
+         familyi={S\bibinitperiod},
+         given={Arnaud Arindra\bibnamedelima Adiyoso},
+         giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=CF}{%
+         family={Ciompi},
+         familyi={C\bibinitperiod},
+         given={Francesco},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=GM}{%
+         family={Ghafoorian},
+         familyi={G\bibinitperiod},
+         given={Mohsen},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=vdLJAWM}{%
+         prefix={van\bibnamedelima der},
+         prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod},
+         family={Laak},
+         familyi={L\bibinitperiod},
+         given={Jeroen A. W.\bibnamedelima M.},
+         giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim W\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=vGB}{%
+         prefix={van},
+         prefixi={v\bibinitperiod},
+         family={Ginneken},
+         familyi={G\bibinitperiod},
+         given={Bram},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=SCI}{%
+         family={S{\'a}nchez},
+         familyi={S\bibinitperiod},
+         given={Clara\bibnamedelima I.},
+         giveni={C\bibinitperiod\bibinitdelim I\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LGKTBBE+1}
+    \strng{fullhash}{LGKTBBESAAACFGMLJAWMvdGBvSCI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1016/j.media.2017.07.005
+    \endverb
+    \field{pages}{60\bibrangedash 88}
+    \field{title}{{A Survey on Deep Learning in Medical Image Analysis}}
+    \verb{url}
+    \verb https://doi.org/10.1016/j.media.2017.07.005
+    \endverb
+    \field{volume}{42}
+    \field{journaltitle}{Medical Image Analysis}
+    \field{year}{2017}
+  \endentry
+
+  \entry{shen2017review}{article}{}{}
+    \name{author}{3}{}{%
+      {{hash=SD}{%
+         family={Shen},
+         familyi={S\bibinitperiod},
+         given={Dinggang},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=WG}{%
+         family={Wu},
+         familyi={W\bibinitperiod},
+         given={Guorong},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=SHI}{%
+         family={Suk},
+         familyi={S\bibinitperiod},
+         given={Heung-Il},
+         giveni={H\bibinithyphendelim I\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SDWGSHI1}
+    \strng{fullhash}{SDWGSHI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1146/annurev-bioeng-071516-044442
+    \endverb
+    \field{pages}{221\bibrangedash 248}
+    \field{title}{{Deep Learning in Medical Image Analysis}}
+    \verb{url}
+    \verb https://doi.org/10.1146/annurev-bioeng-071516-044442
+    \endverb
+    \field{volume}{19}
+    \field{journaltitle}{Annual Review of Biomedical Engineering}
+    \field{year}{2017}
+  \endentry
+
+  \entry{minaee2021survey}{article}{}{}
+    \name{author}{6}{}{%
+      {{hash=MS}{%
+         family={Minaee},
+         familyi={M\bibinitperiod},
+         given={Shervin},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=BY}{%
+         family={Boykov},
+         familyi={B\bibinitperiod},
+         given={Yuri},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=PF}{%
+         family={Porikli},
+         familyi={P\bibinitperiod},
+         given={Fatih},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=PA}{%
+         family={Plaza},
+         familyi={P\bibinitperiod},
+         given={Antonio},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=KN}{%
+         family={Kehtarnavaz},
+         familyi={K\bibinitperiod},
+         given={Nasser},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=TD}{%
+         family={Terzopoulos},
+         familyi={T\bibinitperiod},
+         given={Demetri},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MSBYPF+1}
+    \strng{fullhash}{MSBYPFPAKNTD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2021.3059968
+    \endverb
+    \field{number}{7}
+    \field{pages}{3523\bibrangedash 3542}
+    \field{title}{{Image Segmentation Using Deep Learning: A Survey}}
+    \verb{url}
+    \verb https://doi.org/10.1109/TPAMI.2021.3059968
+    \endverb
+    \field{volume}{44}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{year}{2022}
+  \endentry
+
+  \entry{long2015fcn}{inproceedings}{}{}
+    \name{author}{3}{}{%
+      {{hash=LJ}{%
+         family={Long},
+         familyi={L\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SE}{%
+         family={Shelhamer},
+         familyi={S\bibinitperiod},
+         given={Evan},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=DT}{%
+         family={Darrell},
+         familyi={D\bibinitperiod},
+         given={Trevor},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LJSEDT1}
+    \strng{fullhash}{LJSEDT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+    \verb{doi}
+    \verb 10.1109/CVPR.2015.7298965
+    \endverb
+    \field{pages}{3431\bibrangedash 3440}
+    \field{title}{{Fully Convolutional Networks for Semantic Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1109/CVPR.2015.7298965
+    \endverb
+    \field{year}{2015}
+  \endentry
+
+  \entry{badrinarayanan2017segnet}{article}{}{}
+    \name{author}{3}{}{%
+      {{hash=BV}{%
+         family={Badrinarayanan},
+         familyi={B\bibinitperiod},
+         given={Vijay},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kendall},
+         familyi={K\bibinitperiod},
+         given={Alex},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=CR}{%
+         family={Cipolla},
+         familyi={C\bibinitperiod},
+         given={Roberto},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BVKACR1}
+    \strng{fullhash}{BVKACR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2016.2644615
+    \endverb
+    \field{number}{12}
+    \field{pages}{2481\bibrangedash 2495}
+    \field{title}{{SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1109/TPAMI.2016.2644615
+    \endverb
+    \field{volume}{39}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{year}{2017}
+  \endentry
+
+  \entry{chen2018deeplabv3plus}{article}{}{}
+    \name{author}{5}{}{%
+      {{hash=CLC}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Liang-Chieh},
+         giveni={L\bibinithyphendelim C\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhu},
+         familyi={Z\bibinitperiod},
+         given={Yukun},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=PG}{%
+         family={Papandreou},
+         familyi={P\bibinitperiod},
+         given={George},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=SF}{%
+         family={Schroff},
+         familyi={S\bibinitperiod},
+         given={Florian},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=AH}{%
+         family={Adam},
+         familyi={A\bibinitperiod},
+         given={Hartwig},
+         giveni={H\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CLCZYPG+1}
+    \strng{fullhash}{CLCZYPGSFAH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1007/978-3-030-01234-2_49
+    \endverb
+    \field{pages}{801\bibrangedash 818}
+    \field{title}{{Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1007/978-3-030-01234-2_49
+    \endverb
+    \field{journaltitle}{Proceedings of the European Conference on Computer Vision}
+    \field{year}{2018}
+  \endentry
+
+  \entry{milletari2016vnet}{article}{}{}
+    \name{author}{3}{}{%
+      {{hash=MF}{%
+         family={Milletari},
+         familyi={M\bibinitperiod},
+         given={Fausto},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=NN}{%
+         family={Navab},
+         familyi={N\bibinitperiod},
+         given={Nassir},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=ASA}{%
+         family={Ahmadi},
+         familyi={A\bibinitperiod},
+         given={Seyed-Ahmad},
+         giveni={S\bibinithyphendelim A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MFNNASA1}
+    \strng{fullhash}{MFNNASA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.48550/arXiv.1606.04797
+    \endverb
+    \verb{eprint}
+    \verb 1606.04797
+    \endverb
+    \field{title}{{V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1606.04797
+    \endverb
+    \field{journaltitle}{arXiv preprint arXiv:1606.04797}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2016}
+  \endentry
+
   \entry{ronneberger2015unet}{inproceedings}{}{}
     \name{author}{3}{}{%
       {{hash=RO}{%
@@ -77,6 +416,100 @@
     \endverb
     \field{volume}{9351}
     \field{year}{2015}
+  \endentry
+
+  \entry{zhou2018unetplusplus}{article}{}{}
+    \name{author}{4}{}{%
+      {{hash=ZZ}{%
+         family={Zhou},
+         familyi={Z\bibinitperiod},
+         given={Zongwei},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=SMMR}{%
+         family={Siddiquee},
+         familyi={S\bibinitperiod},
+         given={Md. Mahfuzur\bibnamedelima Rahman},
+         giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+      {{hash=TN}{%
+         family={Tajbakhsh},
+         familyi={T\bibinitperiod},
+         given={Nima},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Liang},
+         familyi={L\bibinitperiod},
+         given={Jianming},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZZSMMRTN+1}
+    \strng{fullhash}{ZZSMMRTNLJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1007/978-3-030-00889-5_1
+    \endverb
+    \field{pages}{3\bibrangedash 11}
+    \field{title}{{UNet++: A Nested U-Net Architecture for Medical Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1007/978-3-030-00889-5_1
+    \endverb
+    \field{journaltitle}{Deep Learning in Medical Image Analysis and Multimodal Learning for Clinical Decision Support}
+    \field{year}{2018}
+  \endentry
+
+  \entry{isensee2021nnunet}{article}{}{}
+    \name{author}{5}{}{%
+      {{hash=IF}{%
+         family={Isensee},
+         familyi={I\bibinitperiod},
+         given={Fabian},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=JPF}{%
+         family={J{\"a}ger},
+         familyi={J\bibinitperiod},
+         given={Paul\bibnamedelima F.},
+         giveni={P\bibinitperiod\bibinitdelim F\bibinitperiod},
+      }}%
+      {{hash=KSAA}{%
+         family={Kohl},
+         familyi={K\bibinitperiod},
+         given={Simon A.\bibnamedelima A.},
+         giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=PJ}{%
+         family={Petersen},
+         familyi={P\bibinitperiod},
+         given={Jens},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=MHKH}{%
+         family={Maier-Hein},
+         familyi={M\bibinithyphendelim H\bibinitperiod},
+         given={Klaus\bibnamedelima H.},
+         giveni={K\bibinitperiod\bibinitdelim H\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{IFJPFKSAA+1}
+    \strng{fullhash}{IFJPFKSAAPJMHKH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1038/s41592-020-01008-z
+    \endverb
+    \field{number}{2}
+    \field{pages}{203\bibrangedash 211}
+    \field{title}{{nnU-Net: A Self-configuring Method for Deep Learning-Based Biomedical Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1038/s41592-020-01008-z
+    \endverb
+    \field{volume}{18}
+    \field{journaltitle}{Nature Methods}
+    \field{year}{2021}
   \endentry
 
   \entry{2023-SAM-Kirillov}{inproceedings}{}{}
@@ -284,6 +717,204 @@
     \field{year}{2023}
   \endentry
 
+  \entry{xu2016deepinteractive}{inproceedings}{}{}
+    \name{author}{5}{}{%
+      {{hash=XN}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Ning},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=PB}{%
+         family={Price},
+         familyi={P\bibinitperiod},
+         given={Brian},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=CS}{%
+         family={Cohen},
+         familyi={C\bibinitperiod},
+         given={Scott},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=YJ}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={Jimei},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=HTS}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Thomas\bibnamedelima S.},
+         giveni={T\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{XNPBCS+1}
+    \strng{fullhash}{XNPBCSYJHTS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+    \verb{doi}
+    \verb 10.48550/arXiv.1603.04042
+    \endverb
+    \verb{eprint}
+    \verb 1603.04042
+    \endverb
+    \field{pages}{373\bibrangedash 381}
+    \field{title}{{Deep Interactive Object Selection}}
+    \verb{url}
+    \verb https://arxiv.org/abs/1603.04042
+    \endverb
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2016}
+  \endentry
+
+  \entry{wang2019deepigeos}{article}{}{}
+    \name{author}{11}{}{%
+      {{hash=WG}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Guotai},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=ZMA}{%
+         family={Zuluaga},
+         familyi={Z\bibinitperiod},
+         given={Maria\bibnamedelima A.},
+         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=LW}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Wenqi},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=PR}{%
+         family={Pratt},
+         familyi={P\bibinitperiod},
+         given={Rosalind},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=PPA}{%
+         family={Patel},
+         familyi={P\bibinitperiod},
+         given={Premal\bibnamedelima A.},
+         giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=AM}{%
+         family={Aertsen},
+         familyi={A\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DT}{%
+         family={Doel},
+         familyi={D\bibinitperiod},
+         given={Tom},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=DAL}{%
+         family={David},
+         familyi={D\bibinitperiod},
+         given={Anna\bibnamedelima L.},
+         giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Deprest},
+         familyi={D\bibinitperiod},
+         given={Jan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=OS}{%
+         family={Ourselin},
+         familyi={O\bibinitperiod},
+         given={Sebastien},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=VT}{%
+         family={Vercauteren},
+         familyi={V\bibinitperiod},
+         given={Tom},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WGZMALW+1}
+    \strng{fullhash}{WGZMALWPRPPAAMDTDALDJOSVT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2018.2840695
+    \endverb
+    \field{number}{7}
+    \field{pages}{1559\bibrangedash 1572}
+    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1109/TPAMI.2018.2840695
+    \endverb
+    \field{volume}{41}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{year}{2019}
+  \endentry
+
+  \entry{ma2024medsam}{article}{}{}
+    \name{author}{6}{}{%
+      {{hash=MJ}{%
+         family={Ma},
+         familyi={M\bibinitperiod},
+         given={Jun},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=HY}{%
+         family={He},
+         familyi={H\bibinitperiod},
+         given={Yuting},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=LF}{%
+         family={Li},
+         familyi={L\bibinitperiod},
+         given={Feifei},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=HL}{%
+         family={Han},
+         familyi={H\bibinitperiod},
+         given={Lin},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=YC}{%
+         family={You},
+         familyi={Y\bibinitperiod},
+         given={Chenyu},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=WB}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Bo},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MJHYLF+1}
+    \strng{fullhash}{MJHYLFHLYCWB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1038/s41467-024-44824-z
+    \endverb
+    \field{eid}{654}
+    \field{number}{1}
+    \field{title}{{Segment Anything in Medical Images}}
+    \verb{url}
+    \verb https://www.nature.com/articles/s41467-024-44824-z
+    \endverb
+    \field{volume}{15}
+    \field{journaltitle}{Nature Communications}
+    \field{year}{2024}
+  \endentry
+
   \entry{oktay2018attentionunet}{inproceedings}{}{}
     \name{author}{12}{}{%
       {{hash=OO}{%
@@ -379,91 +1010,424 @@
     \field{year}{2018}
   \endentry
 
-  \entry{wang2019deepigeos}{article}{}{}
-    \name{author}{11}{}{%
-      {{hash=WG}{%
-         family={Wang},
+  \entry{dosovitskiy2021vit}{inproceedings}{}{}
+    \name{author}{12}{}{%
+      {{hash=DA}{%
+         family={Dosovitskiy},
+         familyi={D\bibinitperiod},
+         given={Alexey},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BL}{%
+         family={Beyer},
+         familyi={B\bibinitperiod},
+         given={Lucas},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kolesnikov},
+         familyi={K\bibinitperiod},
+         given={Alexander},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=WD}{%
+         family={Weissenborn},
          familyi={W\bibinitperiod},
-         given={Guotai},
-         giveni={G\bibinitperiod},
+         given={Dirk},
+         giveni={D\bibinitperiod},
       }}%
-      {{hash=ZMA}{%
-         family={Zuluaga},
+      {{hash=ZX}{%
+         family={Zhai},
          familyi={Z\bibinitperiod},
-         given={Maria\bibnamedelima A.},
-         giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+         given={Xiaohua},
+         giveni={X\bibinitperiod},
       }}%
-      {{hash=LW}{%
-         family={Li},
-         familyi={L\bibinitperiod},
-         given={Wenqi},
-         giveni={W\bibinitperiod},
+      {{hash=UT}{%
+         family={Unterthiner},
+         familyi={U\bibinitperiod},
+         given={Thomas},
+         giveni={T\bibinitperiod},
       }}%
-      {{hash=PR}{%
-         family={Pratt},
-         familyi={P\bibinitperiod},
-         given={Rosalind},
-         giveni={R\bibinitperiod},
-      }}%
-      {{hash=PPA}{%
-         family={Patel},
-         familyi={P\bibinitperiod},
-         given={Premal\bibnamedelima A.},
-         giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod},
-      }}%
-      {{hash=AM}{%
-         family={Aertsen},
-         familyi={A\bibinitperiod},
-         given={Michael},
+      {{hash=DM}{%
+         family={Dehghani},
+         familyi={D\bibinitperiod},
+         given={Mostafa},
          giveni={M\bibinitperiod},
       }}%
-      {{hash=DT}{%
-         family={Doel},
-         familyi={D\bibinitperiod},
-         given={Tom},
-         giveni={T\bibinitperiod},
+      {{hash=MM}{%
+         family={Minderer},
+         familyi={M\bibinitperiod},
+         given={Matthias},
+         giveni={M\bibinitperiod},
       }}%
-      {{hash=DAL}{%
-         family={David},
-         familyi={D\bibinitperiod},
-         given={Anna\bibnamedelima L.},
-         giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
+      {{hash=HG}{%
+         family={Heigold},
+         familyi={H\bibinitperiod},
+         given={Georg},
+         giveni={G\bibinitperiod},
       }}%
-      {{hash=DJ}{%
-         family={Deprest},
-         familyi={D\bibinitperiod},
-         given={Jan},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=OS}{%
-         family={Ourselin},
-         familyi={O\bibinitperiod},
-         given={Sebastien},
+      {{hash=GS}{%
+         family={Gelly},
+         familyi={G\bibinitperiod},
+         given={Sylvain},
          giveni={S\bibinitperiod},
       }}%
-      {{hash=VT}{%
-         family={Vercauteren},
-         familyi={V\bibinitperiod},
-         given={Tom},
-         giveni={T\bibinitperiod},
+      {{hash=UJ}{%
+         family={Uszkoreit},
+         familyi={U\bibinitperiod},
+         given={Jakob},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=HN}{%
+         family={Houlsby},
+         familyi={H\bibinitperiod},
+         given={Neil},
+         giveni={N\bibinitperiod},
       }}%
     }
-    \strng{namehash}{WGZMALW+1}
-    \strng{fullhash}{WGZMALWPRPPAAMDTDALDJOSVT1}
+    \strng{namehash}{DABLKA+1}
+    \strng{fullhash}{DABLKAWDZXUTDMMMHGGSUJHN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{International Conference on Learning Representations}
+    \field{title}{{An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale}}
+    \verb{url}
+    \verb https://openreview.net/forum?id=YicbFdNTTy
+    \endverb
+    \field{year}{2021}
+  \endentry
+
+  \entry{liu2021swin}{inproceedings}{}{}
+    \name{author}{8}{}{%
+      {{hash=LZ}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Ze},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={Lin},
+         familyi={L\bibinitperiod},
+         given={Yutong},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CY}{%
+         family={Cao},
+         familyi={C\bibinitperiod},
+         given={Yue},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=HH}{%
+         family={Hu},
+         familyi={H\bibinitperiod},
+         given={Han},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=WY}{%
+         family={Wei},
+         familyi={W\bibinitperiod},
+         given={Yixuan},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=ZZ}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Zheng},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Lin},
+         familyi={L\bibinitperiod},
+         given={Stephen},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=GB}{%
+         family={Guo},
+         familyi={G\bibinitperiod},
+         given={Baining},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LZLYCY+1}
+    \strng{fullhash}{LZLYCYHHWYZZLSGB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the IEEE/CVF International Conference on Computer Vision}
+    \verb{doi}
+    \verb 10.1109/ICCV48922.2021.00986
+    \endverb
+    \field{pages}{10012\bibrangedash 10022}
+    \field{title}{{Swin Transformer: Hierarchical Vision Transformer Using Shifted Windows}}
+    \verb{url}
+    \verb https://doi.org/10.1109/ICCV48922.2021.00986
+    \endverb
+    \field{year}{2021}
+  \endentry
+
+  \entry{chen2021transunet}{article}{}{}
+    \name{author}{9}{}{%
+      {{hash=CJ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Jieneng},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={Lu},
+         familyi={L\bibinitperiod},
+         given={Yichi},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=YQ}{%
+         family={Yu},
+         familyi={Y\bibinitperiod},
+         given={Qihang},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=ZX}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Xian},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=AE}{%
+         family={Adeli},
+         familyi={A\bibinitperiod},
+         given={Eric},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=XY}{%
+         family={Xia},
+         familyi={X\bibinitperiod},
+         given={Yan},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=LL}{%
+         family={Lu},
+         familyi={L\bibinitperiod},
+         given={Le},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=YAL}{%
+         family={Yuille},
+         familyi={Y\bibinitperiod},
+         given={Alan\bibnamedelima L.},
+         giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=ZY}{%
+         family={Zhou},
+         familyi={Z\bibinitperiod},
+         given={Yuyin},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CJLYYQ+1}
+    \strng{fullhash}{CJLYYQZXAEXYLLYALZY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \verb{doi}
-    \verb 10.1109/TPAMI.2018.2840695
+    \verb 10.48550/arXiv.2102.04306
     \endverb
-    \field{number}{7}
-    \field{pages}{1559\bibrangedash 1572}
-    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation}}
+    \verb{eprint}
+    \verb 2102.04306
+    \endverb
+    \field{title}{{TransUNet: Transformers Make Strong Encoders for Medical Image Segmentation}}
     \verb{url}
-    \verb https://doi.org/10.1109/TPAMI.2018.2840695
+    \verb https://arxiv.org/abs/2102.04306
     \endverb
-    \field{volume}{41}
-    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
-    \field{year}{2019}
+    \field{journaltitle}{arXiv preprint arXiv:2102.04306}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2021}
+  \endentry
+
+  \entry{valanarasu2021medicaltransformer}{article}{}{}
+    \name{author}{3}{}{%
+      {{hash=VJMJ}{%
+         family={Valanarasu},
+         familyi={V\bibinitperiod},
+         given={Jeya Maria\bibnamedelima Jose},
+         giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=HI}{%
+         family={Hacihaliloglu},
+         familyi={H\bibinitperiod},
+         given={Ilker},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=PVM}{%
+         family={Patel},
+         familyi={P\bibinitperiod},
+         given={Vishal\bibnamedelima M.},
+         giveni={V\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{VJMJHIPVM1}
+    \strng{fullhash}{VJMJHIPVM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1016/j.media.2021.102138
+    \endverb
+    \field{eid}{102138}
+    \field{title}{{Medical Transformer: Gated Axial-Attention for Medical Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1016/j.media.2021.102138
+    \endverb
+    \field{volume}{74}
+    \field{journaltitle}{Medical Image Analysis}
+    \field{year}{2021}
+  \endentry
+
+  \entry{hatamizadeh2022unetr}{inproceedings}{}{}
+    \name{author}{4}{}{%
+      {{hash=HA}{%
+         family={Hatamizadeh},
+         familyi={H\bibinitperiod},
+         given={Ali},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=YD}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={Dong},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=RH}{%
+         family={Roth},
+         familyi={R\bibinitperiod},
+         given={Holger},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=XD}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Daguang},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HAYDRH+1}
+    \strng{fullhash}{HAYDRHXD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision}
+    \verb{doi}
+    \verb 10.1109/WACV51458.2022.00066
+    \endverb
+    \field{pages}{574\bibrangedash 584}
+    \field{title}{{UNETR: Transformers for 3D Medical Image Segmentation}}
+    \verb{url}
+    \verb https://doi.org/10.1109/WACV51458.2022.00066
+    \endverb
+    \field{year}{2022}
+  \endentry
+
+  \entry{cao2022swinunet}{article}{}{}
+    \name{author}{7}{}{%
+      {{hash=CH}{%
+         family={Cao},
+         familyi={C\bibinitperiod},
+         given={Hu},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=WY}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Yueyue},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Joy},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=JD}{%
+         family={Jiang},
+         familyi={J\bibinitperiod},
+         given={Dongsheng},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=ZX}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Xiaopeng},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=TQ}{%
+         family={Tian},
+         familyi={T\bibinitperiod},
+         given={Qi},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=WM}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Manning},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CHWYCJ+1}
+    \strng{fullhash}{CHWYCJJDZXTQWM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.48550/arXiv.2105.05537
+    \endverb
+    \verb{eprint}
+    \verb 2105.05537
+    \endverb
+    \field{title}{{Swin-Unet: Unet-Like Pure Transformer for Medical Image Segmentation}}
+    \verb{url}
+    \verb https://arxiv.org/abs/2105.05537
+    \endverb
+    \field{journaltitle}{arXiv preprint arXiv:2105.05537}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2022}
+  \endentry
+
+  \entry{he2016resnet}{inproceedings}{}{}
+    \name{author}{4}{}{%
+      {{hash=HK}{%
+         family={He},
+         familyi={H\bibinitperiod},
+         given={Kaiming},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=ZX}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Xiangyu},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=RS}{%
+         family={Ren},
+         familyi={R\bibinitperiod},
+         given={Shaoqing},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Sun},
+         familyi={S\bibinitperiod},
+         given={Jian},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HKZXRS+1}
+    \strng{fullhash}{HKZXRSSJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+    \verb{doi}
+    \verb 10.1109/CVPR.2016.90
+    \endverb
+    \field{pages}{770\bibrangedash 778}
+    \field{title}{{Deep Residual Learning for Image Recognition}}
+    \verb{url}
+    \verb https://doi.org/10.1109/CVPR.2016.90
+    \endverb
+    \field{year}{2016}
   \endentry
 
   \entry{perez2018film}{inproceedings}{}{}

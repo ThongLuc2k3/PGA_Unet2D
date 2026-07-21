@@ -1,0 +1,201 @@
+% ==========================================
+% PHỤ LỤC B: ĐÁNH GIÁ LUỒNG XỬ LÝ HAI GIAI ĐOẠN
+% ==========================================
+\chapter{ĐÁNH GIÁ LUỒNG XỬ LÝ HAI GIAI ĐOẠN}
+\label{AppendixB}
+
+Phụ lục này trình bày đầy đủ thực nghiệm mở rộng được tóm tắt tại Mục~\ref{sec:product_overview}, Chương~\ref{Chapter4}: khảo sát mô-đun sàng lọc Gatekeeper (EfficientNet-B3~\cite{tan2019efficientnet}) đặt trước PGA-UNet trong một luồng xử lý ảnh X-quang hỗn hợp, gồm cả ảnh bình thường và ảnh bệnh lý.
+
+PGA-UNet được thiết kế để phân đoạn vùng tổn thương dựa trên hộp giới
+hạn do người dùng cung cấp. Để minh họa khả năng tích hợp mô hình vào
+quy trình xử lý ảnh X-quang hỗn hợp, khóa luận bổ sung mô-đun sàng lọc
+Gatekeeper sử dụng EfficientNet-B3~\cite{tan2019efficientnet}. Mô-đun
+này phân loại ảnh thành bình thường hoặc nghi ngờ có bất thường trước
+khi chuyển sang bước xác nhận và phân đoạn.
+
+Gatekeeper chỉ là thành phần hỗ trợ triển khai, không thuộc đóng góp
+kiến trúc chính của khóa luận. Thực nghiệm trong phụ lục này khảo sát ảnh
+hưởng của bước sàng lọc đến luồng phân đoạn, không đánh giá một hệ
+thống chẩn đoán tự động hoàn chỉnh.
+% ------------------------------------------------------------
+\section{Kết quả trên BTXRD}
+\label{subsec:product_overview_btxrd}
+% ------------------------------------------------------------
+
+\subsection{Hiệu năng của Gatekeeper}
+\label{sec:danh_gia_phan_lop}
+
+Gatekeeper sử dụng EfficientNet-B3 được tiền huấn luyện trên ImageNet-1K và tinh chỉnh cho bài toán phân loại nhị phân. Mô hình nhận ảnh kích thước $300\times300$ và trả về xác suất bất thường; ngưỡng phân loại mặc định được đặt tại 0,5.
+
+Mô hình được đánh giá trên tập \texttt{dataset\_online} gồm 375 ảnh kiểm thử BTXRD, trong đó có 187 ảnh bệnh lý và 188 ảnh bình thường. Kết quả được trình bày trong Bảng~\ref{tab:classification_results}.
+
+\needspace{12\baselineskip}
+\begin{table}[htbp]
+    \centering
+    \caption{Kết quả phân loại của Gatekeeper trên BTXRD}
+    \label{tab:classification_results}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{7.5cm}|c|}
+        \hline
+        \textbf{Chỉ số} & \textbf{Kết quả} \\
+        \hline
+        Accuracy & 87,73\% \\
+        \hline
+        Precision & 86,53\% \\
+        \hline
+        Sensitivity & 89,30\% \\
+        \hline
+        Specificity & 86,17\% \\
+        \hline
+        F1-score & 87,90\% \\
+        \hline
+        AUC-ROC & 0,9421 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Gatekeeper đạt AUC-ROC 0,9421 và Accuracy 87,73\%, cho thấy khả năng phân biệt tương đối tốt giữa ảnh bệnh lý và ảnh bình thường. Tại ngưỡng 0,5, mô hình phát hiện đúng 167/187 ảnh bệnh lý, tương ứng Sensitivity 89,30\%, đồng thời phân loại đúng 162/188 ảnh bình thường, tương ứng Specificity 86,17\%. Tuy nhiên, 20 ảnh bệnh lý vẫn bị bỏ sót, vì vậy Gatekeeper chưa phù hợp để tự động loại bỏ ảnh âm tính mà không có bước xác nhận của người dùng chuyên môn.
+
+\subsection{Ảnh hưởng đến luồng phân đoạn}
+\label{sec:pipeline_eval}
+\label{subsec:cascading_error}
+
+Để khảo sát ảnh hưởng của lỗi sàng lọc, thực nghiệm mô phỏng trường hợp kết quả Gatekeeper được sử dụng trực tiếp mà không có bước sửa lại của người dùng. Trong 187 ảnh bệnh lý, 167 ảnh được chuyển đúng sang PGA-UNet và 20 ảnh bị loại nhầm. Hộp giới hạn của các ảnh được chuyển xuống được tạo từ chú thích gốc nhằm giữ cố định chất lượng câu nhắc; do đó, thực nghiệm tập trung vào lỗi định tuyến của Gatekeeper, không đánh giá khả năng tự động tạo hộp giới hạn.
+
+Trên 167 ảnh bệnh lý được chuyển đúng, PGA-UNet đạt Dice trung bình 0,8626. Để biểu diễn ảnh hưởng của sai số tích lũy, khóa luận sử dụng Dice toàn luồng có phạt lỗi định tuyến: ảnh được chuyển đúng đóng góp Dice phân đoạn thực tế, trong khi ảnh bệnh lý bị bỏ sót và ảnh bình thường bị chuyển nhầm được gán giá trị 0. Chỉ số này được xác định bởi:
+
+\begin{equation}
+    \mathrm{Dice}_{\mathrm{pipeline}}
+    =
+    \frac{
+        \displaystyle\sum_{i\in\mathrm{TP}}
+        \mathrm{Dice}_{\mathrm{img}}(i)
+    }{
+        N_{\mathrm{TP}}+N_{\mathrm{FP}}+N_{\mathrm{FN}}
+    }.
+    \label{eq:pipeline_dice}
+\end{equation}
+
+Với 167 TP, 26 FP và 20 FN, Dice toàn luồng đạt 0,6763. Bảng~\ref{tab:pipeline_eval} tóm tắt kết quả.
+
+\needspace{12\baselineskip}
+\begin{table}[htbp]
+    \centering
+    \caption{Kết quả mô phỏng luồng xử lý hai giai đoạn trên BTXRD}
+    \label{tab:pipeline_eval}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{8cm}|c|}
+        \hline
+        \textbf{Thống kê} & \textbf{Giá trị} \\
+        \hline
+        Tổng số ảnh & 375 \\
+        \hline
+        TP / FP / FN / TN & 167 / 26 / 20 / 162 \\
+        \hline
+        Dice của PGA-UNet trên ảnh TP & 0,8626 \\
+        \hline
+        Dice toàn luồng có phạt lỗi định tuyến & \textbf{0,6763} \\
+        \hline
+        IoU toàn luồng có phạt lỗi định tuyến & 0,6003 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Kết quả cho thấy hiệu năng toàn luồng chịu ảnh hưởng đáng kể từ bước sàng lọc: Dice giảm từ 0,8626 trên các ảnh được định tuyến đúng xuống 0,6763 khi tính thêm lỗi FP và FN. Trong đó, ảnh FN là trường hợp đáng lưu ý nhất vì tổn thương không đến được PGA-UNet để phân đoạn.
+
+Trong quy trình đề xuất tại Chương~\ref{Chapter3}, Gatekeeper chỉ cung cấp gợi ý sàng lọc và người dùng vẫn xác nhận trước khi chuyển bước. Vì chưa thực hiện thử nghiệm có sự tham gia của bác sĩ, kết quả trên chỉ phản ánh kịch bản mô phỏng không có hiệu chỉnh của người dùng, không đại diện cho hiệu năng lâm sàng của hệ thống hoàn chỉnh.
+
+Hình~\ref{fig:qual_pipeline_tp} minh họa một số ảnh bệnh lý được Gatekeeper phát hiện đúng và chuyển sang PGA-UNet. Các trường hợp này cho thấy mô hình có thể tiếp tục phân đoạn tổn thương tại nhiều vị trí giải phẫu khi ảnh được định tuyến đúng và cung cấp câu nhắc phù hợp.
+
+\needspace{14\baselineskip}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/qual_pipeline_tp.png}
+    \caption{Một số kết quả phân đoạn của ảnh được Gatekeeper chuyển đúng sang PGA-UNet trên BTXRD. Từ trái sang phải: ảnh X-quang, hộp giới hạn, mặt nạ dự đoán, mặt nạ nhãn gốc và lớp phủ TP, FP, FN.}
+    \label{fig:qual_pipeline_tp}
+\end{figure}
+
+\noindent\textbf{Kết luận.}
+Gatekeeper cho thấy khả năng hỗ trợ sàng lọc ảnh đầu vào, nhưng sai số tại bước này có thể làm giảm hiệu năng của toàn bộ luồng xử lý. Vì vậy, kết quả không làm thay đổi vai trò trung tâm của PGA-UNet mà cho thấy điều kiện cần để triển khai mô hình trong thực tế: Gatekeeper nên được sử dụng như công cụ hỗ trợ, còn quyết định chuyển bước và cung cấp câu nhắc vẫn cần sự xác nhận của người dùng chuyên môn.
+
+% ------------------------------------------------------------
+\section{Kết quả trên FracAtlas}
+\label{subsec:product_overview_fracatlas}
+% ------------------------------------------------------------
+
+Gatekeeper giữ nguyên kiến trúc EfficientNet-B3 và quy trình huấn luyện như trên BTXRD, nhưng được huấn luyện lại hoàn toàn trên FracAtlas. Thực nghiệm nhằm kiểm tra khả năng tích hợp PGA-UNet vào cùng một luồng xử lý trên dữ liệu gãy xương, không đánh giá khả năng suy luận trực tiếp giữa hai miền dữ liệu.
+
+\subsection{Hiệu năng của Gatekeeper}
+\label{subsec:gatekeeper_fa}
+
+Gatekeeper được đánh giá trên 409 ảnh kiểm thử FracAtlas, gồm 72 ảnh gãy xương và 337 ảnh bình thường. Tỉ lệ này gần với phân bố của bộ dữ liệu gốc và mất cân bằng hơn rõ rệt so với tập kiểm thử BTXRD.
+
+\needspace{12\baselineskip}
+\begin{table}[htbp]
+    \centering
+    \caption{Kết quả phân loại của Gatekeeper trên FracAtlas}
+    \label{tab:classification_results_fa}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{7.5cm}|c|}
+        \hline
+        \textbf{Chỉ số} & \textbf{Kết quả} \\
+        \hline
+        Accuracy & 88,26\% \\
+        \hline
+        Precision & 65,38\% \\
+        \hline
+        Sensitivity & 70,83\% \\
+        \hline
+        Specificity & 91,99\% \\
+        \hline
+        F1-score & 68,00\% \\
+        \hline
+        AUC-ROC & 0,9132 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Gatekeeper đạt Accuracy 88,26\% và AUC-ROC 0,9132, cho thấy khả năng phân biệt tương đối tốt giữa ảnh gãy xương và ảnh bình thường. Tuy nhiên, tại ngưỡng 0,5, mô hình chỉ phát hiện đúng 51/72 ảnh bệnh lý, tương ứng Sensitivity 70,83\%, trong khi 21 ảnh còn lại bị bỏ sót. Ngược lại, 310/337 ảnh bình thường được phân loại đúng, tương ứng Specificity 91,99\%.
+
+So với BTXRD, Gatekeeper trên FracAtlas có Sensitivity thấp hơn đáng kể (70,83\% so với 89,30\%) nhưng Specificity cao hơn (91,99\% so với 86,17\%). Kết quả cho thấy mô hình có xu hướng ưu tiên dự đoán lớp bình thường trên tập dữ liệu mất cân bằng, đồng thời gặp khó khăn hơn khi nhận diện đường gãy nhỏ và mảnh từ toàn bộ ảnh X-quang.
+
+Thử nghiệm ngưỡng cho thấy giảm ngưỡng xuống 0,3 có thể tăng Sensitivity lên 84,72\%, nhưng Specificity giảm còn 84,87\%. Vì vậy, điều chỉnh ngưỡng có thể cải thiện khả năng phát hiện ảnh bệnh lý nhưng không loại bỏ được sự đánh đổi giữa bỏ sót và báo động nhầm. Tương tự kết quả trên BTXRD, Gatekeeper chỉ nên đóng vai trò hỗ trợ sàng lọc và không tự động loại bỏ ảnh âm tính khỏi quy trình.
+
+\subsection{Ảnh hưởng đến luồng phân đoạn}
+\label{subsec:pipeline_eval_fa}
+
+Luồng xử lý được đánh giá trên toàn bộ 409 ảnh kiểm thử theo cùng thiết lập tại Mục~\ref{sec:pipeline_eval}. Kết quả của Gatekeeper được sử dụng trực tiếp mà không có bước sửa lại của người dùng. Đối với ảnh bệnh lý được chuyển đúng sang PGA-UNet, hộp giới hạn được tạo từ chú thích gốc nhằm giữ cố định chất lượng câu nhắc và tập trung đánh giá ảnh hưởng của lỗi định tuyến.
+
+Trong 72 ảnh bệnh lý, Gatekeeper chuyển đúng 51 ảnh sang PGA-UNet và bỏ sót 21 ảnh. PGA-UNet đạt Dice trung bình 0,8211 trên 51 ảnh được định tuyến đúng. Dice toàn luồng có phạt lỗi định tuyến được tính theo Công thức~\ref{eq:pipeline_dice}, trong đó ảnh FN và FP được quy ước đóng góp giá trị 0.
+
+\needspace{12\baselineskip}
+\begin{table}[htbp]
+    \centering
+    \caption{Kết quả mô phỏng luồng xử lý hai giai đoạn trên FracAtlas}
+    \label{tab:pipeline_eval_fa}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{8cm}|c|}
+        \hline
+        \textbf{Thống kê} & \textbf{Giá trị} \\
+        \hline
+        Tổng số ảnh & 409 \\
+        \hline
+        Ảnh bệnh lý / ảnh bình thường & 72 / 337 \\
+        \hline
+        TP / FP / FN / TN & 51 / 27 / 21 / 310 \\
+        \hline
+        Dice của PGA-UNet trên ảnh TP & 0,8211 \\
+        \hline
+        Dice toàn luồng có phạt lỗi định tuyến & \textbf{0,4230} \\
+        \hline
+        IoU toàn luồng có phạt lỗi định tuyến & 0,3611 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Dice toàn luồng trên FracAtlas đạt 0,4230, thấp hơn kết quả 0,6763 trên BTXRD. Nguyên nhân chính là Gatekeeper bỏ sót 21/72 ảnh bệnh lý, tương ứng 29,17\%, cao hơn mức 10,70\% trên BTXRD. Trong khi đó, PGA-UNet vẫn đạt Dice 0,8211 trên các ảnh được định tuyến đúng, gần với Dice 0,8169 khi mô hình được đánh giá độc lập trên toàn bộ tập kiểm thử bệnh lý.
+
+Sự khác biệt giữa hai giá trị cho thấy hiệu năng phân đoạn của PGA-UNet được duy trì khi ảnh đến đúng bước xử lý, còn suy giảm của chỉ số toàn luồng chủ yếu xuất phát từ lỗi sàng lọc phía trước. Tuy nhiên, Dice 0,8211 được tính trên nhóm ảnh do Gatekeeper phát hiện đúng nên chỉ mang ý nghĩa có điều kiện, không thay thế kết quả đánh giá độc lập của PGA-UNet trên toàn bộ tập kiểm thử.
+
+\noindent\textbf{Kết luận.}
+Kết quả trên FracAtlas tiếp tục cho thấy Gatekeeper có thể hỗ trợ sàng lọc ảnh đầu vào nhưng chưa đủ tin cậy để tự động quyết định ảnh nào được chuyển sang PGA-UNet. Ảnh hưởng của lỗi sàng lọc đặc biệt rõ trên FracAtlas do Sensitivity thấp và dữ liệu mất cân bằng. Vì vậy, trong luồng đề xuất, Gatekeeper chỉ cung cấp gợi ý ưu tiên; người dùng chuyên môn vẫn cần xác nhận ảnh và cung cấp hộp giới hạn trước khi PGA-UNet thực hiện phân đoạn.
