@@ -315,32 +315,9 @@ PGA-UNet được huấn luyện từ đầu trên từng bộ dữ liệu, tron
 
 Để bổ sung cho so sánh độ chính xác, khóa luận đo hiệu quả tính toán của PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm. Các chỉ số được ghi nhận gồm số tham số, FLOPs, dung lượng điểm lưu trọng số trên đĩa, bộ nhớ GPU đỉnh và độ trễ suy luận trung bình. PGA-UNet được đo ở hai cấu hình $256\times256$ và $512\times512$; SAM-Med2D được đo ở cấu hình $256\times256$, là độ phân giải đối sánh trực tiếp trong Mục~\ref{subsec:sam_comparison}. Phép đo được thực hiện trên cùng thiết bị với một lượt suy luận cho mỗi ảnh và được báo cáo như so sánh tương đối trong cùng môi trường, không nhằm khẳng định tốc độ tuyệt đối trên mọi phần cứng khác.
 
-\needspace{14\baselineskip}
-\begin{table}[htbp]
-    \centering
-    \caption{So sánh hiệu quả tính toán giữa PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm}
-    \label{tab:efficiency_comparison}
-    \renewcommand{\arraystretch}{1.3}
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{|l|c|c|c|c|c|c|}
-        \hline
-        \textbf{Mô hình} & \textbf{Tham số (M)} & \textbf{FLOPs (G)} & \textbf{Checkpoint (MB)} & \textbf{Bộ nhớ GPU đỉnh (MB)} & \textbf{Độ trễ GPU (ms/ảnh)} & \textbf{Độ trễ CPU (ms/ảnh)} \\
-        \hline
-        PGA-UNet ($256\times256$) & 2.950 & 7.742 & 11.3 & 3300.8 & 8.46 $\pm$ 0.83 & 83.87 $\pm$ 2.08 \\
-        \hline
-        PGA-UNet ($512\times512$) & 2.950 & 30.968 & 11.3 & 3429.8 & 21.83 $\pm$ 0.23 & 309.84 $\pm$ 8.24 \\
-        \hline
-        SAM-Med2D ($256\times256$) & 271.242 & 92.024 & 2443.2 & 3332.8 & 60.70 $\pm$ 1.54 & 769.40 $\pm$ 11.36 \\
-        \hline
-    \end{tabular}%
-    }
-\end{table}
+Ở cùng độ phân giải $256\times256$, PGA-UNet nhỏ hơn SAM-Med2D khoảng 92 lần về số tham số (2,95M so với 271,24M), khoảng 11,9 lần về FLOPs và nhanh hơn khoảng 7,2 lần trên GPU trong cùng môi trường thực nghiệm. Dung lượng điểm lưu trọng số cũng chênh lệch rất lớn, khoảng 215 lần (11,3 MB so với 2443,2 MB), cho thấy PGA-UNet là lựa chọn nhẹ hơn rõ rệt về mặt triển khai.
 
-Ở cùng độ phân giải $256\times256$, PGA-UNet nhỏ hơn SAM-Med2D khoảng 92 lần về số tham số (2,95M so với 271,24M) và khoảng 11,9 lần về FLOPs. Dung lượng điểm lưu trọng số chênh lệch còn lớn hơn, khoảng 215 lần (11,3 MB so với 2443,2 MB). Độ trễ suy luận trung bình của PGA-UNet cũng thấp hơn rõ rệt: nhanh hơn khoảng 7,2 lần trên GPU và 9,2 lần khi ép chạy trên CPU trong cùng môi trường thực nghiệm.
-
-Bộ nhớ GPU đỉnh giữa hai mô hình tại cùng độ phân giải $256\times256$ không chênh lệch nhiều trong phép đo hiện tại (3300,8 MB so với 3332,8 MB), cho thấy bộ nhớ đỉnh quan sát được còn chịu ảnh hưởng của khung chạy, bộ nhớ đệm và cách cấp phát của thư viện thực thi. Vì vậy, trong khóa luận này, số tham số, FLOPs, dung lượng checkpoint và độ trễ suy luận là các chỉ báo đáng tin cậy hơn để diễn giải lợi thế triển khai của PGA-UNet so với SAM-Med2D.
-
-Khi tăng độ phân giải của PGA-UNet từ $256\times256$ lên $512\times512$, FLOPs tăng từ 7,742 lên 30,968 GFLOPs và độ trễ GPU tăng từ 8,46 lên 21,83 ms/ảnh. Tuy vậy, ngay cả ở $512\times512$, PGA-UNet vẫn có độ trễ thấp hơn và dung lượng mô hình nhỏ hơn rất nhiều so với SAM-Med2D ở $256\times256$. Kết quả này hỗ trợ nhận định rằng kiến trúc CNN hạng nhẹ của PGA-UNet phù hợp hơn với các kịch bản triển khai tương tác trên phần cứng hạn chế, trong khi vẫn duy trì kết quả phân đoạn cạnh tranh đã trình bày ở các mục trước.
+Khi tăng độ phân giải của PGA-UNet lên $512\times512$, FLOPs và độ trễ tăng như kỳ vọng, nhưng mô hình vẫn có độ trễ thấp hơn và dung lượng nhỏ hơn rất nhiều so với SAM-Med2D ở $256\times256$. Bảng số liệu rút gọn và biểu đồ tổng hợp của phép đo này được đưa xuống Phụ lục~\ref{AppendixA}, Mục~\ref{sec:appendix_efficiency}, nhằm giữ cho phần thân bài tập trung vào hai ý chính: PGA-UNet nhẹ hơn và suy luận nhanh hơn, trong khi SAM-Med2D đòi hỏi tài nguyên tính toán lớn hơn đáng kể.
 % ------------------------------------------------------------
 \subsection{Ảnh hưởng của độ phân giải và sai lệch câu nhắc}
 \label{subsec:resolution_prompt}

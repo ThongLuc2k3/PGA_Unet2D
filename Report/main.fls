@@ -450,6 +450,10 @@ OUTPUT main.toc
 INPUT ./main.lof
 INPUT ./main.lof
 INPUT main.lof
+INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
+INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
+INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
+INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vntt12.tfm
 OUTPUT main.lof
 INPUT ./main.lot
 INPUT ./main.lot
@@ -540,10 +544,6 @@ INPUT ./images/arch_pga_unet2d.png
 INPUT ./images/arch_pga_unet2d.png
 INPUT ./images/arch_pga_unet2d.png
 INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vnr7.tfm
-INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
-INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
-INPUT /home/thongluc/texmf/tex/latex/vntex/t5cmtt.fd
-INPUT /home/thongluc/texmf/fonts/tfm/vntex/vnr/vntt12.tfm
 INPUT ./images/pipeline_pga_app_inference.png
 INPUT ./images/pipeline_pga_app_inference.png
 INPUT ./images/pipeline_pga_app_inference.png
@@ -598,6 +598,11 @@ OUTPUT Appendix/phulucA_phantich_kientruc.aux
 INPUT ./Appendix/phulucA_phantich_kientruc.tex
 INPUT ./Appendix/phulucA_phantich_kientruc.tex
 INPUT Appendix/phulucA_phantich_kientruc.tex
+INPUT ./images/efficiency_comparison_from_notebook.png
+INPUT ./images/efficiency_comparison_from_notebook.png
+INPUT ./images/efficiency_comparison_from_notebook.png
+INPUT ./images/efficiency_comparison_from_notebook.png
+INPUT ./images/efficiency_comparison_from_notebook.png
 INPUT ./images/chart_ablation.png
 INPUT ./images/chart_ablation.png
 INPUT ./images/chart_ablation.png

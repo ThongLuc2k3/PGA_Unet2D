@@ -4,7 +4,53 @@
 \chapter{PHÂN TÍCH CHUYÊN SÂU KIẾN TRÚC VÀ KHẢ NĂNG TỔNG QUÁT HÓA}
 \label{AppendixA}
 
-Phụ lục này trình bày đầy đủ ba nhóm thực nghiệm bổ sung được tóm tắt tại Mục~\ref{sec:ablation_study}, Chương~\ref{Chapter4}: nghiên cứu loại bỏ thành phần so sánh các cấu hình kiến trúc PSG/CAD, kiểm định độ ổn định bằng đánh giá chéo 4-fold, và phân tích theo đặc tính tổn thương, lần lượt trên BTXRD (Mục~\ref{subsec:arch_btxrd}) và FracAtlas (Mục~\ref{subsec:arch_fracatlas}), khép lại bằng một mục tổng hợp kết luận xuyên hai miền dữ liệu (Mục~\ref{subsec:conclusion_arch}). Phần phân tích chuyên sâu này giữ tách riêng theo từng bộ dữ liệu thay vì gộp bảng: nhiều so sánh ở đây có biên độ nhỏ và một số đổi chiều giữa hai miền dữ liệu (chi tiết tại Mục~\ref{subsec:conclusion_arch}), nên việc phân tích độc lập trên từng bộ dữ liệu trước khi tổng hợp sẽ giúp làm rõ xu hướng và tránh nhiễu thông tin so với việc gộp chung.
+Phụ lục này trình bày đầy đủ bốn nhóm thực nghiệm bổ sung được tóm tắt tại Chương~\ref{Chapter4}: hiệu quả tính toán của PGA-UNet và SAM-Med2D (Mục~\ref{sec:appendix_efficiency}); nghiên cứu loại bỏ thành phần so sánh các cấu hình kiến trúc PSG/CAD; kiểm định độ ổn định bằng đánh giá chéo 4-fold; và phân tích theo đặc tính tổn thương, lần lượt trên BTXRD (Mục~\ref{subsec:arch_btxrd}) và FracAtlas (Mục~\ref{subsec:arch_fracatlas}), khép lại bằng một mục tổng hợp kết luận xuyên hai miền dữ liệu (Mục~\ref{subsec:conclusion_arch}). Phần phân tích chuyên sâu này giữ tách riêng theo từng bộ dữ liệu thay vì gộp tất cả bảng vào thân bài: nhiều so sánh ở đây có biên độ nhỏ và một số đổi chiều giữa hai miền dữ liệu (chi tiết tại Mục~\ref{subsec:conclusion_arch}), nên việc phân tích độc lập trên từng nhóm thực nghiệm trước khi tổng hợp sẽ giúp làm rõ xu hướng và tránh nhiễu thông tin.
+
+% ------------------------------------------------------------
+\section{Hiệu quả tính toán của PGA-UNet và SAM-Med2D}
+\label{sec:appendix_efficiency}
+% ------------------------------------------------------------
+
+Mục này lưu toàn bộ số liệu chi tiết của phép đo hiệu quả tính toán đã được tóm tắt tại Mục~\ref{subsec:efficiency_measurement}, Chương~\ref{Chapter4}. Phép đo được thực hiện trong cùng môi trường chạy, với cùng một lượt suy luận cho mỗi ảnh. Các chỉ số được ghi nhận gồm số tham số, số tham số có thể huấn luyện, FLOPs, dung lượng checkpoint, bộ nhớ GPU đỉnh và độ trễ suy luận trung bình trên GPU lẫn khi ép chạy trên CPU. PGA-UNet được đo ở hai cấu hình $256\times256$ và $512\times512$, còn SAM-Med2D được đo ở cấu hình $256\times256$ để đối sánh trực tiếp với phép so sánh tại Mục~\ref{subsec:sam_comparison}. Các trị số trong mục này được dùng như so sánh tương đối trong cùng môi trường, không nhằm khẳng định tốc độ tuyệt đối trên mọi phần cứng khác.
+
+\needspace{12\baselineskip}
+\begin{table}[htbp]
+    \centering
+    \caption{Bảng rút gọn từ \texttt{efficiency\_comparison.csv}: so sánh hiệu quả tính toán giữa PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm}
+    \label{tab:appendix_efficiency_comparison}
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Mô hình}
+        & \textbf{Tham số tổng (M)}
+        & \textbf{Tham số học (M)}
+        & \textbf{FLOPs (G)}
+        & \textbf{Checkpoint (MB)}
+        & \textbf{Bộ nhớ GPU đỉnh (MB)}
+        & \textbf{Độ trễ GPU (ms/ảnh)}
+        & \textbf{Độ trễ CPU (ms/ảnh)} \\
+        \hline
+        PGA-UNet ($256\times256$) & 2.950 & 2.950 & 7.742 & 11.3 & 3300.8 & 8.46 $\pm$ 0.83 & 83.87 $\pm$ 2.08 \\
+        \hline
+        PGA-UNet ($512\times512$) & 2.950 & 2.950 & 30.968 & 11.3 & 3429.8 & 21.83 $\pm$ 0.23 & 309.84 $\pm$ 8.24 \\
+        \hline
+        SAM-Med2D ($256\times256$) & 271.242 & 184.569 & 92.024 & 2443.2 & 3332.8 & 60.70 $\pm$ 1.54 & 769.40 $\pm$ 11.36 \\
+        \hline
+    \end{tabular}%
+    }
+\end{table}
+
+Ở cùng độ phân giải $256\times256$, SAM-Med2D lớn hơn PGA-UNet khoảng 92 lần về số tham số tổng, 11,9 lần về FLOPs, 215 lần về dung lượng checkpoint và chậm hơn khoảng 7,2 lần trên GPU. Độ trễ khi ép chạy trên CPU cũng chênh lệch khoảng 9,2 lần, củng cố nhận định rằng PGA-UNet phù hợp hơn cho các kịch bản triển khai tương tác trên phần cứng hạn chế.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/efficiency_comparison_from_notebook.png}
+    \caption{Biểu đồ tổng hợp sáu chỉ số hiệu quả tính toán giữa PGA-UNet và SAM-Med2D, trích từ notebook đo lường \texttt{measure\_efficiency.ipynb}.}
+    \label{fig:appendix_efficiency_comparison}
+\end{figure}
+
+Bộ nhớ GPU đỉnh tại cùng độ phân giải $256\times256$ không chênh lệch nhiều trong phép đo hiện tại, cho thấy chỉ số này còn chịu ảnh hưởng của khung chạy, bộ nhớ đệm và cách cấp phát của thư viện thực thi. Vì vậy, trong diễn giải chính của khóa luận, số tham số, FLOPs, dung lượng checkpoint và độ trễ suy luận được xem là các chỉ báo đáng tin cậy hơn để so sánh chi phí triển khai giữa PGA-UNet và SAM-Med2D.
 
 % ------------------------------------------------------------
 \section{Phân tích trên BTXRD}
