@@ -30,7 +30,7 @@ Một yêu cầu thiết yếu khác là mức độ ổn định của mô hìn
 
 \subsection{Động lực thực tiễn}
 
-Các mô hình nền tảng Transformer tuy linh hoạt nhưng đòi hỏi tài nguyên tính toán lớn, gây khó khăn khi triển khai trên phần cứng y tế và làm chậm thời gian phản hồi tương tác. Thay vào đó, một kiến trúc CNN hạng nhẹ nhận trực tiếp hộp giới hạn sẽ khả thi hơn trong thực tế. Bác sĩ chỉ cần khoanh vùng sơ bộ; nếu kết quả chưa sát, có thể điều chỉnh hộp giới hạn và mô hình sẽ chạy lại suy luận ngay lập tức. 
+Các mô hình nền tảng Transformer tuy linh hoạt nhưng đòi hỏi tài nguyên tính toán lớn, gây khó khăn khi triển khai trên phần cứng y tế và làm chậm thời gian phản hồi tương tác. Thay vào đó, một kiến trúc CNN hạng nhẹ nhận trực tiếp hộp giới hạn có thể phù hợp hơn với các hệ thống cần chi phí tính toán thấp. Trong kịch bản sử dụng dự kiến, người dùng khoanh vùng sơ bộ, sau đó có thể điều chỉnh hộp giới hạn và nhận lại kết quả suy luận cập nhật.
 
 Từ những động lực khoa học và thực tiễn nêu trên, khóa luận tập trung phát triển một hệ thống phân đoạn ảnh X-quang xương đáp ứng ba tiêu chí cốt lõi: khai thác hiệu quả thông tin hộp giới hạn, duy trì mức ổn định tốt trước các sai lệch thao tác và sở hữu một kiến trúc tinh gọn.
 
@@ -102,7 +102,7 @@ Mô hình cần thỏa mãn các yêu cầu sau:
     \item Có số lượng tham số và chi phí suy luận phù hợp với quá trình tương tác.
 \end{itemize}
 
-Trong giai đoạn huấn luyện, hộp giới hạn được tạo từ mặt nạ nhãn gốc và biến đổi theo các kịch bản mô phỏng. Trong giai đoạn suy luận, hộp được cung cấp trực tiếp bởi người dùng. Phạm vi thực nghiệm của khóa luận sử dụng câu nhắc mô phỏng có kiểm soát; việc đánh giá với hộp giới hạn do bác sĩ vẽ trực tiếp được xác định là hướng phát triển tiếp theo.
+Trong giai đoạn huấn luyện, hộp giới hạn được tạo từ mặt nạ nhãn gốc và biến đổi theo các kịch bản mô phỏng. Trong giai đoạn suy luận, hộp được cung cấp trực tiếp bởi người dùng. Phạm vi thực nghiệm của khóa luận sử dụng câu nhắc mô phỏng có kiểm soát; vì vậy, các kết quả hiện tại phản ánh hành vi của mô hình trong thiết lập đã biết gần đúng vị trí tổn thương, chưa đại diện trực tiếp cho toàn bộ quy trình sử dụng với câu nhắc do bác sĩ vẽ tự do. Việc đánh giá với hộp giới hạn do bác sĩ vẽ trực tiếp được xác định là hướng phát triển tiếp theo.
 
 Bên cạnh bài toán phân đoạn chính, khóa luận thực hiện một thử nghiệm mở rộng với Gatekeeper sử dụng EfficientNet-B3. Mô-đun này cung cấp gợi ý sàng lọc trước khi người dùng xác nhận và cung cấp hộp giới hạn. Gatekeeper không thuộc đóng góp kiến trúc chính và không tự động thay thế quyết định của người dùng.
 
@@ -167,7 +167,7 @@ Khóa luận giới hạn trong phạm vi sau:
     \item sử dụng ảnh bệnh lý có mặt nạ cấp độ điểm ảnh để huấn luyện mô-đun phân đoạn;
     \item sử dụng hộp giới hạn làm dạng câu nhắc trực quan chính;
     \item đánh giá trên hai bộ dữ liệu công khai BTXRD và FracAtlas;
-    \item mô phỏng sai lệch câu nhắc bằng các phép mở rộng và dịch chuyển hộp giới hạn theo quy tắc có kiểm soát;
+    \item mô phỏng sai lệch câu nhắc bằng các phép mở rộng và dịch chuyển hộp giới hạn theo quy tắc có kiểm soát, không thay thế cho đánh giá với câu nhắc thực do người dùng cung cấp;
     \item chưa thực hiện thử nghiệm với câu nhắc do bác sĩ vẽ trực tiếp hoặc dữ liệu thô được thu thập tại cơ sở y tế;
     \item Gatekeeper chỉ được khảo sát như một thành phần hỗ trợ, không phải hệ thống chẩn đoán tự động.
 \end{itemize}
@@ -191,7 +191,7 @@ Khóa luận được tổ chức thành năm chương:
     Trình bày kiến trúc PGA-UNet, gồm bản đồ nhiệt câu nhắc dạng cao nguyên, PSG và CAD; đồng thời mô tả quy trình huấn luyện, suy luận và luồng xử lý hỗ trợ với Gatekeeper.
 
     \item \textbf{Chương 4 -- Thực nghiệm và đánh giá:}
-    Trình bày dữ liệu, cấu hình huấn luyện, kết quả so sánh với các mô hình cơ sở và SAM-Med2D, mức độ ổn định dưới sai lệch câu nhắc mô phỏng, tóm tắt các kết luận chính về đóng góp kiến trúc và khả năng tổng quát hóa, cùng tóm tắt thử nghiệm mở rộng với Gatekeeper. Toàn bộ bảng số liệu chi tiết của nghiên cứu loại bỏ thành phần, đánh giá chéo và phân tích theo đặc tính tổn thương được trình bày tại Phụ lục~\ref{AppendixA}; số liệu chi tiết của luồng xử lý hai giai đoạn với Gatekeeper được trình bày tại Phụ lục~\ref{AppendixB}.
+    Trình bày dữ liệu, cấu hình huấn luyện, kết quả so sánh với các mô hình cơ sở và SAM-Med2D, mức độ ổn định dưới sai lệch câu nhắc mô phỏng, tóm tắt các kết luận chính về đóng góp kiến trúc và tính nhất quán trên hai bộ dữ liệu, cùng tóm tắt thử nghiệm mở rộng với Gatekeeper. Toàn bộ bảng số liệu chi tiết của nghiên cứu loại bỏ thành phần, đánh giá chéo và phân tích theo đặc tính tổn thương được trình bày tại Phụ lục~\ref{AppendixA}; số liệu chi tiết của luồng xử lý hai giai đoạn với Gatekeeper được trình bày tại Phụ lục~\ref{AppendixB}.
 
     \item \textbf{Chương 5 -- Kết luận và hướng phát triển:}
     Tổng hợp các kết quả đạt được, chỉ ra hạn chế của nghiên cứu và đề xuất các hướng phát triển tiếp theo.

@@ -1,34 +1,34 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Các thành phần kế thừa và thiết kế trong PGA-UNet}}{26}{table.3.1}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Các thành phần kế thừa và thiết kế trong PGA-UNet}}{27}{table.3.1}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố hai bộ dữ liệu dùng trong thực nghiệm}}{41}{table.4.1}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên BTXRD ở độ phân giải $512\times 512$ (N=187~ảnh)}}{46}{table.4.2}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên FracAtlas ở độ phân giải $512\times 512$ (N=72~ảnh)}}{46}{table.4.3}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên BTXRD ở độ phân giải $256\times 256$ (N=187~ảnh)}}{48}{table.4.4}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên FracAtlas ở độ phân giải $256\times 256$ (N=72~ảnh)}}{49}{table.4.5}%
-\contentsline {table}{\numberline {4.6}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trên BTXRD (N=187~ảnh)}}{52}{table.4.6}%
-\contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trên FracAtlas (N=72~ảnh)}}{53}{table.4.7}%
-\contentsline {table}{\numberline {4.8}{\ignorespaces Tổng hợp Dice của ba cấu hình chính trong nghiên cứu loại bỏ thành phần trên BTXRD và FracAtlas (ba kịch bản câu nhắc)}}{57}{table.4.8}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Thống kê phân bố hai bộ dữ liệu dùng trong thực nghiệm}}{42}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên BTXRD ở độ phân giải $512\times 512$ (N=187~ảnh)}}{47}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces So sánh PGA-UNet với các mô hình cơ sở trên FracAtlas ở độ phân giải $512\times 512$ (N=72~ảnh)}}{47}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên BTXRD ở độ phân giải $256\times 256$ (N=187~ảnh)}}{49}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces So sánh PGA-UNet với SAM-Med2D trên FracAtlas ở độ phân giải $256\times 256$ (N=72~ảnh)}}{50}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trên BTXRD (N=187~ảnh)}}{53}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Kết quả PGA-UNet tại hai độ phân giải trên FracAtlas (N=72~ảnh)}}{54}{table.4.7}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Tổng hợp Dice của ba cấu hình chính trong nghiên cứu loại bỏ thành phần trên BTXRD và FracAtlas (ba kịch bản câu nhắc)}}{58}{table.4.8}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {A.1}{\ignorespaces Bảng rút gọn từ \texttt {efficiency\_comparison.csv}: so sánh hiệu quả tính toán giữa PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm}}{77}{table.A.1}%
-\contentsline {table}{\numberline {A.2}{\ignorespaces Kết quả nghiên cứu loại bỏ thành phần trên BTXRD trong ba kịch bản câu nhắc (N=187~ảnh)}}{80}{table.A.2}%
-\contentsline {table}{\numberline {A.3}{\ignorespaces Dice Score từng Phân vùng trong đánh giá chéo 4-fold PGA-UNet (kịch bản Bao trọn / Lệch tâm / Hỗn hợp)}}{84}{table.A.3}%
-\contentsline {table}{\numberline {A.4}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}}{84}{table.A.4}%
-\contentsline {table}{\numberline {A.5}{\ignorespaces So sánh PGA-UNet với U-Net theo mức hiệu năng của U-Net trên BTXRD (50 ảnh/nhóm)}}{85}{table.A.5}%
-\contentsline {table}{\numberline {A.6}{\ignorespaces So sánh PGA-UNet với SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{88}{table.A.6}%
-\contentsline {table}{\numberline {A.7}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{91}{table.A.7}%
-\contentsline {table}{\numberline {A.8}{\ignorespaces Kết quả nghiên cứu loại bỏ thành phần trên FracAtlas trong ba kịch bản câu nhắc (N=72~ảnh)}}{93}{table.A.8}%
-\contentsline {table}{\numberline {A.9}{\ignorespaces Dice của PGA-UNet trên từng Phân vùng của FracAtlas trong ba kịch bản câu nhắc}}{98}{table.A.9}%
-\contentsline {table}{\numberline {A.10}{\ignorespaces Kết quả trung bình của đánh giá chéo 4-fold trên FracAtlas}}{98}{table.A.10}%
-\contentsline {table}{\numberline {A.11}{\ignorespaces So sánh PGA-UNet với U-Net theo mức hiệu năng của U-Net trên FracAtlas (36 ảnh/nhóm)}}{99}{table.A.11}%
-\contentsline {table}{\numberline {A.12}{\ignorespaces So sánh PGA-UNet với SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên FracAtlas (Bao trọn, 24 ảnh/nhóm)}}{102}{table.A.12}%
-\contentsline {table}{\numberline {A.13}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên FracAtlas (Bao trọn, 24 ảnh/nhóm)}}{103}{table.A.13}%
-\contentsline {table}{\numberline {A.14}{\ignorespaces Kiểm định Wilcoxon cho sáu cặp cấu hình trên BTXRD và FracAtlas. $\Delta $Dice được tính bằng Dice của cấu hình thứ nhất trừ cấu hình thứ hai; các giá trị $p$ chưa được hiệu chỉnh cho so sánh nhiều lần}}{107}{table.A.14}%
+\contentsline {table}{\numberline {A.1}{\ignorespaces Bảng rút gọn từ \texttt {efficiency\_comparison.csv}: so sánh hiệu quả tính toán giữa PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm}}{79}{table.A.1}%
+\contentsline {table}{\numberline {A.2}{\ignorespaces Kết quả nghiên cứu loại bỏ thành phần trên BTXRD trong ba kịch bản câu nhắc (N=187~ảnh)}}{82}{table.A.2}%
+\contentsline {table}{\numberline {A.3}{\ignorespaces Dice Score từng Phân vùng trong đánh giá chéo 4-fold PGA-UNet (kịch bản Bao trọn / Lệch tâm / Hỗn hợp)}}{86}{table.A.3}%
+\contentsline {table}{\numberline {A.4}{\ignorespaces Kết quả đánh giá chéo 4-fold PGA-UNet trên 3 kịch bản câu nhắc (trung bình 4 fold)}}{86}{table.A.4}%
+\contentsline {table}{\numberline {A.5}{\ignorespaces So sánh PGA-UNet với U-Net theo mức hiệu năng của U-Net trên BTXRD (50 ảnh/nhóm)}}{87}{table.A.5}%
+\contentsline {table}{\numberline {A.6}{\ignorespaces So sánh PGA-UNet với SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{90}{table.A.6}%
+\contentsline {table}{\numberline {A.7}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên BTXRD (Bao trọn, 50 ảnh/nhóm)}}{93}{table.A.7}%
+\contentsline {table}{\numberline {A.8}{\ignorespaces Kết quả nghiên cứu loại bỏ thành phần trên FracAtlas trong ba kịch bản câu nhắc (N=72~ảnh)}}{95}{table.A.8}%
+\contentsline {table}{\numberline {A.9}{\ignorespaces Dice của PGA-UNet trên từng Phân vùng của FracAtlas trong ba kịch bản câu nhắc}}{100}{table.A.9}%
+\contentsline {table}{\numberline {A.10}{\ignorespaces Kết quả trung bình của đánh giá chéo 4-fold trên FracAtlas}}{100}{table.A.10}%
+\contentsline {table}{\numberline {A.11}{\ignorespaces So sánh PGA-UNet với U-Net theo mức hiệu năng của U-Net trên FracAtlas (36 ảnh/nhóm)}}{101}{table.A.11}%
+\contentsline {table}{\numberline {A.12}{\ignorespaces So sánh PGA-UNet với SAM-Med2D theo đặc tính tổn thương ở cùng độ phân giải $256\times 256$ trên FracAtlas (Bao trọn, 24 ảnh/nhóm)}}{104}{table.A.12}%
+\contentsline {table}{\numberline {A.13}{\ignorespaces Ảnh hưởng của độ phân giải đối với PGA-UNet theo đặc tính tổn thương trên FracAtlas (Bao trọn, 24 ảnh/nhóm)}}{105}{table.A.13}%
+\contentsline {table}{\numberline {A.14}{\ignorespaces Kiểm định Wilcoxon cho sáu cặp cấu hình trên BTXRD và FracAtlas. $\Delta $Dice được tính bằng Dice của cấu hình thứ nhất trừ cấu hình thứ hai; các giá trị $p$ chưa được hiệu chỉnh cho so sánh nhiều lần}}{109}{table.A.14}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {B.1}{\ignorespaces Kết quả phân loại của Gatekeeper trên BTXRD}}{112}{table.B.1}%
-\contentsline {table}{\numberline {B.2}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên BTXRD}}{114}{table.B.2}%
-\contentsline {table}{\numberline {B.3}{\ignorespaces Kết quả phân loại của Gatekeeper trên FracAtlas}}{116}{table.B.3}%
-\contentsline {table}{\numberline {B.4}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên FracAtlas}}{118}{table.B.4}%
+\contentsline {table}{\numberline {B.1}{\ignorespaces Kết quả phân loại của Gatekeeper trên BTXRD}}{114}{table.B.1}%
+\contentsline {table}{\numberline {B.2}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên BTXRD}}{116}{table.B.2}%
+\contentsline {table}{\numberline {B.3}{\ignorespaces Kết quả phân loại của Gatekeeper trên FracAtlas}}{118}{table.B.3}%
+\contentsline {table}{\numberline {B.4}{\ignorespaces Kết quả mô phỏng luồng xử lý hai giai đoạn trên FracAtlas}}{120}{table.B.4}%
