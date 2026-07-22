@@ -1,0 +1,4 @@
+model,params_total_M,params_trainable_M,gflops,checkpoint_MB,peak_mem_MB,latency_ms_mean,latency_ms_std,latency_ms_mean_cpu,latency_ms_std_cpu
+PGA-UNet (256x256),2.950,2.950,7.742,11.344,3300.805,8.462,0.832,83.867,2.083
+PGA-UNet (512x512),2.950,2.950,30.968,11.344,3429.771,21.834,0.233,309.843,8.240
+SAM-Med2D (256x256),271.242,184.569,92.024,2443.162,3332.771,60.702,1.539,769.401,11.355
