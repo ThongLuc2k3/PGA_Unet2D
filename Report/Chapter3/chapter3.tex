@@ -298,7 +298,7 @@ $\mathcal{D}
 \State Khởi tạo tham số PGA-UNet $\boldsymbol{\theta}$
 \While{chưa thỏa tiêu chí dừng trên tập xác thực}
     \For{mỗi lô nhỏ $(\mathbf{I},\mathbf{M})$}
-        \State Thay đổi kích thước ảnh và mặt nạ về kích thước đầu vào
+        \State Co giãn ảnh và mặt nạ theo cùng hệ số, giữ tỷ lệ rồi đệm về kích thước đầu vào
         \State Trích hộp giới hạn $\mathbf{B}$ từ mặt nạ $\mathbf{M}$
         \State Điều chỉnh $\mathbf{B}$ theo kịch bản câu nhắc được chọn
         \State Tạo bản đồ nhiệt
@@ -348,7 +348,7 @@ $\mathbf{B}=(x_1,y_1,x_2,y_2)$
 \If{$\mathbf{B}=\emptyset$}
     \State \Return thông báo yêu cầu cung cấp hộp giới hạn
 \EndIf
-\State Chuẩn hóa ảnh $\mathbf{I}$ về kích thước đầu vào
+\State Co giãn ảnh $\mathbf{I}$ giữ tỷ lệ rồi đệm về kích thước đầu vào
 \State Tạo mặt nạ hộp giới hạn $\mathbf{B}_{\mathrm{mask}}$
 \State Tạo bản đồ nhiệt
 $\mathbf{H}_{\mathrm{prompt}}
