@@ -17,7 +17,7 @@
 \chapter{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}
 \label{Chapter4}
 
-Chương này trình bày kết quả thực nghiệm trên cả hai bộ dữ liệu (BTXRD, FracAtlas) song song theo từng chủ đề: Mục~\ref{sec:thiet_lap} thiết lập môi trường thực nghiệm chung; Mục~\ref{sec:danh_gia_hieu_nang} đánh giá hiệu năng phân đoạn (so với U-Net và Attention U-Net, so với SAM-Med2D, ảnh hưởng độ phân giải và mức độ ổn định dưới sai lệch câu nhắc mô phỏng); Mục~\ref{sec:ablation_study} tóm tắt các kết luận chính về đóng góp kiến trúc và tính nhất quán trên hai bộ dữ liệu, với toàn bộ bảng số liệu chi tiết (nghiên cứu loại bỏ thành phần, đánh giá chéo, phân tích theo đặc tính tổn thương) được trình bày tại Phụ lục~\ref{AppendixA}; Mục~\ref{sec:product_overview} tóm tắt kết quả của mô-đun Gatekeeper hỗ trợ và luồng xử lý hai giai đoạn, với số liệu chi tiết tại Phụ lục~\ref{AppendixB}.
+Chương này trình bày phần thực nghiệm của khóa luận trên hai bộ dữ liệu BTXRD và FracAtlas. Để dễ theo dõi hơn, nội dung được chia theo từng nhóm vấn đề. Mục~\ref{sec:thiet_lap} nói về dữ liệu và cấu hình thực nghiệm. Mục~\ref{sec:danh_gia_hieu_nang} trình bày các kết quả phân đoạn chính, gồm so sánh với U-Net, Attention U-Net, SAM-Med2D, ảnh hưởng của độ phân giải và độ ổn định khi câu nhắc bị sai lệch. Mục~\ref{sec:ablation_study} tóm tắt các kết luận quan trọng từ nghiên cứu loại bỏ thành phần, đánh giá chéo và phân tích theo đặc tính tổn thương; phần số liệu đầy đủ được để ở Phụ lục~\ref{AppendixA}. Cuối cùng, Mục~\ref{sec:product_overview} trình bày thử nghiệm mở rộng với Gatekeeper và luồng xử lý hai giai đoạn; các bảng chi tiết nằm ở Phụ lục~\ref{AppendixB}.
 
 % ============================================================
 % PHẦN I, ĐÓNG GÓP 1: Nghiên cứu kiến trúc PGA-UNet
@@ -28,15 +28,12 @@ Chương này trình bày kết quả thực nghiệm trên cả hai bộ dữ l
 \label{sec:thiet_lap}
 % ------------------------------------------------------------
 
-Để đảm bảo tính khách quan và khả năng tái lập của các kết quả nghiên
-cứu, mục này trình bày chi tiết về quy mô dữ liệu, phương pháp phân chia
-các tập đánh giá, cấu hình phần cứng cũng như các siêu tham số được
-thiết lập trong suốt quá trình huấn luyện mô hình.
+Để các phần sau dễ theo dõi hơn, mục này trình bày trước về dữ liệu, cách chia tập, cấu hình phần cứng và các siêu tham số huấn luyện. Đây là phần hơi khô nhưng cần thiết, vì nếu thiếu thì phần kết quả phía sau sẽ khó hiểu hơn.
 
 \subsection{Hai bộ dữ liệu ảnh X-quang và tiền xử lý đầu vào}
 \label{subsec:dataset}
 
-Khóa luận sử dụng hai bộ dữ liệu X-quang xương công khai và độc lập gồm BTXRD~\cite{btxrd2024} (\textit{Bone Tumor X-Ray Dataset}) và FracAtlas~\cite{fracatlas2023}. BTXRD tập trung vào tổn thương khối u xương, trong khi FracAtlas tập trung vào gãy xương tại nhiều vùng cơ thể. Sự khác biệt về hình thái tổn thương giữa hai bộ dữ liệu cho phép đánh giá PGA-UNet trên cả vùng khối u có hình dạng không đồng nhất và đường gãy nhỏ, mảnh, có dạng tuyến tính.
+Khóa luận sử dụng hai bộ dữ liệu X-quang xương công khai và độc lập là BTXRD~\cite{btxrd2024} (\textit{Bone Tumor X-Ray Dataset}) và FracAtlas~\cite{fracatlas2023}. BTXRD tập trung vào khối u xương, còn FracAtlas tập trung vào gãy xương ở nhiều vị trí khác nhau. Việc dùng cả hai bộ dữ liệu giúp mô hình được kiểm tra trên hai dạng tổn thương khác nhau: một bên là vùng tổn thương có hình dạng phức tạp hơn, một bên là các đường gãy thường nhỏ và mảnh hơn.
 
 Dữ liệu dùng cho bài toán phân đoạn chỉ gồm ảnh bệnh lý có mặt nạ ở cấp độ điểm ảnh.
 \needspace{14\baselineskip}
@@ -68,16 +65,16 @@ Dữ liệu dùng cho bài toán phân đoạn chỉ gồm ảnh bệnh lý có 
     \end{tabular}
 \end{table}
 
-FracAtlas có 917 mẫu đa giác được sử dụng trong thực nghiệm, gần tương ứng với 922 vùng gãy xương được công bố trong bộ dữ liệu gốc~\cite{fracatlas2023}. Chênh lệch nhỏ hơn 1\% xuất phát từ việc loại bỏ các đa giác quá nhỏ hoặc gặp lỗi định dạng trong quá trình chuẩn hóa dữ liệu. So với BTXRD, FracAtlas có ít dữ liệu huấn luyện hơn, qua đó cung cấp thêm điều kiện đánh giá khả năng học của PGA-UNet khi dữ liệu bị hạn chế.
+FracAtlas có 917 mẫu đa giác được dùng trong thực nghiệm, khá gần với 922 vùng gãy xương được công bố trong bộ dữ liệu gốc~\cite{fracatlas2023}. Phần chênh lệch nhỏ hơn 1\% chủ yếu do một số đa giác quá nhỏ hoặc lỗi định dạng bị loại ra khi chuẩn hóa dữ liệu. So với BTXRD, FracAtlas có ít dữ liệu huấn luyện hơn, nên cũng giúp kiểm tra thêm khả năng học của PGA-UNet trong điều kiện dữ liệu hạn chế hơn.
 
-Tiền xử lý được áp dụng thống nhất cho cả hai bộ dữ liệu. Ảnh X-quang được đưa về kích thước $512\times512$ hoặc $256\times256$ bằng cách co giãn theo cùng hệ số để giữ tỷ lệ khung hình gốc, sau đó đệm (\textit{padding}) về khung vuông ở giữa ảnh. Mặt nạ nhị phân được tạo từ tọa độ đa giác trong tệp chú thích và được biến đổi tương ứng bằng cùng quy trình co giãn giữ tỷ lệ kết hợp đệm nền 0. Bản đồ nhiệt câu nhắc cũng được chuẩn hóa theo cùng quy trình để đồng bộ với ảnh đầu vào. Dữ liệu sau tiền xử lý được sử dụng thống nhất trong các giai đoạn huấn luyện, suy luận và hiển thị kết quả.
+Phần tiền xử lý được áp dụng giống nhau cho cả hai bộ dữ liệu. Ảnh X-quang được đưa về kích thước $512\times512$ hoặc $256\times256$ bằng cách co giãn theo cùng hệ số để giữ nguyên tỉ lệ, sau đó đệm (\textit{padding}) thành khung vuông. Mặt nạ nhị phân được tạo từ tọa độ đa giác trong chú thích và cũng được biến đổi theo đúng quy trình đó. Bản đồ nhiệt câu nhắc được chuẩn hóa theo cùng cách để đồng bộ với ảnh đầu vào. Dữ liệu sau tiền xử lý được dùng thống nhất trong huấn luyện, suy luận và lúc trực quan hóa kết quả.
 
 Việc phân chia tập huấn luyện, xác thực và kiểm thử được thực hiện ở cấp độ ảnh: các đa giác thuộc cùng một ảnh luôn được giữ trong cùng một tập để tránh rò rỉ dữ liệu ở cấp độ vùng tổn thương. Khóa luận chưa xác nhận việc phân chia ở cấp độ bệnh nhân hoặc lượt chụp (nhiều ảnh của cùng một bệnh nhân, nếu có, có thể rơi vào các tập khác nhau), do siêu dữ liệu công khai của BTXRD và FracAtlas không cung cấp mã định danh bệnh nhân đầy đủ để kiểm tra. Đây là một giới hạn về khả năng kiểm chứng rò rỉ dữ liệu, được nêu lại tại Mục~\ref{sec:han_che}, Chương~\ref{Chapter5}.
 % ------------------------------------------------------------
 \subsection{Mô hình so sánh và cấu hình huấn luyện}
 \label{subsec:models_compared}
 
-PGA-UNet được so sánh với U-Net, Attention U-Net và SAM-Med2D. U-Net~\cite{ronneberger2015unet} và Attention U-Net~\cite{oktay2018attentionunet} là hai mô hình cơ sở hoạt động hoàn toàn tự động, không nhận câu nhắc không gian. SAM-Med2D~\cite{2023-SAMMed2D-Cheng} là mô hình nền tảng phân đoạn ảnh y tế có khả năng tiếp nhận hộp giới hạn và được đánh giá ở hai chế độ: chưa tinh chỉnh và đã tinh chỉnh trên từng bộ dữ liệu. PGA-UNet là mô hình đề xuất, tích hợp bản đồ nhiệt Gaussian vào bộ mã hóa thông qua PSG và vào các kết nối tắt của nhánh giải mã thông qua CAD.
+PGA-UNet được so sánh với U-Net, Attention U-Net và SAM-Med2D. Trong đó, U-Net~\cite{ronneberger2015unet} và Attention U-Net~\cite{oktay2018attentionunet} đóng vai trò mô hình cơ sở tự động, không nhận câu nhắc không gian. SAM-Med2D~\cite{2023-SAMMed2D-Cheng} là mô hình nền tảng có thể nhận hộp giới hạn và được đánh giá ở hai chế độ là chưa tinh chỉnh và đã tinh chỉnh trên từng bộ dữ liệu. PGA-UNet là mô hình đề xuất của khóa luận, sử dụng bản đồ nhiệt Gaussian kết hợp với PSG và CAD.
 
 U-Net, Attention U-Net và PGA-UNet được huấn luyện từ đầu riêng biệt trên BTXRD và FracAtlas. SAM-Med2D ở chế độ chưa tinh chỉnh sử dụng trực tiếp trọng số tiền huấn luyện; ở chế độ đã tinh chỉnh, lớp thích ứng và bộ giải mã được cập nhật trên từng bộ dữ liệu. Kết quả so sánh với SAM-Med2D được trình bày tại Mục~\ref{subsec:sam_comparison}; ảnh hưởng của độ phân giải và sai lệch câu nhắc được phân tích tại Mục~\ref{subsec:resolution_prompt}.
 
@@ -97,7 +94,7 @@ Các mô hình sử dụng kích thước lô 4, bộ tối ưu AdamW, tốc đ�
 \subsection{Phương pháp đánh giá cấp độ ảnh}
 \label{subsec:image_level_eval}
 
-Một ảnh kiểm thử có thể chứa nhiều vùng tổn thương được chú thích bằng các đa giác riêng biệt.
+Một ảnh kiểm thử có thể chứa nhiều vùng tổn thương, và mỗi vùng được chú thích bằng một đa giác riêng.
 
 \begin{enumerate}
     \item \textbf{Hợp nhất nhãn gốc:} Với ảnh chứa $K\geq1$ vùng tổn thương, các mặt nạ nhị phân $\{G_1,G_2,\ldots,G_K\}$ được hợp nhất thành một mặt nạ duy nhất:
@@ -135,14 +132,14 @@ HD95 không xác định về mặt toán học khi $M_{\mathrm{GT}}$ hoặc $\h
 \label{sec:danh_gia_hieu_nang}
 % ============================================================
 
-Mục này đánh giá hiệu năng của PGA-UNet theo ba khía cạnh: khả năng cải thiện so với các mô hình phân đoạn tự động, khả năng cạnh tranh với mô hình nền tảng SAM-Med2D và ảnh hưởng của độ phân giải đầu vào. Bên cạnh độ chính xác phân đoạn, mục này đánh giá mức độ ổn định của PGA-UNet dưới các sai lệch câu nhắc mô phỏng và ảnh hưởng của độ phân giải đầu vào. Trừ khi được nêu khác đi, các kết quả trong mục này cần được hiểu trong bối cảnh phân đoạn có hướng dẫn bằng hộp giới hạn và không đồng nghĩa với một hệ thống tự động phát hiện--phân đoạn đầy đủ.
+Mục này đánh giá hiệu năng của PGA-UNet theo ba hướng chính: so với các mô hình phân đoạn tự động, so với mô hình nền tảng SAM-Med2D và theo ảnh hưởng của độ phân giải đầu vào. Ngoài độ chính xác phân đoạn, phần này cũng xem mức độ ổn định của mô hình khi câu nhắc bị sai lệch. Trừ khi có nói khác đi, các kết quả ở đây đều phải hiểu trong bối cảnh phân đoạn có hướng dẫn bằng hộp giới hạn, chứ không phải một hệ thống tự động phát hiện và phân đoạn đầy đủ.
 
 % ------------------------------------------------------------
 \subsection{So sánh với các mô hình cơ sở}
 \label{subsec:baseline_comparison}
 % ------------------------------------------------------------
 
-Thực nghiệm đầu tiên so sánh PGA-UNet với U-Net và Attention U-Net trên BTXRD và FracAtlas. U-Net và Attention U-Net hoạt động hoàn toàn tự động, trong khi PGA-UNet tiếp nhận hộp giới hạn Bao trọn làm câu nhắc.
+Thực nghiệm đầu tiên so sánh PGA-UNet với U-Net và Attention U-Net trên cả BTXRD và FracAtlas. Trong so sánh này, U-Net và Attention U-Net hoạt động hoàn toàn tự động, còn PGA-UNet nhận thêm câu nhắc là hộp giới hạn Bao trọn.
 
 Cả ba mô hình được huấn luyện từ đầu riêng biệt trên từng bộ dữ liệu với kích thước đầu vào khác nhau và được đánh giá ở cấp độ ảnh. So sánh này nhằm xác định lợi ích tổng thể của phương pháp phân đoạn có hướng dẫn bằng câu nhắc so với các mô hình cơ sở không sử dụng câu nhắc; đây không phải phép so sánh cùng điều kiện đầu vào, nên không được dùng để kết luận về tính mới của riêng kiến trúc PGA-UNet. Đóng góp cụ thể của PSG và CAD, tách biệt khỏi lợi ích của việc có câu nhắc, được kiểm chứng bằng các cấu hình đối sánh cùng nhận câu nhắc (U-Net+Concat, U-Net+PSG, U-Net+CAD) tại Mục~\ref{sec:ablation_study} và Phụ lục~\ref{AppendixA}.
 
@@ -198,9 +195,9 @@ Cả ba mô hình được huấn luyện từ đầu riêng biệt trên từng
     }
 \end{table}
 
-Trong thiết lập phân đoạn có hướng dẫn bằng hộp giới hạn được khảo sát, PGA-UNet đạt hiệu năng cao hơn các mô hình cơ sở trên cả hai bộ dữ liệu. So với U-Net, Dice tăng 0,3867 trên BTXRD và 0,4338 trên FracAtlas; HD95 giảm tương ứng từ 144,37 xuống 12,12 và từ 136,82 xuống 7,45 điểm ảnh. CBL đạt trên 0,95 ở cả hai bộ dữ liệu, cho thấy mô hình hoạt động tốt trong điều kiện đã có thông tin định vị sơ bộ từ câu nhắc.
+Trong thiết lập phân đoạn có hướng dẫn bằng hộp giới hạn, PGA-UNet cho kết quả cao hơn các mô hình cơ sở trên cả hai bộ dữ liệu. So với U-Net, Dice tăng 0,3867 trên BTXRD và 0,4338 trên FracAtlas; HD95 cũng giảm mạnh từ 144,37 xuống 12,12 và từ 136,82 xuống 7,45 điểm ảnh. CBL ở cả hai bộ dữ liệu đều lớn hơn 0,95. Tóm lại, khi đã có thông tin định vị sơ bộ thì mô hình chạy ổn hơn hẳn và không còn lệch nhiều như các mô hình tự động.
 
-Attention U-Net không cải thiện Dice so với U-Net, với kết quả giảm từ 0,4740 xuống 0,4122 trên BTXRD và từ 0,3831 xuống 0,2467 trên FracAtlas. Trong khi đó, PGA-UNet cải thiện đồng thời Dice, IoU, Recall, HD95 và CBL trong thiết lập so sánh giữa mô hình có câu nhắc và mô hình không sử dụng câu nhắc, cho thấy lợi ích tổng thể của phương pháp phân đoạn có hướng dẫn bằng hộp giới hạn trong bối cảnh này. Đóng góp riêng của từng thành phần kiến trúc được phân tích tại Mục~\ref{sec:ablation_study} và Phụ lục~\ref{AppendixA}. Hình~\ref{fig:vis_pga_sample} minh họa khả năng định vị tổn thương và tái tạo đường biên của PGA-UNet trong kịch bản Bao trọn.
+Attention U-Net trong thí nghiệm này không cải thiện được Dice so với U-Net. Còn PGA-UNet thì tăng cùng lúc nhiều chỉ số như Dice, IoU, Recall, HD95 và CBL trong so sánh giữa mô hình có câu nhắc và mô hình không dùng câu nhắc. Chỗ này chủ yếu cho thấy việc có thêm thông tin định vị từ hộp giới hạn là hữu ích với bài toán đang xét. Phần đóng góp riêng của từng thành phần kiến trúc sẽ được tách ra phân tích kỹ hơn ở Mục~\ref{sec:ablation_study} và Phụ lục~\ref{AppendixA}. Hình~\ref{fig:vis_pga_sample} minh họa một số kết quả phân đoạn của PGA-UNet trong kịch bản Bao trọn.
 
 \begin{figure}[htbp]
     \centering
@@ -296,9 +293,9 @@ SAM-Med2D được đánh giá ở hai chế độ: chưa tinh chỉnh, sử d�
     }
 \end{table}
 
-Ở cùng độ phân giải $256\times256$, PGA-UNet đạt kết quả cao hơn SAM-Med2D trong cả ba kịch bản trên hai bộ dữ liệu. Với câu nhắc Bao trọn, Dice của PGA-UNet cao hơn SAM-Med2D đã tinh chỉnh 0,0892 trên BTXRD và 0,0771 trên FracAtlas; so với chế độ chưa tinh chỉnh, mức chênh lệch tương ứng là 0,3015 và 0,2832. PGA-UNet cũng đạt HD95 thấp hơn và CBL trên 0,94, cho thấy khả năng xác định đường biên và duy trì tính liên tục của mặt nạ tốt hơn trong thiết lập thực nghiệm có câu nhắc được kiểm soát. Kết luận này áp dụng cho phép đối sánh của hai hệ thống hoàn chỉnh trong cùng điều kiện đầu vào, không tách riêng đóng góp của từng thành phần kiến trúc.
+Ở cùng độ phân giải $256\times256$, PGA-UNet cho kết quả cao hơn SAM-Med2D ở cả ba kịch bản trên cả hai bộ dữ liệu. Với câu nhắc Bao trọn, Dice của PGA-UNet cao hơn SAM-Med2D đã tinh chỉnh 0,0892 trên BTXRD và 0,0771 trên FracAtlas. So với SAM-Med2D chưa tinh chỉnh thì khoảng cách còn lớn hơn nữa, lên tới 0,3015 trên BTXRD và 0,2832 trên FracAtlas. Ngoài ra, PGA-UNet cũng có HD95 thấp hơn và CBL lớn hơn 0,94, nghĩa là mặt nạ dự đoán có xu hướng bám vị trí tổn thương tốt hơn trong thiết lập có câu nhắc được kiểm soát. Dù vậy, đây vẫn là kết quả so sánh của hai hệ thống hoàn chỉnh, chưa tách riêng đóng góp của từng thành phần kiến trúc.
 
-Khi chuyển từ câu nhắc Bao trọn sang Lệch tâm, Dice của PGA-UNet giảm 0,0283 trên BTXRD và 0,0268 trên FracAtlas, thấp hơn mức giảm 0,0629 và 0,0596 của SAM-Med2D đã tinh chỉnh. Kết quả cho thấy PGA-UNet duy trì hiệu năng ổn định hơn dưới dạng sai lệch câu nhắc mô phỏng đã khảo sát.
+Khi chuyển từ câu nhắc Bao trọn sang Lệch tâm, Dice của PGA-UNet giảm 0,0283 trên BTXRD và 0,0268 trên FracAtlas. Mức giảm này nhỏ hơn mức giảm tương ứng của SAM-Med2D đã tinh chỉnh (0,0629 trên BTXRD và 0,0596 trên FracAtlas). Có thể hiểu là trong các kịch bản mô phỏng của khóa luận, PGA-UNet giữ độ ổn định tốt hơn khi câu nhắc không còn lý tưởng nữa.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{images/chart_sam_comparison_256.png}
@@ -313,7 +310,7 @@ PGA-UNet được huấn luyện từ đầu trên từng bộ dữ liệu, tron
 \label{subsec:efficiency_measurement}
 % ------------------------------------------------------------
 
-Để bổ sung cho so sánh độ chính xác, khóa luận đo hiệu quả tính toán của PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm. Các chỉ số được ghi nhận gồm số tham số, FLOPs, dung lượng điểm lưu trọng số trên đĩa, bộ nhớ GPU đỉnh và độ trễ suy luận trung bình. PGA-UNet được đo ở hai cấu hình $256\times256$ và $512\times512$; SAM-Med2D được đo ở cấu hình $256\times256$, là độ phân giải đối sánh trực tiếp trong Mục~\ref{subsec:sam_comparison}. Phép đo được thực hiện trên cùng thiết bị với một lượt suy luận cho mỗi ảnh và được báo cáo như so sánh tương đối trong cùng môi trường, không nhằm khẳng định tốc độ tuyệt đối trên mọi phần cứng khác.
+Để phần so sánh không chỉ dừng ở độ chính xác, khóa luận còn đo thêm hiệu quả tính toán của PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm. Các chỉ số được ghi nhận gồm số tham số, FLOPs, dung lượng checkpoint, bộ nhớ GPU đỉnh và độ trễ suy luận trung bình. PGA-UNet được đo ở cả $256\times256$ và $512\times512$, còn SAM-Med2D được đo ở $256\times256$, là độ phân giải dùng để đối sánh trực tiếp ở Mục~\ref{subsec:sam_comparison}. Các con số này chỉ mang ý nghĩa so sánh tương đối trong cùng môi trường đo.
 
 Ở cùng độ phân giải $256\times256$, PGA-UNet nhỏ hơn SAM-Med2D khoảng 92 lần về số tham số (2,95M so với 271,24M), khoảng 11,9 lần về FLOPs và nhanh hơn khoảng 7,2 lần trên GPU trong cùng môi trường thực nghiệm. Dung lượng điểm lưu trọng số cũng chênh lệch rất lớn, khoảng 215 lần (11,3 MB so với 2443,2 MB), cho thấy PGA-UNet có chi phí tính toán thấp hơn trong điều kiện đo của khóa luận.
 
@@ -394,7 +391,7 @@ Như đã lưu ý tại Mục~\ref{subsec:models_compared}, kích thước cửa
     \label{fig:chart_resolution_combined}
 \end{figure}
 
-Khi tăng độ phân giải từ $256\times256$ lên $512\times512$, Dice tăng trong cả ba kịch bản trên hai bộ dữ liệu. Trên BTXRD, mức tăng đạt 0,0174 ở kịch bản Bao trọn, 0,0273 ở kịch bản Lệch tâm và 0,0216 ở kịch bản Hỗn hợp. Trên FracAtlas, mức tăng nhỏ hơn, lần lượt là 0,0059, 0,0008 và 0,0041. Precision trên FracAtlas giảm nhẹ ở độ phân giải cao hơn, cho thấy việc thay đổi độ phân giải trong cấu hình hiện tại không cải thiện đồng đều tất cả chỉ số. Do bản đồ câu nhắc mềm cũng thay đổi theo tỷ lệ tương đối giữa hai độ phân giải, các chênh lệch này nên được hiểu là ảnh hưởng tổng hợp của độ phân giải ảnh và cách chuẩn hóa câu nhắc hiện hành.
+Khi tăng độ phân giải từ $256\times256$ lên $512\times512$, Dice đều tăng ở cả ba kịch bản trên hai bộ dữ liệu, nhưng mức tăng không giống nhau. Trên BTXRD, chênh lệch tăng rõ hơn; còn trên FracAtlas, mức tăng nhỏ hơn nhiều. Một số chỉ số như Precision trên FracAtlas còn giảm nhẹ ở độ phân giải cao hơn. Vì bản đồ câu nhắc cũng thay đổi theo tỉ lệ tương đối giữa hai độ phân giải, nên kết quả này không nên hiểu đơn giản là chỉ do ảnh lớn hơn, mà là tác động tổng hợp của cả độ phân giải ảnh và cách chuẩn hóa câu nhắc.
 
 \vspace{0.5cm}
 
@@ -414,7 +411,7 @@ Hình~\ref{fig:qual_shift} minh họa phản ứng của PGA-UNet trước câu 
 \label{sec:ablation_study}
 % ============================================================
 
-Bên cạnh so sánh với các mô hình khác, khóa luận thực hiện ba nhóm thực nghiệm bổ sung để kiểm chứng đóng góp riêng của từng thành phần kiến trúc: nghiên cứu loại bỏ thành phần (tám cấu hình PSG/CAD), đánh giá chéo 4-fold và phân tích theo đặc tính tổn thương, lặp lại độc lập trên cả BTXRD và FracAtlas. Mục này chỉ tóm tắt các kết luận có ý nghĩa trực tiếp đối với đóng góp chính của khóa luận; toàn bộ bảng số liệu chi tiết theo từng cấu hình, từng phân vùng dữ liệu và từng nhóm đặc tính tổn thương, cùng các hình ảnh minh chứng bổ sung, được trình bày tại Phụ lục~\ref{AppendixA}.
+Bên cạnh các phép so sánh chính, khóa luận còn làm thêm ba nhóm thực nghiệm bổ sung để xem đóng góp của từng thành phần kiến trúc rõ đến đâu. Ba nhóm đó gồm nghiên cứu loại bỏ thành phần, đánh giá chéo 4-fold và phân tích theo đặc tính tổn thương. Các thí nghiệm này được thực hiện độc lập trên cả BTXRD và FracAtlas. Trong mục này chỉ tóm tắt các kết luận quan trọng nhất; số liệu đầy đủ và hình minh họa bổ sung được để ở Phụ lục~\ref{AppendixA}.
 
 % ------------------------------------------------------------
 \subsection{Đóng góp của PSG, CAD và bản đồ nhiệt Gaussian}
@@ -447,7 +444,7 @@ Tám cấu hình, tổ hợp giữa có/không PSG, ba lựa chọn cho cơ ch�
         & \textbf{0.8861} & 0.7406 & 0.8292
         & \textbf{0.8351} & 0.6927 & 0.7838 \\
         \hline
-        \textbf{PGA-UNet (đề xuất)}
+        \textbf{PGA-UNet}
         & 0.8607 & \textbf{0.8423} & \textbf{0.8560}
         & 0.8169 & \textbf{0.7850} & \textbf{0.8129} \\
         \hline
@@ -458,7 +455,7 @@ Tám cấu hình, tổ hợp giữa có/không PSG, ba lựa chọn cho cơ ch�
     \footnotesize $^{*}$Cấu hình đạt Dice cao nhất ở kịch bản Bao trọn trong tám cấu hình khảo sát: U-Net+CAD trên BTXRD, U-Net+PSG+Cổng chú ý nguyên bản trên FracAtlas. Toàn bộ tám cấu hình được trình bày tại Bảng~\ref{tab:ablation_arch} và~\ref{tab:fracatlas_ablation_arch}, Phụ lục~\ref{AppendixA}.
 \end{table}
 
-Bảng~\ref{tab:ablation_summary} cho thấy một xu hướng nhất quán trên cả hai bộ dữ liệu: PGA-UNet không đạt Dice cao nhất trong kịch bản Bao trọn (thấp hơn cấu hình tốt nhất 0,0254 trên BTXRD và 0,0182 trên FracAtlas), nhưng đạt kết quả cao nhất trong cả hai kịch bản Lệch tâm và Hỗn hợp trên cả hai bộ dữ liệu. Nói cách khác, đóng góp của PGA-UNet không nằm ở việc tối đa hóa hiệu năng khi câu nhắc hoàn toàn lý tưởng, mà ở khả năng duy trì hiệu năng dưới các sai lệch câu nhắc mô phỏng đã khảo sát.
+Bảng~\ref{tab:ablation_summary} cho thấy một xu hướng rõ ràng trên cả hai bộ dữ liệu. PGA-UNet không phải cấu hình có Dice cao nhất trong kịch bản Bao trọn (thấp hơn cấu hình tốt nhất 0,0254 trên BTXRD và 0,0182 trên FracAtlas), nhưng lại là cấu hình tốt nhất ở hai kịch bản Lệch tâm và Hỗn hợp. Nói ngắn hơn, điểm mạnh chính của mô hình không nằm ở trường hợp câu nhắc quá đẹp, mà nằm ở khả năng giữ kết quả ổn hơn khi câu nhắc có sai lệch như trong các tình huống mô phỏng của khóa luận.
 
 Để kiểm tra độ tin cậy của xu hướng trên ở cấp độ ảnh, sáu cặp cấu hình được kiểm định bằng Wilcoxon signed-rank trên Dice bắt cặp theo từng ảnh, thực hiện riêng trên hai bộ dữ liệu và ba kịch bản (36 kết quả, giá trị $p$ thô, chưa hiệu chỉnh cho so sánh nhiều lần). Hai phát hiện có bằng chứng mạnh và nhất quán nhất trên cả hai bộ dữ liệu đều thuộc kịch bản Lệch tâm:
 \begin{itemize}
@@ -473,9 +470,9 @@ Bảng~\ref{tab:ablation_summary} cho thấy một xu hướng nhất quán trê
 \label{subsec:summary_cv}
 % ------------------------------------------------------------
 
-PGA-UNet được đánh giá bằng đánh giá chéo 4-fold trên cả BTXRD và FracAtlas, với các đa giác thuộc cùng một ảnh luôn được giữ trong cùng một phân vùng. Trên BTXRD, độ lệch chuẩn Dice qua bốn phân vùng dao động từ 0,0087 đến 0,0119; trên FracAtlas, từ 0,0064 đến 0,0084. Giá trị Dice trung bình qua các phân vùng đều gần với kết quả trên tập kiểm thử giữ lại độc lập (chênh lệch không quá 0,006 ở cả hai bộ dữ liệu).
+PGA-UNet cũng được đánh giá bằng 4-fold cross-validation trên cả BTXRD và FracAtlas, trong đó các đa giác thuộc cùng một ảnh luôn được giữ trong cùng một phân vùng. Trên BTXRD, độ lệch chuẩn của Dice qua bốn phân vùng nằm trong khoảng 0,0087 đến 0,0119; còn trên FracAtlas là 0,0064 đến 0,0084. Giá trị Dice trung bình giữa các phân vùng cũng sát với kết quả trên tập kiểm thử độc lập.
 
-Độ lệch chuẩn thấp và nhất quán giữa hai bộ dữ liệu cho thấy PGA-UNet tương đối ổn định trước các cách phân chia dữ liệu đã khảo sát. Kết quả này không thay thế cho đánh giá qua nhiều lần khởi tạo ngẫu nhiên với các hạt giống khác nhau, một hướng đánh giá bổ sung được nêu tại Mục~\ref{sec:han_che}, Chương~\ref{Chapter5}. Bảng chi tiết theo từng phân vùng và đầy đủ sáu chỉ số được trình bày tại Mục~\ref{subsec:cross_validation} và~\ref{subsec:cross_validation_fa}, Phụ lục~\ref{AppendixA}.
+Độ lệch chuẩn tương đối thấp trên cả hai bộ dữ liệu cho thấy PGA-UNet tương đối ổn định trước các cách chia dữ liệu đã khảo sát. Dù vậy, kết quả này chưa thay cho việc đánh giá qua nhiều lần khởi tạo ngẫu nhiên khác nhau. Các bảng chi tiết hơn được để ở Phụ lục~\ref{AppendixA}.
 
 % ------------------------------------------------------------
 \subsection{Hiệu năng theo đặc tính tổn thương}
@@ -512,7 +509,7 @@ Các thành phần riêng lẻ (PSG hoặc CAD khi đứng một mình) có biê
 \label{sec:product_overview}
 % ------------------------------------------------------------
 
-Để minh họa khả năng tích hợp PGA-UNet vào một quy trình xử lý ảnh X-quang hỗn hợp (gồm cả ảnh bình thường và ảnh bệnh lý), khóa luận thực hiện một thử nghiệm mở rộng: đặt mô-đun sàng lọc Gatekeeper (EfficientNet-B3~\cite{tan2019efficientnet}) trước PGA-UNet để phân loại ảnh thành bình thường hoặc nghi ngờ có bất thường trước khi chuyển sang bước xác nhận và phân đoạn. Thực nghiệm này không đánh giá một sản phẩm lâm sàng hoàn chỉnh, mà chỉ minh họa ảnh hưởng của lỗi sàng lọc lên mô-đun phân đoạn khi hai thành phần được ghép nối theo chuỗi. Gatekeeper chỉ là thành phần hỗ trợ triển khai, không thuộc đóng góp kiến trúc chính của khóa luận; toàn bộ số liệu chi tiết của thực nghiệm này được trình bày tại Phụ lục~\ref{AppendixB}.
+Để minh họa cách PGA-UNet có thể được dùng trong một quy trình lớn hơn, khóa luận thực hiện một thử nghiệm mở rộng bằng cách đặt Gatekeeper (EfficientNet-B3~\cite{tan2019efficientnet}) trước PGA-UNet. Vai trò của Gatekeeper là phân loại ảnh thành bình thường hoặc nghi ngờ có bất thường trước khi đi tiếp sang bước phân đoạn. Thực nghiệm này không nhằm giới thiệu một hệ thống lâm sàng hoàn chỉnh, mà chỉ muốn cho thấy lỗi sàng lọc ở bước đầu có thể ảnh hưởng thế nào đến mô-đun phân đoạn ở bước sau. Toàn bộ số liệu chi tiết được để ở Phụ lục~\ref{AppendixB}.
 
 Trên BTXRD, Gatekeeper đạt AUC-ROC 0,9421, Sensitivity 89,30\% và Specificity 86,17\%. Khi kết quả Gatekeeper được sử dụng trực tiếp không qua hiệu chỉnh của người dùng, 20/187 ảnh bệnh lý bị loại nhầm; Dice toàn luồng có phạt lỗi định tuyến giảm từ 0,8626 (trên ảnh được định tuyến đúng) xuống 0,6763. Trên FracAtlas, do dữ liệu mất cân bằng hơn (72/409 ảnh bệnh lý), Gatekeeper chỉ đạt Sensitivity 70,83\% dù Specificity vẫn cao (91,99\%); Dice toàn luồng giảm còn 0,4230, thấp hơn nhiều so với Dice 0,8169 của PGA-UNet khi được đánh giá độc lập trên toàn bộ tập kiểm thử bệnh lý.
 
@@ -522,10 +519,10 @@ Kết quả trên cả hai bộ dữ liệu cho thấy sai số tại bước s�
 \label{sec:summary_ch4}
 % ------------------------------------------------------------
 
-Chương này đã đánh giá PGA-UNet trên BTXRD và FracAtlas thông qua so sánh với các mô hình cơ sở, so sánh với SAM-Med2D, khảo sát ảnh hưởng của độ phân giải và tổng hợp kết luận từ nghiên cứu loại bỏ thành phần, đánh giá chéo và phân tích theo đặc tính tổn thương. Trong phạm vi thiết lập phân đoạn có hướng dẫn bằng hộp giới hạn được khảo sát, kết quả cho thấy PGA-UNet đạt kết quả cao hơn các mô hình cơ sở không sử dụng câu nhắc và cao hơn SAM-Med2D trong phép đối sánh cùng điều kiện ở độ phân giải $256\times256$, đồng thời duy trì mức ổn định tốt hơn dưới các sai lệch câu nhắc mô phỏng.
+Chương này đã trình bày toàn bộ phần thực nghiệm của PGA-UNet trên BTXRD và FracAtlas, gồm so sánh với các mô hình cơ sở, so sánh với SAM-Med2D, khảo sát ảnh hưởng của độ phân giải và tổng hợp kết quả từ nghiên cứu loại bỏ thành phần, đánh giá chéo và phân tích theo đặc tính tổn thương. Trong phạm vi phân đoạn có hướng dẫn bằng hộp giới hạn, PGA-UNet cho kết quả tốt hơn các mô hình cơ sở không dùng câu nhắc và cũng cao hơn SAM-Med2D trong phép so sánh cùng điều kiện ở độ phân giải $256\times256$. Mô hình cũng giữ được độ ổn định tốt hơn dưới các sai lệch câu nhắc đã mô phỏng.
 
-Nghiên cứu loại bỏ thành phần xác nhận hiệu quả của mô hình đến từ sự phối hợp giữa PSG, CAD và bản đồ nhiệt Gaussian, trong đó CAD và bản đồ nhiệt Gaussian có vai trò nhất quán nhất đối với khả năng duy trì hiệu năng dưới câu nhắc lệch tâm ($p<0{,}001$ trên cả hai bộ dữ liệu). Các kết quả được tái lập khi mô hình được huấn luyện lại trên FracAtlas, cho thấy thiết kế PGA-UNet hoạt động nhất quán trên hai bộ dữ liệu được khảo sát. Toàn bộ bảng số liệu chi tiết hỗ trợ các kết luận này được trình bày tại Phụ lục~\ref{AppendixA}.
+Kết quả nghiên cứu loại bỏ thành phần cho thấy hiệu quả của mô hình đến từ sự phối hợp giữa PSG, CAD và bản đồ nhiệt Gaussian, trong đó CAD và bản đồ nhiệt Gaussian là hai phần nổi bật hơn ở khả năng chịu lệch câu nhắc. Khi huấn luyện lại trên FracAtlas, xu hướng kết quả chính vẫn được giữ, nghĩa là thiết kế của PGA-UNet giữ được sự nhất quán nhất định trên hai bộ dữ liệu khảo sát. Các bảng số liệu chi tiết hơn được trình bày ở Phụ lục~\ref{AppendixA}.
 
-Thực nghiệm mở rộng với Gatekeeper cho thấy bước sàng lọc có thể hỗ trợ tích hợp PGA-UNet vào quy trình xử lý ảnh hỗn hợp, nhưng lỗi phân loại làm giảm hiệu năng toàn luồng. Vì vậy, Gatekeeper chỉ nên đóng vai trò hỗ trợ, trong khi quyết định chuyển bước và cung cấp câu nhắc vẫn cần sự xác nhận của người dùng chuyên môn.
+Thử nghiệm mở rộng với Gatekeeper cho thấy bước sàng lọc có thể hữu ích nếu muốn đặt PGA-UNet trong một luồng xử lý ảnh hỗn hợp. Tuy nhiên, sai số ở bước này cũng có thể kéo hiệu năng toàn luồng giảm đáng kể. Vì vậy, Gatekeeper chỉ nên được dùng như công cụ hỗ trợ, còn việc chuyển bước và cung cấp câu nhắc vẫn cần người dùng xác nhận.
 
-Nhìn chung, kết quả thực nghiệm xác nhận đóng góp chính của khóa luận nằm ở kiến trúc PGA-UNet và cơ chế khai thác câu nhắc thông qua PSG, CAD và bản đồ nhiệt Gaussian. Những hạn chế và hướng phát triển tiếp theo được trình bày tại Chương~\ref{Chapter5}.
+Nhìn chung, phần thực nghiệm làm rõ thêm rằng đóng góp chính của khóa luận nằm ở kiến trúc PGA-UNet và cách khai thác câu nhắc thông qua PSG, CAD và bản đồ nhiệt Gaussian. Những hạn chế còn lại và hướng phát triển tiếp theo được trình bày ở Chương~\ref{Chapter5}.

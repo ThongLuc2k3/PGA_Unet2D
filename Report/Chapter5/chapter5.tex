@@ -9,26 +9,26 @@
 \label{sec:ket_luan}
 % ------------------------------------------------------------
 
-Khóa luận đã nghiên cứu và xây dựng PGA-UNet, một kiến trúc phân đoạn tương tác ảnh X-quang xương dựa trên câu nhắc hộp giới hạn. Mô hình hướng đến việc hỗ trợ người dùng khoanh vùng tổn thương, giảm sự phụ thuộc vào khả năng định vị hoàn toàn tự động và phù hợp với điều kiện tài nguyên tính toán hạn chế.
+Khóa luận này xây dựng PGA-UNet, là một mô hình phân đoạn tương tác cho ảnh X-quang xương có dùng hộp giới hạn làm câu nhắc. Ý của khóa luận là không để mô hình tự làm hết bước tìm tổn thương, mà để người dùng khoanh sơ bộ vùng nghi ngờ trước, sau đó mô hình mới làm tiếp phần phân đoạn chi tiết hơn. Với bài toán ảnh X-quang xương, cách làm như vậy được xem là hợp lý hơn, vì tổn thương thường khó thấy rõ và cũng dễ bị nhiễu bởi các cấu trúc xung quanh.
 
-Đóng góp kỹ thuật chính của khóa luận là cơ chế tích hợp câu nhắc vào bộ mã hóa và vào các kết nối tắt của nhánh giải mã trong U-Net. PSG sử dụng thông tin không gian từ câu nhắc để điều biến đặc trưng tại bộ mã hóa, trong khi CAD điều kiện hóa chú ý trên các kết nối tắt để hỗ trợ quá trình tái tạo mặt nạ. Hộp giới hạn được biểu diễn bằng bản đồ nhiệt Gaussian nhằm cung cấp tín hiệu không gian liên tục và giảm sự phụ thuộc cứng vào đường biên của hộp.
+Về mặt kỹ thuật, phần chính của khóa luận nằm ở cách đưa câu nhắc vào sâu trong mạng. PSG được dùng ở bộ mã hóa để điều biến đặc trưng theo vùng mà người dùng đang quan tâm. CAD thì được dùng ở nhánh giải mã để tiếp tục tận dụng thông tin câu nhắc trong lúc khôi phục mặt nạ. Ngoài ra, hộp giới hạn cũng không được dùng trực tiếp dưới dạng tọa độ rời rạc, mà được đổi thành bản đồ nhiệt Gaussian dạng cao nguyên để tín hiệu không gian liên tục và mềm hơn.
 
-Kết quả cho thấy PGA-UNet đạt hiệu năng phân đoạn cao hơn U-Net và Attention U-Net trong thiết lập so sánh giữa mô hình có câu nhắc và mô hình không sử dụng câu nhắc, đồng thời đạt kết quả cao hơn SAM-Med2D trong phép đối sánh cùng điều kiện ở độ phân giải $256\times256$. Mô hình cũng duy trì kết quả ổn định hơn dưới các sai lệch câu nhắc mô phỏng đã khảo sát. Các phân tích theo nhóm tổn thương cho thấy xu hướng cải thiện ở một số nhóm ảnh được khảo sát, nhưng mức độ kết luận không đồng đều giữa các nhóm. Nghiên cứu loại bỏ thành phần cho thấy hiệu quả của mô hình đến từ sự phối hợp giữa PSG, CAD và bản đồ nhiệt Gaussian, trong đó CAD có vai trò nổi bật đối với khả năng duy trì hiệu năng khi câu nhắc bị lệch tâm.
+Trong thực nghiệm, PGA-UNet cho kết quả cao hơn U-Net và Attention U-Net trong thiết lập so sánh giữa mô hình có câu nhắc và mô hình không có câu nhắc. Khi so sánh cùng điều kiện đầu vào với SAM-Med2D ở độ phân giải $256\times256$, PGA-UNet cũng tốt hơn trên cả hai bộ dữ liệu được khảo sát. Mô hình này cũng giữ được độ ổn định tốt hơn trong các kịch bản câu nhắc bị lệch tâm mà khóa luận đã mô phỏng. Phần nghiên cứu loại bỏ thành phần cho thấy hiệu quả của mô hình không đến từ một thành phần riêng lẻ, mà chủ yếu đến từ việc PSG, CAD và bản đồ nhiệt Gaussian đi cùng nhau.
 
-Các kết quả được tái lập khi mô hình được huấn luyện lại độc lập trên FracAtlas, một bộ dữ liệu có quy mô và hình thái tổn thương khác với BTXRD. Điều này cho thấy thiết kế PGA-UNet có tính nhất quán trên hai bộ dữ liệu được khảo sát, nhưng chưa tương đương với tổng quát hóa liên miền theo nghĩa huấn luyện trên một bộ dữ liệu và suy luận trực tiếp trên bộ dữ liệu chưa từng quan sát.
+Khi mô hình được huấn luyện lại độc lập trên FracAtlas, xu hướng kết quả chính vẫn được giữ. Nói vậy không có nghĩa là mô hình đã tổng quát hóa rộng. Ít nhất, kết quả này cho thấy thiết kế của PGA-UNet không chỉ phù hợp với một bộ dữ liệu duy nhất. Dù vậy, chỗ này vẫn chưa thể xem là bằng chứng cho khả năng tổng quát hóa liên miền theo nghĩa chặt, vì mô hình vẫn được huấn luyện riêng trên từng bộ dữ liệu trước khi đánh giá.
 
-Bên cạnh mô-đun phân đoạn, khóa luận thực hiện một thử nghiệm mở rộng với Gatekeeper sử dụng EfficientNet-B3 nhằm minh họa khả năng tích hợp PGA-UNet vào quy trình xử lý ảnh hỗn hợp. Kết quả cho thấy sai số tại bước sàng lọc có thể làm giảm đáng kể hiệu năng toàn luồng. Vì vậy, Gatekeeper chỉ phù hợp với vai trò hỗ trợ ưu tiên ca nghi ngờ; quyết định chuyển bước và cung cấp câu nhắc vẫn cần sự xác nhận của người dùng chuyên môn.
+Khóa luận cũng làm thêm một thử nghiệm mở rộng với Gatekeeper dùng EfficientNet-B3 để xem PGA-UNet có thể đặt trong một luồng xử lý gồm cả ảnh bình thường và ảnh bệnh lý như thế nào. Chỗ này cho thấy nếu bước sàng lọc bỏ sót ảnh bệnh lý thì hiệu năng toàn luồng giảm mạnh. Vì thế, Gatekeeper chỉ nên đóng vai trò hỗ trợ sàng lọc hoặc ưu tiên ảnh nghi ngờ. Quyết định cuối cùng thì vẫn cần người dùng chuyên môn xác nhận.
 
-Khóa luận cũng bổ sung phép đo hiệu quả tính toán trong cùng môi trường thực nghiệm. Ở độ phân giải $256\times256$, PGA-UNet nhỏ hơn SAM-Med2D khoảng 92 lần về số tham số, 11,9 lần về FLOPs và có độ trễ suy luận thấp hơn trên cả GPU lẫn CPU. Kết quả này cho thấy PGA-UNet có lợi thế về chi phí tính toán trong thiết lập đã khảo sát.
+Về hiệu quả tính toán, PGA-UNet cũng có lợi thế rõ rệt trong môi trường thực nghiệm của khóa luận. Ở độ phân giải $256\times256$, mô hình nhỏ hơn SAM-Med2D khoảng 92 lần về số tham số, 11,9 lần về FLOPs và có độ trễ suy luận thấp hơn trên cả GPU lẫn CPU. Nói ngắn gọn thì PGA-UNet hợp hơn với hướng làm gọn nhẹ và phản hồi nhanh.
 
-Nhìn chung, đóng góp chính của khóa luận nằm ở kiến trúc PGA-UNet hạng nhẹ, gồm khoảng 3 triệu tham số, và phương pháp khai thác câu nhắc trực quan thông qua PSG, CAD và bản đồ nhiệt Gaussian. Mặc dù đạt kết quả tích cực trên hai bộ dữ liệu công khai, mô hình vẫn thuộc phạm vi nghiên cứu thử nghiệm trong điều kiện câu nhắc được kiểm soát và chưa đủ cơ sở để triển khai trong môi trường lâm sàng.
+Phần quan trọng nhất trong khóa luận này vẫn là mô hình PGA-UNet và cách khai thác câu nhắc trực quan thông qua PSG, CAD cùng bản đồ nhiệt Gaussian. Dù kết quả thực nghiệm nhìn chung là tốt, mô hình hiện vẫn mới dừng ở mức nghiên cứu trong điều kiện câu nhắc được kiểm soát. Vì vậy, nói đến chuyện triển khai trong môi trường lâm sàng thực tế thì còn sớm.
 
 % ------------------------------------------------------------
 \section{Hạn chế của nghiên cứu}
 \label{sec:han_che}
 % ------------------------------------------------------------
 
-Nghiên cứu vẫn còn một số hạn chế cần được xem xét khi diễn giải kết quả:
+Bên cạnh các kết quả đạt được, nghiên cứu này vẫn còn một số hạn chế. Nếu không nói rõ các điểm này thì phần kết luận rất dễ bị hiểu quá lên:
 
 \begin{itemize}
     \item \textbf{Câu nhắc được mô phỏng từ nhãn gốc, kể cả khi ảnh có nhiều vùng tổn thương:}
@@ -60,7 +60,7 @@ Nghiên cứu vẫn còn một số hạn chế cần được xem xét khi di�
 \label{sec:tuong_lai}
 % ------------------------------------------------------------
 
-Từ các hạn chế trên, nghiên cứu có thể được tiếp tục theo các hướng sau:
+Từ các hạn chế trên, khóa luận có thể đi tiếp theo một số hướng sau:
 
 \begin{itemize}
     \item \textbf{Đánh giá với câu nhắc do người dùng cung cấp:}
@@ -79,4 +79,4 @@ Từ các hạn chế trên, nghiên cứu có thể được tiếp tục theo 
     Khảo sát cơ chế dung hợp đặc trưng hình ảnh với các thông tin như tuổi, giới tính, vị trí đau hoặc tiền sử bệnh. Thông tin bổ sung có thể hỗ trợ phân biệt các trường hợp khó, nhưng cần được đánh giá trên dữ liệu lâm sàng được thu thập và ẩn danh đúng quy trình.
 \end{itemize}
 
-Tóm lại, hướng phát triển ưu tiên là kiểm định PGA-UNet với câu nhắc thực tế và dữ liệu ngoài. Các hướng về độ phân giải cao, học từ nhãn thưa, thông tin lâm sàng và Gatekeeper là những bước mở rộng tiếp theo nhằm nâng cao khả năng ứng dụng của mô hình trong quy trình hỗ trợ phân đoạn ảnh X-quang xương.
+Việc cần làm trước vẫn là kiểm tra PGA-UNet với câu nhắc do người dùng thật cung cấp và trên dữ liệu ngoài môi trường công khai. Làm xong bước đó rồi mới nên tính tiếp đến các hướng như xử lý ảnh độ phân giải cao, học từ nhãn thưa, kết hợp thêm thông tin lâm sàng hoặc cải tiến Gatekeeper để hệ thống có khả năng dùng thực tế tốt hơn.

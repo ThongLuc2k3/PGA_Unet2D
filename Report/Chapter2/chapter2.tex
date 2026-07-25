@@ -4,7 +4,7 @@
 \chapter{CÁC CÔNG TRÌNH LIÊN QUAN VÀ CƠ SỞ LÝ THUYẾT}
 \label{Chapter2}
 
-Chương này gồm hai nội dung chính. Phần đầu khảo sát các phương pháp phân đoạn ảnh y khoa tự động, phân đoạn tương tác dựa trên CNN và mô hình nền tảng dựa trên câu nhắc, qua đó xác định khoảng trống nghiên cứu của khóa luận. Phần sau trình bày cơ sở lý thuyết về U-Net, cơ chế chú ý, biểu diễn và tích hợp câu nhắc trực quan, cùng các độ đo được sử dụng để đánh giá mô hình.
+Chương này gồm hai phần chính. Phần đầu điểm lại các hướng nghiên cứu có liên quan đến phân đoạn ảnh y khoa, nhất là các mô hình tự động, các phương pháp phân đoạn tương tác dựa trên CNN và các mô hình nền tảng có dùng câu nhắc. Từ phần này, khóa luận rút ra khoảng trống mà khóa luận muốn đi vào. Phần sau trình bày các cơ sở lý thuyết cần dùng như U-Net, cơ chế chú ý, cách biểu diễn câu nhắc trực quan và các chỉ số đánh giá mô hình.
 
 % ------------------------------------------------------------
 \section{Các công trình liên quan}
@@ -13,31 +13,31 @@ Chương này gồm hai nội dung chính. Phần đầu khảo sát các phươ
 
 \subsection{Phân đoạn ảnh y khoa tự động}
 
-Trước khi U-Net trở thành cấu trúc chuẩn trong ảnh y khoa, phân đoạn ngữ nghĩa bằng học sâu đã phát triển từ các mạng tích chập thuần túy như FCN~\cite{long2015fcn} sang các mô hình mã hóa--giải mã như SegNet~\cite{badrinarayanan2017segnet} và các kiến trúc khai thác ngữ cảnh đa tỉ lệ như DeepLabv3+~\cite{chen2018deeplabv3plus}. Các khảo sát gần đây thường xem đây là ba nhánh phát triển quan trọng của phân đoạn hiện đại: dự đoán dày đặc toàn ảnh, khôi phục chi tiết không gian qua bộ giải mã, và mở rộng trường tiếp nhận bằng ngữ cảnh đa tỉ lệ~\cite{minaee2021survey}.
+Trước khi U-Net trở thành một kiến trúc gần như quen mặt trong phân đoạn ảnh y khoa, các phương pháp phân đoạn ngữ nghĩa bằng học sâu đã đi theo nhiều hướng khác nhau. Có thể kể đến các mạng tích chập thuần như FCN~\cite{long2015fcn}, các mô hình mã hóa--giải mã như SegNet~\cite{badrinarayanan2017segnet}, hoặc các kiến trúc khai thác ngữ cảnh đa tỉ lệ như DeepLabv3+~\cite{chen2018deeplabv3plus}. Có thể xem đây là những bước nền để các mô hình phân đoạn về sau phát triển mạnh hơn~\cite{minaee2021survey}.
 
-U-Net~\cite{ronneberger2015unet} là một trong những kiến trúc nền tảng của phân đoạn ảnh y khoa. Mô hình sử dụng cấu trúc mã hóa--giải mã đối xứng kết hợp các kết nối tắt, cho phép khai thác đặc trưng ngữ nghĩa ở tầng sâu đồng thời duy trì thông tin không gian từ các tầng nông. Thiết kế này đặc biệt phù hợp với dữ liệu y khoa, nơi số lượng ảnh và mặt nạ phân đoạn thường hạn chế.
+U-Net~\cite{ronneberger2015unet} là một trong những kiến trúc quan trọng nhất của phân đoạn ảnh y khoa. Mô hình có dạng mã hóa--giải mã đối xứng và dùng các kết nối tắt để giữ lại thông tin vị trí từ các tầng nông trong lúc vẫn học được đặc trưng ngữ nghĩa ở các tầng sâu. Thiết kế này hợp với dữ liệu y khoa, vốn thường không có quá nhiều ảnh được gán nhãn phân đoạn.
 
-Attention U-Net~\cite{oktay2018attentionunet} mở rộng U-Net bằng cách bổ sung Cổng chú ý tại các kết nối tắt. Các cổng này học cách tăng trọng số của đặc trưng liên quan đến vùng mục tiêu và giảm ảnh hưởng của vùng ít liên quan trước khi chuyển đặc trưng sang bộ giải mã. Nhờ đó, mô hình có thể tập trung tốt hơn vào cấu trúc cần phân đoạn mà không sử dụng thêm một mạng định vị độc lập.
+Attention U-Net~\cite{oktay2018attentionunet} phát triển tiếp từ U-Net bằng cách thêm các Cổng chú ý ở các kết nối tắt. Ý tưởng ở đây là mô hình học cách ưu tiên những vùng quan trọng hơn trước khi đặc trưng được chuyển sang bộ giải mã. Nhờ vậy, mô hình có thể tập trung tốt hơn vào cấu trúc cần phân đoạn mà không cần thêm một mạng định vị riêng.
 
-Tuy nhiên, trong cấu hình nguyên bản, U-Net và Attention U-Net hoạt động hoàn toàn tự động: mô hình chỉ nhận ảnh và phải tự xác định vùng cần phân đoạn. Đối với ảnh X-quang xương có độ tương phản thấp, vùng tổn thương nhỏ hoặc nhiều cấu trúc chồng lấp, việc định vị tự động có thể gặp khó khăn. Kết quả mô hình cũng khó được điều chỉnh theo vùng mà người dùng đang quan tâm tại thời điểm suy luận.
+Tuy nhiên, ở dạng gốc thì cả U-Net lẫn Attention U-Net đều là các mô hình tự động, nghĩa là chỉ nhận ảnh đầu vào và phải tự tìm vùng cần phân đoạn. Với ảnh X-quang xương, đây là một yêu cầu không hề nhẹ vì tổn thương có thể nhỏ, mờ hoặc nằm trong vùng nhiều cấu trúc chồng lấp. Ngoài ra, người dùng cũng khó can thiệp để hướng mô hình tập trung vào một vùng cụ thể tại thời điểm suy luận.
 
-Sau U-Net, nhiều biến thể được đề xuất để cải thiện hiệu năng hoặc giảm công sức tinh chỉnh thủ công. Chẳng hạn, UNet++~\cite{zhou2018unetplusplus} thiết kế lại các đường nối tắt theo dạng lồng nhau để thu hẹp khoảng cách ngữ nghĩa giữa bộ mã hóa và bộ giải mã, còn nnU-Net~\cite{isensee2021nnunet} nhấn mạnh rằng một phần lớn hiệu năng trong ảnh y khoa đến từ quy trình cấu hình, tiền xử lý và hậu xử lý được chuẩn hóa tự động chứ không chỉ từ kiến trúc mạng. Các kết quả này cho thấy bài toán phân đoạn y khoa không chỉ phụ thuộc vào một mô-đun đơn lẻ mà còn chịu ảnh hưởng đáng kể bởi toàn bộ quy trình thực nghiệm.
+Sau U-Net, nhiều biến thể được đề xuất để cải thiện hiệu năng hoặc giảm công sức tinh chỉnh thủ công. Chẳng hạn, UNet++~\cite{zhou2018unetplusplus} thiết kế lại các đường nối tắt theo dạng lồng nhau để thu hẹp khoảng cách ngữ nghĩa giữa bộ mã hóa và bộ giải mã, còn nnU-Net~\cite{isensee2021nnunet} nhấn mạnh rằng hiệu năng trong ảnh y khoa không chỉ đến từ kiến trúc mạng mà còn đến từ quy trình cấu hình, tiền xử lý và hậu xử lý. Điều này cũng nhắc rằng bài toán phân đoạn y khoa không phụ thuộc vào một mô-đun đơn lẻ.
 
 % ------------------------------------------------------------
 \subsection{Phân đoạn tương tác dựa trên CNN}
 
 Phân đoạn tương tác cho phép người dùng cung cấp thông tin bổ sung như điểm bấm~\cite{xu2016deepinteractive}, nét vẽ hoặc hộp giới hạn để hướng mô hình đến vùng cần xử lý. Thông tin tương tác thường được chuyển thành một hoặc nhiều bản đồ không gian và đưa vào CNN cùng với ảnh.
 
-Các phương pháp tương tác ban đầu thường xử lý tín hiệu người dùng dưới dạng điểm bấm hoặc nét vẽ. Deep Interactive Object Selection~\cite{xu2016deepinteractive} là một ví dụ sớm cho thấy các tương tác đơn giản có thể được mã hóa thành bản đồ khoảng cách và đưa vào CNN để cải thiện đáng kể chất lượng mặt nạ. Trong ảnh y khoa, DeepIGeoS~\cite{wang2019deepigeos} là một phương pháp tiêu biểu trong phân đoạn tương tác. Phương pháp gồm một mạng tạo phân đoạn ban đầu và một mạng tinh chỉnh dựa trên tương tác của người dùng. Các điểm hoặc nét vẽ được chuyển thành bản đồ khoảng cách trắc địa, sau đó ghép với ảnh và kết quả dự đoán trước để sửa những khu vực phân đoạn chưa chính xác.
+Các phương pháp tương tác ban đầu thường khai thác tín hiệu người dùng ở dạng điểm bấm hoặc nét vẽ. Deep Interactive Object Selection~\cite{xu2016deepinteractive} là một ví dụ sớm cho thấy chỉ với những tương tác đơn giản, nếu mã hóa phù hợp thành bản đồ khoảng cách rồi đưa vào CNN thì chất lượng mặt nạ có thể tăng đáng kể. Trong ảnh y khoa, DeepIGeoS~\cite{wang2019deepigeos} là một ví dụ tiêu biểu. Cách làm của phương pháp này là tạo một phân đoạn ban đầu, sau đó dùng thêm tương tác người dùng để tinh chỉnh lại những vùng còn sai.
 
-Các phương pháp thuộc nhóm này cho thấy thao tác người dùng có thể được mã hóa thành bản đồ hai chiều và xử lý trực tiếp bởi CNN. Tuy nhiên, cách ghép bản đồ tương tác tại đầu vào không bảo đảm tín hiệu định hướng được duy trì rõ qua tất cả các tầng của mạng. Đây là cơ sở để nghiên cứu những cơ chế tích hợp câu nhắc sâu hơn vào quá trình mã hóa và giải mã đặc trưng.
+Nhìn chung, các phương pháp này cho thấy tương tác của người dùng hoàn toàn có thể đổi thành bản đồ hai chiều và đưa trực tiếp vào CNN. Dù vậy, nếu chỉ ghép bản đồ đó ở đầu vào thì chưa chắc thông tin định hướng còn rõ ở các tầng sâu hơn của mạng. Đây cũng là một lý do để khóa luận đi tiếp theo hướng tích hợp câu nhắc sâu hơn vào quá trình mã hóa và giải mã đặc trưng.
 
 % ------------------------------------------------------------
 \subsection{Mô hình nền tảng dựa trên câu nhắc}
 
 Segment Anything Model (SAM)~\cite{2023-SAM-Kirillov} là mô hình nền tảng cho phân đoạn ảnh tự nhiên, hỗ trợ nhiều dạng câu nhắc như điểm, hộp giới hạn và mặt nạ. Kiến trúc gồm bộ mã hóa ảnh, bộ mã hóa câu nhắc và bộ giải mã mặt nạ. Cách tổ chức này cho phép một mô hình thực hiện nhiều tác vụ phân đoạn mà không cần thiết kế lại kiến trúc cho từng loại đối tượng.
 
-Do được huấn luyện chủ yếu trên ảnh tự nhiên, SAM có thể gặp khoảng cách miền khi áp dụng trực tiếp vào ảnh y khoa. SAM-Med2D~\cite{2023-SAMMed2D-Cheng} được phát triển để thích nghi SAM với ảnh y khoa 2D. Mô hình bổ sung các lớp thích ứng vào bộ mã hóa ảnh và được huấn luyện trên tập dữ liệu quy mô lớn gồm khoảng 4,6 triệu ảnh và 19,7 triệu mặt nạ thuộc nhiều phương thức ảnh và cấu trúc giải phẫu. Theo hướng tương tự, MedSAM~\cite{ma2024medsam} tinh chỉnh SAM trên hơn 1,5 triệu cặp ảnh--mặt nạ y khoa để hướng đến một mô hình phân đoạn tổng quát cho nhiều phương thức chụp ảnh; khóa luận chọn SAM-Med2D làm đối sánh chính vì đã được thích nghi cụ thể cho ảnh 2D và hỗ trợ tinh chỉnh trực tiếp trên tập dữ liệu X-quang xương.
+Do ban đầu được huấn luyện chủ yếu trên ảnh tự nhiên, SAM có thể gặp khó khi đem dùng trực tiếp cho ảnh y khoa. Vì vậy, SAM-Med2D~\cite{2023-SAMMed2D-Cheng} được phát triển để thích nghi SAM với ảnh y khoa 2D. Mô hình này bổ sung các lớp thích ứng và được huấn luyện trên một tập dữ liệu rất lớn gồm khoảng 4,6 triệu ảnh và 19,7 triệu mặt nạ. Một hướng tương tự là MedSAM~\cite{ma2024medsam}. Trong khóa luận này, SAM-Med2D được chọn làm mô hình đối sánh chính vì nó phù hợp hơn với dữ liệu 2D và hỗ trợ tinh chỉnh trực tiếp trên tập X-quang xương.
 
 SAM-Med2D tiếp nhận câu nhắc thông qua bộ mã hóa riêng và kết hợp biểu diễn câu nhắc với đặc trưng ảnh để sinh mặt nạ. Trong khóa luận, hộp giới hạn được sử dụng làm câu nhắc nhằm bảo đảm điều kiện so sánh thống nhất với PGA-UNet.
 
@@ -48,16 +48,16 @@ SAM-Med2D tiếp nhận câu nhắc thông qua bộ mã hóa riêng và kết h�
     \label{fig:sammed2d_architecture}
 \end{figure}
 
-SAM-Med2D có khả năng khai thác kiến thức tiền huấn luyện trên dữ liệu y khoa đa dạng nhưng sử dụng kiến trúc nền tảng có quy mô lớn hơn CNN chuyên biệt. Trong cấu hình thực nghiệm của khóa luận, SAM-Med2D nhận ảnh kích thước $256\times256$, trong khi PGA-UNet được đánh giá ở cả $256\times256$ và $512\times512$. Vì vậy, các thí nghiệm tại cùng độ phân giải được bổ sung ở Chương~\ref{Chapter4} nhằm hạn chế ảnh hưởng của khác biệt kích thước đầu vào.
+SAM-Med2D có lợi thế là thừa hưởng kiến thức từ tiền huấn luyện trên lượng dữ liệu y khoa lớn, nhưng đổi lại kiến trúc cũng nặng hơn hẳn so với một CNN chuyên biệt. Trong thực nghiệm của khóa luận, SAM-Med2D được chạy ở độ phân giải $256\times256$, còn PGA-UNet được đánh giá ở cả $256\times256$ và $512\times512$. Vì vậy, ở Chương~\ref{Chapter4}, khóa luận có thêm các phép so sánh cùng độ phân giải để giảm bớt ảnh hưởng của khác biệt đầu vào.
 
 Song song với SAM, nhiều công trình gần đây còn khảo sát khả năng kết hợp Transformer với phân đoạn y khoa. ViT~\cite{dosovitskiy2021vit} và Swin Transformer~\cite{liu2021swin} mở ra hướng biểu diễn dựa trên cơ chế chú ý toàn cục hoặc phân cấp; từ đó, các mô hình như TransUNet~\cite{chen2021transunet}, Medical Transformer~\cite{valanarasu2021medicaltransformer}, UNETR~\cite{hatamizadeh2022unetr} và Swin-Unet~\cite{cao2022swinunet} được đề xuất cho nhiều tác vụ phân đoạn y khoa. Dù thường đạt hiệu năng cạnh tranh, các mô hình này cũng có xu hướng đòi hỏi tài nguyên tính toán và cấu hình huấn luyện phức tạp hơn so với các CNN gọn nhẹ.
 
 % ------------------------------------------------------------
 \subsection{Khoảng trống nghiên cứu}
 
-Các phương pháp được khảo sát có những ưu điểm và giới hạn khác nhau. U-Net và Attention U-Net có kiến trúc gọn nhưng không tiếp nhận câu nhắc trong thiết kế nguyên bản. Các phương pháp tương tác dựa trên CNN có thể sử dụng bản đồ không gian, nhưng thường tích hợp tín hiệu bằng ghép kênh tại đầu vào hoặc tại một giai đoạn tinh chỉnh. SAM-Med2D hỗ trợ nhiều dạng câu nhắc và tận dụng tiền huấn luyện quy mô lớn, nhưng có chi phí tính toán cao hơn các CNN chuyên biệt.
+Từ phần khảo sát ở trên có thể thấy mỗi hướng đều có điểm mạnh và điểm hạn chế riêng. U-Net và Attention U-Net gọn và quen thuộc nhưng ở dạng gốc thì không nhận câu nhắc. Các phương pháp tương tác dựa trên CNN có thể dùng bản đồ không gian, nhưng thường chỉ ghép tín hiệu này ở đầu vào hoặc ở một bước tinh chỉnh nào đó. Trong khi đó, SAM-Med2D nhận được nhiều loại câu nhắc và có lợi thế tiền huấn luyện quy mô lớn, nhưng chi phí tính toán cũng cao hơn.
 
-Từ đó, khóa luận hướng đến một kiến trúc CNN hạng nhẹ có khả năng tiếp nhận hộp giới hạn và duy trì thông tin câu nhắc qua cả bộ mã hóa lẫn bộ giải mã. Lựa chọn này phù hợp với nhiều hệ thống hỗ trợ phân đoạn trong môi trường dữ liệu vừa và nhỏ, nơi mô hình cần dễ huấn luyện, dễ kiểm soát và có thời gian phản hồi ngắn, thay vì chỉ theo đuổi mô hình nền tảng lớn nhất có thể. PGA-UNet được đề xuất theo hướng này với ba thành phần chính: bản đồ nhiệt câu nhắc dạng cao nguyên, Cổng không gian tại bộ mã hóa (PSG) và Cơ chế chú ý có điều kiện tại bộ giải mã (CAD). Thiết kế chi tiết được trình bày tại Chương~\ref{Chapter3}.
+Từ khoảng trống đó, khóa luận hướng đến một mô hình CNN tương đối nhẹ, có thể nhận trực tiếp hộp giới hạn và giữ được ảnh hưởng của câu nhắc xuyên qua cả bộ mã hóa lẫn bộ giải mã. Hướng này hợp hơn với những bài toán có dữ liệu vừa hoặc nhỏ, nơi mô hình cần dễ huấn luyện, dễ kiểm soát và phản hồi nhanh. PGA-UNet được đề xuất theo hướng đó với ba phần chính là bản đồ nhiệt câu nhắc dạng cao nguyên, PSG ở bộ mã hóa và CAD ở bộ giải mã. Thiết kế cụ thể sẽ được trình bày ở Chương~\ref{Chapter3}.
 
 % ------------------------------------------------------------
 \section{Cơ sở kiến trúc nền tảng}
@@ -257,7 +257,7 @@ Khác với Cổng chú ý nguyên bản chỉ sử dụng đặc trưng nội b
 \label{sec:metrics}
 % ------------------------------------------------------------
 
-Không có một độ đo duy nhất phản ánh đầy đủ chất lượng phân đoạn. Vì vậy, khóa luận sử dụng Dice và IoU để đánh giá mức độ chồng lấp, Precision và Recall để phân tích xu hướng dự đoán, HD95 để đo sai lệch đường biên và CBL như một chỉ số bổ sung về độ lệch tâm.
+Không có một chỉ số nào có thể phản ánh đầy đủ chất lượng phân đoạn trong mọi khía cạnh. Vì vậy, khóa luận dùng kết hợp nhiều độ đo: Dice và IoU để xem mức độ chồng lấp, Precision và Recall để xem xu hướng dự đoán, HD95 để đánh giá sai lệch đường biên và CBL như một chỉ số bổ sung về độ lệch tâm.
 
 % ------------------------------------------------------------
 \subsection{Hệ số Dice và chỉ số IoU}
@@ -417,6 +417,6 @@ Do CBL là chỉ số bổ sung được sử dụng trong phạm vi khóa luậ
 \label{sec:summary_ch2}
 % ------------------------------------------------------------
 
-Chương này đã khảo sát các phương pháp phân đoạn tự động, phân đoạn tương tác dựa trên CNN và mô hình nền tảng dựa trên câu nhắc. Qua đó, khoảng trống nghiên cứu được xác định là nhu cầu về một kiến trúc CNN hạng nhẹ có khả năng tiếp nhận và duy trì thông tin câu nhắc trong toàn bộ quá trình phân đoạn.
+Chương này đã điểm qua các phương pháp phân đoạn tự động, phân đoạn tương tác dựa trên CNN và mô hình nền tảng dựa trên câu nhắc. Từ đó, khóa luận thấy rõ hơn khoảng trống nghiên cứu mà mình nhắm tới: nhu cầu về một kiến trúc CNN hạng nhẹ có thể tiếp nhận và giữ thông tin câu nhắc trong suốt quá trình phân đoạn.
 
-Các cơ sở lý thuyết về U-Net, Cổng chú ý, bản đồ nhiệt, điều biến đặc trưng và chú ý có điều kiện tạo nền tảng cho thiết kế PGA-UNet tại Chương~\ref{Chapter3}. Chương cũng xác định các độ đo được sử dụng để đánh giá định lượng mô hình tại Chương~\ref{Chapter4}.
+Các cơ sở lý thuyết về U-Net, Cổng chú ý, bản đồ nhiệt, điều biến đặc trưng và chú ý có điều kiện là nền để đi đến thiết kế PGA-UNet ở Chương~\ref{Chapter3}. Chương này cũng chốt các độ đo sẽ dùng để đánh giá định lượng mô hình ở Chương~\ref{Chapter4}.
