@@ -57,11 +57,11 @@
 \noindent{\bfseries 2.1\quad Giới thiệu về đề tài}
 
 \medskip
-Ảnh X-quang là một phương thức cận lâm sàng rất phổ biến trong phát hiện các tổn thương xương như gãy xương, rạn xương và khối u xương nguyên phát. Ở các cơ sở y tế lớn, số lượng ảnh cần đọc mỗi ngày có thể rất nhiều, tạo áp lực lên thời gian và độ chính xác của quá trình chẩn đoán. Trong bối cảnh đó, bước khoanh vùng tổn thương vẫn thường được thực hiện thủ công trên hệ thống PACS, vừa tốn thời gian vừa phụ thuộc không ít vào kinh nghiệm của người thực hiện.
+Chẩn đoán hình ảnh qua X-quang là phương thức cận lâm sàng phổ biến, quan trọng trong phát hiện các loại tổn thương xương như gãy xương, rạn xương và khối u xương nguyên phát. Tại các cơ sở y tế lớn, số ca chụp X-quang mỗi ngày có thể lên đến hàng trăm, gây áp lực lớn lên tốc độ làm việc và độ chính xác chẩn đoán của bác sĩ. Bước khoanh vùng tổn thương là cơ sở để đo kích thước, theo dõi diễn tiến bệnh và lập kế hoạch điều trị, nhưng hiện tại vẫn thực hiện thủ công trên hệ thống PACS, tốn thời gian và phụ thuộc kinh nghiệm cá nhân.
 
-Các mô hình học sâu tự động như U-Net~[1] thường gặp khó trên ảnh X-quang xương vì tổn thương có thể nhỏ, độ tương phản thấp và dễ bị lẫn với các cấu trúc xương lành. Trong khi đó, các mô hình nền tảng có dùng câu nhắc như SAM-Med2D~[2] cho thấy một hướng tiếp cận đáng chú ý, nhưng kiến trúc lại khá nặng ($\sim$91M tham số), nên việc triển khai trên phần cứng thông thường không phải lúc nào cũng thuận lợi.
+Các mô hình học sâu tự động như U-Net~[1] thường gặp khó khăn trên ảnh X-quang xương do độ tương phản thấp, cấu trúc giải phẫu chồng lấp khiến vùng tổn thương dễ nhầm với mô xương lành. Các mô hình nền tảng dạng câu nhắc như SAM-Med2D~[2] mở ra hướng tiếp cận tương tác nhưng kiến trúc nặng ($\sim$91M tham số), khó triển khai trên phần cứng y tế thông thường.
 
-Từ đó, đề tài đề xuất xây dựng PGA-UNet (Prompt-Guided Attention U-Net), là một mô hình U-Net gọn hơn nhưng tích hợp câu nhắc hộp giới hạn vào cả bộ mã hóa và bộ giải mã. Ngoài ra, để minh họa khả năng ứng dụng thực tế hơn, PGA-UNet còn được đặt cùng với một mô hình phân lớp sàng lọc để tạo thành một luồng xử lý hỗ trợ.
+Đề tài đề xuất xây dựng kiến trúc PGA-UNet (Prompt-Guided Attention U-Net): mô hình U-Net nhẹ tích hợp sâu câu nhắc hộp giới hạn của bác sĩ vào cả bộ mã hóa và bộ giải mã. Để hỗ trợ tốt hơn cho chẩn đoán thực tế, PGA-UNet còn được kết hợp với một mô hình phân lớp sàng lọc, tạo thành một hệ thống khả thi trong thực tế.
 
 \medskip
 \noindent{\bfseries 2.2\quad Mục tiêu đề tài}
@@ -97,7 +97,7 @@ Giới hạn:
 \noindent{\bfseries 2.4\quad Cách tiếp cận thực hiện}
 
 \medskip
-Giai đoạn 1: Nghiên cứu tài liệu: Khảo sát các kiến trúc U-Net~[1], Attention U-Net~[6], SAM-Med2D~[2]; tìm hiểu các cách đưa câu nhắc không gian vào mạng tích chập; đồng thời phân tích đặc điểm của hai bộ dữ liệu BTXRD~[3] và FracAtlas~[5].
+Giai đoạn 1: Nghiên cứu tài liệu: Khảo sát kiến trúc U-Net~[1], Attention U-Net~[6], SAM-Med2D~[2]; tìm hiểu cơ chế tích hợp câu nhắc không gian vào mạng tích chập; phân tích đặc điểm hai bộ dữ liệu BTXRD~[3] và FracAtlas~[5].
 
 Giai đoạn 2: Chuẩn bị dữ liệu: Tạo các tệp mặt nạ nhị phân tương ứng với ảnh từ các tệp chú thích, chuẩn hóa kích thước ảnh và chia tập huấn luyện/xác thực/kiểm tra.
 
@@ -110,7 +110,7 @@ Giai đoạn 3: Thiết kế và huấn luyện mô hình:
 \end{itemize}
 
 \needspace{7\baselineskip}
-Giai đoạn 4: Thực nghiệm và đánh giá trên hai bộ dữ liệu: So sánh các chỉ số Dice/IoU/Precision/Recall/HD95/CBL với các mô hình cơ sở; thử nghiệm bóc tách từng thành phần kiến trúc; đánh giá mức độ ổn định với câu nhắc lệch tâm; và đánh giá thêm luồng xử lý toàn hệ thống trên tập hỗn hợp.
+Giai đoạn 4: Thực nghiệm và đánh giá trên hai bộ dữ liệu: So sánh định lượng Dice/IoU/Precision/Recall/HD95/CBL với các mô hình cơ sở; thử nghiệm bóc tách từng thành phần kiến trúc; đánh giá tính bền bỉ với kịch bản câu nhắc lệch tâm; đánh giá luồng xử lý toàn hệ thống trên tập hỗn hợp.
 
 \medskip
 \noindent{\bfseries 2.5\quad Kết quả dự kiến của đề tài}

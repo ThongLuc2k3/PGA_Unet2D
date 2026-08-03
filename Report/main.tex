@@ -113,6 +113,7 @@
 \usepackage{longtable}
 \usepackage{enumitem}
 \usepackage{needspace}
+\usepackage{etoolbox}
 
 \newcolumntype{L}[1]
 {>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -155,21 +156,21 @@
     {\normalfont\large\bfseries}
     {\thesection}
     {1em}
-    {\needspace{8\baselineskip}}
+    {}
 
 % Subsection: ví dụ 4.1.1
 \titleformat{\subsection}
     {\normalfont\normalsize\bfseries}
     {\thesubsection}
     {1em}
-    {\needspace{7\baselineskip}}
+    {}
 
 % Subsubsection: ví dụ 4.1.1.1
 \titleformat{\subsubsection}
     {\normalfont\normalsize\bfseries}
     {\thesubsubsection}
     {1em}
-    {\needspace{6\baselineskip}}
+    {}
 
 % Paragraph dùng làm tiêu đề chia ý nhỏ:
 % in đậm, không đánh số, không đưa vào mục lục
@@ -177,12 +178,31 @@
     {\normalfont\normalsize\bfseries}
     {}
     {0pt}
-    {\needspace{5\baselineskip}}
+    {}
 
 \titlespacing*{\paragraph}
     {0pt}
     {1.2\baselineskip}
     {0.4\baselineskip}
+
+% Tránh mục bị mồ côi cuối trang: kiểm tra khoảng trống TRƯỚC KHI
+% \section/... bắt đầu dựng dòng, để không tách rời số mục và tên mục.
+% Dùng \Needspace* (chữ N hoa, needspace.sty) thay vì \needspace chữ
+% thường: bản chữ thường chỉ chèn glue co-giãn + hình phạt -100 để
+% "gợi ý" thuật toán ngắt trang, nên khi \clubpenalty/\widowpenalty
+% được đặt rất cao (chống mồ côi dòng) phía trên, TeX có thể vẫn chọn
+% ngắt trang sớm dù còn thừa chỗ. \Needspace* so sánh \pagegoal và
+% \pagetotal trực tiếp bằng \ifdim nên chỉ ngắt trang khi thực sự
+% thiếu chỗ. Nếu \pagegoal vẫn là \maxdimen (chưa có nội dung nào
+% được đặt lên trang, ví dụ \section ngay sau \chapter) thì bỏ qua
+% hẳn việc kiểm tra vì trang chắc chắn còn trống.
+\newcommand{\CheckNeedSpace}[1]{%
+    \ifdim\pagegoal=\maxdimen\else\Needspace*{#1}\fi
+}
+\pretocmd{\section}{\CheckNeedSpace{8\baselineskip}}{}{}
+\pretocmd{\subsection}{\CheckNeedSpace{7\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\CheckNeedSpace{6\baselineskip}}{}{}
+\pretocmd{\paragraph}{\CheckNeedSpace{5\baselineskip}}{}{}
 
 % Đánh số đến subsubsection
 \setcounter{secnumdepth}{3}
@@ -237,6 +257,22 @@
 \renewcommand{\listfigurename}{Danh sách hình}
 \renewcommand{\listtablename}{Danh sách bảng}
 \renewcommand{\appendixname}{Phụ lục}
+
+% Mục lục (.toc) của extreport chỉ ghi "\numberline{\thechapter}#1" cho
+% mỗi \chapter, không kèm \@chapapp (Chương/Phụ lục) — khác với tiêu đề
+% in trên trang (đã có "\@chapapp\space\thechapter"). Vì vậy sau \appendix,
+% mục lục chỉ hiện "A ..." dù trang nội dung hiện đúng "PHỤ LỤC A ...".
+% Patch dưới đây chỉ đổi dòng ghi vào mục lục cho các chương nằm sau lệnh
+% \appendix, thành "Phụ lục A: Tên chương" — không đụng đến cách đánh số
+% chương/bảng/hình hay tiêu đề trên trang.
+\makeatletter
+\newif\ifInAppendix
+\apptocmd{\appendix}{\global\InAppendixtrue}{}{}
+\patchcmd{\@chapter}
+    {\protect\numberline{\thechapter}#1}
+    {\ifInAppendix\protect\appendixname\ \thechapter: #1\else\protect\numberline{\thechapter}#1\fi}
+    {}{\PackageWarningNoLine{main}{Khong the sua muc luc phu luc (patch @chapter that bai)}}
+\makeatother
 
 % ============================================================
 % DÃN DÒNG VÀ ĐỊNH DẠNG ĐOẠN
@@ -458,9 +494,6 @@
 % ------------------------------------------------------------
 
 \cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{Phụ lục}
-\chapter*{PHỤ LỤC}
 \appendix
 
 \include{Appendix/phulucA_phantich_kientruc}

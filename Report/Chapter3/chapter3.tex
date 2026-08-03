@@ -9,7 +9,7 @@
 \label{sec:pga_unet}
 % ------------------------------------------------------------
 
-PGA-UNet (\textit{Prompt-Guided Attention U-Net}) là mô hình phân đoạn tương tác nhận đồng thời ảnh X-quang và hộp giới hạn vùng nghi ngờ. Mô hình này được xây dựng dựa trên khung mã hóa--giải mã của U-Net~\cite{ronneberger2015unet} và ý tưởng chú ý ở kết nối tắt của Attention U-Net~\cite{oktay2018attentionunet}. Từ đó, khóa luận bổ sung ba thành phần chính là bản đồ nhiệt câu nhắc dạng cao nguyên, Cổng không gian tại bộ mã hóa (PSG) và Cơ chế chú ý có điều kiện ở các kết nối tắt của nhánh giải mã (CAD).
+PGA-UNet (\textit{Prompt-Guided Attention U-Net}) là mô hình phân đoạn tương tác nhận đồng thời ảnh X-quang và hộp giới hạn vùng nghi ngờ. Mô hình này được xây dựng dựa trên khung mã hóa, giải mã của U-Net~\cite{ronneberger2015unet} và ý tưởng chú ý ở kết nối tắt của Attention U-Net~\cite{oktay2018attentionunet}. Từ đó, khóa luận bổ sung ba thành phần chính là bản đồ nhiệt câu nhắc dạng cao nguyên, Cổng không gian tại bộ mã hóa (PSG) và Cơ chế chú ý có điều kiện ở các kết nối tắt của nhánh giải mã (CAD).
 
 Bảng~\ref{tab:inheritance_contribution} phân biệt các thành phần kế thừa với thiết kế được sử dụng trong PGA-UNet.
 
@@ -27,7 +27,7 @@ Bảng~\ref{tab:inheritance_contribution} phân biệt các thành phần kế t
         & \textbf{Thiết kế trong PGA-UNet} \\
         \hline
         Khung mạng
-        & U-Net~\cite{ronneberger2015unet}: cấu trúc mã hóa--giải mã và kết nối tắt
+        & U-Net~\cite{ronneberger2015unet}: cấu trúc mã hóa, giải mã và kết nối tắt
         & Sử dụng làm kiến trúc nền cho mô hình phân đoạn hạng nhẹ \\
         \hline
         Biểu diễn câu nhắc
@@ -60,7 +60,7 @@ Hình~\ref{fig:pga_architecture} cho thấy kiến trúc tổng thể của mô 
 % ------------------------------------------------------------
 
 Đầu vào tương tác của PGA-UNet là hộp giới hạn
-$\mathbf{B}=(x_1,y_1,x_2,y_2)$ do người dùng cung cấp quanh vùng nghi ngờ. Các nghiên cứu phân đoạn tương tác khác còn sử dụng điểm nhấp chuột~\cite{xu2016deepinteractive} hoặc nét vẽ tự do~\cite{wang2019deepigeos} làm câu nhắc; khóa luận chọn hộp giới hạn vì đây là thao tác đơn giản, không đòi hỏi người dùng ước lượng chính xác tâm hay đường biên tổn thương, đồng thời thống nhất với dạng câu nhắc mà SAM và SAM-Med2D hỗ trợ, thuận lợi cho việc so sánh trực tiếp tại Chương~\ref{Chapter4}. Thay vì sử dụng trực tiếp bốn tọa độ rời rạc, hộp được chuyển thành bản đồ nhiệt câu nhắc
+$\mathbf{B}=(x_1,y_1,x_2,y_2)$ do bác sĩ chẩn đoán ảnh cung cấp quanh vùng nghi ngờ. Các nghiên cứu phân đoạn tương tác khác còn sử dụng điểm nhấp chuột~\cite{xu2016deepinteractive} hoặc nét vẽ tự do~\cite{wang2019deepigeos} làm câu nhắc; khóa luận chọn hộp giới hạn vì đây là thao tác đơn giản, không đòi hỏi bác sĩ ước lượng chính xác tâm hay đường biên tổn thương, đồng thời thống nhất với dạng câu nhắc mà SAM và SAM-Med2D hỗ trợ, thuận lợi cho việc so sánh trực tiếp tại Chương~\ref{Chapter4}. Thay vì sử dụng trực tiếp bốn tọa độ rời rạc, hộp được chuyển thành bản đồ nhiệt câu nhắc
 $\mathbf{H}_{\mathrm{prompt}}\in[0,1]^{H\times W}$ có cùng kích thước không gian với ảnh đầu vào.
 
 Trước tiên, hộp giới hạn được biểu diễn thành mặt nạ nhị phân:
@@ -101,7 +101,7 @@ Khác với các mô hình nền tảng như SAM và SAM-Med2D~\cite{2023-SAM-Ki
 \label{subsec:psg}
 % ------------------------------------------------------------
 
-Trong U-Net thông thường, bộ mã hóa trích xuất đặc trưng trên toàn bộ ảnh mà không biết người dùng đang quan tâm vùng nào. Với ảnh X-quang, điều này có thể làm mô hình bị phân tán bởi nền ảnh, vùng xương chồng lấp hoặc các khu vực có tương phản mạnh nhưng không liên quan trực tiếp đến tổn thương.
+Trong U-Net thông thường, bộ mã hóa trích xuất đặc trưng trên toàn bộ ảnh mà không biết bác sĩ đang quan tâm vùng nào. Với ảnh X-quang, điều này có thể làm mô hình bị phân tán bởi nền ảnh, vùng xương chồng lấp hoặc các khu vực có tương phản mạnh nhưng không liên quan trực tiếp đến tổn thương.
 
 Vì vậy, PGA-UNet thêm Cổng không gian PSG (\textit{Prompt Spatial Gate}) vào các tầng mã hóa. Vai trò của PSG là dùng bản đồ nhiệt để điều chỉnh đặc trưng theo không gian, giúp mô hình chú ý sớm hơn đến vùng được khoanh.
 
@@ -149,7 +149,7 @@ trong đó $\mathbf{W}^{l}_{\mathrm{gate}}$ ánh xạ bản đồ một kênh sa
 \end{equation}
 
 với $\odot$ là phép nhân theo phần tử và
-$\alpha^{l}_{\mathrm{PSG}}\in[0,1]$ là hệ số học được, được khởi tạo bằng 0,1.
+$\alpha^{l}_{\mathrm{PSG}}\in[0,1]$ là hệ số học được, được khởi tạo bằng 0 hoặc 1.
 
 Thành phần $1+$ trong Phương trình~\eqref{eq:spatial_gate} tạo ra kết nối dư, giúp đặc trưng gốc không bị mất đi. Nói cách khác, PSG trong khóa luận không được thiết kế để triệt hẳn phần nền, mà thiên về việc tăng cường vùng đã được câu nhắc chỉ ra trong khi vẫn giữ lại ngữ cảnh chung của ảnh.
 
@@ -249,7 +249,7 @@ $\mathbf{W}^{l}_{x}$ và $\mathbf{W}^{l}_{g}$ là các phép chiếu đặc trư
 Điểm khác chính của CAD so với cổng chú ý nguyên bản là tín hiệu điều khiển ở đây được điều kiện hóa trực tiếp bởi câu nhắc từ bên ngoài. Có thể xem PSG là phần dẫn hướng ở bước mã hóa, còn CAD là phần nhắc lại định hướng đó ở bước giải mã. Hai thành phần này đi cùng nhau để câu nhắc có ảnh hưởng xuyên suốt mạng, thay vì chỉ xuất hiện ở một chỗ.
 
 \paragraph{Chi tiết triển khai theo tầng.}
-Với hệ số thu gọn \texttt{feature\_scale}=4, PGA-UNet sử dụng số kênh $\{16,32,64,128,256\}$ từ tầng mã hóa nông nhất đến nút cổ chai. Bốn tầng giải mã lần lượt nhận cặp kênh bỏ qua/tín hiệu cổng là $(128,256)$, $(64,128)$, $(32,64)$ và $(16,32)$. Ở mỗi tầng giải mã, $f^{l}_{\mathrm{enc}}$ mã hóa prompt theo chuỗi $1\rightarrow g_l/2 \rightarrow g_l$, trong đó $g_l$ là số kênh của tín hiệu cổng tại tầng đó. Cấu hình này được dùng thống nhất trong toàn bộ thực nghiệm của khóa luận.
+Với hệ số thu gọn \texttt{feature\_scale}=4, PGA-UNet sử dụng số kênh $\{16,32,64,128,256\}$ từ tầng mã hóa nông nhất đến nút cổ chai. Bốn tầng giải mã lần lượt nhận cặp kênh bỏ qua/tín hiệu cổng là $(128,256)$, $(64,128)$, $(32,64)$ và $(16,32)$. Ở mỗi tầng giải mã, $f^{l}_{\mathrm{enc}}$ mã hóa prompt theo số kênh của tầng đó, trong đó $g_l$ là tín hiệu từ nút thắt đi lên nên buộc phải giảm số kênh bằng với đặc trưng từ bộ mã hóa (tín hiệu từ nút thắt $g_l \rightarrow g_l/2 \rightarrow g_l$ mới này là tín hiệu của tầng này). Cấu hình này được dùng thống nhất trong toàn bộ thực nghiệm của khóa luận.
 
 Các hệ số $w_l$, tham số khởi tạo và các thiết lập thực nghiệm được sử dụng thống nhất trong các phép đánh giá của khóa luận. Giá trị cụ thể được trình bày tại Chương~\ref{Chapter4}.
 
@@ -258,15 +258,14 @@ Các hệ số $w_l$, tham số khởi tạo và các thiết lập thực nghi�
 \label{sec:algorithm_summary}
 % ------------------------------------------------------------
 
-Phần này tóm tắt hai quy trình chính của PGA-UNet là huấn luyện và suy luận. Khi huấn luyện, hộp giới hạn được tạo từ mặt nạ nhãn gốc rồi điều chỉnh để mô phỏng sai lệch thao tác. Khi suy luận, mô hình nhận trực tiếp hộp giới hạn từ người dùng.
+Phần này tóm tắt hai quy trình chính của PGA-UNet là huấn luyện và suy luận. Khi huấn luyện, hộp giới hạn được tạo từ mặt nạ nhãn gốc rồi điều chỉnh để mô phỏng sai lệch thao tác. Khi suy luận, mô hình nhận trực tiếp hộp giới hạn từ bác sĩ chẩn đoán ảnh.
 
 % ------------------------------------------------------------
 \subsection{Quy trình huấn luyện}
 \label{subsec:training_process}
 % ------------------------------------------------------------
 
-Đầu vào huấn luyện gồm ảnh X-quang và mặt nạ phân đoạn. Với mỗi mẫu, hộp giới hạn được trích từ mặt nạ, sau đó biến đổi theo kịch bản câu nhắc Bao trọn hoặc Lệch tâm. \noindent\textbf{Mô phỏng câu nhắc.}
-Gọi $w=x_2-x_1$ và $h=y_2-y_1$ lần lượt là chiều rộng và chiều cao
+Đầu vào huấn luyện gồm ảnh X-quang và mặt nạ phân đoạn. Với mỗi mẫu, hộp giới hạn được trích từ mặt nạ, sau đó biến đổi theo kịch bản câu nhắc Bao trọn hoặc Lệch tâm. Trong mô phỏng câu nhắc, gọi $w=x_2-x_1$ và $h=y_2-y_1$ lần lượt là chiều rộng và chiều cao
 của hộp bao sát tổn thương. Ba kịch bản câu nhắc được xây dựng như sau:
 
 \begin{itemize}
@@ -275,8 +274,7 @@ của hộp bao sát tổn thương. Ba kịch bản câu nhắc được xây d
     tác khoanh rộng hơn vùng tổn thương.
 
     \item \textbf{Lệch tâm:} Hộp được dịch khỏi vị trí ban đầu theo
-    hướng ngẫu nhiên với hệ số dịch bằng $0{,}30$ kích thước hộp
-    (\texttt{shift\_ratio}=0.30). Tọa độ sau biến đổi được giới hạn trong
+    hướng ngẫu nhiên với hệ số dịch bằng $0{,}30$ kích thước hộp. Tọa độ sau biến đổi được giới hạn trong
     phạm vi ảnh.
 
     \item \textbf{Hỗn hợp:} Mỗi mẫu sử dụng câu nhắc Bao trọn với xác
@@ -298,7 +296,7 @@ $\mathcal{D}
 \State Khởi tạo tham số PGA-UNet $\boldsymbol{\theta}$
 \While{chưa thỏa tiêu chí dừng trên tập xác thực}
     \For{mỗi lô nhỏ $(\mathbf{I},\mathbf{M})$}
-        \State Co giãn ảnh và mặt nạ theo cùng hệ số, giữ tỷ lệ rồi đệm về kích thước đầu vào
+        \State Chuẩn hóa ảnh và mặt nạ theo cùng hệ số
         \State Trích hộp giới hạn $\mathbf{B}$ từ mặt nạ $\mathbf{M}$
         \State Điều chỉnh $\mathbf{B}$ theo kịch bản câu nhắc được chọn
         \State Tạo bản đồ nhiệt
@@ -335,7 +333,7 @@ Mô hình được huấn luyện riêng trên từng bộ dữ liệu. Các c�
 \subsection{Quy trình suy luận}
 % ------------------------------------------------------------
 
-Trong giai đoạn suy luận, người dùng cung cấp ảnh X-quang và hộp giới hạn vùng nghi ngờ. Hộp được chuyển thành bản đồ nhiệt theo cùng phương pháp sử dụng khi huấn luyện. Mô hình trả về bản đồ xác suất, sau đó được nhị phân hóa tại ngưỡng 0,5 để tạo mặt nạ cuối cùng.
+Trong giai đoạn suy luận, bác sĩ cung cấp ảnh X-quang và hộp giới hạn vùng nghi ngờ. Hộp được chuyển thành bản đồ nhiệt theo cùng phương pháp sử dụng khi huấn luyện. Mô hình trả về bản đồ xác suất, sau đó được nhị phân hóa tại ngưỡng 0,5 để tạo mặt nạ cuối cùng.
 
 \begin{algorithm}[H]
 \caption{Quy trình suy luận PGA-UNet}
@@ -348,7 +346,7 @@ $\mathbf{B}=(x_1,y_1,x_2,y_2)$
 \If{$\mathbf{B}=\emptyset$}
     \State \Return thông báo yêu cầu cung cấp hộp giới hạn
 \EndIf
-\State Co giãn ảnh $\mathbf{I}$ giữ tỷ lệ rồi đệm về kích thước đầu vào
+\State Chuẩn hóa ảnh $\mathbf{I}$ để phù hợp với kích thước đầu vào
 \State Tạo mặt nạ hộp giới hạn $\mathbf{B}_{\mathrm{mask}}$
 \State Tạo bản đồ nhiệt
 $\mathbf{H}_{\mathrm{prompt}}
@@ -369,27 +367,27 @@ $\widehat{\mathbf{M}}
 \end{algorithmic}
 \end{algorithm}
 
-Nếu người dùng chưa cung cấp hộp giới hạn thì hệ thống sẽ không phân đoạn. Lý do là bản đồ nhiệt toàn giá trị 0 không mang thông tin định vị, nên không đúng với cách PGA-UNet được thiết kế và huấn luyện.
+Nếu bác sĩ chưa cung cấp hộp giới hạn thì hệ thống sẽ không phân đoạn. Lý do là bản đồ nhiệt toàn giá trị 0 không mang thông tin định vị, nên không đúng với cách PGA-UNet được thiết kế và huấn luyện.
 
-Quy trình suy luận chỉ cần một lượt truyền xuôi qua mô hình. Với kiến trúc CNN và số kênh cố định, chi phí tính toán của PGA-UNet tăng theo kích thước ảnh đầu vào. Theo thống kê kiến trúc, mô hình có khoảng 3 triệu tham số. Trong khóa luận, số tham số, FLOPs, bộ nhớ đỉnh, độ trễ suy luận và dung lượng checkpoint của PGA-UNet và SAM-Med2D cũng được đo trong cùng môi trường thực nghiệm; kết quả được trình bày ở Mục~\ref{subsec:efficiency_measurement}, Chương~\ref{Chapter4}. Các con số này chỉ nên hiểu là so sánh tương đối trong cùng môi trường đo.
+Quy trình suy luận chỉ cần một lượt truyền xuôi qua mô hình. Với kiến trúc CNN và số kênh cố định, chi phí tính toán của PGA-UNet tăng theo kích thước ảnh đầu vào. Theo thống kê kiến trúc, mô hình có khoảng 3 triệu tham số. Trong khóa luận, số lượng tham số, FLOPs, bộ nhớ đỉnh, độ trễ suy luận và dung lượng checkpoint của PGA-UNet và SAM-Med2D cũng được đo trong cùng môi trường thực nghiệm; kết quả được trình bày ở Mục~\ref{subsec:efficiency_measurement}, Chương~\ref{Chapter4}. Các con số này chỉ nên hiểu là so sánh tương đối trong cùng môi trường đo.
 
 % ------------------------------------------------------------
 \section{Mở rộng luồng xử lý với mô-đun sàng lọc}
 \label{sec:tong_the}
 % ------------------------------------------------------------
 
-PGA-UNet được huấn luyện cho trường hợp ảnh đã có vùng nghi ngờ và người dùng đã cung cấp hộp giới hạn. Trong thực tế, luồng ảnh đầu vào có thể lẫn cả ảnh bình thường và ảnh bệnh lý. Vì vậy, để minh họa cách PGA-UNet có thể đặt trong một quy trình lớn hơn, khóa luận bổ sung Gatekeeper dùng EfficientNet-B3 trước bước phân đoạn.
+PGA-UNet được huấn luyện cho trường hợp ảnh đã có vùng nghi ngờ và bác sĩ đã cung cấp hộp giới hạn. Trong thực tế, luồng ảnh đầu vào có thể lẫn cả ảnh bình thường và ảnh bệnh lý. Vì vậy, để minh họa cách PGA-UNet có thể đặt trong một quy trình lớn hơn, khóa luận bổ sung Gatekeeper dùng EfficientNet-B3 trước bước phân đoạn.
 
-Gatekeeper chỉ là phần hỗ trợ thêm, không phải đóng góp kiến trúc chính của khóa luận. Mô-đun này trả về xác suất bất thường để người dùng tham khảo, chứ không tự động loại bỏ ảnh hay thay cho quyết định của người dùng chuyên môn.
+Gatekeeper chỉ là phần hỗ trợ thêm, không phải đóng góp kiến trúc chính của khóa luận. Mô-đun này trả về xác suất bất thường để bác sĩ tham khảo, chứ không tự động loại bỏ ảnh hay thay cho quyết định của bác sĩ chẩn đoán ảnh.
 
 % ------------------------------------------------------------
 \subsection{Sàng lọc ảnh đầu vào}
 \label{sec:phan_lop}
 % ------------------------------------------------------------
 
-Gatekeeper phân loại ảnh thành bình thường hoặc nghi ngờ có bất thường. Với ảnh được gợi ý có bất thường, người dùng kiểm tra và cung cấp hộp giới hạn để chuyển sang PGA-UNet. Với ảnh được gợi ý bình thường, người dùng vẫn có thể xác nhận lại hoặc chủ động khoanh vùng nếu phát hiện dấu hiệu nghi ngờ.
+Gatekeeper phân loại ảnh thành bình thường hoặc nghi ngờ có bất thường. Với ảnh được gợi ý có bất thường, bác sĩ kiểm tra và cung cấp hộp giới hạn để chuyển sang PGA-UNet. Với ảnh được gợi ý bình thường, bác sĩ vẫn có thể xác nhận lại hoặc chủ động khoanh vùng nếu phát hiện dấu hiệu nghi ngờ.
 
-Cơ chế này được thiết kế theo hướng \textit{triage mềm}, tức là Gatekeeper chỉ gợi ý ảnh nào đáng chú ý hơn, còn việc có chuyển sang bước phân đoạn hay không vẫn do người dùng quyết định. Cách làm này giúp hạn chế rủi ro ảnh bệnh lý bị bỏ qua hoàn toàn chỉ vì mô-đun phân loại đoán sai.
+Cơ chế này được thiết kế theo hướng sàng lọc mềm, tức là Gatekeeper chỉ gợi ý ảnh nào đáng chú ý hơn, còn việc có chuyển sang bước phân đoạn hay không vẫn do bác sĩ chẩn đoán ảnh quyết định. Cách làm này giúp hạn chế rủi ro ảnh bệnh lý bị bỏ qua hoàn toàn chỉ vì mô-đun phân loại đoán sai.
 
 Cấu hình và kết quả thực nghiệm của Gatekeeper trên BTXRD và FracAtlas được tóm tắt tại Mục~\ref{sec:product_overview}, Chương~\ref{Chapter4}, với số liệu chi tiết tại Phụ lục~\ref{AppendixB}.
 
@@ -398,9 +396,9 @@ Cấu hình và kết quả thực nghiệm của Gatekeeper trên BTXRD và Fra
 \label{subsec:pga_stage}
 % ------------------------------------------------------------
 
-Sau khi xác định vùng nghi ngờ, người dùng vẽ hộp giới hạn trên ảnh X-quang. Hệ thống chuyển hộp thành bản đồ nhiệt và đưa đồng thời ảnh với bản đồ câu nhắc vào PGA-UNet. Mặt nạ dự đoán được hiển thị chồng lên ảnh gốc để hỗ trợ quan sát.
+Sau khi xác định vùng nghi ngờ, bác sĩ vẽ hộp giới hạn trên ảnh X-quang. Hệ thống chuyển hộp thành bản đồ nhiệt và đưa đồng thời ảnh với bản đồ câu nhắc vào PGA-UNet. Mặt nạ dự đoán được hiển thị chồng lên ảnh gốc để hỗ trợ quan sát.
 
-Nếu kết quả chưa phù hợp, người dùng có thể điều chỉnh hộp giới hạn và thực hiện lại suy luận. Quá trình hiệu chỉnh chỉ thay đổi câu nhắc đầu vào, không cập nhật kiến trúc hoặc tham số mô hình.
+Nếu kết quả chưa phù hợp, bác sĩ có thể điều chỉnh hộp giới hạn và thực hiện lại suy luận. Quá trình hiệu chỉnh chỉ thay đổi câu nhắc đầu vào, không cập nhật kiến trúc hoặc tham số mô hình.
 
 \begin{figure}[htbp]
     \centering
@@ -412,7 +410,7 @@ Nếu kết quả chưa phù hợp, người dùng có thể điều chỉnh h�
     \label{fig:pipeline_overview}
 \end{figure}
 
-Luồng trên chỉ nhằm minh họa một cách tích hợp PGA-UNet vào quy trình xử lý ảnh hỗn hợp. Vì khóa luận chưa có thử nghiệm với bác sĩ hoặc người dùng chuyên môn trong điều kiện thực tế, nên đây chưa thể xem là một quy trình lâm sàng đã được xác nhận.
+Luồng trên chỉ nhằm minh họa một cách tích hợp PGA-UNet vào quy trình xử lý ảnh hỗn hợp. Vì khóa luận chưa có thử nghiệm với bác sĩ chuyên môn trong điều kiện thực tế, nên đây chưa thể xem là một quy trình lâm sàng đã được xác nhận.
 
 % ------------------------------------------------------------
 \section{Tổng kết chương}
