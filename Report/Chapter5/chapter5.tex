@@ -43,7 +43,7 @@ Bên cạnh các kết quả đạt được, nghiên cứu này vẫn còn mộ
     Ảnh X-quang là hình chiếu hai chiều của cấu trúc giải phẫu ba chiều. Hiện tượng chồng lấp giữa các cấu trúc xương có thể làm mờ ranh giới tổn thương. Bản đồ nhiệt Gaussian chỉ cung cấp vùng định hướng tương đối và không biểu diễn trực tiếp hình dạng phức tạp của tổn thương kéo dài, phân nhánh hoặc không liên tục.
 
     \item \textbf{Giới hạn về độ phân giải đầu vào:}
-    Việc chuẩn hóa ảnh về kích thước $512\times512$ hoặc $256\times256$ pixel có thể làm thất thoát nhiều thông tin không gian quan trọng. Do ảnh X-quang gốc thường có độ phân giải rất cao, việc nén ảnh xuống kích thước nhỏ hơn nhiều lần sẽ khiến các tổn thương kích thước nhỏ và ranh giới mờ bị mất đi, từ đó làm giảm khả năng nhận diện của mô hình.
+    Dù khóa luận đã dùng quy trình \textit{resize + padding} để giữ nguyên tỉ lệ ảnh và tránh méo hình học, việc chuẩn hóa ảnh về khung $512\times512$ hoặc $256\times256$ pixel vẫn có thể làm thất thoát nhiều thông tin không gian quan trọng. Do ảnh X-quang gốc thường có độ phân giải rất cao, bước thu nhỏ ảnh trước khi đệm nền vẫn có thể khiến các tổn thương kích thước nhỏ và ranh giới mờ bị mất chi tiết, từ đó làm giảm khả năng nhận diện của mô hình.
 
     \item \textbf{Chưa có đánh giá với bác sĩ chẩn đoán ảnh:}
     Nghiên cứu chưa đo thời gian thao tác, mức độ thuận tiện, độ biến thiên giữa bác sĩ chẩn đoán ảnh hoặc khả năng hiệu chỉnh kết quả trong một quy trình đọc ảnh thực tế. Vì vậy, hiệu quả hỗ trợ bác sĩ mới được suy luận từ kết quả kỹ thuật, chưa được xác nhận bằng nghiên cứu bác sĩ chẩn đoán ảnh.

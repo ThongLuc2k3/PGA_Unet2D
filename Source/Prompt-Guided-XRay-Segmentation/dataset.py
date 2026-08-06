@@ -109,6 +109,7 @@ class BTXRD_Dataset(Dataset):
         return heatmap
 
     def _resize_and_pad(self, array, interpolation, pad_value=0):
+        """Resize isotropically to fit the target square, then pad the rest."""
         orig_h, orig_w = array.shape[:2]
         scale = min(self.img_size / orig_w, self.img_size / orig_h)
         new_w = max(1, int(round(orig_w * scale)))
@@ -164,7 +165,7 @@ class BTXRD_Dataset(Dataset):
         prompt_map = self.create_plateau_heatmap(
             [bx_min, by_min, bx_max, by_max], orig_h, orig_w)
 
-        # Preserve aspect ratio, then pad to a square canvas.
+        # Preserve aspect ratio before padding so X-ray anatomy is not distorted.
         image = self._resize_and_pad(image, cv2.INTER_LINEAR, pad_value=0)
         mask = self._resize_and_pad(mask, cv2.INTER_NEAREST, pad_value=0)
         prompt_map = self._resize_and_pad(prompt_map, cv2.INTER_LINEAR, pad_value=0.0)

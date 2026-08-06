@@ -1,6 +1,11 @@
 ## Bước 1 – Chuẩn bị môi trường
 - pip install torch torchvision opencv-python scipy matplotlib tqdm
 
+## Tiền xử lý đầu vào
+- Ảnh, mask và prompt map đều dùng quy trình `resize + padding`, không kéo giãn trực tiếp về khung vuông.
+- Cạnh dài được co về `img_size`, sau đó đệm nền để tạo ảnh vuông `img_size x img_size`.
+- `image` dùng `cv2.INTER_LINEAR`, `mask` dùng `cv2.INTER_NEAREST`, `prompt_map` dùng `cv2.INTER_LINEAR`.
+
 ## Cấu trúc thư mục cần có:
 # dataset_BTXRD/
   - train/images/  train/annotations/

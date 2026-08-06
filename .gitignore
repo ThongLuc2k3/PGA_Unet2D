@@ -6,3 +6,4 @@
 # JSON annotation gốc của dataset (tải riêng, không cần commit)
 /dataset_json/
 /Source/Report
+/diagrams
