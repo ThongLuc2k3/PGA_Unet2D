@@ -15,8 +15,8 @@ class PromptSegmentationDataset(Dataset):
     Each sample corresponds to one GT polygon inside one image.
 
     prompt_mode:
-        'zoom_out'   – covering prompt expanded around the GT
-        'shift'      – covering prompt with an off-center displacement
+        'zoom_out': covering prompt expanded around the GT
+        'shift': covering prompt with an off-center displacement
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,

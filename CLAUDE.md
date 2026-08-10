@@ -15,7 +15,7 @@ Talking with the user is a separate matter: reply in whatever language the user 
 
 ## Writing style
 
-Do not use an em dash or a double hyphen as sentence-connecting punctuation in comments, docstrings, print statements, or markdown. It reads as AI-generated prose. Use a period, comma, or colon instead, or just restructure the sentence.
+Do not use an em dash (—), an en dash (–), or a double hyphen as sentence-connecting punctuation in comments, docstrings, print statements, or markdown. It reads as AI-generated prose. Use a period, comma, or colon instead, or just restructure the sentence.
 
 This does not apply to:
 - decorative section-divider lines made of repeated dash or box-drawing characters, for example `# --------------------------------`, which are fine to keep as visual separators,
