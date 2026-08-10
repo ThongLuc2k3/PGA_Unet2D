@@ -23,7 +23,28 @@ IMG_SIZE   = 512
 EARLY_STOP = 15
 EVAL_PROMPT_MODES = ('zoom_out', 'shift')
 PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
-DATASET_ROOT = os.environ.get("PROMPT_DATASET_ROOT", "dataset")
+def resolve_dataset_root():
+    env_root = os.environ.get("PROMPT_DATASET_ROOT")
+    if env_root:
+        return env_root
+
+    candidates = [
+        "dataset",
+        "dataset_BTXRD",
+        "dataset_FracAtlas",
+    ]
+    for root in candidates:
+        if os.path.isdir(os.path.join(root, "train", "images")):
+            return root
+
+    for name in sorted(os.listdir(".")):
+        if os.path.isdir(os.path.join(name, "train", "images")):
+            return name
+
+    return "dataset"
+
+
+DATASET_ROOT = resolve_dataset_root()
 
 # =========================================================
 # METRICS
