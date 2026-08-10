@@ -7,11 +7,11 @@ from tqdm import tqdm
 import logging
 import datetime
 
-from dataset import BTXRD_Dataset
+from dataset import PromptSegmentationDataset
 from models.networks.prompt_unet_2D import PGA_UNet
 
 # =========================================================
-# CẤU HÌNH – chỉ đổi ở đây khi chuyển thí nghiệm
+# Experiment configuration
 # =========================================================
 TRAIN_PROMPT_MODE  = 'zoom_out'  # 'zoom_out' hoặc 'shift'
 USE_ENCODER_PROMPT = True    # True để bật PromptSpatialGate ở encoder
@@ -23,6 +23,7 @@ IMG_SIZE   = 512
 EARLY_STOP = 15
 EVAL_PROMPT_MODES = ('zoom_out', 'shift')
 PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
+DATASET_ROOT = os.environ.get("PROMPT_DATASET_ROOT", "dataset")
 
 # =========================================================
 # METRICS
@@ -127,14 +128,15 @@ def main():
     logger.info("=" * 90)
     logger.info(
         f"TrainPrompt: {TRAIN_PROMPT_MODE} | Device: {DEVICE} | "
-        f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE}"
+        f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE} | "
+        f"DatasetRoot: {DATASET_ROOT}"
     )
     logger.info("=" * 90)
 
     # ── Dataset ──────────────────────────────────────────────────────
-    train_ds = BTXRD_Dataset(
-        image_dir="dataset_BTXRD/train/images",
-        json_dir="dataset_BTXRD/train/annotations",
+    train_ds = PromptSegmentationDataset(
+        image_dir=os.path.join(DATASET_ROOT, "train", "images"),
+        json_dir=os.path.join(DATASET_ROOT, "train", "annotations"),
         img_size=IMG_SIZE, is_train=True,
         prompt_mode=TRAIN_PROMPT_MODE
     )
@@ -143,9 +145,9 @@ def main():
 
     val_loaders = {}
     for mode in EVAL_PROMPT_MODES:
-        ds = BTXRD_Dataset(
-            image_dir="dataset_BTXRD/val/images",
-            json_dir="dataset_BTXRD/val/annotations",
+        ds = PromptSegmentationDataset(
+            image_dir=os.path.join(DATASET_ROOT, "val", "images"),
+            json_dir=os.path.join(DATASET_ROOT, "val", "annotations"),
             img_size=IMG_SIZE, is_train=False,
             prompt_mode=mode
         )

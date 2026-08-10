@@ -1,149 +1,95 @@
-# PGA-UNet: Prompt-Guided Attention U-Net for Bone X-Ray Segmentation
+# PGA-Unet2D Source Layout
 
-Mã nguồn thực nghiệm cho khóa luận tốt nghiệp:
-**"Phát triển hệ thống phân đoạn tổn thương xương trên ảnh X-quang dựa trên câu nhắc trực quan"**
+This directory contains the current source tree for the PGA-UNet thesis experiments after consolidation to the `PGA_Unet2D` repository structure.
 
-Sinh viên: Nguyễn Hữu Bình (22120031) — Thông Lúc (22120196)
-Người hướng dẫn: PGS.TS. Lý Quốc Ngọc — ThS. Đỗ Thị Thanh Hà
+## Active Structure
 
----
-
-## Cấu trúc thư mục
-
-```
+```text
 Source/
-├── Prompt-Guided-XRay-Segmentation/   # Package mô hình PGA-UNet (branch TN_B_ON)
-│   ├── dataset.py                      # BTXRD_Dataset: load ảnh/polygon, sinh prompt (zoom_out/shift/mixed_7_3), augmentation
-│   ├── train.py                        # Vòng lặp huấn luyện PGA-UNet, early stopping, scheduler
-│   ├── models/
-│   │   ├── networks/
-│   │   │   └── prompt_unet_2D.py       # Kiến trúc PGA-UNet (PromptSpatialGate + Conditioned Attention Decoder)
-│   │   ├── layers/
-│   │   │   └── grid_attention_layer.py # GridAttentionBlock2D (kế thừa từ Attention U-Net)
-│   │   └── networks_other.py           # init_weights và tiện ích khởi tạo trọng số
-│   └── REAME.md
-│
-├── File_Train/                         # Notebook HUẤN LUYỆN (chạy trên Colab/Kaggle GPU)
-│   ├── PGA_Unet2D.ipynb                # Huấn luyện PGA-UNet (mô hình chính, Thí nghiệm B)
-│   ├── Unet2D.ipynb                    # Huấn luyện baseline U-Net thuần (không prompt)
-│   ├── Finetune_SAMMed2D_test_robust.ipynb  # Fine-tune SAM-Med2D + test 3 kịch bản prompt
-│   ├── EfficientNet_B3.ipynb           # Huấn luyện Gatekeeper (phân lớp bình thường/bệnh lý)
-│   └── Ablation/                       # Huấn luyện 5 biến thể kiến trúc PGA-UNet
-│       ├── V1_NoPSG_NoCAD_Concat.ipynb    # V1: không PSG, không CAD (nối kênh đơn giản)
-│       ├── V2_PSG_Only.ipynb              # V2: chỉ Prompt Spatial Gate
-│       ├── V3_CAD_Only.ipynb              # V3: chỉ Conditioned Attention Decoder
-│       ├── V4_Full_BinaryPrompt.ipynb     # V4: PSG + CAD, prompt nhị phân (mask cứng)
-│       └── V5_Full_HeatmapPrompt.ipynb    # V5: PSG + CAD, prompt Gaussian Heatmap (mô hình đề xuất)
-│
-└── File_Test/                          # Notebook ĐÁNH GIÁ / SO SÁNH (copy từ Result/Result_BTXRD, đã xóa output)
-    ├── pga-vs-unet2d-r512.ipynb            # So sánh PGA-UNet vs U-Net (baseline), 3 kịch bản prompt, 512×512
-    ├── test-pga-samzs-samft-r256.ipynb     # PGA-UNet vs SAM-Med2D zero-shot vs SAM-Med2D fine-tuned, 256×256
-    ├── test-pga-dataset-1234.ipynb         # Kiểm định chéo (Cross-validation) PGA-UNet trên 4 fold
-    ├── test-subcat-pga-vs-baseline.ipynb   # Phân tích sub-category: PGA-UNet vs U-Net (nhóm Dễ/Khó theo Dice U-Net)
-    ├── test-subcat-pga-vs-sam-r256-r512.ipynb  # Phân tích sub-category: SAM-Med2D vs PGA-UNet (256 & 512)
-    ├── test-pipeline-evaluation.ipynb      # Đánh giá pipeline end-to-end (Gatekeeper → PGA-UNet)
-    ├── efficientnet-b3.ipynb               # Đánh giá Gatekeeper (Accuracy/Recall/Precision/AUC-ROC)
-    ├── Test_app.ipynb                      # Kiểm tra inference thủ công (Gradio app demo)
-    └── Ablation/                       # Test 4 biến thể ablation (V1–V4; V5 được test ở các notebook trên)
-        ├── test-v1-nopsg-nocad-concat.ipynb
-        ├── test-v2-psg-only.ipynb
-        ├── test-v3-cad-only.ipynb
-        └── test-v4-full-binaryprompt.ipynb
+├── Prompt-Guided-XRay-Segmentation/
+│   ├── dataset.py
+│   ├── train.py
+│   ├── REAME.md
+│   └── models/
+├── File_Train/
+│   ├── btxrd/
+│   ├── fracatlas/
+│   └── common/
+└── File_Test/
+    ├── btxrd/
+    ├── fracatlas/
+    └── common/
 ```
 
-> **Quy ước:** `File_Train/` chứa notebook huấn luyện từ đầu (sinh checkpoint `.pth`); `File_Test/` chứa notebook tải checkpoint đã huấn luyện về để đánh giá/so sánh/trực quan hóa — không huấn luyện lại. Các file trong `File_Test/` được đồng bộ từ `Result/Result_BTXRD/` (nơi lưu kết quả chạy thật) nhưng đã xóa toàn bộ output (số liệu, biểu đồ) để giữ mã nguồn gọn nhẹ.
+## Source Package
 
----
+`Prompt-Guided-XRay-Segmentation/` is the shared runtime package for PGA-UNet.
 
-## Mô hình PGA-UNet
+- `dataset.py`: `PromptSegmentationDataset`, prompt generation, resize-and-padding, image-level split handling.
+- `train.py`: main PGA-UNet training loop.
+- `models/networks/prompt_unet_2D.py`: PGA-UNet architecture with Gaussian prompt input, Prompt Spatial Gate, and Conditional Attention Decoder.
+- `models/layers/grid_attention_layer.py`: original attention gate inherited from Attention U-Net and reused in ablation variants.
 
-**Kiến trúc:** U-Net nhẹ (~3M tham số), `feature_scale=4`, bộ lọc `[16, 32, 64, 128, 256]`
+The current prompt protocol is resolution-aware:
 
-**Hai thành phần chính:**
-- **Prompt Spatial Gate (PSG):** Tại mỗi tầng mã hóa, bản đồ nhiệt câu nhắc được giảm mẫu và nhân có trọng số (`1 + alpha * gate(prompt)`, `alpha` khởi tạo 0.1, học được) vào feature map để tăng cường đặc trưng vùng ROI mà không triệt tiêu phần còn lại.
-- **Conditioned Attention Decoder (CAD):** Tại mỗi tầng giải mã, tín hiệu gating của Attention Gate (kế thừa từ Attention U-Net) được điều kiện hóa bằng đặc trưng câu nhắc, với trọng số giảm dần theo tầng `[1.0, 0.7, 0.4, 0.2]`.
+- `256 x 256`: minimum prompt margin `5 px`, Gaussian kernel `31`
+- `512 x 512`: minimum prompt margin `10 px`, Gaussian kernel `61`
+- covering prompt training range: `0.25-0.70`
+- covering prompt test setting: `0.50`
+- off-center shift setting: up to `0.50`, while still covering the lesion
 
-**Biểu diễn câu nhắc:** Plateau Heatmap — vùng trong bounding box (mở rộng 5px mỗi cạnh) gán giá trị 1, làm mịn biên bằng Gaussian kernel `31×31`.
+## Dataset-Specific Notebook Folders
 
-**Prompt augmentation (trong `forward()` của model, chỉ khi `training=True`):** 15% prompt bị xóa trắng (mô phỏng không có câu nhắc), 15% prompt bị nhiễu Gaussian (σ=0.1), 70% giữ nguyên.
+The active notebooks are dataset-specific:
 
-**Cài đặt huấn luyện (`train.py`):**
+- `File_Train/btxrd/`
+- `File_Train/fracatlas/`
+- `File_Test/btxrd/`
+- `File_Test/fracatlas/`
 
-| Tham số | Giá trị |
-|---|---|
-| Epochs | 100 (early stop patience=15, theo Dice zoom-out trên tập val) |
-| Batch size | 4 |
-| Image size | 512×512 |
-| Optimizer | AdamW (lr=1e-4, weight_decay=1e-4) |
-| Scheduler | ReduceLROnPlateau (mode=max, factor=0.5, patience=5) |
-| Loss | BCEWithLogitsLoss + Dice Loss (tổng, trọng số bằng nhau) |
-| Gradient clipping | max_norm=1.0 |
-| Image augmentation | HFlip 50%, Rotate ±15° (50%), áp dụng đồng bộ ảnh/mask/prompt |
+Each dataset folder contains the current train or test notebooks for:
 
----
+- `PGA_Unet2D.ipynb`
+- `Attention_Unet2D.ipynb`
+- `Unet2D.ipynb`
+- `Finetune_SAMMed2D_test_robust.ipynb`
+- ablation notebooks
+- dataset-specific comparison notebooks
 
-## Gatekeeper — EfficientNet_B3
+The active comparison story is:
 
-Phân lớp nhị phân (bình thường / bệnh lý) đặt trước PGA-UNet trong pipeline, sàng lọc ảnh trước khi đưa vào phân đoạn.
-Tinh chỉnh hai giai đoạn: (1) đóng băng backbone, chỉ huấn luyện head (25 epoch, lr=1e-4); (2) mở toàn bộ, CosineAnnealingLR (tối đa 100 epoch, dừng sớm patience=15, lr=1e-5).
+1. PGA-UNet across BTXRD and FracAtlas at `256` and `512`
+2. Monte Carlo cross-validation for stability
+3. PGA-UNet vs Attention U-Net at `512`
+4. Attention U-Net top-Dice and bottom-Dice subsets
+5. PGA-UNet vs SAM-Med2D at `256`
+6. Small-lesion subset analysis
+7. Efficiency analysis
+8. Ablation analysis
 
-Kết quả trên tập kiểm thử (N=375: 187 bệnh lý + 188 bình thường):
+## Common Folders
 
-| Metric | Giá trị |
-|---|---|
-| Accuracy | 88.00% |
-| Precision | 87.37% |
-| Recall (Sensitivity) | 88.77% |
-| Specificity | 87.23% |
-| NPV | 88.65% |
-| F1-Score | 88.06% |
-| AUC-ROC | 0.9405 |
+`File_Train/common/` and `File_Test/common/` are shared templates and legacy intermediate notebooks retained for reference. They are not the primary entry points for reruns. When in doubt, prefer the dataset-specific folders first.
 
----
+## Current Baselines
 
-## Pipeline End-to-End
+The current main baselines are:
 
-`File_Test/test-pipeline-evaluation.ipynb` đánh giá toàn bộ luồng trên tập `dataset_online` hỗn hợp (375 ảnh: 187 bệnh lý + 188 bình thường):
-- Ảnh bình thường → Gatekeeper chặn (TN) hoặc lọt (FP, PGA-UNet chạy nhưng không có GT → Dice=0)
-- Ảnh bệnh lý → Gatekeeper thông (TP, PGA-UNet phân đoạn với bounding box prompt) hoặc bị bỏ sót (FN, không tính)
-- Kết quả: TP=166, FP=24, FN=21, TN=164 → **Pipeline Dice = 0.7544**, **Pipeline IoU = 0.6693** (mẫu số 190 = 166 ảnh TP + 24 ảnh FP)
+- `Attention U-Net` as the automatic baseline
+- `SAM-Med2D` as the prompt-based foundation baseline
 
----
+`U-Net` is still kept in the source tree for reference and optional supplementary experiments, but it is no longer the main automatic baseline in the paper narrative.
 
-## So sánh với baseline (U-Net) và SAM-Med2D
+## Split Terminology
 
-Trên tập kiểm thử BTXRD (PGA-UNet/U-Net: N=187 ảnh, image-level; SAM-Med2D: N=232 mẫu per-polygon — xem lý do khác đơn vị đánh giá tại `Report/Chapter4/chapter4.tex`, mục "Phương pháp đánh giá image-level"); PGA-UNet ở kịch bản Zoom-out:
+The repeated stability experiment should be described as:
 
-| Mô hình | Độ phân giải | Dice↑ | IoU↑ | Precision↑ | Recall↑ | HD95*↓ (chuẩn hóa) | CBL↑ |
-|---|---|---|---|---|---|---|---|
-| U-Net (baseline, không prompt) | 512 | 0.4790 | 0.3815 | 0.6245 | 0.5184 | 0.285 | 0.5906 |
-| **PGA-UNet (Zoom-out, đề xuất)** | **512** | **0.8584** | **0.7617** | **0.8526** | **0.8817** | **0.029** | **0.9500** |
-| SAM-Med2D fine-tuned | 256 | 0.7350 | 0.6130 | 0.7513 | 0.7478 | 0.196 | 0.8907 |
+`Monte Carlo cross-validation (repeated random image-level splits)`
 
-> HD95* chuẩn hóa theo kích thước ảnh (px ÷ độ phân giải tương ứng) vì U-Net/PGA-UNet chạy ở 512×512 còn SAM-Med2D bắt buộc 256×256 (giới hạn position embedding ViT-B) — so sánh HD95 thô giữa hai độ phân giải khác nhau không có ý nghĩa.
+It should not be described as strict non-overlapping `k`-fold cross-validation.
 
-Chi tiết đầy đủ (3 kịch bản prompt, ablation, cross-validation, sub-category, fine-tuned vs zero-shot, và thực nghiệm tổng quát hóa trên FracAtlas) xem `Report/Chapter4/chapter4.tex`.
+## Notes
 
----
-
-## Yêu cầu môi trường
-
-Các notebook được thiết kế chạy trên **Google Colab / Kaggle** (GPU T4/A100/P100).
-
-```
-torch >= 2.0
-torchvision
-numpy
-opencv-python
-scikit-learn
-matplotlib
-scipy
-tqdm
-gdown
-```
-
-Package PGA-UNet được clone trực tiếp từ GitHub trong mỗi notebook (branch `TN_B_ON`) và thêm vào `sys.path`, ví dụ:
-```python
-!git clone -b TN_B_ON https://github.com/ThongLuc2k3/Prompt-Guided-XRay-Segmentation.git
-sys.path.insert(0, '/content/Prompt-Guided-XRay-Segmentation')
-```
+- Test notebooks intentionally keep some checkpoint placeholders because final reruns will produce new checkpoints.
+- Dataset links have already been separated by folder for `BTXRD` and `FracAtlas`.
+- The paper narrative now uses `Attention U-Net`, `SAM-Med2D`, `small-lesion subset`, and the full `Gaussian prompt + PSG + CAD` ablation story.

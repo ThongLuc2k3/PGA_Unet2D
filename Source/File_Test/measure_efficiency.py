@@ -18,7 +18,7 @@ Required packages (installed automatically if missing):
 Outputs:
   - Prints a comparison table to the console, along with SAM-Med2D/PGA-UNet ratios for each metric.
   - Saves `results/efficiency_comparison.csv`.
-  - Saves the bar chart `results/efficiency_comparison.png` with six metrics: parameter count, GFLOPs, checkpoint size, peak GPU memory, latency on the current device, and forced CPU latency. The color palette matches the rest of the thesis figures (PGA-UNet = blue `#2a78d6`, SAM-Med2D = orange `#eb6834`).
+  - Saves the bar chart `results/efficiency_comparison.png` with six headline metrics: parameter count, GFLOPs, checkpoint size, peak GPU memory, latency on the current device, and forced CPU latency. The CSV also includes extra diagnostics such as trainable/frozen parameter split, trainable parameter ratio, latency percentiles, coefficients of variation, FPS, milliseconds per megapixel, and pixels processed per second.
 ══════════════════════════════════════════════════════════════════════
 """
 
@@ -67,9 +67,9 @@ if not os.path.exists(f"{BASE}/SAM-Med2D"):
 
 os.makedirs(f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints", exist_ok=True)
 for cid, fpath in [
-    ("1Y3i4uizUfVjXtMD81FOQHseQdN-7LEJp", f"{BASE}/SAM-Med2D/best_sam.pth"),
-    ("1wV7W9j-LTLaqpKI0Q7MTyF9CHdzivXhH", f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_256_best.pth"),
-    ("13_51tUHcFSu85GqJTri0hDrPGcInHYBz", f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_512_best.pth"),
+    ("", f"{BASE}/SAM-Med2D/best_sam.pth"),
+    ("", f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_256_best.pth"),
+    ("", f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_512_best.pth"),
 ]:
     if not os.path.exists(fpath):
         gdown.download(f"https://drive.google.com/uc?id={cid}", fpath, quiet=False)
@@ -192,6 +192,10 @@ def checkpoint_size_mb(path):
     return os.path.getsize(path) / (1024 ** 2) if os.path.exists(path) else float("nan")
 
 
+def _safe_div(num, den):
+    return float("nan") if den == 0 else num / den
+
+
 def measure_flops(model, inputs):
     """inputs: tuple of tensors passed to `model(*inputs)`. Returns `(GFLOPs, GMACs)`.
 
@@ -234,15 +238,29 @@ def _timed_runs(model, inputs, device_type, n_warmup, n_runs):
                 torch.cuda.synchronize()
             times.append((time.perf_counter() - t0) * 1000.0)
 
-    times = torch.tensor(times)
+    times = torch.tensor(times, dtype=torch.float64)
     mean_ms = times.mean().item()
-    std_ms = times.std().item()
-    fps = 1000.0 / mean_ms
-    return mean_ms, std_ms, fps
+    std_ms = times.std(unbiased=False).item()
+    p50_ms = torch.quantile(times, 0.50).item()
+    p95_ms = torch.quantile(times, 0.95).item()
+    min_ms = times.min().item()
+    max_ms = times.max().item()
+    cv_pct = _safe_div(std_ms, mean_ms) * 100.0
+    fps = _safe_div(1000.0, mean_ms)
+    return dict(
+        mean_ms=mean_ms,
+        std_ms=std_ms,
+        p50_ms=p50_ms,
+        p95_ms=p95_ms,
+        min_ms=min_ms,
+        max_ms=max_ms,
+        cv_pct=cv_pct,
+        fps=fps,
+    )
 
 
 def measure_latency(model, inputs, n_warmup=10, n_runs=50):
-    """Latency on the model's current device (GPU if CUDA is available). Returns `(mean_ms, std_ms, fps)`."""
+    """Latency on the model's current device (GPU if CUDA is available)."""
     return _timed_runs(model, inputs, DEVICE.type, n_warmup, n_runs)
 
 
@@ -252,10 +270,10 @@ def measure_latency_cpu(model, inputs, n_warmup=5, n_runs=20):
     model_cpu = model.to("cpu")
     inputs_cpu = tuple(x.to("cpu") for x in inputs)
     try:
-        mean_ms, std_ms, fps = _timed_runs(model_cpu, inputs_cpu, "cpu", n_warmup, n_runs)
+        stats = _timed_runs(model_cpu, inputs_cpu, "cpu", n_warmup, n_runs)
     finally:
         model.to(orig_device)
-    return mean_ms, std_ms, fps
+    return stats
 
 
 def measure_peak_memory_mb(model, inputs):
@@ -349,9 +367,7 @@ rows = []
 for name, model, inputs, ckpt_path, n_params_total in configs:
     print(f"\nMeasuring: {name} ...")
     gflops, gmacs = measure_flops(model, inputs)
-    mean_ms, std_ms, fps = measure_latency(model, inputs)
     print("  Measuring CPU latency as well (simulating deployment without a GPU; this may take a while for SAM-Med2D) ...")
-    mean_ms_cpu, std_ms_cpu, fps_cpu = measure_latency_cpu(model, inputs)
     peak_mem = measure_peak_memory_mb(model, inputs)
     ckpt_mb = checkpoint_size_mb(ckpt_path)
 
@@ -359,27 +375,68 @@ for name, model, inputs, ckpt_path, n_params_total in configs:
         n_trainable = count_sam_finetune_trainable(sam_model)
     else:
         n_trainable = count_params(model, only_trainable=True)
+    n_frozen = max(n_params_total - n_trainable, 0)
+    if name.startswith("PGA-UNet (256x256)"):
+        input_side = 256
+    elif name.startswith("PGA-UNet (512x512)"):
+        input_side = 512
+    else:
+        input_side = 256
+    input_megapixels = (input_side * input_side) / 1e6
+    current_latency = measure_latency(model, inputs)
+    cpu_latency = measure_latency_cpu(model, inputs)
+    ms_per_mp = _safe_div(current_latency["mean_ms"], input_megapixels)
+    pixels_per_second_mp = _safe_div(input_megapixels, current_latency["mean_ms"] / 1000.0)
+    cpu_ms_per_mp = _safe_div(cpu_latency["mean_ms"], input_megapixels)
+    cpu_pixels_per_second_mp = _safe_div(input_megapixels, cpu_latency["mean_ms"] / 1000.0)
 
     rows.append(dict(
         model=name,
+        input_side_px=input_side,
+        input_megapixels=input_megapixels,
         params_total_M=n_params_total / 1e6,
         params_trainable_M=n_trainable / 1e6,
+        params_frozen_M=n_frozen / 1e6,
+        trainable_ratio_pct=_safe_div(n_trainable, n_params_total) * 100.0,
         gflops=gflops,
         gmacs=gmacs,
         checkpoint_MB=ckpt_mb,
         peak_mem_MB=peak_mem,
-        latency_ms_mean=mean_ms,
-        latency_ms_std=std_ms,
-        fps=fps,
-        latency_ms_mean_cpu=mean_ms_cpu,
-        latency_ms_std_cpu=std_ms_cpu,
-        fps_cpu=fps_cpu,
+        latency_ms_mean=current_latency["mean_ms"],
+        latency_ms_std=current_latency["std_ms"],
+        latency_ms_p50=current_latency["p50_ms"],
+        latency_ms_p95=current_latency["p95_ms"],
+        latency_ms_min=current_latency["min_ms"],
+        latency_ms_max=current_latency["max_ms"],
+        latency_cv_pct=current_latency["cv_pct"],
+        fps=current_latency["fps"],
+        ms_per_megapixel=ms_per_mp,
+        megapixels_per_second=pixels_per_second_mp,
+        latency_ms_mean_cpu=cpu_latency["mean_ms"],
+        latency_ms_std_cpu=cpu_latency["std_ms"],
+        latency_ms_p50_cpu=cpu_latency["p50_ms"],
+        latency_ms_p95_cpu=cpu_latency["p95_ms"],
+        latency_ms_min_cpu=cpu_latency["min_ms"],
+        latency_ms_max_cpu=cpu_latency["max_ms"],
+        latency_cv_pct_cpu=cpu_latency["cv_pct"],
+        fps_cpu=cpu_latency["fps"],
+        ms_per_megapixel_cpu=cpu_ms_per_mp,
+        megapixels_per_second_cpu=cpu_pixels_per_second_mp,
     ))
     print(f"  Parameters: {n_params_total/1e6:.3f}M total / {n_trainable/1e6:.3f}M trainable")
     print(f"  FLOPs:   {gflops:.3f} GFLOPs ({gmacs:.3f} GMACs)")
     print(f"  Peak GPU memory: {peak_mem:.1f} MB" if DEVICE.type == "cuda" else "  Peak memory: N/A (CPU)")
-    print(f"  Latency (current device — {DEVICE.type}): {mean_ms:.2f} ± {std_ms:.2f} ms/image  ({fps:.1f} images/s)")
-    print(f"  Latency (forced CPU): {mean_ms_cpu:.2f} ± {std_ms_cpu:.2f} ms/image  ({fps_cpu:.1f} images/s)")
+    print(
+        f"  Latency (current device — {DEVICE.type}): "
+        f"{current_latency['mean_ms']:.2f} ± {current_latency['std_ms']:.2f} ms/image  "
+        f"(p50={current_latency['p50_ms']:.2f}, p95={current_latency['p95_ms']:.2f}, "
+        f"{current_latency['fps']:.1f} images/s)"
+    )
+    print(
+        f"  Latency (forced CPU): {cpu_latency['mean_ms']:.2f} ± {cpu_latency['std_ms']:.2f} ms/image  "
+        f"(p50={cpu_latency['p50_ms']:.2f}, p95={cpu_latency['p95_ms']:.2f}, "
+        f"{cpu_latency['fps']:.1f} images/s)"
+    )
     print(f"  Checkpoint size on disk: {ckpt_mb:.1f} MB")
 
 df = pd.DataFrame(rows)
@@ -389,9 +446,15 @@ df.to_csv(csv_path, index=False, float_format="%.4f")
 print("\n" + "=" * 70)
 print("SUMMARY TABLE")
 print("=" * 70)
-_num_cols = ["params_total_M", "params_trainable_M", "gflops", "gmacs",
-             "checkpoint_MB", "peak_mem_MB", "latency_ms_mean", "latency_ms_std", "fps",
-             "latency_ms_mean_cpu", "latency_ms_std_cpu", "fps_cpu"]
+_num_cols = ["input_megapixels", "params_total_M", "params_trainable_M", "params_frozen_M",
+             "trainable_ratio_pct", "gflops", "gmacs", "checkpoint_MB", "peak_mem_MB",
+             "latency_ms_mean", "latency_ms_std", "latency_ms_p50", "latency_ms_p95",
+             "latency_ms_min", "latency_ms_max", "latency_cv_pct", "fps",
+             "ms_per_megapixel", "megapixels_per_second",
+             "latency_ms_mean_cpu", "latency_ms_std_cpu", "latency_ms_p50_cpu",
+             "latency_ms_p95_cpu", "latency_ms_min_cpu", "latency_ms_max_cpu",
+             "latency_cv_pct_cpu", "fps_cpu", "ms_per_megapixel_cpu",
+             "megapixels_per_second_cpu"]
 print(df.to_string(index=False, formatters={c: (lambda x: f"{x:.3f}") for c in _num_cols}))
 print(f"\n→ CSV: {csv_path}")
 
@@ -403,11 +466,14 @@ try:
     print("SAM-Med2D / PGA-UNet comparison at the same 256x256 resolution:")
     print(f"  Parameter count:        {r_sam['params_total_M']/r_pga['params_total_M']:.1f}x "
           f"({r_sam['params_total_M']:.2f}M vs {r_pga['params_total_M']:.2f}M)")
+    print(f"  Trainable parameters:   {r_sam['params_trainable_M']/r_pga['params_trainable_M']:.1f}x")
     print(f"  GFLOPs:            {r_sam['gflops']/r_pga['gflops']:.1f}x")
     print(f"  Checkpoint size (MB):   {r_sam['checkpoint_MB']/r_pga['checkpoint_MB']:.1f}x")
     if DEVICE.type == "cuda":
         print(f"  GPU latency:        {r_sam['latency_ms_mean']/r_pga['latency_ms_mean']:.1f}x")
+        print(f"  GPU p95 latency:    {r_sam['latency_ms_p95']/r_pga['latency_ms_p95']:.1f}x")
     print(f"  CPU latency:        {r_sam['latency_ms_mean_cpu']/r_pga['latency_ms_mean_cpu']:.1f}x")
+    print(f"  Pixels/s throughput:    {r_sam['megapixels_per_second']/r_pga['megapixels_per_second']:.1f}x")
     print("-" * 70)
 except (IndexError, KeyError, ZeroDivisionError):
     pass

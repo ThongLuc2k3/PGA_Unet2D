@@ -9,20 +9,20 @@ from torchvision.transforms import InterpolationMode
 import random
 
 
-class BTXRD_Dataset(Dataset):
+class PromptSegmentationDataset(Dataset):
     """
-    Mỗi sample = 1 polygon GT trong 1 ảnh.
-    1 ảnh nhiều polygon → nhiều sample (1GT-1Prompt).
+    Generic polygon-to-prompt dataset for prompt-guided lesion segmentation.
+    Each sample corresponds to one GT polygon inside one image.
 
     prompt_mode:
-        'zoom_out'   – prompt bao trọn GT, mở rộng ra ngoài
-        'shift'      – zoom_out + dịch tâm (vẫn giao GT ≥ 30%)
+        'zoom_out'   – covering prompt expanded around the GT
+        'shift'      – covering prompt with an off-center displacement
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
                  prompt_mode='zoom_out',
-                 zoom_ratio=(0.25, 0.70),
-                 shift_ratio=0.50):
+                 zoom_ratio=(0.15, 0.45),
+                 shift_ratio=0.30):
         self.image_dir   = image_dir
         self.json_dir    = json_dir
         self.img_size    = img_size
@@ -58,8 +58,9 @@ class BTXRD_Dataset(Dataset):
     def _ensure_min_prompt_margin(self, bx_min, bx_max, by_min, by_max,
                                   x_min, x_max, y_min, y_max, orig_h, orig_w):
         """
-        Đảm bảo prompt bbox không ôm quá sát GT nếu còn không gian ảnh.
-        Khoảng đệm tối thiểu được áp ở bước sinh bbox, không áp thêm ở heatmap.
+        Ensure the prompt box does not hug the GT boundary too tightly when
+        image space is still available. The minimum context margin is enforced
+        at box generation time rather than as a post-hoc heatmap expansion.
         """
         margin = float(self.min_prompt_margin_px)
 
@@ -80,14 +81,14 @@ class BTXRD_Dataset(Dataset):
         return bx_min, bx_max, by_min, by_max
 
     def _zoom_out_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w):
-        """Mở rộng bbox đều ra ngoài GT. Train: asymmetric random. Test: fixed."""
+        """Expand the prompt box outside the GT. Train: asymmetric random. Test: fixed."""
         gt_w, gt_h = x_max - x_min, y_max - y_min
         lo, hi = self.zoom_ratio
         if self.is_train:
             r_l, r_r = random.uniform(lo, hi), random.uniform(lo, hi)
             r_t, r_b = random.uniform(lo, hi), random.uniform(lo, hi)
         else:
-            r = 0.50
+            r = 0.30
             r_l = r_r = r_t = r_b = r
         bx_min = max(0,       x_min - gt_w * r_l)
         bx_max = min(orig_w,  x_max + gt_w * r_r)
@@ -100,7 +101,7 @@ class BTXRD_Dataset(Dataset):
         return bx_min, bx_max, by_min, by_max
 
     def _shift_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
-        """Zoom-out rồi lệch tâm nhưng vẫn bao trọn toàn bộ GT."""
+        """Create an off-center covering box that still fully contains the GT."""
         gt_w, gt_h = x_max - x_min, y_max - y_min
         bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
             x_min, x_max, y_min, y_max, orig_h, orig_w)
@@ -118,7 +119,7 @@ class BTXRD_Dataset(Dataset):
         by_min = max(0,       by_min + dy)
         by_max = min(orig_h,  by_max + dy)
 
-        # Shift vẫn phải bao trọn GT, chỉ thay đổi vị trí tương đối của GT trong hộp.
+        # Shift mode must still cover the full GT, only changing its relative position inside the box.
         box_w = bx_max - bx_min
         box_h = by_max - by_min
         bx_min = min(bx_min, x_min)
@@ -126,7 +127,7 @@ class BTXRD_Dataset(Dataset):
         bx_max = max(bx_max, x_max)
         by_max = max(by_max, y_max)
 
-        # Nếu clamp vào biên ảnh làm đổi kích thước hộp, cố giữ lại box size ban đầu khi còn chỗ.
+        # If clamping to image borders shrinks the shifted box, try to preserve the original box size.
         if bx_max - bx_min < box_w:
             if bx_min <= 0:
                 bx_max = min(orig_w, bx_min + box_w)
@@ -190,7 +191,7 @@ class BTXRD_Dataset(Dataset):
         x_min, y_min = np.min(points, axis=0)
         x_max, y_max = np.max(points, axis=0)
 
-        # Chọn prompt bbox theo mode
+        # Select the prompt box according to the configured prompt mode.
         if self.prompt_mode == 'zoom_out':
             bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w)
@@ -205,7 +206,7 @@ class BTXRD_Dataset(Dataset):
         prompt_map = self.create_plateau_heatmap(
             [bx_min, by_min, bx_max, by_max], orig_h, orig_w)
 
-        # Preserve aspect ratio before padding so X-ray anatomy is not distorted.
+        # Preserve aspect ratio before padding so anatomy is not distorted.
         image = self._resize_and_pad(image, cv2.INTER_LINEAR, pad_value=0)
         mask = self._resize_and_pad(mask, cv2.INTER_NEAREST, pad_value=0)
         prompt_map = self._resize_and_pad(prompt_map, cv2.INTER_LINEAR, pad_value=0.0)
@@ -217,7 +218,7 @@ class BTXRD_Dataset(Dataset):
         mask   = torch.from_numpy(mask).unsqueeze(0)
         prompt = torch.from_numpy(prompt_map).unsqueeze(0)
 
-        # Augmentation đồng bộ (chỉ train)
+        # Synchronized augmentation (train only).
         if self.is_train:
             if random.random() >= 0.5:
                 image, mask, prompt = TF.hflip(image), TF.hflip(mask), TF.hflip(prompt)
@@ -229,3 +230,14 @@ class BTXRD_Dataset(Dataset):
 
         mask = (mask > 0.5).float()
         return image, mask, prompt
+
+
+# Backward-compatible aliases used by older notebooks/scripts.
+BTXRD_Dataset = PromptSegmentationDataset
+FracAtlas_Dataset = PromptSegmentationDataset
+
+__all__ = [
+    "PromptSegmentationDataset",
+    "BTXRD_Dataset",
+    "FracAtlas_Dataset",
+]

@@ -6,14 +6,14 @@
 - Cạnh dài được co về `img_size`, sau đó đệm nền để tạo ảnh vuông `img_size x img_size`.
 - `image` dùng `cv2.INTER_LINEAR`, `mask` dùng `cv2.INTER_NEAREST`, `prompt_map` dùng `cv2.INTER_LINEAR`.
 - Prompt chỉ còn 2 chế độ: `zoom_out` và `shift`.
-- `zoom_out` khi train được lấy ngẫu nhiên trong khoảng `0.25-0.70`; khi test dùng một mức cố định tròn là `0.50`.
-- `shift` dùng độ lệch tương đối `0.50`.
+- `zoom_out` khi train được lấy ngẫu nhiên trong khoảng `0.15-0.45`; khi test dùng một mức cố định là `0.30`.
+- `shift` dùng độ lệch tương đối `0.30`.
 - Tham số prompt phụ thuộc độ phân giải:
   - `img_size=256` → khoảng ngữ cảnh tối thiểu quanh GT là `5 px`, Gaussian kernel `31`
   - `img_size=512` → khoảng ngữ cảnh tối thiểu quanh GT là `10 px`, Gaussian kernel `61`
 
 ## Cấu trúc thư mục cần có:
-# dataset_BTXRD/
+# dataset_<DATASET_NAME>/
   - train/images/  train/annotations/
   - val/images/    val/annotations/
   - test/images/   test/annotations/
@@ -27,6 +27,7 @@
 
 ## Bước 2 – Huấn luyện với prompt bao trọn
 # Trong train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=False
+- đặt `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>`
 - python train.py
 # → checkpoints/pga_unet_zoom_out_256_best.pth hoặc _512_best.pth
 - python test_exp.py
