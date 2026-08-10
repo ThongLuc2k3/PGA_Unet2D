@@ -17,13 +17,12 @@ class BTXRD_Dataset(Dataset):
     prompt_mode:
         'zoom_out'   – prompt bao trọn GT, mở rộng ra ngoài
         'shift'      – zoom_out + dịch tâm (vẫn giao GT ≥ 30%)
-        'mixed_7_3'  – 70% zoom_out + 30% shift (train: random, test: deterministic by idx)
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
                  prompt_mode='zoom_out',
-                 zoom_ratio=(0.15, 0.45),
-                 shift_ratio=0.30):
+                 zoom_ratio=(0.25, 0.70),
+                 shift_ratio=0.50):
         self.image_dir   = image_dir
         self.json_dir    = json_dir
         self.img_size    = img_size
@@ -31,6 +30,11 @@ class BTXRD_Dataset(Dataset):
         self.prompt_mode = prompt_mode
         self.zoom_ratio  = zoom_ratio
         self.shift_ratio = shift_ratio
+        self.min_prompt_margin_px = max(1, int(round(5 * (self.img_size / 256.0))))
+
+        kernel = int(round(31 * (self.img_size / 256.0)))
+        self.prompt_kernel = kernel if kernel % 2 == 1 else kernel - 1
+        self.prompt_kernel = max(3, self.prompt_kernel)
 
         self.all_samples = []
         for img_name in sorted(os.listdir(image_dir)):
@@ -51,6 +55,30 @@ class BTXRD_Dataset(Dataset):
 
     # ── Prompt helpers ────────────────────────────────────────────────
 
+    def _ensure_min_prompt_margin(self, bx_min, bx_max, by_min, by_max,
+                                  x_min, x_max, y_min, y_max, orig_h, orig_w):
+        """
+        Đảm bảo prompt bbox không ôm quá sát GT nếu còn không gian ảnh.
+        Khoảng đệm tối thiểu được áp ở bước sinh bbox, không áp thêm ở heatmap.
+        """
+        margin = float(self.min_prompt_margin_px)
+
+        left_gap = x_min - bx_min
+        right_gap = bx_max - x_max
+        top_gap = y_min - by_min
+        bottom_gap = by_max - y_max
+
+        if left_gap < margin:
+            bx_min = max(0.0, min(bx_min, x_min - margin))
+        if right_gap < margin:
+            bx_max = min(float(orig_w), max(bx_max, x_max + margin))
+        if top_gap < margin:
+            by_min = max(0.0, min(by_min, y_min - margin))
+        if bottom_gap < margin:
+            by_max = min(float(orig_h), max(by_max, y_max + margin))
+
+        return bx_min, bx_max, by_min, by_max
+
     def _zoom_out_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w):
         """Mở rộng bbox đều ra ngoài GT. Train: asymmetric random. Test: fixed."""
         gt_w, gt_h = x_max - x_min, y_max - y_min
@@ -59,16 +87,20 @@ class BTXRD_Dataset(Dataset):
             r_l, r_r = random.uniform(lo, hi), random.uniform(lo, hi)
             r_t, r_b = random.uniform(lo, hi), random.uniform(lo, hi)
         else:
-            r = (lo + hi) / 2
+            r = 0.50
             r_l = r_r = r_t = r_b = r
         bx_min = max(0,       x_min - gt_w * r_l)
         bx_max = min(orig_w,  x_max + gt_w * r_r)
         by_min = max(0,       y_min - gt_h * r_t)
         by_max = min(orig_h,  y_max + gt_h * r_b)
+        bx_min, bx_max, by_min, by_max = self._ensure_min_prompt_margin(
+            bx_min, bx_max, by_min, by_max,
+            x_min, x_max, y_min, y_max, orig_h, orig_w,
+        )
         return bx_min, bx_max, by_min, by_max
 
     def _shift_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
-        """Zoom-out rồi dịch tâm, đảm bảo overlap với GT ≥ 30%."""
+        """Zoom-out rồi lệch tâm nhưng vẫn bao trọn toàn bộ GT."""
         gt_w, gt_h = x_max - x_min, y_max - y_min
         bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
             x_min, x_max, y_min, y_max, orig_h, orig_w)
@@ -86,26 +118,42 @@ class BTXRD_Dataset(Dataset):
         by_min = max(0,       by_min + dy)
         by_max = min(orig_h,  by_max + dy)
 
-        # Đảm bảo overlap ≥ 30%
-        if min(bx_max, x_max) - max(bx_min, x_min) < gt_w * 0.3:
-            if dx > 0: bx_max = min(orig_w, x_max + gt_w * 0.15)
-            else:      bx_min = max(0,      x_min - gt_w * 0.15)
-        if min(by_max, y_max) - max(by_min, y_min) < gt_h * 0.3:
-            if dy > 0: by_max = min(orig_h, y_max + gt_h * 0.15)
-            else:      by_min = max(0,      y_min - gt_h * 0.15)
+        # Shift vẫn phải bao trọn GT, chỉ thay đổi vị trí tương đối của GT trong hộp.
+        box_w = bx_max - bx_min
+        box_h = by_max - by_min
+        bx_min = min(bx_min, x_min)
+        by_min = min(by_min, y_min)
+        bx_max = max(bx_max, x_max)
+        by_max = max(by_max, y_max)
+
+        # Nếu clamp vào biên ảnh làm đổi kích thước hộp, cố giữ lại box size ban đầu khi còn chỗ.
+        if bx_max - bx_min < box_w:
+            if bx_min <= 0:
+                bx_max = min(orig_w, bx_min + box_w)
+            elif bx_max >= orig_w:
+                bx_min = max(0, bx_max - box_w)
+        if by_max - by_min < box_h:
+            if by_min <= 0:
+                by_max = min(orig_h, by_min + box_h)
+            elif by_max >= orig_h:
+                by_min = max(0, by_max - box_h)
 
         return bx_min, bx_max, by_min, by_max
 
     def create_plateau_heatmap(self, bbox, orig_h, orig_w):
         heatmap = np.zeros((orig_h, orig_w), dtype=np.float32)
         x_min, y_min, x_max, y_max = bbox
-        x_min = max(0, int(x_min - 5))
-        y_min = max(0, int(y_min - 5))
-        x_max = min(orig_w, int(x_max + 5))
-        y_max = min(orig_h, int(y_max + 5))
+        x_min = max(0, int(x_min))
+        y_min = max(0, int(y_min))
+        x_max = min(orig_w, int(x_max))
+        y_max = min(orig_h, int(y_max))
         if x_max > x_min and y_max > y_min:
             heatmap[y_min:y_max, x_min:x_max] = 1.0
-            heatmap = cv2.GaussianBlur(heatmap, (31, 31), 0)
+            heatmap = cv2.GaussianBlur(
+                heatmap,
+                (self.prompt_kernel, self.prompt_kernel),
+                0,
+            )
         return heatmap
 
     def _resize_and_pad(self, array, interpolation, pad_value=0):
@@ -151,14 +199,6 @@ class BTXRD_Dataset(Dataset):
             bx_min, bx_max, by_min, by_max = self._shift_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
-        elif self.prompt_mode == 'mixed_7_3':
-            use_shift = (random.random() < 0.3) if self.is_train else (idx % 10 >= 7)
-            if use_shift:
-                bx_min, bx_max, by_min, by_max = self._shift_bbox(
-                    x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
-            else:
-                bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
-                    x_min, x_max, y_min, y_max, orig_h, orig_w)
         else:
             raise ValueError(f"Unknown prompt_mode: {self.prompt_mode}")
 

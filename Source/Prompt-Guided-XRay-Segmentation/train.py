@@ -13,7 +13,7 @@ from models.networks.prompt_unet_2D import PGA_UNet
 # =========================================================
 # CẤU HÌNH – chỉ đổi ở đây khi chuyển thí nghiệm
 # =========================================================
-EXPERIMENT         = 'B'     # 'A' → zoom_out only | 'B' → mixed_7_3
+TRAIN_PROMPT_MODE  = 'zoom_out'  # 'zoom_out' hoặc 'shift'
 USE_ENCODER_PROMPT = True    # True để bật PromptSpatialGate ở encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
@@ -21,6 +21,8 @@ EPOCHS     = 100
 LR         = 1e-4
 IMG_SIZE   = 512
 EARLY_STOP = 15
+EVAL_PROMPT_MODES = ('zoom_out', 'shift')
+PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
 
 # =========================================================
 # METRICS
@@ -116,39 +118,44 @@ def setup_logger(exp_name):
 # MAIN
 # =========================================================
 def main():
-    logger = setup_logger(EXPERIMENT)
+    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift'}:
+        raise ValueError("TRAIN_PROMPT_MODE phải là 'zoom_out' hoặc 'shift'.")
+    if PRIMARY_VAL_MODE not in EVAL_PROMPT_MODES:
+        raise ValueError("PRIMARY_VAL_MODE phải nằm trong EVAL_PROMPT_MODES.")
+
+    logger = setup_logger(TRAIN_PROMPT_MODE)
     logger.info("=" * 90)
-    logger.info(f"Thí nghiệm {EXPERIMENT} | Device: {DEVICE} | EncoderPrompt: {USE_ENCODER_PROMPT}")
+    logger.info(
+        f"TrainPrompt: {TRAIN_PROMPT_MODE} | Device: {DEVICE} | "
+        f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE}"
+    )
     logger.info("=" * 90)
 
     # ── Dataset ──────────────────────────────────────────────────────
-    train_mode = 'zoom_out' if EXPERIMENT == 'A' else 'mixed_7_3'
-
     train_ds = BTXRD_Dataset(
         image_dir="dataset_BTXRD/train/images",
         json_dir="dataset_BTXRD/train/annotations",
         img_size=IMG_SIZE, is_train=True,
-        prompt_mode=train_mode
+        prompt_mode=TRAIN_PROMPT_MODE
     )
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True,
                               num_workers=2, pin_memory=True)
 
-    # Val loaders: Exp A → 1 loader; Exp B → 3 loaders
-    val_cfg = {'zoom_out': 'zoom_out'} if EXPERIMENT == 'A' else {
-        'zoom_out':  'zoom_out',
-        'shift':     'shift',
-        'mixed_7_3': 'mixed_7_3',
-    }
     val_loaders = {}
-    for name, mode in val_cfg.items():
+    for mode in EVAL_PROMPT_MODES:
         ds = BTXRD_Dataset(
             image_dir="dataset_BTXRD/val/images",
             json_dir="dataset_BTXRD/val/annotations",
             img_size=IMG_SIZE, is_train=False,
             prompt_mode=mode
         )
-        val_loaders[name] = DataLoader(ds, batch_size=BATCH_SIZE, shuffle=False,
-                                       num_workers=2, pin_memory=True)
+        val_loaders[mode] = DataLoader(
+            ds,
+            batch_size=BATCH_SIZE,
+            shuffle=False,
+            num_workers=2,
+            pin_memory=True,
+        )
 
     # ── Model ────────────────────────────────────────────────────────
     model = PGA_UNet(in_channels=1, n_classes=1,
@@ -161,7 +168,7 @@ def main():
     os.makedirs("checkpoints", exist_ok=True)
     best_val_dice   = 0.0
     patience_counter = 0
-    ckpt_prefix     = f"checkpoints/pga_unet_exp{EXPERIMENT}"
+    ckpt_prefix     = f"checkpoints/pga_unet_{TRAIN_PROMPT_MODE}_{IMG_SIZE}"
 
     for epoch in range(EPOCHS):
         # ── Train ────────────────────────────────────────────────────
@@ -204,8 +211,7 @@ def main():
                     'cbl':  s_cbl  / n_cbl if n_cbl > 0 else 0.0,
                 }
 
-        # Dùng zoom_out dice làm tiêu chí chính
-        primary_dice = val_results['zoom_out']['dice']
+        primary_dice = val_results[PRIMARY_VAL_MODE]['dice']
         scheduler.step(primary_dice)
 
         # Log
@@ -232,7 +238,7 @@ def main():
             logger.info(f"Early stopping ở epoch {epoch+1}.")
             break
 
-    logger.info(f"\nBest Dice (zoom_out): {best_val_dice:.4f}")
+    logger.info(f"\nBest Dice ({PRIMARY_VAL_MODE}): {best_val_dice:.4f}")
     logger.info(f"Checkpoint: {ckpt_prefix}_best.pth")
 
 

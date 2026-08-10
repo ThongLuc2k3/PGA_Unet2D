@@ -1,40 +1,24 @@
 """
 measure_efficiency.py
 ══════════════════════════════════════════════════════════════════════
-So sánh hiệu quả tính toán giữa PGA-UNet (256×256, 512×512) và SAM-Med2D
-(256×256): số tham số (tổng + có thể huấn luyện), FLOPs/MACs, dung lượng
-checkpoint trên đĩa, bộ nhớ GPU đỉnh, độ trễ suy luận trên GPU VÀ khi ép
-chạy trên CPU (mô phỏng triển khai trên phần cứng không có GPU — đúng
-động lực "CNN hạng nhẹ khả thi hơn Transformer nền tảng" đã nêu ở
-Chương 1 nhưng khóa luận chưa từng đo thực nghiệm).
+Computational-efficiency comparison between PGA-UNet (256x256, 512x512) and SAM-Med2D (256x256): total and trainable parameter counts, FLOPs/MACs, on-disk checkpoint size, peak GPU memory, GPU inference latency, and forced CPU inference latency (to simulate deployment on hardware without a GPU, matching the thesis motivation that lightweight CNNs may be more practical than foundation-model Transformers).
 
-Đây là phần đo lường còn thiếu được nêu trong Chương 3/Chương 5 của khóa
-luận (khóa luận chỉ đếm số tham số ~3 triệu cho PGA-UNet, chưa đo FLOPs/
-latency/memory so với SAM-Med2D).
+This script fills the measurement gap noted in the thesis methodology/results sections: the thesis reported only the approximate parameter count of PGA-UNet (~3M) and did not measure FLOPs, latency, or memory against SAM-Med2D.
 
-Cách chạy:
-  - Kaggle / Colab (khuyến nghị, cần GPU để số liệu khớp điều kiện đã
-    dùng khi huấn luyện — Kaggle T4 16GB):
+How to run:
+  - Kaggle / Colab (recommended, requires a GPU so that the measurements match the training hardware setup, e.g. a Tesla T4 16 GB):
         !python measure_efficiency.py
-    hoặc copy toàn bộ nội dung file này vào 1 cell rồi chạy trực tiếp.
-  - Máy cá nhân (CPU): vẫn chạy được, nhưng thời gian suy luận và bộ nhớ
-    sẽ không phản ánh đúng điều kiện GPU đã dùng trong khóa luận — script
-    sẽ tự in cảnh báo khi không có CUDA.
+    or copy the full file contents into a single notebook cell and run it directly.
+  - Local machine (CPU only): still supported, but latency and memory will not reflect the GPU conditions used in the thesis. The script prints a warning automatically when CUDA is unavailable.
 
-Yêu cầu cài đặt (script tự cài nếu thiếu):
-  - fvcore (đo FLOPs, xử lý tốt attention/matmul trong ViT của SAM-Med2D,
-    chính xác hơn thop cho kiến trúc Transformer)
-  - gdown (tải checkpoint từ Google Drive, giống các notebook khác)
+Required packages (installed automatically if missing):
+  - fvcore (for FLOP counting; handles attention/matmul in SAM-Med2D's ViT more reliably than `thop` for Transformer architectures)
+  - gdown (to download checkpoints from Google Drive, consistent with the other notebooks)
 
-Kết quả:
-  - In bảng so sánh ra màn hình, kèm tỉ lệ SAM-Med2D/PGA-UNet cho từng
-    chỉ số (tiện trích thẳng vào report).
-  - Lưu `results/efficiency_comparison.csv`.
-  - Lưu biểu đồ cột `results/efficiency_comparison.png` (6 chỉ số: số
-    tham số, GFLOPs, dung lượng checkpoint, bộ nhớ GPU đỉnh, độ trễ trên
-    thiết bị hiện tại, độ trễ ép trên CPU), cùng bảng màu đã dùng xuyên
-    suốt các biểu đồ khác của khóa luận (PGA-UNet = xanh dương #2a78d6,
-    SAM-Med2D = cam #eb6834).
+Outputs:
+  - Prints a comparison table to the console, along with SAM-Med2D/PGA-UNet ratios for each metric.
+  - Saves `results/efficiency_comparison.csv`.
+  - Saves the bar chart `results/efficiency_comparison.png` with six metrics: parameter count, GFLOPs, checkpoint size, peak GPU memory, latency on the current device, and forced CPU latency. The color palette matches the rest of the thesis figures (PGA-UNet = blue `#2a78d6`, SAM-Med2D = orange `#eb6834`).
 ══════════════════════════════════════════════════════════════════════
 """
 
@@ -45,7 +29,7 @@ import subprocess
 import argparse
 
 # ──────────────────────────────────────────────────────────────────────
-# 0. Cài thư viện còn thiếu
+# 0. Install missing packages
 # ──────────────────────────────────────────────────────────────────────
 def _pip_install(pkg):
     subprocess.run([sys.executable, "-m", "pip", "install", "-q", pkg], check=False)
@@ -56,7 +40,7 @@ for _pkg, _import_name in [("fvcore", "fvcore"), ("gdown", "gdown"),
     try:
         __import__(_import_name)
     except ImportError:
-        print(f"→ Cài {_pkg} ...")
+        print(f"Installing {_pkg} ...")
         _pip_install(_pkg)
 
 import gdown
@@ -67,38 +51,37 @@ import matplotlib.pyplot as plt
 from fvcore.nn import FlopCountAnalysis
 
 # ──────────────────────────────────────────────────────────────────────
-# 1. Thiết lập (giống các notebook khác trong khóa luận: BASE, clone
-#    repo, tải checkpoint từ Google Drive)
+# 1. Setup (consistent with the other thesis notebooks: BASE, repo clone, checkpoint download from Google Drive)
 # ──────────────────────────────────────────────────────────────────────
 BASE = "/kaggle/working" if os.path.exists("/kaggle/working") else \
        ("/content" if os.path.exists("/content") else os.getcwd())
 os.chdir(BASE)
 
-REPO_PGA = "https://github.com/ThongLuc2k3/Prompt-Guided-XRay-Segmentation.git"
+REPO_PGA = "https://github.com/ThongLuc2k3/PGA_Unet2D.git"
 REPO_SAM = "https://github.com/OpenGVLab/SAM-Med2D/"
 
-if not os.path.exists(f"{BASE}/pga-repo"):
-    subprocess.run(["git", "clone", "-q", "-b", "TN_B_ON", REPO_PGA, f"{BASE}/pga-repo"], check=False)
+if not os.path.exists(f"{BASE}/PGA_Unet2D"):
+    subprocess.run(["git", "clone", "-q", REPO_PGA, f"{BASE}/PGA_Unet2D"], check=False)
 if not os.path.exists(f"{BASE}/SAM-Med2D"):
     subprocess.run(["git", "clone", "-q", REPO_SAM, f"{BASE}/SAM-Med2D"], check=False)
 
-os.makedirs(f"{BASE}/pga-repo/checkpoints", exist_ok=True)
+os.makedirs(f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints", exist_ok=True)
 for cid, fpath in [
     ("1Y3i4uizUfVjXtMD81FOQHseQdN-7LEJp", f"{BASE}/SAM-Med2D/best_sam.pth"),
-    ("1wV7W9j-LTLaqpKI0Q7MTyF9CHdzivXhH", f"{BASE}/pga-repo/checkpoints/pga_256_best.pth"),
-    ("13_51tUHcFSu85GqJTri0hDrPGcInHYBz", f"{BASE}/pga-repo/checkpoints/pga_512_best.pth"),
+    ("1wV7W9j-LTLaqpKI0Q7MTyF9CHdzivXhH", f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_256_best.pth"),
+    ("13_51tUHcFSu85GqJTri0hDrPGcInHYBz", f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_512_best.pth"),
 ]:
     if not os.path.exists(fpath):
         gdown.download(f"https://drive.google.com/uc?id={cid}", fpath, quiet=False)
 
-sys.path.insert(0, f"{BASE}/pga-repo")
+sys.path.insert(0, f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation")
 sys.path.insert(0, f"{BASE}/SAM-Med2D")
 for _k in list(sys.modules.keys()):
     if "segment_anything" in _k:
         del sys.modules[_k]
 
-# ── Patch build_sam.py để cho phép image_size tùy chỉnh + encoder_adapter
-#    (giống hệt patch đã dùng trong test-subcat-pga-vs-sam-r256-r512.ipynb) ──
+# Patch `build_sam.py` to support a configurable `image_size` and `encoder_adapter`
+# (identical to the patch used in `test-subcat-pga-vs-sam-r256-r512.ipynb`).
 _build_sam_path = f"{BASE}/SAM-Med2D/segment_anything/build_sam.py"
 os.makedirs(os.path.dirname(_build_sam_path), exist_ok=True)
 _build_sam_code = '''import torch
@@ -176,16 +159,14 @@ from segment_anything import sam_model_registry
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if DEVICE.type == "cpu":
-    print("⚠️  Không phát hiện GPU (CUDA). Số tham số/FLOPs vẫn đúng, nhưng độ trễ và "
-          "bộ nhớ đo trên CPU KHÔNG phản ánh điều kiện GPU Tesla T4 đã dùng khi huấn "
-          "luyện/đánh giá trong khóa luận — chỉ dùng để so sánh tương đối giữa hai mô hình.")
+    print("Warning: no GPU (CUDA) detected. Parameter counts and FLOPs remain valid, but CPU-only latency and memory measurements do not reflect the Tesla T4 conditions used for training and evaluation in the thesis. Treat them as relative comparisons only.")
 
 RESULTS_DIR = f"{BASE}/results"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 
 # ──────────────────────────────────────────────────────────────────────
-# 2. Tiện ích đo lường
+# 2. Measurement utilities
 # ──────────────────────────────────────────────────────────────────────
 def count_params(model, only_trainable=False):
     if only_trainable:
@@ -194,9 +175,9 @@ def count_params(model, only_trainable=False):
 
 
 def count_sam_finetune_trainable(sam_model):
-    """Số tham số THỰC SỰ được cập nhật khi tinh chỉnh SAM-Med2D trong khóa luận:
-    chỉ các lớp Adapter trong image_encoder (backbone ViT còn lại bị đóng băng),
-    cộng toàn bộ prompt_encoder và mask_decoder — đúng quy tắc freeze trong
+    """Actual trainable parameters updated during SAM-Med2D fine-tuning in the thesis:
+    only the Adapter layers in the image encoder are updated (the remaining ViT backbone is frozen),
+    together with the full prompt encoder and mask decoder, matching the freezing rule in
     Source/File_Train/Finetune_SAMMed2D_test_robust.ipynb."""
     n = 0
     for name, p in sam_model.image_encoder.named_parameters():
@@ -212,15 +193,14 @@ def checkpoint_size_mb(path):
 
 
 def measure_flops(model, inputs):
-    """inputs: tuple các tensor truyền vào model(*inputs). Trả về (GFLOPs, GMACs).
+    """inputs: tuple of tensors passed to `model(*inputs)`. Returns `(GFLOPs, GMACs)`.
 
-    Chạy trên CPU dù model gốc ở GPU: torch.jit.trace (dùng nội bộ bởi
-    fvcore) đôi khi biến một giá trị lấy từ .shape[0] thành tensor nằm
-    trên CPU trong lúc trace, gây lỗi "tensors on different devices" nếu
-    phần còn lại của đồ thị đang ở CUDA (gặp ở mask_decoder của SAM-Med2D).
-    Đưa toàn bộ model + input về CPU khi đếm FLOPs sẽ tránh xung đột này
-    hoàn toàn — số FLOPs chỉ phụ thuộc shape của tensor, không phụ thuộc
-    thiết bị tính toán, nên không ảnh hưởng đến độ chính xác kết quả.
+    FLOPs are counted on CPU even when the original model resides on GPU. `torch.jit.trace`
+    (used internally by `fvcore`) may turn a value derived from `.shape[0]` into a CPU tensor
+    during tracing, which can trigger a "tensors on different devices" error when the rest of
+    the graph is on CUDA, as observed in the SAM-Med2D mask decoder. Moving the full model and
+    inputs to CPU during FLOP counting avoids this conflict entirely. FLOPs depend only on tensor
+    shapes, not on the compute device, so result accuracy is unaffected.
     """
     orig_device = next(model.parameters()).device
     model_cpu = model.to("cpu").eval()
@@ -234,7 +214,7 @@ def measure_flops(model, inputs):
     finally:
         model.to(orig_device)
     gmacs = macs / 1e9
-    gflops = 2 * gmacs  # quy ước 1 MAC = 2 FLOPs
+    gflops = 2 * gmacs  # convention: 1 MAC = 2 FLOPs
     return gflops, gmacs
 
 
@@ -262,16 +242,12 @@ def _timed_runs(model, inputs, device_type, n_warmup, n_runs):
 
 
 def measure_latency(model, inputs, n_warmup=10, n_runs=50):
-    """Độ trễ trên thiết bị hiện tại của model (GPU nếu có CUDA). Trả về (mean_ms, std_ms, fps)."""
+    """Latency on the model's current device (GPU if CUDA is available). Returns `(mean_ms, std_ms, fps)`."""
     return _timed_runs(model, inputs, DEVICE.type, n_warmup, n_runs)
 
 
 def measure_latency_cpu(model, inputs, n_warmup=5, n_runs=20):
-    """Độ trễ khi buộc chạy trên CPU, kể cả khi máy có GPU — mô phỏng kịch bản triển
-    khai trên phần cứng y tế không có GPU (đúng động lực 'CNN hạng nhẹ khả thi hơn
-    Transformer nền tảng' đã nêu ở Chương 1, nhưng khóa luận chưa từng đo). Số lần
-    lặp ít hơn measure_latency vì CPU chậm hơn nhiều, đặc biệt với ViT-B của SAM-Med2D.
-    Model được trả về đúng thiết bị gốc sau khi đo."""
+    """Latency when forcing the model onto CPU, even on a GPU-equipped machine. This simulates deployment on medical hardware without a GPU, matching the thesis motivation that lightweight CNNs may be more practical than foundation-model Transformers. Fewer iterations are used than in `measure_latency` because CPU execution is much slower, especially for SAM-Med2D's ViT-B. The model is returned to its original device afterward."""
     orig_device = next(model.parameters()).device
     model_cpu = model.to("cpu")
     inputs_cpu = tuple(x.to("cpu") for x in inputs)
@@ -283,7 +259,7 @@ def measure_latency_cpu(model, inputs, n_warmup=5, n_runs=20):
 
 
 def measure_peak_memory_mb(model, inputs):
-    """Bộ nhớ GPU đỉnh (MB) trong một lượt suy luận. Trả về NaN nếu chạy trên CPU."""
+    """Peak GPU memory (MB) during a single inference pass. Returns `NaN` on CPU."""
     if DEVICE.type != "cuda":
         return float("nan")
     model.eval()
@@ -296,9 +272,7 @@ def measure_peak_memory_mb(model, inputs):
 
 
 class SAMWrapper(nn.Module):
-    """Gộp 3 bước suy luận rời rạc của SAM-Med2D (image_encoder → prompt_encoder →
-    mask_decoder) thành một lượt forward() duy nhất, để đo FLOPs/latency/memory
-    theo cùng giao thức với PGA-UNet (một lệnh gọi model(*inputs) duy nhất)."""
+    """Wrap the three-stage SAM-Med2D inference pipeline (`image_encoder -> prompt_encoder -> mask_decoder`) into a single `forward()` call so that FLOPs, latency, and memory are measured under the same protocol as PGA-UNet (a single `model(*inputs)` invocation)."""
 
     def __init__(self, sam_model):
         super().__init__()
@@ -318,23 +292,23 @@ class SAMWrapper(nn.Module):
 
 
 # ──────────────────────────────────────────────────────────────────────
-# 3. Nạp mô hình
+# 3. Load models
 # ──────────────────────────────────────────────────────────────────────
 print("\n" + "=" * 70)
-print("Nạp mô hình ...")
+print("Loading models ...")
 print("=" * 70)
 
 pga256 = PGA_UNet(in_channels=1, n_classes=1, use_encoder_prompt=True).to(DEVICE)
-pga256.load_state_dict(torch.load(f"{BASE}/pga-repo/checkpoints/pga_256_best.pth",
+pga256.load_state_dict(torch.load(f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_256_best.pth",
                                    map_location=DEVICE, weights_only=True))
 pga256.eval()
 
 pga512 = PGA_UNet(in_channels=1, n_classes=1, use_encoder_prompt=True).to(DEVICE)
-pga512.load_state_dict(torch.load(f"{BASE}/pga-repo/checkpoints/pga_512_best.pth",
+pga512.load_state_dict(torch.load(f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_512_best.pth",
                                    map_location=DEVICE, weights_only=True))
 pga512.eval()
-print("✅ PGA-UNet nạp xong (2 checkpoint riêng biệt pga_256_best.pth / pga_512_best.pth — "
-      "cùng kiến trúc nên số tham số/FLOPs theo shape không đổi, chỉ trọng số khác nhau).")
+print("PGA-UNet loaded successfully (`pga_256_best.pth` and `pga_512_best.pth`). "
+      "The architecture is identical across resolutions, so parameter counts and FLOPs depend only on input shape, not on the checkpoint weights.")
 
 args_sam = argparse.Namespace(image_size=256, encoder_adapter=True,
                                sam_checkpoint=f"{BASE}/SAM-Med2D/best_sam.pth")
@@ -342,10 +316,10 @@ sam_model = sam_model_registry["vit_b"](args_sam).to(DEVICE)
 sam_model.eval()
 sam_wrapped = SAMWrapper(sam_model).to(DEVICE)
 sam_wrapped.eval()
-print("✅ SAM-Med2D nạp xong (ViT-B, encoder_adapter=True, ảnh 256×256).")
+print("SAM-Med2D loaded successfully (ViT-B, `encoder_adapter=True`, input size 256x256).")
 
 # ──────────────────────────────────────────────────────────────────────
-# 4. Chuẩn bị input giả lập cho từng cấu hình
+# 4. Prepare synthetic inputs for each configuration
 # ──────────────────────────────────────────────────────────────────────
 def make_pga_inputs(size):
     img = torch.randn(1, 1, size, size, device=DEVICE)
@@ -360,23 +334,23 @@ def make_sam_inputs():
 
 
 configs = [
-    ("PGA-UNet (256×256)", pga256, make_pga_inputs(256),
-     f"{BASE}/pga-repo/checkpoints/pga_256_best.pth", count_params(pga256)),
-    ("PGA-UNet (512×512)", pga512, make_pga_inputs(512),
-     f"{BASE}/pga-repo/checkpoints/pga_512_best.pth", count_params(pga512)),
-    ("SAM-Med2D (256×256)", sam_wrapped, make_sam_inputs(),
+    ("PGA-UNet (256x256)", pga256, make_pga_inputs(256),
+     f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_256_best.pth", count_params(pga256)),
+    ("PGA-UNet (512x512)", pga512, make_pga_inputs(512),
+     f"{BASE}/PGA_Unet2D/Source/Prompt-Guided-XRay-Segmentation/checkpoints/pga_512_best.pth", count_params(pga512)),
+    ("SAM-Med2D (256x256)", sam_wrapped, make_sam_inputs(),
      f"{BASE}/SAM-Med2D/best_sam.pth", count_params(sam_model)),
 ]
 
 # ──────────────────────────────────────────────────────────────────────
-# 5. Chạy đo
+# 5. Run the measurements
 # ──────────────────────────────────────────────────────────────────────
 rows = []
 for name, model, inputs, ckpt_path, n_params_total in configs:
-    print(f"\nĐang đo: {name} ...")
+    print(f"\nMeasuring: {name} ...")
     gflops, gmacs = measure_flops(model, inputs)
     mean_ms, std_ms, fps = measure_latency(model, inputs)
-    print("  (đang đo thêm độ trễ CPU — mô phỏng phần cứng không GPU, có thể mất một lúc với SAM-Med2D) ...")
+    print("  Measuring CPU latency as well (simulating deployment without a GPU; this may take a while for SAM-Med2D) ...")
     mean_ms_cpu, std_ms_cpu, fps_cpu = measure_latency_cpu(model, inputs)
     peak_mem = measure_peak_memory_mb(model, inputs)
     ckpt_mb = checkpoint_size_mb(ckpt_path)
@@ -401,19 +375,19 @@ for name, model, inputs, ckpt_path, n_params_total in configs:
         latency_ms_std_cpu=std_ms_cpu,
         fps_cpu=fps_cpu,
     ))
-    print(f"  Tham số: {n_params_total/1e6:.3f}M tổng / {n_trainable/1e6:.3f}M có thể huấn luyện")
+    print(f"  Parameters: {n_params_total/1e6:.3f}M total / {n_trainable/1e6:.3f}M trainable")
     print(f"  FLOPs:   {gflops:.3f} GFLOPs ({gmacs:.3f} GMACs)")
-    print(f"  Bộ nhớ đỉnh (GPU): {peak_mem:.1f} MB" if DEVICE.type == "cuda" else "  Bộ nhớ đỉnh: N/A (CPU)")
-    print(f"  Độ trễ (thiết bị hiện tại — {DEVICE.type}): {mean_ms:.2f} ± {std_ms:.2f} ms/ảnh  ({fps:.1f} ảnh/giây)")
-    print(f"  Độ trễ (ép chạy CPU):  {mean_ms_cpu:.2f} ± {std_ms_cpu:.2f} ms/ảnh  ({fps_cpu:.1f} ảnh/giây)")
-    print(f"  Checkpoint trên đĩa: {ckpt_mb:.1f} MB")
+    print(f"  Peak GPU memory: {peak_mem:.1f} MB" if DEVICE.type == "cuda" else "  Peak memory: N/A (CPU)")
+    print(f"  Latency (current device — {DEVICE.type}): {mean_ms:.2f} ± {std_ms:.2f} ms/image  ({fps:.1f} images/s)")
+    print(f"  Latency (forced CPU): {mean_ms_cpu:.2f} ± {std_ms_cpu:.2f} ms/image  ({fps_cpu:.1f} images/s)")
+    print(f"  Checkpoint size on disk: {ckpt_mb:.1f} MB")
 
 df = pd.DataFrame(rows)
 csv_path = f"{RESULTS_DIR}/efficiency_comparison.csv"
 df.to_csv(csv_path, index=False, float_format="%.4f")
 
 print("\n" + "=" * 70)
-print("BẢNG TỔNG HỢP")
+print("SUMMARY TABLE")
 print("=" * 70)
 _num_cols = ["params_total_M", "params_trainable_M", "gflops", "gmacs",
              "checkpoint_MB", "peak_mem_MB", "latency_ms_mean", "latency_ms_std", "fps",
@@ -421,40 +395,39 @@ _num_cols = ["params_total_M", "params_trainable_M", "gflops", "gmacs",
 print(df.to_string(index=False, formatters={c: (lambda x: f"{x:.3f}") for c in _num_cols}))
 print(f"\n→ CSV: {csv_path}")
 
-# ── Tóm tắt tỉ lệ so với PGA-UNet cùng độ phân giải (256), tiện trích vào report ──
+# Ratio summary against PGA-UNet at the same 256x256 resolution, ready to cite in the manuscript
 try:
-    r_pga = df[df["model"] == "PGA-UNet (256×256)"].iloc[0]
-    r_sam = df[df["model"] == "SAM-Med2D (256×256)"].iloc[0]
+    r_pga = df[df["model"] == "PGA-UNet (256x256)"].iloc[0]
+    r_sam = df[df["model"] == "SAM-Med2D (256x256)"].iloc[0]
     print("\n" + "-" * 70)
-    print("So sánh SAM-Med2D / PGA-UNet, cùng độ phân giải 256×256:")
-    print(f"  Số tham số:        {r_sam['params_total_M']/r_pga['params_total_M']:.1f}× "
-          f"({r_sam['params_total_M']:.2f}M so với {r_pga['params_total_M']:.2f}M)")
-    print(f"  GFLOPs:            {r_sam['gflops']/r_pga['gflops']:.1f}×")
-    print(f"  Checkpoint (MB):   {r_sam['checkpoint_MB']/r_pga['checkpoint_MB']:.1f}×")
+    print("SAM-Med2D / PGA-UNet comparison at the same 256x256 resolution:")
+    print(f"  Parameter count:        {r_sam['params_total_M']/r_pga['params_total_M']:.1f}x "
+          f"({r_sam['params_total_M']:.2f}M vs {r_pga['params_total_M']:.2f}M)")
+    print(f"  GFLOPs:            {r_sam['gflops']/r_pga['gflops']:.1f}x")
+    print(f"  Checkpoint size (MB):   {r_sam['checkpoint_MB']/r_pga['checkpoint_MB']:.1f}x")
     if DEVICE.type == "cuda":
-        print(f"  Độ trễ GPU:        {r_sam['latency_ms_mean']/r_pga['latency_ms_mean']:.1f}×")
-    print(f"  Độ trễ CPU:        {r_sam['latency_ms_mean_cpu']/r_pga['latency_ms_mean_cpu']:.1f}×")
+        print(f"  GPU latency:        {r_sam['latency_ms_mean']/r_pga['latency_ms_mean']:.1f}x")
+    print(f"  CPU latency:        {r_sam['latency_ms_mean_cpu']/r_pga['latency_ms_mean_cpu']:.1f}x")
     print("-" * 70)
 except (IndexError, KeyError, ZeroDivisionError):
     pass
 
 # ──────────────────────────────────────────────────────────────────────
-# 6. Biểu đồ so sánh (cùng bảng màu đã dùng trong các biểu đồ khác của
-#    khóa luận: PGA-UNet = xanh dương #2a78d6, SAM-Med2D = cam #eb6834)
+# 6. Comparison plots (using the same color palette as the other thesis figures: PGA-UNet = blue `#2a78d6`, SAM-Med2D = orange `#eb6834`)
 # ──────────────────────────────────────────────────────────────────────
-COLORS = {"PGA-UNet (256×256)": "#8ec2ef",
-          "PGA-UNet (512×512)": "#2a78d6",
-          "SAM-Med2D (256×256)": "#eb6834"}
+COLORS = {"PGA-UNet (256x256)": "#8ec2ef",
+          "PGA-UNet (512x512)": "#2a78d6",
+          "SAM-Med2D (256x256)": "#eb6834"}
 
 fig, axes = plt.subplots(2, 3, figsize=(16, 9))
 axes = axes.flatten()
 metrics = [
-    ("params_total_M", "Số tham số (triệu)", axes[0]),
+    ("params_total_M", "Parameter count (millions)", axes[0]),
     ("gflops", "GFLOPs", axes[1]),
-    ("checkpoint_MB", "Checkpoint trên đĩa (MB)", axes[2]),
-    ("peak_mem_MB", "Bộ nhớ GPU đỉnh (MB)", axes[3]),
-    ("latency_ms_mean", f"Độ trễ suy luận trên {DEVICE.type.upper()} (ms/ảnh)", axes[4]),
-    ("latency_ms_mean_cpu", "Độ trễ suy luận ép trên CPU (ms/ảnh)", axes[5]),
+    ("checkpoint_MB", "Checkpoint size on disk (MB)", axes[2]),
+    ("peak_mem_MB", "Peak GPU memory (MB)", axes[3]),
+    ("latency_ms_mean", f"Inference latency on {DEVICE.type.upper()} (ms/image)", axes[4]),
+    ("latency_ms_mean_cpu", "Forced CPU inference latency (ms/image)", axes[5]),
 ]
 for col, label, ax in metrics:
     vals = df[col].tolist()
@@ -471,9 +444,9 @@ for col, label, ax in metrics:
 plt.tight_layout()
 png_path = f"{RESULTS_DIR}/efficiency_comparison.png"
 plt.savefig(png_path, dpi=150, bbox_inches="tight")
-print(f"→ Biểu đồ: {png_path}")
+print(f"→ Figure: {png_path}")
 
 if DEVICE.type != "cuda":
-    print("\n⚠️  Nhắc lại: chạy script này trên Kaggle/Colab có GPU trước khi đưa số liệu "
-          "bộ nhớ/độ trễ vào báo cáo, để khớp điều kiện phần cứng (Tesla T4) đã dùng "
-          "xuyên suốt khóa luận.")
+    print("\nReminder: run this script on Kaggle/Colab with GPU support before reporting "
+          "memory/latency numbers, so the hardware setting matches the Tesla T4 used "
+          "throughout the thesis.")

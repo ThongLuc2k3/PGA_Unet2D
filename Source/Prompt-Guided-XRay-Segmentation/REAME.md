@@ -5,6 +5,12 @@
 - Ảnh, mask và prompt map đều dùng quy trình `resize + padding`, không kéo giãn trực tiếp về khung vuông.
 - Cạnh dài được co về `img_size`, sau đó đệm nền để tạo ảnh vuông `img_size x img_size`.
 - `image` dùng `cv2.INTER_LINEAR`, `mask` dùng `cv2.INTER_NEAREST`, `prompt_map` dùng `cv2.INTER_LINEAR`.
+- Prompt chỉ còn 2 chế độ: `zoom_out` và `shift`.
+- `zoom_out` khi train được lấy ngẫu nhiên trong khoảng `0.25-0.70`; khi test dùng một mức cố định tròn là `0.50`.
+- `shift` dùng độ lệch tương đối `0.50`.
+- Tham số prompt phụ thuộc độ phân giải:
+  - `img_size=256` → khoảng ngữ cảnh tối thiểu quanh GT là `5 px`, Gaussian kernel `31`
+  - `img_size=512` → khoảng ngữ cảnh tối thiểu quanh GT là `10 px`, Gaussian kernel `61`
 
 ## Cấu trúc thư mục cần có:
 # dataset_BTXRD/
@@ -17,26 +23,24 @@
   - networks_other.py
 # dataset.py
 # train.py
-# test_expA.py
-# test_expB.py
+# test_exp.py
 
-## Bước 2 – Thí nghiệm A (baseline sạch, zoom-out only)
-# Trong train.py: EXPERIMENT='A', USE_ENCODER_PROMPT=False
+## Bước 2 – Huấn luyện với prompt bao trọn
+# Trong train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=False
 - python train.py
-# → checkpoints/pga_unet_expA_best.pth
-- python test_expA.py
+# → checkpoints/pga_unet_zoom_out_256_best.pth hoặc _512_best.pth
+- python test_exp.py
 # → in bảng 6 metrics, show các ảnh test (cần show ảnh nào thì ghi tên ảnh đó ở int main)
 
-## Bước 3 – Thí nghiệm A + Encoder Prompt (so sánh với bước 2)
-# Trong train.py: EXPERIMENT='A', USE_ENCODER_PROMPT=True
+## Bước 3 – Huấn luyện với prompt bao trọn + Encoder Prompt
+# Trong train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=True
 - python train.py
-- python test_expA.py
+- python test_exp.py
 # → so sánh Dice/CBL với bước 2
 
-## Bước 4 – Thí nghiệm B (zoom-out + shift)
-# Trong train.py: EXPERIMENT='B', USE_ENCODER_PROMPT=True
+## Bước 4 – Huấn luyện với prompt lệch tâm
+# Trong train.py: TRAIN_PROMPT_MODE='shift', USE_ENCODER_PROMPT=True
 - python train.py
-# → checkpoints/pga_unet_expB_best.pth
-- python test_expB.py
-# → bảng 3 kịch bản, how các ảnh test (cần show ảnh nào thì ghi tên ảnh đó ở int main)
-# → ảnh result_inference_check_*.png (cải tiến inference)
+# → checkpoints/pga_unet_shift_256_best.pth hoặc _512_best.pth
+- python test_exp.py
+# → bảng 2 kịch bản `zoom_out` và `shift`, show các ảnh test (cần show ảnh nào thì ghi tên ảnh đó ở int main)
