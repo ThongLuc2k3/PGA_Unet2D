@@ -13,8 +13,8 @@ from models.networks.prompt_unet_2D import PGA_UNet
 # =========================================================
 # Experiment configuration
 # =========================================================
-TRAIN_PROMPT_MODE  = 'zoom_out'  # 'zoom_out' hoặc 'shift'
-USE_ENCODER_PROMPT = True    # True để bật PromptSpatialGate ở encoder
+TRAIN_PROMPT_MODE  = 'zoom_out'  # 'zoom_out' or 'shift'
+USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
 EPOCHS     = 100
@@ -70,10 +70,10 @@ def batch_metrics_sum(pred, target, smooth=1e-5):
 
 def calculate_cbl(pred, target, smooth=1e-6):
     """
-    CBL – Center-Based Localization score [0, 1].
-    Đo tâm predicted mask có gần tâm GT mask không.
-    Normalize theo đường chéo GT bbox để scale-invariant.
-    Trả về (cbl_sum, valid_count).
+    CBL, Center-Based Localization score in [0, 1].
+    Measures how close the predicted mask's centroid is to the GT mask's centroid.
+    Normalized by the GT bbox diagonal to stay scale-invariant.
+    Returns (cbl_sum, valid_count).
     """
     B, _, H, W = pred.shape
     pred_bin = (torch.sigmoid(pred) > 0.5).float()
@@ -90,13 +90,13 @@ def calculate_cbl(pred, target, smooth=1e-6):
         gt_area = gt_m.sum()
 
         if gt_area < smooth:
-            continue  # GT rỗng → bỏ qua
+            continue  # empty GT, skip
 
-        # Tâm GT
+        # GT centroid
         cx_gt = (grid_x * gt_m).sum() / (gt_area + smooth)
         cy_gt = (grid_y * gt_m).sum() / (gt_area + smooth)
 
-        # Đường chéo GT bbox
+        # GT bbox diagonal
         nz    = gt_m.nonzero()
         gt_diag = torch.sqrt(
             ((nz[:, 0].max() - nz[:, 0].min()).float()) ** 2 +
@@ -105,10 +105,10 @@ def calculate_cbl(pred, target, smooth=1e-6):
 
         pred_area = pred_m.sum()
         if pred_area < smooth:
-            valid_count += 1  # CBL = 0 cho sample này
+            valid_count += 1  # CBL = 0 for this sample
             continue
 
-        # Tâm predicted mask
+        # Predicted mask centroid
         cx_p = (grid_x * pred_m).sum() / (pred_area + smooth)
         cy_p = (grid_y * pred_m).sum() / (pred_area + smooth)
 
@@ -141,9 +141,9 @@ def setup_logger(exp_name):
 # =========================================================
 def main():
     if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift'}:
-        raise ValueError("TRAIN_PROMPT_MODE phải là 'zoom_out' hoặc 'shift'.")
+        raise ValueError("TRAIN_PROMPT_MODE must be 'zoom_out' or 'shift'.")
     if PRIMARY_VAL_MODE not in EVAL_PROMPT_MODES:
-        raise ValueError("PRIMARY_VAL_MODE phải nằm trong EVAL_PROMPT_MODES.")
+        raise ValueError("PRIMARY_VAL_MODE must be one of EVAL_PROMPT_MODES.")
 
     logger = setup_logger(TRAIN_PROMPT_MODE)
     logger.info("=" * 90)
@@ -211,7 +211,7 @@ def main():
 
         train_loss_avg = train_loss / len(train_loader)
 
-        # ── Validate (tất cả loaders) ─────────────────────────────
+        # ── Validate (all loaders) ─────────────────────────────
         model.eval()
         val_results = {}
         with torch.no_grad():
@@ -258,7 +258,7 @@ def main():
         logger.info(log_str)
 
         if patience_counter >= EARLY_STOP:
-            logger.info(f"Early stopping ở epoch {epoch+1}.")
+            logger.info(f"Early stopping at epoch {epoch+1}.")
             break
 
     logger.info(f"\nBest Dice ({PRIMARY_VAL_MODE}): {best_val_dice:.4f}")

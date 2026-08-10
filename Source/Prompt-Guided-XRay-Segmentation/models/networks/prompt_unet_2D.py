@@ -21,10 +21,10 @@ class unetConv2(nn.Module):
 
 class PromptSpatialGate(nn.Module):
     """
-    Dùng prompt heatmap để ENHANCE encoder features ở vùng được prompt.
-    Công thức: out = features * (1 + alpha * gate(prompt))
-    - Không suppress feature, chỉ boost vùng được chỉ định
-    - alpha learnable, khởi tạo nhỏ (0.1) để không phá vỡ training ban đầu
+    Uses the prompt heatmap to enhance encoder features in the prompted region.
+    Formula: out = features * (1 + alpha * gate(prompt))
+    It never suppresses a feature, it only boosts the prompted region.
+    Alpha is learnable and starts small (0.1) so it does not disrupt early training.
     """
     def __init__(self, feature_channels):
         super().__init__()
@@ -106,8 +106,8 @@ class unetUp_PromptAttention(nn.Module):
 class PGA_UNet(nn.Module):
     """
     Prompt-Guided Attention UNet.
-    use_encoder_prompt=True  → thêm PromptSpatialGate ở mỗi level encoder
-    use_encoder_prompt=False → giống baseline gốc (chỉ prompt ở decoder)
+    use_encoder_prompt=True adds a PromptSpatialGate at every encoder level.
+    use_encoder_prompt=False matches the original baseline (prompt only reaches the decoder).
     """
 
     def __init__(self, feature_scale=4, n_classes=1, in_channels=1,
@@ -117,7 +117,7 @@ class PGA_UNet(nn.Module):
         self.use_encoder_prompt = use_encoder_prompt
 
         w = list(prompt_weights)
-        assert len(w) == 4, "prompt_weights phải có đúng 4 phần tử (4 tầng decoder)"
+        assert len(w) == 4, "prompt_weights must have exactly 4 elements (4 decoder levels)"
 
         filters = [int(x / feature_scale) for x in [64, 128, 256, 512, 1024]]
         # filters = [16, 32, 64, 128, 256]
@@ -133,14 +133,14 @@ class PGA_UNet(nn.Module):
         self.maxpool4 = nn.MaxPool2d(2)
         self.center   = unetConv2(filters[3], filters[4], is_batchnorm)
 
-        # Prompt gates cho encoder (tùy chọn)
+        # Optional prompt gates for the encoder
         if use_encoder_prompt:
             self.pg1 = PromptSpatialGate(filters[0])
             self.pg2 = PromptSpatialGate(filters[1])
             self.pg3 = PromptSpatialGate(filters[2])
             self.pg4 = PromptSpatialGate(filters[3])
 
-        # Decoder với Prompt Guided Attention
+        # Decoder with prompt-guided attention
         self.up_concat4 = unetUp_PromptAttention(filters[3], filters[4], filters[3], prompt_weight=w[0])
         self.up_concat3 = unetUp_PromptAttention(filters[2], filters[3], filters[2], prompt_weight=w[1])
         self.up_concat2 = unetUp_PromptAttention(filters[1], filters[2], filters[1], prompt_weight=w[2])
@@ -149,7 +149,7 @@ class PGA_UNet(nn.Module):
         self.final = nn.Conv2d(filters[0], n_classes, 1)
 
     def forward(self, inputs, prompt):
-        # Augmentation cấp model (chỉ train)
+        # Model-level augmentation, training only
         if self.training:
             r = torch.rand(1).item()
             if r < 0.15:

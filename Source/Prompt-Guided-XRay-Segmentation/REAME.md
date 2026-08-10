@@ -1,47 +1,45 @@
-## Bước 1 – Chuẩn bị môi trường
+## Step 1: Environment setup
 - pip install torch torchvision opencv-python scipy matplotlib tqdm
 
-## Tiền xử lý đầu vào
-- Ảnh, mask và prompt map đều dùng quy trình `resize + padding`, không kéo giãn trực tiếp về khung vuông.
-- Cạnh dài được co về `img_size`, sau đó đệm nền để tạo ảnh vuông `img_size x img_size`.
-- `image` dùng `cv2.INTER_LINEAR`, `mask` dùng `cv2.INTER_NEAREST`, `prompt_map` dùng `cv2.INTER_LINEAR`.
-- Prompt chỉ còn 2 chế độ: `zoom_out` và `shift`.
-- `zoom_out` khi train được lấy ngẫu nhiên trong khoảng `0.15-0.45`; khi test dùng một mức cố định là `0.30`.
-- `shift` dùng độ lệch tương đối `0.30`.
-- Tham số prompt phụ thuộc độ phân giải:
-  - `img_size=256` → khoảng ngữ cảnh tối thiểu quanh GT là `5 px`, Gaussian kernel `31`
-  - `img_size=512` → khoảng ngữ cảnh tối thiểu quanh GT là `10 px`, Gaussian kernel `61`
+## Input preprocessing
+- Image, mask, and prompt map all use the `resize + padding` pipeline, never a direct stretch to a square frame.
+- The long edge is scaled down to `img_size`, then the background is padded to form a square `img_size x img_size` image.
+- `image` uses `cv2.INTER_LINEAR`, `mask` uses `cv2.INTER_NEAREST`, `prompt_map` uses `cv2.INTER_LINEAR`.
+- Only 2 prompt modes remain: `zoom_out` and `shift`.
+- `zoom_out` is sampled randomly in `0.15-0.45` during training, and fixed at `0.30` during testing.
+- `shift` uses a fixed relative offset of `0.30`.
+- Prompt parameters scale with resolution:
+  - `img_size=256`: minimum context margin around GT is `5 px`, Gaussian kernel `31`
+  - `img_size=512`: minimum context margin around GT is `10 px`, Gaussian kernel `61`
 
-## Cấu trúc thư mục cần có:
+## Required directory structure:
 # dataset_<DATASET_NAME>/
   - train/images/  train/annotations/
   - val/images/    val/annotations/
   - test/images/   test/annotations/
 # models/
   - layers/grid_attention_layer.py
-  - networks/prompt_unet_2D.py     ← file vừa viết
+  - networks/prompt_unet_2D.py
   - networks_other.py
 # dataset.py
 # train.py
-# test_exp.py
 
-## Bước 2 – Huấn luyện với prompt bao trọn
-# Trong train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=False
-- đặt `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>`
+## Step 2: Train with the covering prompt
+# In train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=False
+- set `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>`
 - python train.py
-# → checkpoints/pga_unet_zoom_out_256_best.pth hoặc _512_best.pth
-- python test_exp.py
-# → in bảng 6 metrics, show các ảnh test (cần show ảnh nào thì ghi tên ảnh đó ở int main)
+# produces checkpoints/pga_unet_zoom_out_256_best.pth or _512_best.pth
+- run the matching test notebook under File_Test/ to get the 6-metric table and sample visualizations
 
-## Bước 3 – Huấn luyện với prompt bao trọn + Encoder Prompt
-# Trong train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=True
+## Step 3: Train with the covering prompt plus encoder prompt
+# In train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=True
 - python train.py
-- python test_exp.py
-# → so sánh Dice/CBL với bước 2
+- run the matching test notebook under File_Test/
+# compare Dice/CBL against step 2
 
-## Bước 4 – Huấn luyện với prompt lệch tâm
-# Trong train.py: TRAIN_PROMPT_MODE='shift', USE_ENCODER_PROMPT=True
+## Step 4: Train with the off-center prompt
+# In train.py: TRAIN_PROMPT_MODE='shift', USE_ENCODER_PROMPT=True
 - python train.py
-# → checkpoints/pga_unet_shift_256_best.pth hoặc _512_best.pth
-- python test_exp.py
-# → bảng 2 kịch bản `zoom_out` và `shift`, show các ảnh test (cần show ảnh nào thì ghi tên ảnh đó ở int main)
+# produces checkpoints/pga_unet_shift_256_best.pth or _512_best.pth
+- run the matching test notebook under File_Test/
+# produces the 2-scenario table (`zoom_out` and `shift`) plus sample visualizations

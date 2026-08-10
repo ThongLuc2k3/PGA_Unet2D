@@ -427,7 +427,7 @@ for name, model, inputs, ckpt_path, n_params_total in configs:
     print(f"  FLOPs:   {gflops:.3f} GFLOPs ({gmacs:.3f} GMACs)")
     print(f"  Peak GPU memory: {peak_mem:.1f} MB" if DEVICE.type == "cuda" else "  Peak memory: N/A (CPU)")
     print(
-        f"  Latency (current device — {DEVICE.type}): "
+        f"  Latency (current device: {DEVICE.type}): "
         f"{current_latency['mean_ms']:.2f} ± {current_latency['std_ms']:.2f} ms/image  "
         f"(p50={current_latency['p50_ms']:.2f}, p95={current_latency['p95_ms']:.2f}, "
         f"{current_latency['fps']:.1f} images/s)"
