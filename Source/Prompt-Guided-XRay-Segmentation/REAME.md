@@ -31,9 +31,9 @@
 
 ## Step 2: Train with the covering prompt
 # In train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=False
-- set `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>`
+- set `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>` and `PROMPT_IMG_SIZE=256` or `512` (defaults to `512` if unset)
 - python train.py
-# produces checkpoints/pga_unet_zoom_out_256_best.pth or _512_best.pth
+# produces checkpoints/pga_unet_zoom_out_256_best.pth or _512_best.pth depending on PROMPT_IMG_SIZE
 - run the matching test notebook under File_Test/ to get the 6-metric table and sample visualizations
 
 ## Step 3: Train with the covering prompt plus encoder prompt

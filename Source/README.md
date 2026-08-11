@@ -54,7 +54,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 
 `File_Train/{btxrd,fracatlas}/` contains:
 
-- `pga-train-256.ipynb`, `pga-train-512.ipynb`: PGA-UNet training (env var `PROMPT_DATASET_ROOT` selects the dataset for `train.py`), plus an inline post-train evaluation cell for the zoom-out/shift scenarios.
+- `pga-train-256.ipynb`, `pga-train-512.ipynb`: PGA-UNet training (env vars `PROMPT_DATASET_ROOT` selects the dataset and `PROMPT_IMG_SIZE` selects the resolution for `train.py`, defaults to `512` if unset), plus an inline post-train evaluation cell for the zoom-out/shift scenarios.
 - `Attention_Unet2D.ipynb`: Attention U-Net baseline training.
 - `Finetune_SAMMed2D_test_robust.ipynb`: SAM-Med2D finetuning and its own zoom-out/shift test cells.
 - `Ablation/`: the 8 architecture-ablation training notebooks (`cad-only`, `psg-only`, `psg-attention`, `full-binary-prompt`, `full-heatmap-prompt`, `no-psg-attention-concat`, `no-psg-no-cad-binary`, `no-psg-no-cad-concat`).

@@ -19,10 +19,13 @@ DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
 EPOCHS     = 100
 LR         = 1e-4
-IMG_SIZE   = 512
 EARLY_STOP = 15
 EVAL_PROMPT_MODES = ('zoom_out', 'shift')
 PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
+def resolve_img_size():
+    return int(os.environ.get("PROMPT_IMG_SIZE", "512"))
+
+
 def resolve_dataset_root():
     env_root = os.environ.get("PROMPT_DATASET_ROOT")
     if env_root:
@@ -45,6 +48,7 @@ def resolve_dataset_root():
 
 
 DATASET_ROOT = resolve_dataset_root()
+IMG_SIZE     = resolve_img_size()
 
 # =========================================================
 # METRICS
