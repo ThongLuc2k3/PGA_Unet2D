@@ -8,9 +8,14 @@
 - Only 2 prompt modes remain: `zoom_out` and `shift`.
 - `zoom_out` is sampled randomly in `0.15-0.45` during training, and fixed at `0.30` during testing.
 - `shift` uses a fixed relative offset of `0.30`.
-- Prompt parameters scale with resolution:
-  - `img_size=256`: minimum context margin around GT is `5 px`, Gaussian kernel `31`
-  - `img_size=512`: minimum context margin around GT is `10 px`, Gaussian kernel `61`
+- No minimum context margin is enforced around the GT: the covering box only guarantees
+  full coverage of the GT, nothing more (the `shift` mode already could not guarantee a
+  minimum gap either, since it snaps back to the GT boundary to preserve coverage).
+- The Gaussian kernel is fixed regardless of resolution: `31`, the same for
+  `img_size=256` and `img_size=512`. It is applied to heatmap coordinates in
+  original-image pixel space before the resize-and-pad step, so keeping it constant
+  (rather than scaling with `img_size`) is what keeps the effective blur consistent
+  relative to the final `img_size x img_size` frame the network sees.
 
 ## Required directory structure:
 # dataset_<DATASET_NAME>/

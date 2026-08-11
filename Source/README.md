@@ -36,10 +36,12 @@ Source/
 - `models/networks/utils.py`: shared building blocks (`unetConv2`, `unetUp`) used by the baseline above.
 - `models/layers/grid_attention_layer.py`: original attention gate inherited from Attention U-Net and reused in ablation variants.
 
-The current prompt protocol is resolution-aware:
+The current prompt protocol:
 
-- `256 x 256`: minimum prompt margin `5 px`, Gaussian kernel `31`
-- `512 x 512`: minimum prompt margin `10 px`, Gaussian kernel `61`
+- no minimum prompt margin: the covering box only guarantees full coverage of the GT
+- Gaussian kernel `31`, fixed for both `256 x 256` and `512 x 512` (applied in
+  original-image pixel space before resize, so keeping it constant is what keeps it
+  consistent relative to the network's final input frame)
 - covering prompt training range: `0.15-0.45`
 - covering prompt test setting: fixed at `0.30`
 - off-center shift setting: fixed relative offset `0.30`, while still overlapping the lesion

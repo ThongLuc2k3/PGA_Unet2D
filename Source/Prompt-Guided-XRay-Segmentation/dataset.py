@@ -30,11 +30,12 @@ class PromptSegmentationDataset(Dataset):
         self.prompt_mode = prompt_mode
         self.zoom_ratio  = zoom_ratio
         self.shift_ratio = shift_ratio
-        self.min_prompt_margin_px = max(1, int(round(5 * (self.img_size / 256.0))))
-
-        kernel = int(round(31 * (self.img_size / 256.0)))
-        self.prompt_kernel = kernel if kernel % 2 == 1 else kernel - 1
-        self.prompt_kernel = max(3, self.prompt_kernel)
+        # Fixed regardless of img_size: applied to heatmap coordinates in
+        # original-image pixel space, before the resize-and-pad step. Scaling
+        # it with img_size would change the effective blur relative to the
+        # final img_size x img_size frame the network sees, so it stays
+        # constant across resolutions instead.
+        self.prompt_kernel = 31
 
         self.all_samples = []
         for img_name in sorted(os.listdir(image_dir)):
@@ -55,31 +56,6 @@ class PromptSegmentationDataset(Dataset):
 
     # ── Prompt helpers ────────────────────────────────────────────────
 
-    def _ensure_min_prompt_margin(self, bx_min, bx_max, by_min, by_max,
-                                  x_min, x_max, y_min, y_max, orig_h, orig_w):
-        """
-        Ensure the prompt box does not hug the GT boundary too tightly when
-        image space is still available. The minimum context margin is enforced
-        at box generation time rather than as a post-hoc heatmap expansion.
-        """
-        margin = float(self.min_prompt_margin_px)
-
-        left_gap = x_min - bx_min
-        right_gap = bx_max - x_max
-        top_gap = y_min - by_min
-        bottom_gap = by_max - y_max
-
-        if left_gap < margin:
-            bx_min = max(0.0, min(bx_min, x_min - margin))
-        if right_gap < margin:
-            bx_max = min(float(orig_w), max(bx_max, x_max + margin))
-        if top_gap < margin:
-            by_min = max(0.0, min(by_min, y_min - margin))
-        if bottom_gap < margin:
-            by_max = min(float(orig_h), max(by_max, y_max + margin))
-
-        return bx_min, bx_max, by_min, by_max
-
     def _zoom_out_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w):
         """Expand the prompt box outside the GT. Train: asymmetric random. Test: fixed."""
         gt_w, gt_h = x_max - x_min, y_max - y_min
@@ -94,10 +70,6 @@ class PromptSegmentationDataset(Dataset):
         bx_max = min(orig_w,  x_max + gt_w * r_r)
         by_min = max(0,       y_min - gt_h * r_t)
         by_max = min(orig_h,  y_max + gt_h * r_b)
-        bx_min, bx_max, by_min, by_max = self._ensure_min_prompt_margin(
-            bx_min, bx_max, by_min, by_max,
-            x_min, x_max, y_min, y_max, orig_h, orig_w,
-        )
         return bx_min, bx_max, by_min, by_max
 
     def _shift_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
