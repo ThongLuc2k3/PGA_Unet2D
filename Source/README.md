@@ -46,7 +46,7 @@ The current prompt protocol:
 - covering prompt test setting: fixed at `0.30`
 - off-center shift setting: fixed relative offset `0.30`, while still overlapping the lesion
 
-SAM-Med2D finetuning is the one exception: training uses the original authors' box-noise protocol (`get_boxes_from_mask`, small pixel-level jitter), not the covering-prompt ranges above. Its validation split during training and its test notebooks do use the same covering-prompt protocol as PGA-UNet, so evaluation stays apples-to-apples across baselines even though each model trains its own way.
+SAM-Med2D finetuning now uses the same covering-prompt ranges above for training too (50/50 per sample between zoom-out expansion, ratio 0.15-0.45, and off-center shift, ratio 0.30, via `prompt_box_from_mask` in the notebook's `DataLoader.py` cell), not the original authors' box-noise protocol (`get_boxes_from_mask`, small pixel-level jitter). PGA-UNet itself trains zoom-out only; SAM-Med2D trains on both modes so it sees the same range of prompts it is tested on. Its validation split during training and its test notebooks also use the same covering-prompt protocol as PGA-UNet, so training and evaluation stay apples-to-apples across baselines. Training is box-only: the point-prompt branch and the `iter_point` point-refinement loop from the original authors' code are disabled (`iter_point=0`).
 
 ## Dataset-Specific Notebook Folders
 
