@@ -1,0 +1,80 @@
+\relax 
+\providecommand\babel@aux[2]{}
+\@nameuse{bbl@beforestart}
+\catcode `"\active 
+\citation{b1,b2}
+\babel@aux{vietnamese}{}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Giới thiệu}{1}{}\protected@file@percent }
+\newlabel{sec:introduction}{{I}{1}{}{}{}}
+\citation{b3}
+\citation{b4}
+\citation{b5,b6}
+\citation{b1,b2,b9}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Công trình liên quan}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Phương pháp}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Thiết lập bài toán}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Biểu diễn câu nhắc}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Prompt Spatial Gate}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Conditional Attention Decoder}{2}{}\protected@file@percent }
+\citation{b7}
+\citation{b8}
+\citation{b3}
+\citation{b4}
+\citation{b2}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Tổng quan PGA-UNet. Thông tin câu nhắc suy ra từ hộp giới hạn được đưa vào đặc trưng bộ mã hóa qua PSG và được tái sử dụng trong chú ý trên kết nối tắt của bộ giải mã qua CAD.}}{3}{}\protected@file@percent }
+\newlabel{fig:arch}{{1}{3}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Thiết lập thực nghiệm}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Bộ dữ liệu}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Chi tiết huấn luyện}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Baseline và độ đo}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Phạm vi phân tích}{3}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces So sánh với các baseline CNN tự động tại $512\times 512$.}}{4}{}\protected@file@percent }
+\newlabel{tab:baseline}{{1}{4}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces So sánh Dice với SAM-Med2D đã fine-tune tại $256\times 256$.}}{4}{}\protected@file@percent }
+\newlabel{tab:sam}{{2}{4}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Kết quả}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}So sánh với các baseline CNN tự động}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}So sánh cùng điều kiện với SAM-Med2D}{4}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Các độ đo cấp ảnh của PGA-UNet và SAM-Med2D đã fine-tune tại $256\times 256$ trong điều kiện prompt hỗn hợp.}}{4}{}\protected@file@percent }
+\newlabel{tab:sam-mixed}{{3}{4}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Hành vi định tính khi câu nhắc bị nhiễu. PGA-UNet ổn định hơn khi prompt lệch khỏi hộp bao trọn lý tưởng, dù các mẫu gãy xương mảnh vẫn khó hơn các tổn thương gọn khối lớn hơn.}}{4}{}\protected@file@percent }
+\newlabel{fig:robust}{{2}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Ablation và hiệu năng tính toán}{4}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Tóm tắt kết quả ablation chính (Dice) của các cấu hình có prompt tại $512\times 512$.}}{4}{}\protected@file@percent }
+\newlabel{tab:ablation}{{4}{4}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces So sánh định tính giữa biểu diễn câu nhắc Gaussian và biểu diễn câu nhắc nhị phân. Phiên bản Gaussian tạo biên sạch hơn và độ chồng lấp tốt hơn trên ví dụ đại diện này của BTXRD.}}{5}{}\protected@file@percent }
+\newlabel{fig:ablation-gaussian-binary}{{3}{5}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces So sánh hiệu quả tính toán trong cùng môi trường đo.}}{5}{}\protected@file@percent }
+\newlabel{tab:efficiency}{{5}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Ảnh hưởng của độ phân giải đầu vào}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Dice của PGA-UNet ở hai độ phân giải trong điều kiện bao trọn và lệch tâm.}}{5}{}\protected@file@percent }
+\newlabel{tab:resolution}{{6}{5}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Dice trên 50 tổn thương nhỏ nhất của tập kiểm thử BTXRD.}}{5}{}\protected@file@percent }
+\newlabel{tab:small}{{7}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Hiệu năng trên tổn thương nhỏ}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces So sánh định tính trên tổn thương nhỏ trong BTXRD. Các ví dụ đối chiếu SAM-Med2D ở $256\times 256$, PGA-UNet ở $256\times 256$, và PGA-UNet ở $512\times 512$.}}{6}{}\protected@file@percent }
+\newlabel{fig:small-btxrd}{{4}{6}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces So sánh top-Dice và bottom-Dice trên BTXRD (50 ảnh mỗi nhóm).}}{6}{}\protected@file@percent }
+\newlabel{tab:extreme}{{8}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}Các tập con top- và bottom-Dice của U-Net}{6}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces So sánh định tính giữa U-Net và PGA-UNet trên BTXRD cho một ca thuộc nhóm top-Dice và một ca thuộc nhóm bottom-Dice của U-Net.}}{6}{}\protected@file@percent }
+\newlabel{fig:extreme-btxrd}{{5}{6}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Một trường hợp lỗi điển hình ở vùng giải phẫu chồng lấp. Dù có prompt bao trọn, biên tổn thương vẫn khó tách vì các cấu trúc X-quang cục bộ bị lẫn với nhau.}}{6}{}\protected@file@percent }
+\newlabel{fig:failure}{{6}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-G}}Các trường hợp còn khó}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Thảo luận}{6}{}\protected@file@percent }
+\bibcite{b1}{1}
+\bibcite{b2}{2}
+\bibcite{b3}{3}
+\bibcite{b4}{4}
+\bibcite{b5}{5}
+\bibcite{b6}{6}
+\bibcite{b7}{7}
+\bibcite{b8}{8}
+\bibcite{b9}{9}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Kết luận}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{T\`ai li\d \ecircumflex u}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Thong Luc}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Huu-Binh Nguyen}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Ly Quoc Ngoc}{8}{}\protected@file@percent }
+\gdef \@abspage@last{8}

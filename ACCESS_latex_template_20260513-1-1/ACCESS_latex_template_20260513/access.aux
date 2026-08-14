@@ -1,0 +1,85 @@
+\relax 
+\citation{b3,b4}
+\citation{b5,b6}
+\citation{b1,b2}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
+\newlabel{sec:introduction}{{I}{1}{}{}{}}
+\citation{b3}
+\citation{b4}
+\citation{b5,b6}
+\citation{b1,b2,b9}
+\citation{b3}
+\citation{b4}
+\citation{b6}
+\citation{b2,b9}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Representative prior work and the remaining gap addressed in this article.}}{2}{}\protected@file@percent }
+\newlabel{tab:related}{{1}{2}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Method}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Offline and Online Framework}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Problem Setting}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Prompt Representation}{2}{}\protected@file@percent }
+\citation{b7}
+\citation{b8}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Prompt Spatial Gate}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-E}}Conditional Attention Decoder}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of PGA-UNet. Prompt information derived from the bounding box is injected into encoder features through PSG and reused in decoder skip attention through CAD.}}{3}{}\protected@file@percent }
+\newlabel{fig:arch}{{1}{3}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Setup}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Datasets}{3}{}\protected@file@percent }
+\citation{b4}
+\citation{b2}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Training Details}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Baselines and Metrics}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Scope of Analysis}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}Results}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Main Comparison Across Datasets and Resolutions}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Effect of Input Resolution}{4}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces PGA-UNet Dice under covering and off-center prompts at two resolutions.}}{5}{}\protected@file@percent }
+\newlabel{tab:resolution}{{2}{5}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Qualitative behavior under prompt perturbation. PGA-UNet remains more stable when the prompt is shifted away from the ideal covering box, although thin fracture patterns are still harder than larger compact lesions.}}{5}{}\protected@file@percent }
+\newlabel{fig:robust}{{2}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Monte Carlo Cross-Validation}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Comparison with the Automatic Baseline}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Comparison with the automatic baseline at $512\times 512$.}}{5}{}\protected@file@percent }
+\newlabel{tab:baseline}{{3}{5}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Top-Dice and bottom-Dice comparison on BTXRD (50 images per group).}}{5}{}\protected@file@percent }
+\newlabel{tab:extreme}{{4}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Attention U-Net Top- and Bottom-Dice Subsets}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Qualitative comparison between Attention U-Net and PGA-UNet on BTXRD for one case from the Attention U-Net top-Dice group and one case from the Attention U-Net bottom-Dice group.}}{6}{}\protected@file@percent }
+\newlabel{fig:extreme-btxrd}{{3}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}Matched Comparison with SAM-Med2D}{6}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Dice comparison with fine-tuned SAM-Med2D at $256\times 256$.}}{6}{}\protected@file@percent }
+\newlabel{tab:sam}{{5}{6}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Dice on the 50 smallest lesions in the BTXRD test set.}}{6}{}\protected@file@percent }
+\newlabel{tab:small}{{6}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-G}}Performance on Small Lesions}{6}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Qualitative comparison on small lesions in BTXRD. The examples contrast SAM-Med2D at $256\times 256$, PGA-UNet at $256\times 256$, and PGA-UNet at $512\times 512$.}}{7}{}\protected@file@percent }
+\newlabel{fig:small-btxrd}{{4}{7}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Efficiency comparison in the tested environment.}}{7}{}\protected@file@percent }
+\newlabel{tab:efficiency}{{7}{7}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-H}}Efficiency Analysis}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-I}}Ablation Study}{7}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Summary ablation results (Dice) for the main prompt-aware configurations at $512\times 512$.}}{7}{}\protected@file@percent }
+\newlabel{tab:ablation}{{8}{7}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Qualitative comparison between the Gaussian prompt representation and the binary prompt representation. The Gaussian version produces cleaner boundaries and better overlap on this representative BTXRD example.}}{7}{}\protected@file@percent }
+\newlabel{fig:ablation-gaussian-binary}{{5}{7}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-J}}Failure Modes}{7}{}\protected@file@percent }
+\bibcite{b1}{1}
+\bibcite{b2}{2}
+\bibcite{b3}{3}
+\bibcite{b4}{4}
+\bibcite{b5}{5}
+\bibcite{b6}{6}
+\bibcite{b7}{7}
+\bibcite{b8}{8}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Representative failure case in an anatomically overlapping region. Even with a covering prompt, the lesion boundary remains difficult because the local X-ray structures are visually confounded.}}{8}{}\protected@file@percent }
+\newlabel{fig:failure}{{6}{8}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{REFERENCES}{8}{}\protected@file@percent }
+\bibcite{b9}{9}
+\@writefile{toc}{\contentsline {subsection}{Thong Luc}{9}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Nguyen Huu Binh}{9}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Ly Quoc Ngoc}{9}{}\protected@file@percent }
+\gdef \@abspage@last{9}
