@@ -36,8 +36,7 @@ Phần này trình bày về tập dữ liệu, cách phân chia dữ liệu th�
 Khóa luận sử dụng hai bộ dữ liệu X-quang xương công khai và độc lập là BTXRD~\cite{btxrd2024}(Bone Tumor X-Ray Dataset) và FracAtlas~\cite{fracatlas2023}. BTXRD tập trung vào khối u xương, còn FracAtlas tập trung vào gãy xương ở nhiều vị trí khác nhau. Việc dùng cả hai bộ dữ liệu giúp mô hình được kiểm tra trên hai dạng tổn thương khác nhau: một bên là vùng tổn thương có hình dạng phức tạp hơn, một bên là các đường gãy thường nhỏ và mảnh hơn.
 
 Dữ liệu dùng cho bài toán phân đoạn chỉ gồm ảnh bệnh lý có mặt nạ ở cấp độ điểm ảnh.
-\needspace{14\baselineskip}
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Thống kê phân bố hai bộ dữ liệu dùng trong thực nghiệm}
     \label{tab:dataset_stats}
@@ -67,7 +66,7 @@ Dữ liệu dùng cho bài toán phân đoạn chỉ gồm ảnh bệnh lý có 
 
 FracAtlas có 917 mẫu đa giác được dùng trong thực nghiệm, khá gần với 922 vùng gãy xương được công bố trong bộ dữ liệu gốc~\cite{fracatlas2023}. Phần chênh lệch nhỏ hơn 1\% chủ yếu do một số đa giác quá nhỏ hoặc lỗi định dạng bị loại ra khi chuẩn hóa dữ liệu. So với BTXRD, FracAtlas có ít dữ liệu huấn luyện hơn, nên cũng giúp kiểm tra thêm khả năng học của PGA-UNet trong điều kiện dữ liệu hạn chế hơn.
 
-Phần tiền xử lý được áp dụng giống nhau cho cả hai bộ dữ liệu. Thay vì co giãn trực tiếp ảnh gốc về khung vuông đích, khóa luận dùng quy trình \textit{resize + padding}: ảnh X-quang trước hết được thu phóng đồng tỉ lệ sao cho cạnh dài nhất khớp với kích thước đích ($512$ hoặc $256$ điểm ảnh), sau đó được đệm nền để tạo khung vuông $512\times512$ hoặc $256\times256$. Cách này giữ nguyên tỉ lệ hình học của cấu trúc xương và tránh méo ảnh do kéo giãn không đồng đều theo hai trục. Mặt nạ nhị phân được tạo từ tọa độ đa giác trong chú thích và cũng được biến đổi theo đúng quy trình đó, với nội suy lân cận gần nhất để không làm mờ biên phân đoạn. Tương tự, bản đồ nhiệt câu nhắc được chuẩn hóa theo cùng quy trình \textit{resize + padding} để đồng bộ hoàn toàn với ảnh đầu vào. Dữ liệu sau tiền xử lý được dùng thống nhất trong huấn luyện, suy luận và lúc trực quan hóa kết quả.
+Phần tiền xử lý được áp dụng giống nhau cho cả hai bộ dữ liệu. Ảnh X-quang được chuẩn hóa về kích thước $512\times512$ hoặc $256\times256$. Mặt nạ nhị phân được tạo từ tọa độ đa giác trong chú thích và cũng được biến đổi theo đúng quy trình đó. Tương tự, bản đồ nhiệt câu nhắc được chuẩn hóa theo cùng cách để đồng bộ với ảnh đầu vào. Dữ liệu sau tiền xử lý được dùng thống nhất trong huấn luyện, suy luận và lúc trực quan hóa kết quả.
 
 Việc phân chia tập huấn luyện, xác thực và kiểm thử được thực hiện ở cấp độ ảnh: các đa giác thuộc cùng một ảnh luôn được giữ trong cùng một tập để tránh rò rỉ dữ liệu ở cấp độ vùng tổn thương. Khóa luận chưa xác nhận việc phân chia ở cấp độ bệnh nhân hoặc lượt chụp (nhiều ảnh của cùng một bệnh nhân, nếu có, có thể rơi vào các tập khác nhau), do siêu dữ liệu công khai của BTXRD và FracAtlas không cung cấp mã định danh bệnh nhân đầy đủ để kiểm tra. Đây là một giới hạn về khả năng kiểm chứng rò rỉ dữ liệu, được nêu lại tại Mục~\ref{sec:han_che}, Chương~\ref{Chapter5}.
 % ------------------------------------------------------------
@@ -143,7 +142,7 @@ Thực nghiệm đầu tiên so sánh PGA-UNet với U-Net và Attention U-Net t
 
 Cả ba mô hình được huấn luyện từ đầu riêng biệt trên từng bộ dữ liệu với cùng kích thước đầu vào và được đánh giá ở cấp độ ảnh. So sánh này nhằm xác định lợi ích tổng thể của phương pháp phân đoạn có hướng dẫn bằng câu nhắc so với các mô hình cơ sở không sử dụng câu nhắc; đây không phải phép so sánh cùng điều kiện đầu vào, nên không được dùng để kết luận về tính mới của riêng kiến trúc PGA-UNet. Đóng góp cụ thể của PSG và CAD, tách biệt khỏi lợi ích của việc có câu nhắc, được kiểm chứng bằng các cấu hình đối sánh cùng nhận câu nhắc (U-Net+Concat, U-Net+PSG, U-Net+CAD) tại Mục~\ref{sec:ablation_study} và Phụ lục~\ref{AppendixA}.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{So sánh PGA-UNet với các mô hình cơ sở trên BTXRD ở độ phân giải $512\times512$ (N=\Ntestimg~ảnh)}
     \label{tab:baseline_comparison}
@@ -169,7 +168,7 @@ Cả ba mô hình được huấn luyện từ đầu riêng biệt trên từng
     }
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{So sánh PGA-UNet với các mô hình cơ sở trên FracAtlas ở độ phân giải $512\times512$ (N=\NtestimgFA~ảnh)}
     \label{tab:fracatlas_baseline}
@@ -215,8 +214,7 @@ Trong cấu hình thực nghiệm, SAM-Med2D~\cite{2023-SAMMed2D-Cheng} tiếp n
 
 SAM-Med2D được đánh giá ở hai chế độ: chưa tinh chỉnh, sử dụng trực tiếp trọng số tiền huấn luyện; và đã tinh chỉnh, cập nhật lớp thích ứng cùng bộ giải mã trên từng bộ dữ liệu. Các cấu hình sử dụng cùng tập kiểm thử, kịch bản câu nhắc và phương pháp đánh giá cấp độ ảnh tại Mục~\ref{subsec:image_level_eval}.
 
-\needspace{16\baselineskip}
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{So sánh PGA-UNet với SAM-Med2D trên BTXRD ở độ phân giải $256\times256$ (N=\Ntestimg~ảnh)}
     \label{tab:sam_comparison}
@@ -254,8 +252,7 @@ SAM-Med2D được đánh giá ở hai chế độ: chưa tinh chỉnh, sử d�
     }
 \end{table}
 
-\needspace{16\baselineskip}
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{So sánh PGA-UNet với SAM-Med2D trên FracAtlas ở độ phân giải $256\times256$ (N=\NtestimgFA~ảnh)}
     \label{tab:fracatlas_sam_comparison}
@@ -324,8 +321,7 @@ Mục này khảo sát ảnh hưởng của độ phân giải đầu vào và c
 
 Như đã lưu ý tại Mục~\ref{subsec:models_compared}, kích thước cửa sổ Gaussian ($k=31$) và biên mở rộng hộp giới hạn (5 điểm ảnh) được giữ cố định theo số điểm ảnh đồng thời cho cả hai độ phân giải. Vì vậy, so với kích thước ảnh, câu nhắc ở $256\times256$ được làm mềm và mở rộng tương đối nhiều hơn so với câu nhắc ở $512\times512$. Đây là một yếu tố có thể ảnh hưởng đồng thời cùng với độ phân giải khi so sánh hai cấu hình dưới đây, nên chênh lệch chỉ số Dice giữa hai độ phân giải không chỉ đơn thuần phản ánh độ sắc nét và chi tiết của bức ảnh mà còn chịu ảnh hưởng bởi mức độ tác động tương đối của câu nhắc lên từng độ phân giải.
 
-\needspace{16\baselineskip}
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Kết quả PGA-UNet tại hai độ phân giải trên BTXRD (N=\Ntestimg~ảnh)}
     \label{tab:pga_256_512}
@@ -353,8 +349,7 @@ Như đã lưu ý tại Mục~\ref{subsec:models_compared}, kích thước cửa
     }
 \end{table}
 
-\needspace{16\baselineskip}
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Kết quả PGA-UNet tại hai độ phân giải trên FracAtlas (N=\NtestimgFA~ảnh)}
     \label{tab:fracatlas_pga_full}
@@ -396,7 +391,7 @@ Khi tăng độ phân giải từ $256\times256$ lên $512\times512$, Dice đề
 \vspace{0.5cm}
 
 PGA-UNet duy trì mức suy giảm Dice tương đối nhỏ khi chuyển từ câu nhắc Bao trọn sang Lệch tâm. Mức giảm nằm trong khoảng từ 0,0184 đến 0,0319 trên hai độ phân giải và hai bộ dữ liệu. Kết quả này cần được hiểu là độ ổn định đối với dạng lệch câu nhắc mô phỏng đã khảo sát, không phải khẳng định tổng quát về độ bền vững trước mọi dạng prompt lệch trong thực tế. Khả năng này vẫn cần được kiểm chứng với câu nhắc do bác sĩ chẩn đoán ảnh cung cấp trong thực tế. Cần lưu ý thêm rằng hộp giới hạn Lệch tâm dùng để đánh giá được sinh bằng cùng quy tắc (dịch ngẫu nhiên bằng 0,30 kích thước hộp) đã sử dụng khi huấn luyện, nên kết quả phản ánh độ ổn định của mô hình đối với đúng dạng nhiễu đã học, chưa phải bằng chứng về mức độ lệch chưa từng thấy hoặc do bác sĩ chẩn đoán ảnh thực tế tạo ra.
-\needspace{12\baselineskip}
+
 Hình~\ref{fig:qual_shift} minh họa khả năng dự đoán của PGA-UNet trước câu nhắc Lệch tâm trên một ảnh thuộc mỗi bộ dữ liệu. Trong ví dụ BTXRD, Dice giảm từ 0,922 xuống 0,917; trong ví dụ FracAtlas, Dice giảm từ 0,781 xuống 0,643. Đây là các trường hợp minh họa và không thay thế kết quả trung bình trên toàn bộ tập kiểm thử.
 
 \begin{figure}[H]
@@ -420,8 +415,7 @@ Bên cạnh các phép so sánh chính, khóa luận còn làm thêm ba nhóm th
 
 Tám cấu hình, tổ hợp giữa không hoặc có PSG, ba lựa chọn cho cơ chế chú ý trên các kết nối tắt của nhánh giải mã (không cổng chú ý, cổng chú ý nguyên bản của Attention U-Net~\cite{oktay2018attentionunet}, hoặc CAD) và hai cách biểu diễn câu nhắc (nhị phân hoặc Gaussian), được huấn luyện lại từ đầu trên cùng dữ liệu và cùng điều kiện huấn luyện của BTXRD và FracAtlas. U-Net+Concat, chỉ nối câu nhắc vào ảnh đầu vào, đóng vai trò cấu hình cơ sở cùng nhận câu nhắc như PGA-UNet.
 
-\needspace{14\baselineskip}
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Tổng hợp Dice của ba cấu hình chính trong nghiên cứu loại bỏ thành phần trên BTXRD và FracAtlas (ba kịch bản câu nhắc)}
     \label{tab:ablation_summary}

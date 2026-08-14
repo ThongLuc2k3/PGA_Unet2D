@@ -61,7 +61,8 @@
          family={Setio},
          familyi={S\bibinitperiod},
          given={Arnaud Arindra\bibnamedelima Adiyoso},
-         giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim A\bibinitperiod},
+         giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim
+  A\bibinitperiod},
       }}%
       {{hash=CF}{%
          family={Ciompi},
@@ -81,7 +82,8 @@
          family={Laak},
          familyi={L\bibinitperiod},
          given={Jeroen A. W.\bibnamedelima M.},
-         giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim W\bibinitperiod\bibinitdelim M\bibinitperiod},
+         giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim
+  W\bibinitperiod\bibinitdelim M\bibinitperiod},
       }}%
       {{hash=vGB}{%
          prefix={van},
@@ -98,7 +100,7 @@
          giveni={C\bibinitperiod\bibinitdelim I\bibinitperiod},
       }}%
     }
-    \strng{namehash}{LG+1}
+    \strng{namehash}{LGKTBBE+1}
     \strng{fullhash}{LGKTBBESAAACFGMLJAWMvdGBvSCI1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -107,9 +109,6 @@
     \endverb
     \field{pages}{60\bibrangedash 88}
     \field{title}{{A Survey on Deep Learning in Medical Image Analysis}}
-    \verb{url}
-    \verb https://doi.org/10.1016/j.media.2017.07.005
-    \endverb
     \field{volume}{42}
     \field{journaltitle}{Medical Image Analysis}
     \field{year}{2017}
@@ -136,7 +135,7 @@
          giveni={H\bibinithyphendelim I\bibinitperiod},
       }}%
     }
-    \strng{namehash}{SD+1}
+    \strng{namehash}{SDWGSHI1}
     \strng{fullhash}{SDWGSHI1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -145,9 +144,6 @@
     \endverb
     \field{pages}{221\bibrangedash 248}
     \field{title}{{Deep Learning in Medical Image Analysis}}
-    \verb{url}
-    \verb https://doi.org/10.1146/annurev-bioeng-071516-044442
-    \endverb
     \field{volume}{19}
     \field{journaltitle}{Annual Review of Biomedical Engineering}
     \field{year}{2017}
@@ -192,7 +188,7 @@
          giveni={D\bibinitperiod},
       }}%
     }
-    \strng{namehash}{MS+1}
+    \strng{namehash}{MSBYPF+1}
     \strng{fullhash}{MSBYPFPAKNTD1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -202,11 +198,9 @@
     \field{number}{7}
     \field{pages}{3523\bibrangedash 3542}
     \field{title}{{Image Segmentation Using Deep Learning: A Survey}}
-    \verb{url}
-    \verb https://doi.org/10.1109/TPAMI.2021.3059968
-    \endverb
     \field{volume}{44}
-    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}
     \field{year}{2022}
   \endentry
 
@@ -231,19 +225,17 @@
          giveni={T\bibinitperiod},
       }}%
     }
-    \strng{namehash}{LJ+1}
+    \strng{namehash}{LJSEDT1}
     \strng{fullhash}{LJSEDT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}
     \verb{doi}
     \verb 10.1109/CVPR.2015.7298965
     \endverb
     \field{pages}{3431\bibrangedash 3440}
     \field{title}{{Fully Convolutional Networks for Semantic Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1109/CVPR.2015.7298965
-    \endverb
     \field{year}{2015}
   \endentry
 
@@ -268,7 +260,7 @@
          giveni={R\bibinitperiod},
       }}%
     }
-    \strng{namehash}{BV+1}
+    \strng{namehash}{BVKACR1}
     \strng{fullhash}{BVKACR1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -277,12 +269,11 @@
     \endverb
     \field{number}{12}
     \field{pages}{2481\bibrangedash 2495}
-    \field{title}{{SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1109/TPAMI.2016.2644615
-    \endverb
+    \field{title}{{SegNet: A Deep Convolutional Encoder-Decoder Architecture
+  for Image Segmentation}}
     \field{volume}{39}
-    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}
     \field{year}{2017}
   \endentry
 
@@ -319,7 +310,7 @@
          giveni={H\bibinitperiod},
       }}%
     }
-    \strng{namehash}{CLC+1}
+    \strng{namehash}{CLCZYPG+1}
     \strng{fullhash}{CLCZYPGSFAH1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -327,11 +318,10 @@
     \verb 10.1007/978-3-030-01234-2_49
     \endverb
     \field{pages}{801\bibrangedash 818}
-    \field{title}{{Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1007/978-3-030-01234-2_49
-    \endverb
-    \field{journaltitle}{Proceedings of the European Conference on Computer Vision}
+    \field{title}{{Encoder-Decoder with Atrous Separable Convolution for
+  Semantic Image Segmentation}}
+    \field{journaltitle}{Proceedings of the European Conference on Computer
+  Vision}
     \field{year}{2018}
   \endentry
 
@@ -356,7 +346,7 @@
          giveni={S\bibinithyphendelim A\bibinitperiod},
       }}%
     }
-    \strng{namehash}{MF+1}
+    \strng{namehash}{MFNNASA1}
     \strng{fullhash}{MFNNASA1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -366,10 +356,8 @@
     \verb{eprint}
     \verb 1606.04797
     \endverb
-    \field{title}{{V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1606.04797
-    \endverb
+    \field{title}{{V-Net: Fully Convolutional Neural Networks for Volumetric
+  Medical Image Segmentation}}
     \field{journaltitle}{arXiv preprint arXiv:1606.04797}
     \field{eprinttype}{arXiv}
     \field{eprintclass}{cs.CV}
@@ -400,20 +388,19 @@
     \list{publisher}{1}{%
       {Springer}%
     }
-    \strng{namehash}{RO+1}
+    \strng{namehash}{ROFPBT1}
     \strng{fullhash}{ROFPBT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2015}
+    \field{booktitle}{Medical Image Computing and Computer-Assisted
+  Intervention -- MICCAI 2015}
     \verb{doi}
     \verb 10.1007/978-3-319-24574-4_28
     \endverb
     \field{pages}{234\bibrangedash 241}
     \field{series}{Lecture Notes in Computer Science}
-    \field{title}{{U-Net: Convolutional Networks for Biomedical Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1007/978-3-319-24574-4_28
-    \endverb
+    \field{title}{{U-Net: Convolutional Networks for Biomedical Image
+  Segmentation}}
     \field{volume}{9351}
     \field{year}{2015}
   \endentry
@@ -430,7 +417,8 @@
          family={Siddiquee},
          familyi={S\bibinitperiod},
          given={Md. Mahfuzur\bibnamedelima Rahman},
-         giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim R\bibinitperiod},
+         giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim
+  R\bibinitperiod},
       }}%
       {{hash=TN}{%
          family={Tajbakhsh},
@@ -445,7 +433,7 @@
          giveni={J\bibinitperiod},
       }}%
     }
-    \strng{namehash}{ZZ+1}
+    \strng{namehash}{ZZSMMRTN+1}
     \strng{fullhash}{ZZSMMRTNLJ1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -453,11 +441,10 @@
     \verb 10.1007/978-3-030-00889-5_1
     \endverb
     \field{pages}{3\bibrangedash 11}
-    \field{title}{{UNet++: A Nested U-Net Architecture for Medical Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1007/978-3-030-00889-5_1
-    \endverb
-    \field{journaltitle}{Deep Learning in Medical Image Analysis and Multimodal Learning for Clinical Decision Support}
+    \field{title}{{UNet++: A Nested U-Net Architecture for Medical Image
+  Segmentation}}
+    \field{journaltitle}{Deep Learning in Medical Image Analysis and Multimodal
+  Learning for Clinical Decision Support}
     \field{year}{2018}
   \endentry
 
@@ -470,16 +457,16 @@
          giveni={F\bibinitperiod},
       }}%
       {{hash=JPF}{%
-         family={J{\"a}ger},
+         family={Jaeger},
          familyi={J\bibinitperiod},
          given={Paul\bibnamedelima F.},
          giveni={P\bibinitperiod\bibinitdelim F\bibinitperiod},
       }}%
-      {{hash=KSAA}{%
+      {{hash=KS}{%
          family={Kohl},
          familyi={K\bibinitperiod},
-         given={Simon A.\bibnamedelima A.},
-         giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim A\bibinitperiod},
+         given={Simon},
+         giveni={S\bibinitperiod},
       }}%
       {{hash=PJ}{%
          family={Petersen},
@@ -494,22 +481,22 @@
          giveni={K\bibinitperiod\bibinitdelim H\bibinitperiod},
       }}%
     }
-    \strng{namehash}{IF+1}
-    \strng{fullhash}{IFJPFKSAAPJMHKH1}
+    \strng{namehash}{IFJPFKS+1}
+    \strng{fullhash}{IFJPFKSPJMHKH1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \verb{doi}
-    \verb 10.1038/s41592-020-01008-z
+    \verb{eprint}
+    \verb 1809.10486
     \endverb
-    \field{number}{2}
-    \field{pages}{203\bibrangedash 211}
-    \field{title}{{nnU-Net: A Self-configuring Method for Deep Learning-Based Biomedical Image Segmentation}}
+    \field{title}{{nnU-Net: Self-adapting Framework for U-Net-Based Medical
+  Image Segmentation}}
     \verb{url}
-    \verb https://doi.org/10.1038/s41592-020-01008-z
+    \verb https://arxiv.org/abs/1809.10486
     \endverb
-    \field{volume}{18}
-    \field{journaltitle}{Nature Methods}
-    \field{year}{2021}
+    \field{journaltitle}{arXiv preprint arXiv:1809.10486}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2018}
   \endentry
 
   \entry{2023-SAM-Kirillov}{inproceedings}{}{}
@@ -587,20 +574,17 @@
          giveni={R\bibinitperiod},
       }}%
     }
-    \strng{namehash}{KA+1}
+    \strng{namehash}{KAMERN+1}
     \strng{fullhash}{KAMERNMHRCGLXTWSBACLWYDPGR1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE/CVF International Conference on Computer Vision}
+    \field{booktitle}{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}
     \verb{doi}
     \verb 10.1109/ICCV51070.2023.00371
     \endverb
     \field{pages}{4015\bibrangedash 4026}
     \field{title}{{Segment Anything}}
-    \verb{url}
-    \verb https://openaccess.thecvf.com/content/ICCV2023/html/Kirillov_Segmen
-    \verb t_Anything_ICCV_2023_paper.html
-    \endverb
     \field{year}{2023}
   \endentry
 
@@ -697,7 +681,7 @@
          giveni={Y\bibinitperiod},
       }}%
     }
-    \strng{namehash}{CJ+2}
+    \strng{namehash}{CJYJDZ+1}
     \strng{fullhash}{CJYJDZCJLTWHSYHZCJJLSHHJZSZMQY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -708,9 +692,6 @@
     \verb 2308.16184
     \endverb
     \field{title}{{SAM-Med2D}}
-    \verb{url}
-    \verb https://arxiv.org/abs/2308.16184
-    \endverb
     \field{journaltitle}{arXiv preprint arXiv:2308.16184}
     \field{eprinttype}{arXiv}
     \field{eprintclass}{cs.CV}
@@ -750,11 +731,12 @@
          giveni={T\bibinitperiod\bibinitdelim S\bibinitperiod},
       }}%
     }
-    \strng{namehash}{XN+1}
+    \strng{namehash}{XNPBCS+1}
     \strng{fullhash}{XNPBCSYJHTS1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}
     \verb{doi}
     \verb 10.48550/arXiv.1603.04042
     \endverb
@@ -763,9 +745,6 @@
     \endverb
     \field{pages}{373\bibrangedash 381}
     \field{title}{{Deep Interactive Object Selection}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1603.04042
-    \endverb
     \field{eprinttype}{arXiv}
     \field{eprintclass}{cs.CV}
     \field{year}{2016}
@@ -840,7 +819,7 @@
          giveni={T\bibinitperiod},
       }}%
     }
-    \strng{namehash}{WG+1}
+    \strng{namehash}{WGZMALW+1}
     \strng{fullhash}{WGZMALWPRPPAAMDTDALDJOSVT1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -849,12 +828,11 @@
     \endverb
     \field{number}{7}
     \field{pages}{1559\bibrangedash 1572}
-    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1109/TPAMI.2018.2840695
-    \endverb
+    \field{title}{{DeepIGeoS: A Deep Interactive Geodesic Framework for Medical
+  Image Segmentation}}
     \field{volume}{41}
-    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}
     \field{year}{2019}
   \endentry
 
@@ -897,7 +875,7 @@
          giveni={B\bibinitperiod},
       }}%
     }
-    \strng{namehash}{MJ+1}
+    \strng{namehash}{MJHYLF+1}
     \strng{fullhash}{MJHYLFHLYCWB1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -907,9 +885,6 @@
     \field{eid}{654}
     \field{number}{1}
     \field{title}{{Segment Anything in Medical Images}}
-    \verb{url}
-    \verb https://www.nature.com/articles/s41467-024-44824-z
-    \endverb
     \field{volume}{15}
     \field{journaltitle}{Nature Communications}
     \field{year}{2024}
@@ -990,7 +965,7 @@
          giveni={D\bibinitperiod},
       }}%
     }
-    \strng{namehash}{OO+1}
+    \strng{namehash}{OOSJFLL+1}
     \strng{fullhash}{OOSJFLLLMHMMKMKMSHNYKBGBRD1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -1002,9 +977,6 @@
     \verb 1804.03999
     \endverb
     \field{title}{{Attention U-Net: Learning Where to Look for the Pancreas}}
-    \verb{url}
-    \verb https://arxiv.org/abs/1804.03999
-    \endverb
     \field{eprinttype}{arXiv}
     \field{eprintclass}{cs.CV}
     \field{year}{2018}
@@ -1085,12 +1057,13 @@
          giveni={N\bibinitperiod},
       }}%
     }
-    \strng{namehash}{DA+1}
+    \strng{namehash}{DABLKA+1}
     \strng{fullhash}{DABLKAWDZXUTDMMMHGGSUJHN1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{booktitle}{International Conference on Learning Representations}
-    \field{title}{{An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale}}
+    \field{title}{{An Image Is Worth 16x16 Words: Transformers for Image
+  Recognition at Scale}}
     \verb{url}
     \verb https://openreview.net/forum?id=YicbFdNTTy
     \endverb
@@ -1148,19 +1121,18 @@
          giveni={B\bibinitperiod},
       }}%
     }
-    \strng{namehash}{LZ+1}
+    \strng{namehash}{LZLYCY+1}
     \strng{fullhash}{LZLYCYHHWYZZLSGB1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE/CVF International Conference on Computer Vision}
+    \field{booktitle}{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}
     \verb{doi}
     \verb 10.1109/ICCV48922.2021.00986
     \endverb
     \field{pages}{10012\bibrangedash 10022}
-    \field{title}{{Swin Transformer: Hierarchical Vision Transformer Using Shifted Windows}}
-    \verb{url}
-    \verb https://doi.org/10.1109/ICCV48922.2021.00986
-    \endverb
+    \field{title}{{Swin Transformer: Hierarchical Vision Transformer Using
+  Shifted Windows}}
     \field{year}{2021}
   \endentry
 
@@ -1221,7 +1193,7 @@
          giveni={Y\bibinitperiod},
       }}%
     }
-    \strng{namehash}{CJ+1}
+    \strng{namehash}{CJLYYQ+1}
     \strng{fullhash}{CJLYYQZXAEXYLLYALZY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -1231,95 +1203,12 @@
     \verb{eprint}
     \verb 2102.04306
     \endverb
-    \field{title}{{TransUNet: Transformers Make Strong Encoders for Medical Image Segmentation}}
-    \verb{url}
-    \verb https://arxiv.org/abs/2102.04306
-    \endverb
+    \field{title}{{TransUNet: Transformers Make Strong Encoders for Medical
+  Image Segmentation}}
     \field{journaltitle}{arXiv preprint arXiv:2102.04306}
     \field{eprinttype}{arXiv}
     \field{eprintclass}{cs.CV}
     \field{year}{2021}
-  \endentry
-
-  \entry{valanarasu2021medicaltransformer}{article}{}{}
-    \name{author}{3}{}{%
-      {{hash=VJMJ}{%
-         family={Valanarasu},
-         familyi={V\bibinitperiod},
-         given={Jeya Maria\bibnamedelima Jose},
-         giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim J\bibinitperiod},
-      }}%
-      {{hash=HI}{%
-         family={Hacihaliloglu},
-         familyi={H\bibinitperiod},
-         given={Ilker},
-         giveni={I\bibinitperiod},
-      }}%
-      {{hash=PVM}{%
-         family={Patel},
-         familyi={P\bibinitperiod},
-         given={Vishal\bibnamedelima M.},
-         giveni={V\bibinitperiod\bibinitdelim M\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{VJMJ+1}
-    \strng{fullhash}{VJMJHIPVM1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \verb{doi}
-    \verb 10.1016/j.media.2021.102138
-    \endverb
-    \field{eid}{102138}
-    \field{title}{{Medical Transformer: Gated Axial-Attention for Medical Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1016/j.media.2021.102138
-    \endverb
-    \field{volume}{74}
-    \field{journaltitle}{Medical Image Analysis}
-    \field{year}{2021}
-  \endentry
-
-  \entry{hatamizadeh2022unetr}{inproceedings}{}{}
-    \name{author}{4}{}{%
-      {{hash=HA}{%
-         family={Hatamizadeh},
-         familyi={H\bibinitperiod},
-         given={Ali},
-         giveni={A\bibinitperiod},
-      }}%
-      {{hash=YD}{%
-         family={Yang},
-         familyi={Y\bibinitperiod},
-         given={Dong},
-         giveni={D\bibinitperiod},
-      }}%
-      {{hash=RH}{%
-         family={Roth},
-         familyi={R\bibinitperiod},
-         given={Holger},
-         giveni={H\bibinitperiod},
-      }}%
-      {{hash=XD}{%
-         family={Xu},
-         familyi={X\bibinitperiod},
-         given={Daguang},
-         giveni={D\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{HA+1}
-    \strng{fullhash}{HAYDRHXD1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision}
-    \verb{doi}
-    \verb 10.1109/WACV51458.2022.00066
-    \endverb
-    \field{pages}{574\bibrangedash 584}
-    \field{title}{{UNETR: Transformers for 3D Medical Image Segmentation}}
-    \verb{url}
-    \verb https://doi.org/10.1109/WACV51458.2022.00066
-    \endverb
-    \field{year}{2022}
   \endentry
 
   \entry{cao2022swinunet}{article}{}{}
@@ -1367,7 +1256,7 @@
          giveni={M\bibinitperiod},
       }}%
     }
-    \strng{namehash}{CH+1}
+    \strng{namehash}{CHWYCJ+1}
     \strng{fullhash}{CHWYCJJDZXTQWM1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -1377,14 +1266,12 @@
     \verb{eprint}
     \verb 2105.05537
     \endverb
-    \field{title}{{Swin-Unet: Unet-Like Pure Transformer for Medical Image Segmentation}}
-    \verb{url}
-    \verb https://arxiv.org/abs/2105.05537
-    \endverb
+    \field{title}{{Swin-Unet: Unet-Like Pure Transformer for Medical Image
+  Segmentation}}
     \field{journaltitle}{arXiv preprint arXiv:2105.05537}
     \field{eprinttype}{arXiv}
     \field{eprintclass}{cs.CV}
-    \field{year}{2022}
+    \field{year}{2021}
   \endentry
 
   \entry{he2016resnet}{inproceedings}{}{}
@@ -1414,19 +1301,17 @@
          giveni={J\bibinitperiod},
       }}%
     }
-    \strng{namehash}{HK+1}
+    \strng{namehash}{HKZXRS+1}
     \strng{fullhash}{HKZXRSSJ1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+    \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}
     \verb{doi}
     \verb 10.1109/CVPR.2016.90
     \endverb
     \field{pages}{770\bibrangedash 778}
     \field{title}{{Deep Residual Learning for Image Recognition}}
-    \verb{url}
-    \verb https://doi.org/10.1109/CVPR.2016.90
-    \endverb
     \field{year}{2016}
   \endentry
 
@@ -1465,20 +1350,18 @@
          giveni={A\bibinitperiod},
       }}%
     }
-    \strng{namehash}{PE+1}
+    \strng{namehash}{PESFVHd+1}
     \strng{fullhash}{PESFVHdDVCA1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the AAAI Conference on Artificial Intelligence}
+    \field{booktitle}{Proceedings of the AAAI Conference on Artificial
+  Intelligence}
     \verb{doi}
     \verb 10.1609/aaai.v32i1.11671
     \endverb
     \field{number}{1}
     \field{pages}{3942\bibrangedash 3951}
     \field{title}{{FiLM: Visual Reasoning with a General Conditioning Layer}}
-    \verb{url}
-    \verb https://ojs.aaai.org/index.php/AAAI/article/view/11671
-    \endverb
     \field{volume}{32}
     \field{year}{2018}
   \endentry
@@ -1510,21 +1393,18 @@
          giveni={J\bibinithyphendelim Y\bibinitperiod},
       }}%
     }
-    \strng{namehash}{PT+1}
+    \strng{namehash}{PTLMYWTC+1}
     \strng{fullhash}{PTLMYWTCZJY1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition}
+    \field{booktitle}{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition}
     \verb{doi}
     \verb 10.1109/CVPR.2019.00244
     \endverb
     \field{pages}{2337\bibrangedash 2346}
-    \field{title}{{Semantic Image Synthesis with Spatially-Adaptive Normalization}}
-    \verb{url}
-    \verb https://openaccess.thecvf.com/content_CVPR_2019/html/Park_Semantic_
-    \verb Image_Synthesis_With_Spatially-Adaptive_Normalization_CVPR_2019_pap
-    \verb er.html
-    \endverb
+    \field{title}{{Semantic Image Synthesis with Spatially-Adaptive
+  Normalization}}
     \field{year}{2019}
   \endentry
 
@@ -1615,7 +1495,7 @@
          giveni={J\bibinitperiod},
       }}%
     }
-    \strng{namehash}{YS+1}
+    \strng{namehash}{YSHYWX+1}
     \strng{fullhash}{YSHYWXZYPICWZCCLWHLDWGILSGYCQSJ1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -1624,10 +1504,8 @@
     \endverb
     \field{eid}{88}
     \field{number}{1}
-    \field{title}{{A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors}}
-    \verb{url}
-    \verb https://www.nature.com/articles/s41597-024-04311-y
-    \endverb
+    \field{title}{{A Radiograph Dataset for the Classification, Localization,
+  and Segmentation of Primary Bone Tumors}}
     \field{volume}{12}
     \field{journaltitle}{Scientific Data}
     \field{year}{2025}
@@ -1672,7 +1550,7 @@
          giveni={S\bibinitperiod},
       }}%
     }
-    \strng{namehash}{AI+1}
+    \strng{namehash}{AIRMAPFZ+1}
     \strng{fullhash}{AIRMAPFZATCTMSS1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
@@ -1681,10 +1559,8 @@
     \endverb
     \field{eid}{521}
     \field{number}{1}
-    \field{title}{{FracAtlas: A Dataset for Fracture Classification, Localization and Segmentation of Musculoskeletal Radiographs}}
-    \verb{url}
-    \verb https://www.nature.com/articles/s41597-023-02432-4
-    \endverb
+    \field{title}{{FracAtlas: A Dataset for Fracture Classification,
+  Localization and Segmentation of Musculoskeletal Radiographs}}
     \field{volume}{10}
     \field{journaltitle}{Scientific Data}
     \field{year}{2023}
@@ -1712,10 +1588,12 @@
     \strng{fullhash}{TMLQV1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{booktitle}{Proceedings of the 36th International Conference on Machine Learning}
+    \field{booktitle}{Proceedings of the 36th International Conference on
+  Machine Learning}
     \field{pages}{6105\bibrangedash 6114}
     \field{series}{Proceedings of Machine Learning Research}
-    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}}
+    \field{title}{{EfficientNet: Rethinking Model Scaling for Convolutional
+  Neural Networks}}
     \verb{url}
     \verb https://proceedings.mlr.press/v97/tan19a.html
     \endverb

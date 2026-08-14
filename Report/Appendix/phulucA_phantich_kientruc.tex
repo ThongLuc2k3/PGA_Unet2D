@@ -13,7 +13,6 @@ Phụ lục A tập hợp các số liệu chi tiết mà Chương~\ref{Chapter4
 
 Mục này trình bày đầy đủ số liệu của phần đo hiệu quả tính toán đã được tóm tắt ở Chương~\ref{Chapter4}. Các phép đo được thực hiện trong cùng môi trường chạy, với cùng thiết bị và cùng cách đo cho từng mô hình. Những chỉ số được ghi nhận gồm số tham số, số tham số có thể huấn luyện, số phép tính, dung lượng checkpoint, bộ nhớ GPU đỉnh và độ trễ suy luận trung bình trên GPU và CPU. SAM-Med2D được đo ở $256\times256$, còn PGA-UNet được đo ở hai cấu hình $256\times256$ và $512\times512$ để tiện đối sánh trực tiếp. Các con số trong mục này chỉ được hiểu là để so sánh tương đối trong cùng môi trường thực nghiệm.
 
-\needspace{12\baselineskip}
 \begin{table}[H]
     \centering
     \caption{Bảng so sánh hiệu quả tính toán giữa PGA-UNet và SAM-Med2D trong cùng môi trường thực nghiệm}
@@ -62,7 +61,7 @@ Trên BTXRD, PGA-UNet được phân tích theo ba hướng: đóng góp của t
 \subsection{Đóng góp của kiến trúc và câu nhắc}
 \label{subsec:ablation_arch}
 
-\noindent\textbf{Thiết kế thí nghiệm.}\\
+\noindent\textbf{Thiết kế thí nghiệm}\\
 Tám cấu hình được huấn luyện lại từ đầu trên cùng tập BTXRD và giữ nguyên các điều kiện huấn luyện. Thực nghiệm chỉ thay đổi ba yếu tố: PSG tại bộ mã hóa, cơ chế chú ý trên các kết nối tắt của nhánh giải mã và cách biểu diễn câu nhắc.
 
 Trong đó, sáu cấu hình cùng sử dụng bản đồ nhiệt Gaussian để khảo sát đóng góp kiến trúc. Mỗi cấu hình là một tổ hợp giữa hai lựa chọn tại bộ mã hóa (không hoặc có PSG) và ba lựa chọn cho cơ chế chú ý trên các kết nối tắt của nhánh giải mã (không dùng cổng chú ý, dùng cổng chú ý nguyên bản hoặc dùng CAD). Nhờ đó, xác định PSG và CAD có hiệu quả khi hoạt động riêng lẻ hay chỉ phát huy khi được kết hợp.
@@ -70,8 +69,7 @@ Trong đó, sáu cấu hình cùng sử dụng bản đồ nhiệt Gaussian đ�
 Hai cấu hình còn lại thay bản đồ nhiệt Gaussian bằng mặt nạ hộp giới hạn nhị phân. Chúng được dùng để so sánh hai cách biểu diễn câu nhắc trong cả cấu hình nối kênh cơ sở và cấu hình đầy đủ PSG+CAD.
 
 U-Net+Concat là cấu hình cơ sở, trong đó câu nhắc chỉ được nối vào ảnh như một kênh đầu vào. U-Net+PSG và U-Net+CAD lần lượt bổ sung riêng PSG hoặc CAD. Các cấu hình dùng cổng chú ý nguyên bản kế thừa Attention U-Net~\cite{oktay2018attentionunet} và không nhận trực tiếp đặc trưng câu nhắc trong cơ chế chú ý trên các kết nối tắt của nhánh giải mã. PGA-UNet kết hợp cả PSG, CAD và bản đồ nhiệt Gaussian.
-\vspace{-0.3cm}
-\needspace{16\baselineskip}
+
 \begin{table}[H]
     \centering
     \caption{Kết quả chỉ số Dice của nghiên cứu loại bỏ thành phần trên BTXRD trong ba kịch bản câu nhắc (N=\Ntestimg~ảnh)}
@@ -124,34 +122,34 @@ U-Net+Concat là cấu hình cơ sở, trong đó câu nhắc chỉ được n�
     }
 \end{table}
 
-\noindent\textbf{Vai trò của thông tin câu nhắc.}
+\noindent\textbf{Vai trò của thông tin câu nhắc}\\
 Điểm đáng chú ý đầu tiên là lợi ích lớn nhất đến từ việc có câu nhắc. U-Net không dùng câu nhắc chỉ đạt Dice 0,4740 trên BTXRD (Ở bảng~\ref{tab:baseline_comparison}), trong khi cách đơn giản nhất là nối thẳng câu nhắc vào ảnh đầu vào đã nâng Dice lên 0,8763 ở kịch bản Bao trọn. Nghĩa là trước khi xét đến PSG hay CAD, bản thân thông tin câu nhắc đã tạo ra khác biệt rất lớn.
 
 Attention U-Net không có câu nhắc đạt kết quả thấp hơn U-Net không câu nhắc. Kết quả này cho thấy cổng chú ý nguyên bản không tự cải thiện hiệu năng trong thiết lập hiện tại khi thiếu thông tin định hướng. Tuy nhiên, số liệu này không phải là nguyên nhân gây suy giảm mà chỉ được sử dụng làm điểm tham chiếu cho các cấu hình chú ý có câu nhắc.
 
-\noindent\textbf{Đóng góp của PSG tại bộ mã hóa.}
+\noindent\textbf{Đóng góp của PSG tại bộ mã hóa}\\
 Khi được sử dụng riêng lẻ, PSG tạo ra mức thay đổi nhỏ so với phép nối kênh. Trong kịch bản Lệch tâm, Dice tăng từ 0,7364 của U-Net+Concat lên 0,7388 của U-Net+PSG, tương ứng mức tăng 0,0024. Ngược lại, Dice giảm nhẹ 0,0090 ở kịch bản Bao trọn và 0,0054 ở kịch bản Hỗn hợp.
 
 Khi xét riêng, PSG chưa đủ để tạo ra cải thiện rõ rệt ở đầu ra phân đoạn. Vai trò chính của PSG không phải là thay thế quá trình tái tạo mặt nạ, mà là đưa tín hiệu không gian của câu nhắc vào quá trình mã hóa đặc trưng. Lợi ích của tín hiệu này chỉ thể hiện rõ hơn khi nhánh giải mã tiếp tục khai thác thông qua CAD trên các kết nối tắt.
 
-\noindent\textbf{Đóng góp của CAD trên các kết nối tắt của nhánh giải mã.}
+\noindent\textbf{Đóng góp của CAD trên các kết nối tắt của nhánh giải mã}\\
 Khi không có PSG, U-Net+CAD đạt Dice 0,8861 ở kịch bản Bao trọn, cao nhất trong tám cấu hình. So với U-Net+Concat, CAD cải thiện Dice 0,0098 ở Bao trọn, 0,0042 ở Lệch tâm và 0,0076 ở Hỗn hợp. Như vậy, CAD riêng lẻ giúp cơ chế chú ý trên các kết nối tắt khai thác câu nhắc tốt hơn phép nối kênh, nhưng mức cải thiện trong kịch bản Lệch tâm vẫn còn nhỏ.
 
 Vai trò của việc điều kiện hóa chú ý thể hiện rõ hơn khi so sánh CAD với cổng chú ý nguyên bản. Không có PSG, U-Net+CAD cao hơn U-Net+Cổng chú ý nguyên bản 0,0123 ở Bao trọn, 0,0092 ở Lệch tâm và 0,0099 ở Hỗn hợp. Khi có PSG, PGA-UNet cao hơn U-Net+PSG+Cổng chú ý nguyên bản 0,1064 ở Lệch tâm và 0,0387 ở Hỗn hợp, mặc dù thấp hơn 0,0073 ở Bao trọn. Điều này cho thấy lợi ích chính không đến từ việc bổ sung một cổng chú ý bất kỳ, mà từ việc điều kiện hóa quá trình chú ý bằng đặc trưng câu nhắc thông qua CAD.
 
-\noindent\textbf{Đóng góp của bản đồ nhiệt Gaussian.}
+\noindent\textbf{Đóng góp của bản đồ nhiệt Gaussian}\\
 Ở cấu hình nối kênh cơ sở, cách biểu diễn câu nhắc chỉ tạo ra khác biệt nhỏ. So với U-Net+Concat dùng mặt nạ nhị phân, U-Net+Concat dùng Gaussian thấp hơn 0,0018 ở Bao trọn, nhưng cao hơn 0,0052 ở Lệch tâm và 0,0014 ở Hỗn hợp. Những chênh lệch này đều nhỏ hơn 0,006.
 
 Ảnh hưởng của Gaussian trở nên rõ rệt khi câu nhắc được xử lý bởi đầy đủ PSG và CAD. So với PGA-UNet dùng câu nhắc nhị phân, PGA-UNet dùng Gaussian cao hơn 0,0989 Dice ở kịch bản Lệch tâm và 0,0293 ở Hỗn hợp, nhưng thấp hơn 0,0173 ở Bao trọn. Có thể thấy mặt nạ nhị phân phù hợp hơn một chút khi hộp giới hạn hoàn toàn chính xác, trong khi bản đồ nhiệt Gaussian giúp mô hình duy trì hiệu năng tốt hơn khi vị trí câu nhắc bị lệch trong phạm vi bài toán.
 
 Có thể hiểu rằng sự chuyển tiếp mềm của bản đồ nhiệt Gaussian làm mô hình bớt phụ thuộc vào đường biên cứng của hộp giới hạn. Dù vậy, đây vẫn chỉ là cách giải thích dựa trên thiết kế và kết quả thực nghiệm, chưa phải bằng chứng trực tiếp về cách mô hình tổ chức đặc trưng bên trong.
 
-\noindent\textbf{Sự bổ trợ giữa PSG, CAD và bản đồ nhiệt Gaussian.}
+\noindent\textbf{Sự bổ trợ giữa PSG, CAD và bản đồ nhiệt Gaussian}\\
 Trong kịch bản Lệch tâm, PSG riêng lẻ cải thiện 0,0024 và CAD riêng lẻ cải thiện 0,0042 so với U-Net+Concat. Trong khi đó, cấu hình kết hợp PSG, CAD và Gaussian cải thiện 0,1059. Chênh lệch này cho thấy hiệu quả của mô hình không phải là tổng đơn giản của hai thành phần hoạt động độc lập, mà xuất hiện khi tín hiệu câu nhắc được duy trì xuyên suốt cả bộ mã hóa và các kết nối tắt có chú ý của nhánh giải mã.
 
 Theo cơ chế thiết kế, PSG đưa thông tin không gian của câu nhắc vào các đặc trưng mã hóa, CAD sử dụng đặc trưng câu nhắc để điều chỉnh các kết nối tắt của nhánh giải mã, còn bản đồ nhiệt Gaussian cung cấp tín hiệu không gian có chuyển tiếp mềm. Ba thành phần vì vậy đảm nhận các vai trò khác nhau nhưng liên kết trong cùng một quá trình dẫn hướng phân đoạn. Nhận xét này dựa trên chênh lệch Dice trung bình và được xem là bằng chứng về xu hướng bổ trợ, không phải một kiểm định tương tác chính thức.
 
-\noindent\textbf{Kết luận từ nghiên cứu loại bỏ thành phần.}
+\noindent\textbf{Kết luận từ nghiên cứu loại bỏ thành phần}\\
 Hạn chế của PGA-UNet nằm ở kịch bản Bao trọn, tức là khi câu nhắc gần như lý tưởng. Ở đây PGA-UNet (0,8607) thấp hơn U-Net+CAD (0,8861) một khoảng 0,0254. Điều này phù hợp với đặc điểm thiết kế: mặt nạ nhị phân có biên rõ nên có lợi khi vị trí hộp giới hạn hoàn toàn chính xác, còn bản đồ nhiệt Gaussian chấp nhận giảm nhẹ hiệu năng để đổi lấy độ bền khi câu nhắc bị lệch. Trong thực tế, khi bác sĩ chẩn đoán ảnh tự vẽ hộp giới hạn, sai lệch vài điểm ảnh xảy ra phổ biến hơn nhiều so với việc luôn xác định đúng tuyệt đối vị trí tổn thương.
 
 Nhìn chung, nghiên cứu loại bỏ thành phần cho thấy PGA-UNet không được thiết kế để đạt hiệu năng cao nhất khi câu nhắc lý tưởng, mà để duy trì hiệu năng ổn định hơn khi câu nhắc không lý tưởng. Trên BTXRD, PGA-UNet thể hiện đúng xu hướng này, với 0,8423 ở Lệch tâm và 0,8560 ở Hỗn hợp, hai giá trị cao nhất trong bảng.
@@ -171,7 +169,6 @@ Các nhận xét trên dựa vào sự chênh lệch Dice trung bình. Kiểm đ
 
 PGA-UNet được đánh giá bằng kiểm chứng chéo ngẫu nhiên lặp lại 4 lần trên tập huấn luyện và xác thực. Ở mỗi lần, dữ liệu được xáo lại theo cấp độ ảnh, còn các đa giác thuộc cùng một ảnh luôn đi cùng nhau để tránh rò rỉ dữ liệu. Đây không phải là k-fold cross-validation theo nghĩa kỹ thuật chuẩn, mà là 4 lần chia ngẫu nhiên độc lập để xem kết quả có nhạy với cách chia dữ liệu hay không. Bảng~\ref{tab:cross_validation_per_fold} trình bày Dice trên từng lần, trong khi Bảng~\ref{tab:cross_validation} tổng hợp kết quả trung bình của sáu chỉ số đánh giá.
 
-\needspace{12\baselineskip}
 \begin{table}[H]
     \centering
     \caption{Dice của PGA-UNet trong kiểm chứng chéo ngẫu nhiên lặp lại 4 lần trên BTXRD (kịch bản Bao trọn / Lệch tâm / Hỗn hợp)}
@@ -198,7 +195,6 @@ PGA-UNet được đánh giá bằng kiểm chứng chéo ngẫu nhiên lặp l�
 
 Độ lệch chuẩn Dice dao động từ 0,0087 đến 0,0119, tức là khá nhỏ. Kịch bản Lệch tâm vẫn dao động nhiều nhất, điều này hợp lý vì chính cách tạo câu nhắc ở kịch bản này đã có yếu tố ngẫu nhiên. Bảng~\ref{tab:cross_validation} bổ sung các chỉ số còn lại (IoU, Precision, Recall, HD95, CBL) tính theo giá trị trung bình cho ba kịch bản trên.
 
-\needspace{12\baselineskip}
 \begin{table}[H]
     \centering
     \caption{Kết quả trung bình của kiểm chứng chéo ngẫu nhiên lặp lại 4 lần của PGA-UNet trên ba kịch bản câu nhắc}
@@ -231,7 +227,7 @@ Mục này khảo sát sự thay đổi hiệu năng của PGA-UNet trên các n
 
 Các kết quả phân nhóm có vai trò bổ sung cho đánh giá trên toàn bộ tập kiểm thử. Do mỗi nhóm chỉ gồm một phần dữ liệu và được xác định theo tiêu chí riêng, kết quả không thay thế cho các chỉ số trung bình được báo cáo ở Mục~\ref{sec:danh_gia_hieu_nang} trong Chương~\ref{Chapter4}.
 
-\noindent\textbf{So sánh với U-Net theo mức hiệu năng của mô hình cơ sở.}
+\noindent\textbf{So sánh với U-Net theo mức hiệu năng của mô hình cơ sở}\\
 Từ tập kiểm thử BTXRD, 50 ảnh có Dice U-Net cao nhất được xếp vào nhóm U-Net hoạt động tốt, trong khi 50 ảnh có Dice thấp nhất được xếp vào nhóm U-Net hoạt động kém. Cách phân nhóm này nhằm khảo sát liệu PGA-UNet chỉ cải thiện trên những ảnh U-Net đã xử lý tốt hay vẫn duy trì kết quả trên các trường hợp U-Net gặp nhiều khó khăn.
 
 Do nhóm được xác định trực tiếp từ kết quả của U-Net, đây là phân tích mô tả theo hai cực hiệu năng của mô hình cơ sở, không phải cách phân loại độ khó độc lập của dữ liệu.
@@ -303,7 +299,7 @@ Hình~\ref{fig:qual_subcat_baseline_btxrd} minh họa một ảnh thuộc mỗi 
     \label{fig:qual_subcat_baseline_btxrd}
 \end{figure}
 
-\noindent\textbf{So sánh với SAM-Med2D theo đặc tính tổn thương.}
+\noindent\textbf{So sánh với SAM-Med2D theo đặc tính tổn thương}\\
 Để so sánh công bằng giữa hai kiến trúc, PGA-UNet và SAM-Med2D đều được đánh giá ở độ phân giải $256\times256$, trên cùng ba nhóm ảnh và cùng câu nhắc Bao trọn. Ba nhóm gồm Tổn thương nhỏ, Biên mờ và Tổn thương rõ, mỗi nhóm có 50 ảnh. Phép so sánh này chỉ thay đổi kiến trúc mô hình, không bị ảnh hưởng bởi sự khác biệt về độ phân giải đầu vào.
 
 \begin{table}[H]
@@ -382,7 +378,7 @@ Hình~\ref{fig:qual_subcat_sam_btxrd} minh họa một ảnh đại diện cho m
     \label{fig:qual_subcat_sam_btxrd}
 \end{figure}
 
-\noindent\textbf{Ảnh hưởng của độ phân giải theo đặc tính tổn thương.}
+\noindent\textbf{Ảnh hưởng của độ phân giải theo đặc tính tổn thương}\\
 Sau khi kiểm soát độ phân giải trong phép so sánh với SAM-Med2D, hai phiên bản PGA-UNet được đối chiếu trên cùng ba nhóm ảnh để xác định nhóm tổn thương nào cải thiện nhiều nhất khi tăng kích thước đầu vào từ $256\times256$ lên $512\times512$. Hai cấu hình sử dụng cùng kiến trúc, cùng nhóm mẫu và cùng câu nhắc Bao trọn; yếu tố thay đổi duy nhất là độ phân giải đầu vào và điểm lưu trọng số tương ứng.
 
 \begin{table}[H]
@@ -461,7 +457,7 @@ Recall của phiên bản $256\times256$ cao hơn trong cả ba nhóm, trong khi
     \label{fig:chart_subcat_btxrd}
 \end{figure}
 
-\noindent\textbf{Kết luận.}
+\noindent\textbf{Kết luận}\\
 Khi kiểm soát độ phân giải ở $256\times256$, PGA-UNet vẫn cao hơn SAM-Med2D trên cả ba nhóm, đặc biệt ở Tổn thương nhỏ và Biên mờ. Còn khi chỉ thay đổi độ phân giải của PGA-UNet, mức cải thiện lớn nhất vẫn rơi vào nhóm Tổn thương nhỏ. Kết hợp hai kết quả này cho thấy lợi thế của PGA-UNet trên nhóm này không chỉ đến từ độ phân giải $512\times512$, dù độ phân giải cao vẫn mang lại thêm cải thiện.
 % ------------------------------------------------------------
 \section{Phân tích trên FracAtlas}
@@ -473,7 +469,7 @@ Ba nhóm thí nghiệm trên được lặp lại với tập FracAtlas. Đây l
 \subsection{Đóng góp của kiến trúc và câu nhắc}
 \label{subsec:fracatlas_ablation}
 
-\noindent\textbf{Thiết kế thí nghiệm.}
+\noindent\textbf{Thiết kế thí nghiệm}\\
 Tám cấu hình trong Mục~\ref{subsec:ablation_arch} được huấn luyện lại từ đầu trên FracAtlas với cùng cách phân chia dữ liệu và cấu hình huấn luyện. Các cấu hình chỉ khác nhau ở sự hiện diện của PSG, cơ chế chú ý trên các kết nối tắt của nhánh giải mã và biểu diễn câu nhắc. Kết quả trong ba kịch bản được trình bày tại Bảng~\ref{tab:fracatlas_ablation_arch}.
 
 \begin{table}[H]
@@ -528,34 +524,34 @@ Tám cấu hình trong Mục~\ref{subsec:ablation_arch} được huấn luyện 
     }
 \end{table}
 
-\noindent\textbf{Đối chiếu với các mô hình không sử dụng câu nhắc.}
+\noindent\textbf{Đối chiếu với các mô hình không sử dụng câu nhắc}\\
 Trên FracAtlas, U-Net và Attention U-Net không sử dụng câu nhắc lần lượt đạt Dice 0,3831 và 0,2467 (Ở bảng~\ref{tab:fracatlas_baseline}). Trong khi đó, cấu hình nối kênh đơn giản U-Net+Concat đạt 0,8131 ở kịch bản Bao trọn. Điều này cho thấy thông tin vị trí từ câu nhắc đóng vai trò khá quan trọng khi phân đoạn đường gãy xương.
 
 Tương tự với tập BTXRD, chỉ số Dice của Attention U-Net cũng thấp hơn U-Net trên tập FracAtlas. Kết quả cho thấy cổng chú ý nguyên bản không tự cải thiện hiệu năng trong thiết lập thiếu câu nhắc, điều này không trực tiếp xác định nguyên nhân gây suy giảm.
 
-\noindent\textbf{Đóng góp của PSG tại bộ mã hóa.}
+\noindent\textbf{Đóng góp của PSG tại bộ mã hóa}\\
 So với U-Net+Concat, U-Net+PSG cải thiện Dice trong cả ba kịch bản: tăng 0,0080 ở Bao trọn, 0,0181 ở Lệch tâm và 0,0127 ở Hỗn hợp. Mức cải thiện này lớn hơn xu hướng đã quan sát được trên BTXRD, đồng thời cho thấy việc đưa thông tin không gian vào bộ mã hóa có lợi đối với các vùng gãy xương nhỏ và mảnh.
 
 Tuy nhiên, U-Net+PSG vẫn thấp hơn PGA-UNet 0,1090 ở Lệch tâm và 0,0429 ở Hỗn hợp. Điều này cho thấy PSG giúp cải thiện đặc trưng mã hóa. Nhưng hiệu quả sẽ bị giới hạn nếu các kết nối tắt của nhánh giải mã không tiếp tục dùng thông tin câu nhắc này.
 
-\noindent\textbf{Đóng góp của CAD và sự khác biệt với cổng chú ý nguyên bản.}
+\noindent\textbf{Đóng góp của CAD và sự khác biệt với cổng chú ý nguyên bản}\\
 Khi hoạt động không có PSG, U-Net+CAD không cải thiện so với U-Net+Concat. Dice giảm 0,0325 ở Bao trọn, 0,0028 ở Lệch tâm và 0,0302 ở Hỗn hợp. Có thể thấy CAD một mình chưa phát huy hiệu quả khi đặc trưng mã hóa chưa được PSG điều biến theo câu nhắc.
 
 Cổng chú ý nguyên bản cũng phụ thuộc vào PSG. Khi không có PSG, U-Net+Cổng chú ý nguyên bản thấp hơn U-Net+Concat 0,0235 ở Bao trọn và 0,0195 ở Hỗn hợp, còn Lệch tâm chỉ tăng 0,0051. Khi bổ sung PSG, U-Net+PSG+Cổng chú ý nguyên bản đạt 0,8351 ở Bao trọn, 0,6927 ở Lệch tâm và 0,7838 ở Hỗn hợp, cao hơn cấu hình chỉ có PSG trong cả ba trường hợp.
 
 So với cổng chú ý nguyên bản có PSG, PGA-UNet sử dụng CAD thấp hơn 0,0182 ở Bao trọn nhưng cao hơn 0,0923 ở Lệch tâm và 0,0291 ở Hỗn hợp. Cổng chú ý nguyên bản phù hợp hơn khi hộp giới hạn lý tưởng, còn CAD có ích rõ hơn khi câu nhắc bị lệch.
 
-\noindent\textbf{Đóng góp của bản đồ nhiệt Gaussian.}
+\noindent\textbf{Đóng góp của bản đồ nhiệt Gaussian}\\
 Ở cấu hình nối kênh cơ sở, mặt nạ nhị phân cao hơn bản đồ Gaussian 0,0072 ở Bao trọn, 0,0051 ở Lệch tâm và 0,0085 ở Hỗn hợp. Các mức chênh lệch đều nhỏ hơn 0,01, cho thấy cách biểu diễn câu nhắc ít ảnh hưởng khi câu nhắc chỉ được nối trực tiếp vào đầu vào.
 
 Khi kết hợp đầy đủ PSG và CAD, xu hướng thay đổi rõ rệt. PGA-UNet sử dụng Gaussian cao hơn phiên bản dùng câu nhắc nhị phân 0,0262 ở Bao trọn, 0,1005 ở Lệch tâm và 0,0655 ở Hỗn hợp. Qua đó có thể thấy lợi ích của Gaussian chỉ thực sự rõ khi thông tin câu nhắc được đưa vào cả bộ mã hóa qua PSG lẫn các kết nối tắt của nhánh giải mã qua CAD.
 
-\noindent\textbf{Sự bổ trợ giữa PSG, CAD và bản đồ nhiệt Gaussian.}
+\noindent\textbf{Sự bổ trợ giữa PSG, CAD và bản đồ nhiệt Gaussian}\\
 Trong kịch bản Lệch tâm, PSG riêng lẻ cải thiện 0,0181 so với U-Net+Concat, trong khi CAD riêng lẻ giảm 0,0028. Ngược lại, cấu hình đầy đủ PSG+CAD+Gaussian cải thiện 0,1271, từ 0,6579 lên 0,7850. Điều này cho thấy CAD không hoạt động hiệu quả như một thành phần độc lập, mà cần đặc trưng đã được PSG điều biến tại bộ mã hóa từ trước.
 
 Theo thiết kế của PGA-UNet, PSG đưa thông tin vị trí vào quá trình trích xuất đặc trưng, CAD tiếp tục sử dụng đặc trưng câu nhắc trên các kết nối tắt của nhánh giải mã, còn Gaussian cung cấp tín hiệu không gian có chuyển tiếp mềm. Kết quả trên FracAtlas cho thấy hiệu quả của mô hình xuất hiện từ sự phối hợp giữa ba yếu tố thay vì từ một thành phần riêng lẻ.
 
-\noindent\textbf{Kết luận từ nghiên cứu loại bỏ thành phần.}
+\noindent\textbf{Kết luận từ nghiên cứu loại bỏ thành phần}\\
 PGA-UNet không đạt Dice cao nhất trong kịch bản Bao trọn; U-Net+PSG+Cổng chú ý nguyên bản đạt 0,8351, trong khi PGA-UNet đạt 0,8169. Ngược lại, PGA-UNet đạt kết quả cao nhất ở Lệch tâm với 0,7850 và Hỗn hợp với 0,8129. So với U-Net+Concat, mức cải thiện tương ứng là 0,1271 và 0,0556.
 
 Kết quả này nhất quán với xu hướng chính trên BTXRD: kiến trúc đề xuất chấp nhận giảm nhẹ hiệu năng trong điều kiện câu nhắc lý tưởng để duy trì hiệu năng tốt hơn khi câu nhắc bị lệch. Trên FracAtlas, đóng góp riêng của PSG thể hiện rõ hơn, CAD riêng lẻ không tạo cải thiện, nhưng sự kết hợp PSG+CAD cùng câu nhắc Gaussian mang lại mức tăng lớn nhất trong hai kịch bản có sai lệch trong phạm vi bài toán. Điều này cho thấy ưu thế của PGA-UNet đến từ sự phối hợp giữa các thành phần, không phải từ PSG, CAD hoặc Gaussian khi được sử dụng độc lập.
@@ -569,14 +565,15 @@ Kết quả này nhất quán với xu hướng chính trên BTXRD: kiến trúc
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{images/qual_ablation_v4v6_btxrd.png}
+    \includegraphics[width=0.65\textwidth]{images/qual_ablation_v4v6_btxrd.png}
     \caption{Minh họa định tính so sánh cấu hình PGA-UNet (Gaussian) với cấu hình dùng câu nhắc nhị phân trên BTXRD, tương ứng hai hàng cuối của Bảng~\ref{tab:ablation_arch}.}
     \label{fig:qual_ablation_v6v7_btxrd}
 \end{figure}
 
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{images/qual_ablation_v4v6_fracatlas.png}
+    \includegraphics[width=0.65\textwidth]{images/qual_ablation_v4v6_fracatlas.png}
     \caption{Minh họa định tính so sánh cấu hình PGA-UNet (Gaussian) với cấu hình dùng câu nhắc nhị phân trên FracAtlas, tương ứng hai hàng cuối của Bảng~\ref{tab:fracatlas_ablation_arch}.}
     \label{fig:qual_ablation_v6v7_fracatlas}
 \end{figure}
@@ -664,7 +661,7 @@ So với kết quả trên tập kiểm thử chính tại Bảng~\ref{tab:fraca
 
 Tương tự Mục~\ref{subsec:subcategory}, mục này phân tích hiệu năng của PGA-UNet trên FracAtlas theo các nhóm ảnh có đặc điểm tổn thương khác nhau. Ba phép so sánh được thực hiện: so sánh với U-Net trên các ảnh mà U-Net hoạt động tốt hoặc kém; so sánh PGA-UNet với SAM-Med2D ở cùng độ phân giải $256\times256$; và so sánh hai phiên bản PGA-UNet tại $256\times256$ và $512\times512$. Các kết quả phân nhóm chỉ có ý nghĩa mô tả và không thay thế kết quả trung bình trên toàn bộ tập kiểm thử.
 
-\noindent\textbf{So sánh với U-Net theo mức hiệu năng của mô hình cơ sở.}
+\noindent\textbf{So sánh với U-Net theo mức hiệu năng của mô hình cơ sở}\\
 Theo cùng tiêu chí phân nhóm đã dùng trên BTXRD (Mục~\ref{subsec:subcategory}), tập kiểm thử FracAtlas được chia thành hai nhóm hậu nghiệm theo chính Dice của U-Net: nhóm có giá trị Dice cao nhất và nhóm có giá trị Dice thấp nhất của U-Net. Do FracAtlas chỉ có \NtestimgFA~ảnh kiểm thử (ít hơn nhiều so với \Ntestimg~ảnh của BTXRD), quy mô mỗi nhóm được điều chỉnh còn N=36 ảnh/nhóm để hai nhóm không chồng lấp nhau ($2\times36=72=$\NtestimgFA).
 
 \begin{table}[H]
@@ -714,7 +711,7 @@ Xu hướng từ BTXRD (Bảng~\ref{tab:subcat_baseline}) được tái khẳng 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/chart_fracatlas_subcat_baseline.png}
+    \includegraphics[width=0.7\textwidth, height=9cm, keepaspectratio=false]{images/chart_fracatlas_subcat_baseline.png}
     \caption{Dice của U-Net và PGA-UNet trên nhóm U-Net hoạt động tốt và U-Net hoạt động kém.}
     \label{fig:chart_fracatlas_subcat_baseline}
 \end{figure}
@@ -728,7 +725,7 @@ Hình~\ref{fig:qual_subcat_baseline_fracatlas} minh họa một ảnh thuộc m�
     \label{fig:qual_subcat_baseline_fracatlas}
 \end{figure}
 
-\noindent\textbf{So sánh với SAM-Med2D theo đặc tính tổn thương.}
+\noindent\textbf{So sánh với SAM-Med2D theo đặc tính tổn thương}\\
 Tập kiểm thử FracAtlas được chia thành ba nhóm không chồng lấp, mỗi nhóm gồm 24 ảnh. Nhóm Tổn thương nhỏ gồm các ảnh có tổng diện tích nhãn nhỏ nhất. Trong số ảnh còn lại, 24 ảnh có chỉ số Dice SAM-Med2D thấp nhất được xếp vào nhóm Biên mờ và 24 ảnh còn lại có diện tích tổn thương lớn nhất được xếp vào nhóm Tổn thương rõ.
 
 Tên nhóm Biên mờ được sử dụng như một quy ước mô tả cho những ảnh SAM-Med2D gặp khó khăn. Do nhóm này được xác định dựa trên chính Dice của SAM-Med2D, kết quả thu được chỉ mang tính nhận định sơ bộ và không được xem là đánh giá khách quan về độ khó của tổn thương.
@@ -809,7 +806,7 @@ Tên nhóm Biên mờ được sử dụng như một quy ước mô tả cho nh
     \label{fig:qual_subcat_sam_fracatlas}
 \end{figure}
 
-\noindent\textbf{Ảnh hưởng của độ phân giải theo đặc tính tổn thương.}
+\noindent\textbf{Ảnh hưởng của độ phân giải theo đặc tính tổn thương}\\
 Hai phiên bản PGA-UNet được tiếp tục đối chiếu trên cùng ba nhóm ảnh để xác định ảnh hưởng của việc tăng độ phân giải từ $256\times256$ lên $512\times512$. Ngoài độ phân giải và điểm lưu trọng số tương ứng, các điều kiện đánh giá được giữ nguyên.
 
 \begin{table}[H]
@@ -877,7 +874,7 @@ Việc tăng độ phân giải giúp cải thiện Dice trên cả ba nhóm, nh
     \label{fig:chart_fracatlas_pga_resolution}
 \end{figure}
 
-\noindent\textbf{Kết luận.}
+\noindent\textbf{Kết luận}\\
 Khi kiểm soát độ phân giải ở $256\times256$, PGA-UNet vẫn đạt Dice cao hơn SAM-Med2D trên cả ba nhóm, đặc biệt ở Tổn thương nhỏ và nhóm ảnh SAM-Med2D gặp khó khăn. Khi thay đổi độ phân giải của PGA-UNet, nhóm Tổn thương nhỏ tiếp tục nhận được mức cải thiện lớn hơn. Hai kết quả cho thấy ưu thế của PGA-UNet trên tổn thương nhỏ không chỉ đến từ việc sử dụng ảnh $512\times512$, mặc dù độ phân giải cao vẫn giúp cải thiện thêm hiệu năng.
 
 % ------------------------------------------------------------
@@ -943,36 +940,36 @@ Kiểm định được thực hiện riêng trên BTXRD và FracAtlas trong ba 
     \end{tabular}%
     }
 \end{table}
-\vspace{3cm}
-\noindent\textbf{Vai trò của CAD đối với khả năng duy trì hiệu năng dưới sai lệch câu nhắc trong phạm vi bài toán.}
+
+\noindent\textbf{Vai trò của CAD đối với khả năng duy trì hiệu năng dưới sai lệch câu nhắc trong phạm vi bài toán}\\
 Kết quả nhất quán nhất giữa hai bộ dữ liệu xuất hiện khi so sánh PGA-UNet với cấu hình dùng PSG và cổng chú ý nguyên bản. Trong kịch bản Lệch tâm, việc thay cổng chú ý nguyên bản bằng CAD làm Dice tăng 0,1065 trên BTXRD và 0,0924 trên FracAtlas; cả hai phép kiểm định đều đạt $p<0{,}001$.
 
 Ở kịch bản Hỗn hợp, mức tăng đạt 0,0388 trên BTXRD và 0,0291 trên FracAtlas, nhưng chỉ kết quả BTXRD đạt giá trị $p$ dưới 0,05. Trong kịch bản Bao trọn, PGA-UNet thấp hơn cấu hình dùng cổng chú ý nguyên bản 0,0073 trên BTXRD và 0,0182 trên FracAtlas.
 
 Như vậy, bằng chứng mạnh và nhất quán nhất của CAD nằm ở kịch bản Lệch tâm. CAD không tối đa hóa Dice khi hộp giới hạn hoàn toàn lý tưởng, nhưng giúp mô hình duy trì hiệu năng tốt hơn khi vị trí câu nhắc bị sai lệch. Kết quả này phù hợp với mục tiêu thiết kế PGA-UNet là tăng mức ổn định dưới sai số hộp giới hạn đã được mô phỏng trong thực nghiệm.
 
-\noindent\textbf{Vai trò của bản đồ nhiệt Gaussian.}
+\noindent\textbf{Vai trò của bản đồ nhiệt Gaussian}\\
 Khi câu nhắc chỉ được nối vào đầu vào, chênh lệch Dice giữa Gaussian và mặt nạ nhị phân đều nhỏ hơn 0,01 và không nhất quán về chiều giữa hai bộ dữ liệu. Điều này cho thấy chỉ riêng cách biểu diễn câu nhắc chưa đủ để tạo khác biệt lớn nếu kiến trúc không có cơ chế khai thác câu nhắc ở nhiều tầng.
 
 Trong cấu hình đầy đủ PSG+CAD, Gaussian tạo ra mức cải thiện rõ rệt ở các kịch bản có câu nhắc lệch. So với PGA-UNet dùng câu nhắc nhị phân, phiên bản Gaussian tăng 0,0990 Dice trên BTXRD và 0,1005 trên FracAtlas ở kịch bản Lệch tâm, với $p<0{,}001$ trên cả hai bộ dữ liệu. Trong kịch bản Hỗn hợp, mức tăng tương ứng là 0,0293 và 0,0655.
 
 Riêng kịch bản Bao trọn có kết quả khác nhau giữa hai miền: Gaussian thấp hơn nhị phân 0,0173 trên BTXRD nhưng cao hơn 0,0262 trên FracAtlas. Vì vậy, đóng góp nhất quán của Gaussian không nằm ở kịch bản lý tưởng mà ở khả năng hỗ trợ mô hình khi câu nhắc bị lệch, đặc biệt khi được kết hợp với PSG và CAD.
 
-\noindent\textbf{Đóng góp riêng lẻ của PSG và cơ chế chú ý.}
+\noindent\textbf{Đóng góp riêng lẻ của PSG và cơ chế chú ý}\\
 Các thành phần riêng lẻ có mức ảnh hưởng nhỏ và thay đổi giữa hai bộ dữ liệu. Khi không có PSG, CAD cao hơn cổng chú ý nguyên bản trên BTXRD ở Bao trọn và Hỗn hợp, nhưng thấp hơn trên FracAtlas trong cùng hai kịch bản. Khi có PSG, cổng chú ý nguyên bản gần như không cải thiện so với PSG đơn độc trên BTXRD, nhưng tạo ra mức tăng từ 0,0138 đến 0,0167 trên FracAtlas.
 
 Những kết quả này cho thấy tác dụng của PSG, CAD hoặc cổng chú ý khi đứng riêng phụ thuộc vào đặc điểm dữ liệu. Do mức chênh đều dưới 0,02 Dice và không nhất quán về chiều, chúng không được xem là quy luật kiến trúc chung. Hơn nữa, các kiểm định trong từng bộ dữ liệu không trực tiếp kiểm tra sự khác biệt hiệu ứng giữa hai miền, nên chưa thể kết luận đây là tương tác có ý nghĩa thống kê giữa kiến trúc và bộ dữ liệu.
 
-\noindent\textbf{Sự bổ trợ giữa PSG, CAD và Gaussian.}
+\noindent\textbf{Sự bổ trợ giữa PSG, CAD và Gaussian}\\
 Ở kịch bản Lệch tâm trên BTXRD, PSG và CAD khi sử dụng riêng chỉ cải thiện lần lượt 0,0024 và 0,0042 so với U-Net+Concat, trong khi cấu hình đầy đủ cải thiện 0,1059. Trên FracAtlas, PSG riêng lẻ tăng 0,0181, CAD riêng lẻ giảm 0,0028, nhưng cấu hình đầy đủ tăng 0,1271.
 
 Các chênh lệch trung bình cho thấy hiệu quả của PGA-UNet không phải là tổng đơn giản của những cải thiện do từng thành phần riêng lẻ. PSG đưa thông tin câu nhắc vào bộ mã hóa, CAD tiếp tục sử dụng đặc trưng câu nhắc trên các kết nối tắt của nhánh giải mã và Gaussian cung cấp tín hiệu không gian có chuyển tiếp mềm. Ba thành phần này có vẻ bổ trợ cho nhau trong việc giữ thông tin câu nhắc xuyên suốt mạng. Dù vậy, đây vẫn là nhận xét đi ra từ thiết kế ablation, chưa phải kết quả của một kiểm định tương tác thống kê riêng.
 
-\noindent\textbf{Độ ổn định qua các lần kiểm chứng chéo.}
+\noindent\textbf{Độ ổn định qua các lần kiểm chứng chéo}\\
 Về độ ổn định, kiểm chứng chéo ngẫu nhiên lặp lại 4 lần trên cả hai bộ dữ liệu đều cho độ lệch chuẩn Dice dưới 0,012, nhỏ hơn rõ rệt so với các chênh lệch giữa các cấu hình. Tuy vậy, cần tách bạch hai loại biến động này: một bên là do chia dữ liệu, một bên là do đổi kiến trúc. Vì thế không nên gộp chúng lại thành một tỷ lệ tín hiệu trên nhiễu.
 
-\noindent\textbf{Các trường hợp còn hạn chế.}
+\noindent\textbf{Các trường hợp còn hạn chế}\\
 Các dạng tổn thương còn gây khó khăn cho PGA-UNet (hình dạng kéo dài hoặc phân nhánh, vùng giải phẫu chồng lấp, ảnh có độ tương phản thấp) cùng minh họa định tính tương ứng được tổng hợp tại Mục~\ref{subsec:summary_subcat}, Chương~\ref{Chapter4}.
 
-\noindent\textbf{Kết luận về phạm vi đóng góp kiến trúc.}
+\noindent\textbf{Kết luận về phạm vi đóng góp kiến trúc}\\
 Tóm lại trên cả hai miền dữ liệu, PGA-UNet được huấn luyện lại độc lập, không chia sẻ trọng số, và vẫn giữ đúng một xu hướng: chấp nhận giảm nhẹ hiệu năng ở Bao trọn để đổi lấy lợi thế lớn và có ý nghĩa thống kê ở Lệch tâm và Hỗn hợp. Đây là bằng chứng thiết kế có thể tái lập trên hai loại tổn thương khác nhau, chứ chưa phải bằng chứng tổng quát hóa liên miền theo nghĩa huấn luyện ở một nơi rồi suy luận trên miền chưa từng thấy.

@@ -317,6 +317,9 @@
 % Cho phép ngắt dòng URL dài trong tài liệu tham khảo
 \usepackage{xurl}
 
+% Chèn các file PDF đính kèm (bản nhận xét GVPB, quyết định giao đề tài)
+\usepackage{pdfpages}
+
 % Thông tin PDF
 \hypersetup{
     pdftitle={
@@ -384,6 +387,18 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Lời cam đoan}
 \input{FrontMatter/reassurances}
+
+% Bản nhận xét của giảng viên phản biện
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bản nhận xét của giảng viên phản biện}
+\includepdf[pages=-]{Attachments/KLTN_Ban_nhan_xet_GVPB_ThongLuc-HuuBinh.pdf}
+
+% Quyết định giao đề tài khóa luận
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Quyết định giao đề tài khóa luận}
+\includepdf[pages=-]{Attachments/25D2-KL-TGMT05.pdf}
 
 % Lời cảm ơn
 \cleardoublepage

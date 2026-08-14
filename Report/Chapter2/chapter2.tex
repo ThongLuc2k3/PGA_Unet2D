@@ -21,7 +21,7 @@ Attention U-Net~\cite{oktay2018attentionunet} phát triển tiếp từ U-Net b�
 
 Tuy nhiên, ở dạng gốc thì cả U-Net lẫn Attention U-Net đều là các mô hình tự động, nghĩa là chỉ nhận ảnh đầu vào và phải tự tìm vùng cần phân đoạn. Với ảnh X-quang xương, đây là một yêu cầu không hề nhẹ vì tổn thương có thể nhỏ, mờ hoặc nằm trong vùng nhiều cấu trúc chồng lấp. Ngoài ra, bác sĩ chẩn đoán ảnh cũng khó can thiệp để hướng mô hình tập trung vào một vùng cụ thể tại thời điểm suy luận.
 
-Sau U-Net, nhiều biến thể được đề xuất để cải thiện hiệu năng hoặc giảm công sức tinh chỉnh thủ công. Chẳng hạn, UNet++~\cite{zhou2018unetplusplus} thiết kế lại các đường nối tắt theo dạng lồng nhau để thu hẹp khoảng cách ngữ nghĩa giữa bộ mã hóa và bộ giải mã, còn nnU-Net~\cite{isensee2018nnunet} nhấn mạnh rằng hiệu năng trong ảnh y khoa không chỉ đến từ kiến trúc mạng mà còn đến từ quy trình cấu hình, tiền xử lý và hậu xử lý. Điều này cũng nhắc rằng bài toán phân đoạn y khoa không phụ thuộc vào một mô-đun đơn lẻ.
+Sau U-Net, nhiều biến thể được đề xuất để cải thiện hiệu năng hoặc giảm công sức tinh chỉnh thủ công. Chẳng hạn, UNet++~\cite{zhou2018unetplusplus} thiết kế lại các đường nối tắt theo dạng lồng nhau để thu hẹp khoảng cách ngữ nghĩa giữa bộ mã hóa và bộ giải mã, còn nnU-Net~\cite{isensee2021nnunet} nhấn mạnh rằng hiệu năng trong ảnh y khoa không chỉ đến từ kiến trúc mạng mà còn đến từ quy trình cấu hình, tiền xử lý và hậu xử lý. Điều này cũng nhắc rằng bài toán phân đoạn y khoa không phụ thuộc vào một mô-đun đơn lẻ.
 
 % ------------------------------------------------------------
 \subsection{Phân đoạn tương tác dựa trên CNN}
@@ -50,7 +50,7 @@ SAM-Med2D tiếp nhận câu nhắc thông qua bộ mã hóa riêng và kết h�
 
 SAM-Med2D có lợi thế là thừa hưởng kiến thức từ tiền huấn luyện trên lượng dữ liệu y khoa lớn, nhưng đổi lại kiến trúc cũng nặng hơn hẳn so với một CNN chuyên biệt. Trong thực nghiệm của khóa luận, SAM-Med2D được chạy ở độ phân giải $256\times256$, còn PGA-UNet được đánh giá ở cả $256\times256$ và $512\times512$. Vì vậy, ở Chương~\ref{Chapter4}, khóa luận có thêm các phép so sánh cùng độ phân giải để giảm bớt ảnh hưởng của khác biệt đầu vào.
 
-Song song với SAM, nhiều công trình gần đây còn khảo sát khả năng kết hợp Transformer với phân đoạn y khoa. ViT~\cite{dosovitskiy2021vit} và Swin Transformer~\cite{liu2021swin} mở ra hướng biểu diễn dựa trên cơ chế chú ý toàn cục hoặc phân cấp; từ đó, các mô hình như TransUNet~\cite{chen2021transunet}, Medical Transformer~\cite{valanarasu2021medicaltransformer}, UNETR~\cite{hatamizadeh2022unetr} và Swin-Unet~\cite{cao2022swinunet} được đề xuất cho nhiều tác vụ phân đoạn y khoa. Dù thường đạt hiệu năng cạnh tranh, các mô hình này cũng có xu hướng đòi hỏi tài nguyên tính toán và cấu hình huấn luyện phức tạp hơn so với các CNN gọn nhẹ.
+Song song với SAM, nhiều công trình gần đây còn khảo sát khả năng kết hợp Transformer với phân đoạn y khoa. ViT~\cite{dosovitskiy2021vit} và Swin Transformer~\cite{liu2021swin} mở ra hướng biểu diễn dựa trên cơ chế chú ý toàn cục hoặc phân cấp; từ đó, các mô hình như TransUNet~\cite{chen2021transunet}, Swin-Unet~\cite{cao2022swinunet} được đề xuất cho nhiều tác vụ phân đoạn y khoa. Dù thường đạt hiệu năng cạnh tranh, các mô hình này cũng có xu hướng đòi hỏi tài nguyên tính toán và cấu hình huấn luyện phức tạp hơn so với các CNN gọn nhẹ.
 
 % ------------------------------------------------------------
 \subsection{Khoảng trống nghiên cứu}

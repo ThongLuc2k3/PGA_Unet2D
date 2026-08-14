@@ -101,7 +101,7 @@ Hình~\ref{fig:qual_pipeline_tp} minh họa một số ảnh bệnh lý được
     \label{fig:qual_pipeline_tp}
 \end{figure}
 
-\noindent\textbf{Kết luận.}
+\noindent\textbf{Kết luận}\\
 Gatekeeper có thể hỗ trợ sàng lọc ảnh đầu vào, nhưng sai số tại bước này có thể làm giảm hiệu năng của toàn bộ luồng xử lý. Vì vậy, kết quả không làm thay đổi vai trò trung tâm của PGA-UNet mà chỉ cho thấy một điều kiện cần để triển khai mô hình trong thực tế: Gatekeeper nên được dùng như công cụ hỗ trợ, còn quyết định cuối cùng và cung cấp câu nhắc vẫn cần bác sĩ chẩn đoán ảnh xác nhận.
 
 % ------------------------------------------------------------
@@ -156,7 +156,7 @@ Trong 72 ảnh bệnh lý, Gatekeeper chuyển đúng 51 ảnh sang PGA-UNet và
     \caption{Kết quả mô phỏng luồng xử lý hai giai đoạn trên FracAtlas}
     \label{tab:pipeline_eval_fa}
     \renewcommand{\arraystretch}{1.3}
-    \begin{tabular}{|p{8cm}|c|}
+    \begin{tabular}{|p{9cm}|c|}
         \hline
         \textbf{Thống kê} & \textbf{Giá trị} \\
         \hline
@@ -175,5 +175,6 @@ Trong 72 ảnh bệnh lý, Gatekeeper chuyển đúng 51 ảnh sang PGA-UNet và
 
 Kết quả luồng xử lý ở FracAtlas được thể hiện rõ hơn trên BTXRD: Dice toàn luồng chỉ còn 0,4230, dù PGA-UNet vẫn đạt 0,8211 trên những ảnh được sàng lọc đúng. Điều này cho thấy những sai số ở bước sàng lọc đã ảnh hưởng phần lớn đến kết quả cuối cùng. Tuy vậy, Dice 0,8211 chỉ được tính trên nhóm ảnh Gatekeeper phát hiện đúng, nên đó vẫn là một kết quả có điều kiện, không thay thế đánh giá độc lập của PGA-UNet trên toàn bộ tập kiểm thử.
 
-\noindent\textbf{Kết luận.}
+\newpage
+\noindent\textbf{Kết luận}\\
 Kết quả trên FracAtlas tiếp tục cho thấy Gatekeeper có thể hữu ích ở vai trò hỗ trợ sàng lọc, nhưng chưa đủ tin cậy để tự động quyết định ảnh nào được đưa sang PGA-UNet. Tác động của lỗi sàng lọc ở đây thể hiện rõ hơn do Sensitivity thấp và dữ liệu mất cân bằng. Vì vậy, trong luồng đề xuất, Gatekeeper chỉ nên đóng vai trò gợi ý. Do đó, bác sĩ chẩn đoán ảnh vẫn cần xác nhận và cung cấp hộp giới hạn trước khi phân đoạn.

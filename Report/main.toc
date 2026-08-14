@@ -1,12 +1,14 @@
 \contentsline {chapter}{Lời cam đoan}{i}{section*.1}%
-\contentsline {chapter}{Lời cảm ơn}{ii}{section*.3}%
-\contentsline {chapter}{Đề cương}{iii}{section*.5}%
-\contentsline {chapter}{Mục lục}{ix}{section*.6}%
-\contentsline {chapter}{Danh sách hình}{xiii}{section*.8}%
-\contentsline {chapter}{Danh sách bảng}{xvi}{section*.10}%
-\contentsline {chapter}{Tóm tắt}{xviii}{section*.12}%
-\contentsline {chapter}{Danh mục các ký hiệu và chữ viết tắt}{xx}{section*.14}%
-\contentsline {chapter}{Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}{xxiii}{section*.16}%
+\contentsline {chapter}{Bản nhận xét của giảng viên phản biện}{ii}{section*.3}%
+\contentsline {chapter}{Quyết định giao đề tài khóa luận}{iv}{section*.4}%
+\contentsline {chapter}{Lời cảm ơn}{vii}{section*.5}%
+\contentsline {chapter}{Đề cương}{viii}{section*.7}%
+\contentsline {chapter}{Mục lục}{xiv}{section*.8}%
+\contentsline {chapter}{Danh sách hình}{xviii}{section*.10}%
+\contentsline {chapter}{Danh sách bảng}{xxi}{section*.12}%
+\contentsline {chapter}{Tóm tắt}{xxiii}{section*.14}%
+\contentsline {chapter}{Danh mục các ký hiệu và chữ viết tắt}{xxv}{section*.16}%
+\contentsline {chapter}{Bảng đối chiếu thuật ngữ chuyên ngành Anh -- Việt}{xxviii}{section*.18}%
 \contentsline {chapter}{\numberline {1}GIỚI THIỆU}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Bối cảnh nghiên cứu}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Động lực nghiên cứu}{2}{section.1.2}%
@@ -25,14 +27,14 @@
 \contentsline {subsection}{\numberline {2.1.4}Khoảng trống nghiên cứu}{13}{subsection.2.1.4}%
 \contentsline {section}{\numberline {2.2}Cơ sở kiến trúc nền tảng}{14}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Kiến trúc U-Net}{14}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Kiến trúc Attention U-Net}{15}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.2}Kiến trúc Attention U-Net}{14}{subsection.2.2.2}%
 \contentsline {section}{\numberline {2.3}Biểu diễn và tích hợp câu nhắc trực quan}{16}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Biểu diễn không gian của câu nhắc}{17}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Điều biến đặc trưng theo tín hiệu điều kiện}{18}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.1}Biểu diễn không gian của câu nhắc}{16}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Điều biến đặc trưng theo tín hiệu điều kiện}{17}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Cơ chế chú ý có điều kiện}{18}{subsection.2.3.3}%
 \contentsline {section}{\numberline {2.4}Các độ đo đánh giá}{19}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}Hệ số Dice và chỉ số IoU}{19}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Precision và Recall}{20}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.2}Precision và Recall}{19}{subsection.2.4.2}%
 \contentsline {subsection}{\numberline {2.4.3}Khoảng cách Hausdorff 95\%}{20}{subsection.2.4.3}%
 \contentsline {subsection}{\numberline {2.4.4}Chỉ số định vị tâm CBL}{21}{subsection.2.4.4}%
 \contentsline {section}{\numberline {2.5}Tổng kết chương}{22}{section.2.5}%
@@ -41,52 +43,52 @@
 \contentsline {subsection}{\numberline {3.1.1}Biểu diễn câu nhắc trực quan}{24}{subsection.3.1.1}%
 \contentsline {subsection}{\numberline {3.1.2}Cổng không gian tại bộ mã hóa}{25}{subsection.3.1.2}%
 \contentsline {subsection}{\numberline {3.1.3}Cơ chế chú ý có điều kiện trên kết nối tắt của nhánh giải mã}{27}{subsection.3.1.3}%
-\contentsline {paragraph}{Chi tiết triển khai theo tầng.}{28}{paragraph*.18}%
+\contentsline {paragraph}{Chi tiết triển khai theo tầng.}{28}{paragraph*.20}%
 \contentsline {section}{\numberline {3.2}Quy trình huấn luyện và suy luận}{29}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Quy trình huấn luyện}{29}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Quy trình suy luận}{30}{subsection.3.2.2}%
 \contentsline {section}{\numberline {3.3}Mở rộng luồng xử lý với mô-đun sàng lọc}{31}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}Sàng lọc ảnh đầu vào}{32}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}Phân đoạn có hướng dẫn}{32}{subsection.3.3.2}%
-\contentsline {section}{\numberline {3.4}Tổng kết chương}{35}{section.3.4}%
-\contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{36}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{36}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Hai bộ dữ liệu ảnh X-quang và tiền xử lý đầu vào}{36}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Mô hình so sánh và cấu hình huấn luyện}{38}{subsection.4.1.2}%
-\contentsline {paragraph}{Cấu hình huấn luyện.}{38}{paragraph*.19}%
-\contentsline {subsection}{\numberline {4.1.3}Phương pháp đánh giá cấp độ ảnh}{39}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{40}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}So sánh với các mô hình cơ sở}{41}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}So sánh với mô hình nền tảng SAM-Med2D}{43}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Hiệu quả tính toán}{45}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Ảnh hưởng của độ phân giải và câu nhắc lệch trong phạm vi bài toán}{46}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}Tổng hợp đóng góp kiến trúc và tính nhất quán trên hai bộ dữ liệu}{51}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Đóng góp của PSG, CAD và bản đồ nhiệt Gaussian}{51}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Độ ổn định qua các phân vùng dữ liệu}{53}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Hiệu năng theo đặc tính tổn thương}{53}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Kết luận về phạm vi đóng góp kiến trúc}{54}{subsection.4.3.4}%
-\contentsline {section}{\numberline {4.4}Đánh giá luồng xử lý hỗ trợ hai giai đoạn}{55}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Tổng kết chương}{56}{section.4.5}%
-\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{58}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Kết luận và đóng góp đạt được}{58}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Hạn chế của nghiên cứu}{60}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Định hướng phát triển}{62}{section.5.3}%
-\contentsline {chapter}{Tài liệu tham khảo}{64}{chapter*.20}%
-\contentsline {chapter}{\appendixname \ A: PHÂN TÍCH CHUYÊN SÂU KIẾN TRÚC VÀ TÍNH KHẢ THI TRÊN ĐA DẠNG DỮ LIỆU}{70}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Hiệu quả tính toán của PGA-UNet và SAM-Med2D}{70}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Phân tích trên BTXRD}{72}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Đóng góp của kiến trúc và câu nhắc}{72}{subsection.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Độ ổn định qua kiểm chứng chéo ngẫu nhiên lặp lại}{76}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}Phân tích theo đặc tính tổn thương}{78}{subsection.A.2.3}%
-\contentsline {section}{\numberline {A.3}Phân tích trên FracAtlas}{86}{section.A.3}%
-\contentsline {subsection}{\numberline {A.3.1}Đóng góp của kiến trúc và câu nhắc}{86}{subsection.A.3.1}%
-\contentsline {subsection}{\numberline {A.3.2}Độ ổn định qua kiểm chứng chéo ngẫu nhiên lặp lại}{91}{subsection.A.3.2}%
-\contentsline {subsection}{\numberline {A.3.3}Phân tích theo đặc tính tổn thương}{92}{subsection.A.3.3}%
-\contentsline {section}{\numberline {A.4}Kết luận đóng góp kiến trúc trên hai miền dữ liệu}{99}{section.A.4}%
-\contentsline {chapter}{\appendixname \ B: ĐÁNH GIÁ LUỒNG XỬ LÝ HAI GIAI ĐOẠN}{104}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Kết quả trên BTXRD}{104}{section.B.1}%
-\contentsline {subsection}{\numberline {B.1.1}Hiệu năng của Gatekeeper}{104}{subsection.B.1.1}%
-\contentsline {subsection}{\numberline {B.1.2}Ảnh hưởng đến luồng phân đoạn}{105}{subsection.B.1.2}%
-\contentsline {section}{\numberline {B.2}Kết quả trên FracAtlas}{108}{section.B.2}%
-\contentsline {subsection}{\numberline {B.2.1}Hiệu năng của Gatekeeper}{108}{subsection.B.2.1}%
-\contentsline {subsection}{\numberline {B.2.2}Ảnh hưởng đến luồng phân đoạn}{109}{subsection.B.2.2}%
+\contentsline {section}{\numberline {3.4}Tổng kết chương}{34}{section.3.4}%
+\contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{35}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Thiết lập môi trường thực nghiệm}{35}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Hai bộ dữ liệu ảnh X-quang và tiền xử lý đầu vào}{35}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Mô hình so sánh và cấu hình huấn luyện}{37}{subsection.4.1.2}%
+\contentsline {paragraph}{Cấu hình huấn luyện.}{37}{paragraph*.21}%
+\contentsline {subsection}{\numberline {4.1.3}Phương pháp đánh giá cấp độ ảnh}{38}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Đánh giá hiệu năng kiến trúc PGA-UNet}{39}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}So sánh với các mô hình cơ sở}{40}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}So sánh với mô hình nền tảng SAM-Med2D}{42}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Hiệu quả tính toán}{44}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Ảnh hưởng của độ phân giải và câu nhắc lệch trong phạm vi bài toán}{45}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Tổng hợp đóng góp kiến trúc và tính nhất quán trên hai bộ dữ liệu}{48}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Đóng góp của PSG, CAD và bản đồ nhiệt Gaussian}{49}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Độ ổn định qua các phân vùng dữ liệu}{50}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Hiệu năng theo đặc tính tổn thương}{51}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Kết luận về phạm vi đóng góp kiến trúc}{52}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Đánh giá luồng xử lý hỗ trợ hai giai đoạn}{53}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Tổng kết chương}{54}{section.4.5}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{55}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Kết luận và đóng góp đạt được}{55}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hạn chế của nghiên cứu}{57}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Định hướng phát triển}{59}{section.5.3}%
+\contentsline {chapter}{Tài liệu tham khảo}{61}{chapter*.22}%
+\contentsline {chapter}{\appendixname \ A: PHÂN TÍCH CHUYÊN SÂU KIẾN TRÚC VÀ TÍNH KHẢ THI TRÊN ĐA DẠNG DỮ LIỆU}{66}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Hiệu quả tính toán của PGA-UNet và SAM-Med2D}{66}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Phân tích trên BTXRD}{68}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Đóng góp của kiến trúc và câu nhắc}{68}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Độ ổn định qua kiểm chứng chéo ngẫu nhiên lặp lại}{72}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Phân tích theo đặc tính tổn thương}{74}{subsection.A.2.3}%
+\contentsline {section}{\numberline {A.3}Phân tích trên FracAtlas}{82}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}Đóng góp của kiến trúc và câu nhắc}{82}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}Độ ổn định qua kiểm chứng chéo ngẫu nhiên lặp lại}{86}{subsection.A.3.2}%
+\contentsline {subsection}{\numberline {A.3.3}Phân tích theo đặc tính tổn thương}{88}{subsection.A.3.3}%
+\contentsline {section}{\numberline {A.4}Kết luận đóng góp kiến trúc trên hai miền dữ liệu}{95}{section.A.4}%
+\contentsline {chapter}{\appendixname \ B: ĐÁNH GIÁ LUỒNG XỬ LÝ HAI GIAI ĐOẠN}{100}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Kết quả trên BTXRD}{100}{section.B.1}%
+\contentsline {subsection}{\numberline {B.1.1}Hiệu năng của Gatekeeper}{100}{subsection.B.1.1}%
+\contentsline {subsection}{\numberline {B.1.2}Ảnh hưởng đến luồng phân đoạn}{101}{subsection.B.1.2}%
+\contentsline {section}{\numberline {B.2}Kết quả trên FracAtlas}{104}{section.B.2}%
+\contentsline {subsection}{\numberline {B.2.1}Hiệu năng của Gatekeeper}{104}{subsection.B.2.1}%
+\contentsline {subsection}{\numberline {B.2.2}Ảnh hưởng đến luồng phân đoạn}{105}{subsection.B.2.2}%
