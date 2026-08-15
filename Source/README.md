@@ -70,7 +70,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 - `Demo_Interactive_PGA_Unet.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
 - `Ablation/`: the matching 8 ablation test notebooks.
 
-There is no single dedicated PGA-only test notebook; PGA-UNet is evaluated inside the comparison notebooks above. Efficiency analysis is measured by `File_Test/measure_efficiency.py` (parameter count, FLOPs, latency), not a notebook.
+There is no single dedicated PGA-only test notebook; PGA-UNet is evaluated inside the comparison notebooks above. Efficiency analysis (parameter count, FLOPs, latency, checkpoint size, peak memory) is measured by `File_Test/measure_efficiency_btxrd.ipynb`. These numbers depend only on model architecture and input resolution, not on which dataset the checkpoint was trained on, so a single BTXRD-based notebook covers both datasets.
 
 The active comparison story is:
 
