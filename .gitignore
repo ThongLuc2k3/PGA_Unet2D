@@ -8,8 +8,8 @@
 /Source/Report
 /diagrams
 
-# Vietnamese self-check translation of the paper (main branch is English-only per CLAUDE.md)
-/Paper_IEEE_Access/vietnam/
+# Generated test results (checkpoints, CSVs, executed notebooks) — not committed, regenerate via Source/File_Test
+/Results/
 
 # LaTeX build artifacts
 Paper_IEEE_Access/**/*.aux
