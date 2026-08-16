@@ -25,6 +25,10 @@ This does not apply to:
 - a single hyphen used as a plain title separator in a heading or comment, for example `# Ablation - CAD only`, which is a normal, human-natural convention and not the AI-writing tell this rule targets,
 - LaTeX's own `--` en-dash ligature inside numeric ranges, for example `15\%--45\%` or page ranges in `\bibitem` entries, which is TeX typesetting syntax, not prose punctuation.
 
+## Git commit conventions
+
+**Never add a `Co-Authored-By: Claude ...` (or any AI-attribution) trailer to a commit message, on any branch.** This repo is public on GitHub, and that trailer makes GitHub list the AI as a repo contributor, which the author does not want. This was violated in early sessions on both `main` and `graduation-project`; both branches' histories were later rewritten (`git filter-branch --msg-filter`) to strip the trailer and force-pushed to origin, keeping a local-only `backup/<branch>-pre-claude-trailer-cleanup` branch for each in case anything needed to be recovered. Do not repeat the mistake, and do not force-push over anyone's work to "fix" this again without the user explicitly asking first, since it rewrites public commit hashes.
+
 ## Scope discipline
 
 - Do only what was asked. Do not refactor, rename, delete files, or clean up unrelated code without asking first.
