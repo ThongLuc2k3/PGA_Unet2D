@@ -7,4 +7,14 @@
 /dataset_json/
 /Source/Report
 /diagrams
-/ACCESS_latex_template_20260513-1-1
+
+# Vietnamese self-check translation of the paper (main branch is English-only per CLAUDE.md)
+/Paper_IEEE_Access/vietnam/
+
+# LaTeX build artifacts
+Paper_IEEE_Access/**/*.aux
+Paper_IEEE_Access/**/*.log
+Paper_IEEE_Access/**/*.fls
+Paper_IEEE_Access/**/*.fdb_latexmk
+Paper_IEEE_Access/**/*.synctex.gz
+Paper_IEEE_Access/**/*.out

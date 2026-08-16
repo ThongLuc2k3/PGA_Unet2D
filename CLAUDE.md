@@ -4,7 +4,7 @@
 
 This repo has two branches with different purposes. Do not mix content, numbers, or checkpoint IDs between them.
 
-- `main` (this branch): source for an IEEE Access journal paper submission. The paper draft is at `ACCESS_latex_template_20260513-1-1/ACCESS_latex_template_20260513/access.tex`. Experiments here use a cleaned-up, revised prompt protocol.
+- `main` (this branch): source for an IEEE Access journal paper submission. The paper draft is at `Paper_IEEE_Access/access.tex`, split into `Paper_IEEE_Access/sections/*.tex` (one file per paper section), `references.tex`, and `biography.tex`; figures live under `Paper_IEEE_Access/images/<category>/`; a Vietnamese self-check translation (not for submission) lives in `Paper_IEEE_Access/vietnam/access_vietnam.tex`. Experiments here use a cleaned-up, revised prompt protocol.
 - `graduation-project`: the original undergraduate thesis, in Vietnamese, already submitted (full LaTeX report under `Report/`). Read it with `git show graduation-project:<path>` or a separate worktree; do not check it out over uncommitted work on `main`.
 
 ## Language rule (main branch only)

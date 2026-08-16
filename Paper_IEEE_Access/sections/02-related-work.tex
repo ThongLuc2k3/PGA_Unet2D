@@ -1,0 +1,31 @@
+\section{Related Work}
+Automatic medical image segmentation progressed from fully convolutional encoder-decoder architectures toward more selective skip-feature processing. U-Net established the canonical multi-scale encoder-decoder template for biomedical segmentation \cite{b3}. Attention U-Net then introduced attention gates on skip connections so that decoder-side fusion could suppress irrelevant spatial responses more selectively \cite{b4}. This line of work improved automatic segmentation quality, but it still assumes that the network itself must both localize and segment the lesion from the raw image alone.
+
+Interactive medical segmentation developed in parallel from the observation that partial user guidance can simplify the problem substantially \cite{b5,b6}. Early methods used clicks, scribbles, and geodesic cues; later work incorporated boxes as practical coarse prompts. The next major step was promptable foundation models such as SAM, SAM-Med2D, and MedSAM, which generalized prompt-driven segmentation across many medical domains \cite{b1,b2,b9}. These models are flexible, but their prompt usage is architecturally different from lightweight task-specific CNNs, and their computational cost is much higher. For very small radiographic lesions, another unresolved issue is whether a coarse prompt merely indicates the approximate region or whether it continues to shape feature extraction and decoding throughout the network.
+
+The present work is motivated by that gap. In grayscale bone radiographs, the challenge is not only to know \emph{where} the lesion roughly is, but also to preserve weak lesion evidence while suppressing surrounding clutter. A lightweight prompt-guided CNN may therefore benefit from making prompt information active from early encoding to late decoding instead of using the prompt only as an initial cue.
+
+\begin{table}[t]
+\caption{Representative prior work and the remaining gap addressed in this article.}
+\label{tab:related}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{L{1.9cm}L{2.2cm}L{2.7cm}L{2.7cm}L{2.1cm}L{2.1cm}}
+\toprule
+Work & Principle & Method & Performance Evidence & Pros & Cons \\
+\midrule
+U-Net \cite{b3} & Fully convolutional encoder-decoder & Multi-scale skip-connected segmentation network & Broad biomedical benchmarks; Dice-based overlap reporting & Simple, efficient, strong canonical baseline & No prompt guidance; all localization must be automatic \\
+\midrule
+Attention U-Net \cite{b4} & Skip-feature filtering by attention gates & U-Net with gated skip connections & Medical image segmentation tasks with overlap metrics such as Dice and IoU & Stronger automatic baseline than plain U-Net & Attention is still learned without explicit prompt conditioning \\
+\midrule
+DeepIGeoS and related interactive methods \cite{b6} & User guidance reduces search space & Geodesic or interaction-aware segmentation & Interactive medical segmentation under user input & Better reflects clinical interaction & Interaction mechanism can be task-specific or expensive to maintain \\
+\midrule
+SAM-Med2D / MedSAM \cite{b2,b9} & Promptable foundation segmentation & Large pretrained model with prompt-driven mask decoding & Multi-dataset medical evaluation with prompt-based metrics & Flexible and broadly applicable & Heavy; prompt influence is not designed as a lightweight end-to-end radiograph-specific prior \\
+\midrule
+This work & Prompt as a dense spatial prior throughout the network & Gaussian plateau prompt + PSG + CAD in a lightweight CNN & BTXRD and FracAtlas; Dice, IoU, HD95, CBL, efficiency, small-lesion analysis & Lightweight, prompt-aware from encoder to decoder, robust to prompt perturbation & Still requires supervised masks and fixed-resolution preprocessing \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+

@@ -1,0 +1,27 @@
+\history{Manuscript revised August 10, 2026.}
+\doi{}
+
+\title{PGA-UNet: A Lightweight Prompt-Guided Attention U-Net for Interactive Bone X-Ray Lesion Segmentation}
+\author{\uppercase{Thong Luc}\authorrefmark{1},
+\uppercase{Huu-Binh Nguyen}\authorrefmark{1},
+\uppercase{Ly Quoc Ngoc}\authorrefmark{2}}
+
+\address[1]{B.Sc. Program in Computer Science, Faculty of Information Technology, University of Science, VNU-HCM, Vietnam}
+\address[2]{[ c\`{\^a}n \dj{}i\`{\^e}n th\^ong tin ]}
+
+\markboth
+{Luc \headeretal: PGA-UNet for Interactive Bone X-Ray Lesion Segmentation}
+{Luc \headeretal: PGA-UNet for Interactive Bone X-Ray Lesion Segmentation}
+
+\corresp{Corresponding author: Thong Luc (e-mail: 22120196@student.hcmus.edu.vn).}
+
+\begin{abstract}
+Bone X-ray lesion segmentation remains difficult because lesions are often small, low-contrast, and anatomically confounded, so fully automatic segmentation models may fail before accurate boundary prediction becomes possible. Prior studies addressed this problem either with automatic encoder-decoder networks such as U-Net and Attention U-Net or with promptable foundation models such as SAM-Med2D. However, automatic models do not exploit user-provided spatial guidance, whereas foundation models are computationally heavy and do not necessarily preserve prompt influence throughout a lightweight task-specific network. This article proposes PGA-UNet, a lightweight prompt-guided convolutional architecture that converts a bounding-box prompt into a Gaussian-smoothed plateau heatmap, amplifies prompt-relevant encoder features through a Prompt Spatial Gate (PSG), and conditions decoder skip attention through a Conditional Attention Decoder (CAD). On BTXRD and FracAtlas, PGA-UNet achieved Dice scores of 0.8788 and 0.8286 at $512\times512$ under covering prompts, respectively. In a matched $256\times256$ comparison, PGA-UNet outperformed fine-tuned SAM-Med2D under both covering and off-center prompts on both datasets, despite being trained only on covering prompts while SAM-Med2D was trained on both, with the clearest advantage on the 50 smallest BTXRD lesions, where fine-tuned SAM-Med2D collapsed to a Dice of 0.1903 while PGA-UNet reached 0.7650 at the same resolution. Ablation results further showed that prompt-gated encoder features (PSG) and prompt-conditioned decoder attention (CAD) are most effective when combined rather than in isolation, and that the full architecture also makes the Gaussian-smoothed prompt more beneficial than a binary prompt. PGA-UNet uses 2.95M parameters, corresponding to an approximately 92-fold reduction in parameter count, an 11.9-fold reduction in FLOPs, and a 6.0-fold reduction in GPU inference latency relative to SAM-Med2D in the tested $256\times256$ setting. These results indicate that prompt information is most effective in this task when it is both spatially softened and propagated throughout the network from early encoding to late decoding.
+\end{abstract}
+
+\begin{keywords}
+bone X-ray, interactive segmentation, medical image segmentation, prompt-guided learning, Attention U-Net
+\end{keywords}
+
+\titlepgskip=-15pt
+\maketitle

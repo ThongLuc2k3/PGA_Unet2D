@@ -1,0 +1,19 @@
+\section{Introduction}
+\label{sec:introduction}
+\PARstart{B}{one} X-ray imaging is widely used in screening, diagnosis support, and follow-up because it is fast, inexpensive, and broadly available. However, lesion segmentation in radiographs remains difficult because targets may be small, low-contrast, elongated, or partially occluded by surrounding anatomy. In such cases, the main failure often occurs at localization: if the model attends to the wrong anatomical region, accurate boundary prediction becomes irrelevant.
+
+This difficulty motivated two broad development lines in prior work. One line improved fully automatic segmentation networks, beginning with U-Net-style encoder-decoder architectures and later extending them with attention mechanisms such as Attention U-Net \cite{b3,b4}. These models remain strong and efficient baselines, but they still solve a harder problem than many practical workflows require, namely localizing and segmenting every lesion from scratch. A second line moved toward interactive or prompt-guided segmentation, where clicks, scribbles, geodesic cues, or boxes are provided by the user \cite{b5,b6}. More recently, promptable foundation models such as SAM and SAM-Med2D pushed this direction further \cite{b1,b2}. Although powerful, these models are heavy and may be unnecessarily expensive for a fixed grayscale radiograph task with repeated low-latency interaction.
+
+In the present setting, a clinician can often provide a coarse bounding box more easily than a fully automatic system can localize a small lesion reliably. This creates a more focused research question: how should a lightweight model use that coarse spatial cue? A simple answer is to concatenate the prompt as an extra channel. However, that strategy does not guarantee that the prompt remains influential once features move deeper through the network, especially when the prompt is slightly misaligned or when lesion evidence is weak.
+
+This article therefore investigates a lightweight alternative. We propose PGA-UNet, a prompt-guided convolutional architecture that treats the box prompt as a structured spatial prior rather than as a simple auxiliary channel. The prompt is encoded as a plateau-style Gaussian heatmap, injected into encoder features through a Prompt Spatial Gate (PSG), and reused in the decoder through a Conditional Attention Decoder (CAD). The underlying encoder-decoder structure remains U-Net-like, but prompt information is not limited to the input layer; it is amplified and maintained throughout the network.
+
+The main contributions of this article are as follows.
+\begin{itemize}
+\item We present a compact prompt-guided architecture for interactive bone X-ray lesion segmentation.
+\item We integrate plateau-style Gaussian prompting, encoder-side prompt gating, and decoder-side prompt-conditioned attention within a lightweight network.
+\item We formulate an offline training and online interactive inference framework for prompt-guided radiographic lesion segmentation, with explicit mathematical definitions for prompt encoding, encoder gating, and decoder conditioning.
+\item We evaluate the method on BTXRD and FracAtlas under covering and off-center prompt settings, including comparisons with Attention U-Net and SAM-Med2D, a small-lesion analysis, Monte Carlo cross-validation, and efficiency measurements.
+\item We report ablation, efficiency, and small-lesion results that clarify where the proposed prompt-conditioning design is most useful.
+\end{itemize}
+

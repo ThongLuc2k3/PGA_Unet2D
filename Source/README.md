@@ -61,16 +61,16 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 
 `File_Test/{btxrd,fracatlas}/` contains:
 
-- `pga-vs-attention-unet-r512.ipynb`: PGA-UNet vs Attention U-Net at `512`.
-- `test-subcat-pga-vs-attention-unet.ipynb`: Attention U-Net top-Dice and bottom-Dice subsets, PGA-UNet on the same subsets.
-- `test-pga-samzs-samft-r256.ipynb`: PGA-UNet vs SAM-Med2D (zero-shot and finetuned) at `256`.
-- `test-subcat-pga-vs-sam-r256-r512.ipynb`: small-lesion subset analysis, SAM-256 vs PGA-256 vs PGA-512.
-- `test-pga-dataset-1234.ipynb`: Monte Carlo cross-validation (4 repeated random image-level splits).
-- `Attention_Unet2D.ipynb`: standalone Attention U-Net evaluation.
-- `Demo_Interactive_PGA_Unet.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
+- `test-pga-vs-attention-unet-r512-{btxrd,fracatlas}.ipynb`: PGA-UNet vs Attention U-Net at `512`.
+- `test-subcat-pga-vs-attention-unet-{btxrd,fracatlas}.ipynb`: Attention U-Net top-Dice and bottom-Dice subsets, PGA-UNet on the same subsets.
+- `test-pga-samzs-samft-r256-{btxrd,fracatlas}.ipynb`: PGA-UNet vs SAM-Med2D (zero-shot and finetuned) at `256`.
+- `test-subcat-pga-vs-sam-r256-r512-{btxrd,fracatlas}.ipynb`: small-lesion subset analysis, SAM-256 vs PGA-256 vs PGA-512.
+- `test-pga-dataset-1234-{btxrd,fracatlas}.ipynb`: Monte Carlo cross-validation (4 repeated random image-level splits).
+- `test-Attention_Unet2D-{btxrd,fracatlas}.ipynb`: standalone Attention U-Net evaluation.
+- `test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
 - `Ablation/`: the matching 8 ablation test notebooks.
 
-There is no single dedicated PGA-only test notebook; PGA-UNet is evaluated inside the comparison notebooks above. Efficiency analysis (parameter count, FLOPs, latency, checkpoint size, peak memory) is measured by `File_Test/measure_efficiency_btxrd.ipynb`. These numbers depend only on model architecture and input resolution, not on which dataset the checkpoint was trained on, so a single BTXRD-based notebook covers both datasets.
+There is no single dedicated PGA-only test notebook; PGA-UNet is evaluated inside the comparison notebooks above. Efficiency analysis (parameter count, FLOPs, latency, checkpoint size, peak memory) is measured by `File_Test/test-measure_efficiency_btxrd.ipynb`. These numbers depend only on model architecture and input resolution, not on which dataset the checkpoint was trained on, so a single BTXRD-based notebook covers both datasets.
 
 The active comparison story is:
 
@@ -110,6 +110,6 @@ It should not be described as strict non-overlapping `k`-fold cross-validation.
 
 These cells have a `TODO_..._DRIVE_ID` or an empty `''` in place of a real Google Drive file ID, because the corresponding checkpoint has not been retrained/reuploaded yet under the current protocol. Fill in the real ID once the checkpoint exists, do not leave a guessed value:
 
-- `File_Test/{btxrd,fracatlas}/pga-vs-attention-unet-r512.ipynb`: Attention U-Net checkpoint (both datasets); PGA-UNet-512 checkpoint for FracAtlas.
-- `File_Test/{btxrd,fracatlas}/test-subcat-pga-vs-attention-unet.ipynb`: Attention U-Net checkpoint and PGA-UNet-512 checkpoint (both datasets).
-- `File_Test/{btxrd,fracatlas}/Demo_Interactive_PGA_Unet.ipynb`: PGA-UNet-512 checkpoint for BTXRD and for FracAtlas.
+- `File_Test/{btxrd,fracatlas}/test-pga-vs-attention-unet-r512-{btxrd,fracatlas}.ipynb`: Attention U-Net checkpoint (both datasets); PGA-UNet-512 checkpoint for FracAtlas.
+- `File_Test/{btxrd,fracatlas}/test-subcat-pga-vs-attention-unet-{btxrd,fracatlas}.ipynb`: Attention U-Net checkpoint and PGA-UNet-512 checkpoint (both datasets).
+- `File_Test/{btxrd,fracatlas}/test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: PGA-UNet-512 checkpoint for BTXRD and for FracAtlas.
