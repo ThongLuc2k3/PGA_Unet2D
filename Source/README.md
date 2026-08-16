@@ -9,7 +9,7 @@ Source/
 ├── Prompt-Guided-XRay-Segmentation/
 │   ├── dataset.py
 │   ├── train.py
-│   ├── REAME.md
+│   ├── README.md
 │   └── models/
 │       ├── networks_other.py
 │       ├── layers/grid_attention_layer.py
@@ -105,11 +105,5 @@ It should not be described as strict non-overlapping `k`-fold cross-validation.
 - Dataset links have already been separated by folder for `BTXRD` and `FracAtlas`.
 - The paper narrative now uses `Attention U-Net`, `SAM-Med2D`, `small-lesion subset`, and the full `Gaussian prompt + PSG + CAD` ablation story.
 - All notebooks were audited for syntax errors, missing local-module imports, and cross-dataset ID mix-ups (see `CLAUDE.md` at the repo root for the current known-good state and the conventions this branch follows).
-
-### Checkpoints still pending (Google Drive ID not filled in yet)
-
-These cells have a `TODO_..._DRIVE_ID` or an empty `''` in place of a real Google Drive file ID, because the corresponding checkpoint has not been retrained/reuploaded yet under the current protocol. Fill in the real ID once the checkpoint exists, do not leave a guessed value:
-
-- `File_Test/{btxrd,fracatlas}/test-pga-vs-attention-unet-r512-{btxrd,fracatlas}.ipynb`: Attention U-Net checkpoint (both datasets); PGA-UNet-512 checkpoint for FracAtlas.
-- `File_Test/{btxrd,fracatlas}/test-subcat-pga-vs-attention-unet-{btxrd,fracatlas}.ipynb`: Attention U-Net checkpoint and PGA-UNet-512 checkpoint (both datasets).
-- `File_Test/{btxrd,fracatlas}/test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: PGA-UNet-512 checkpoint for BTXRD and for FracAtlas.
+- Every `File_Test/{btxrd,fracatlas}/*.ipynb` and `File_Test/{btxrd,fracatlas}/Ablation/*.ipynb` has real Google Drive IDs filled in for its dataset/checkpoint downloads (verified by scanning all `*_ID`/`cid` assignments); none are left as placeholders.
+- Executed copies of these test notebooks, plus their per-image CSVs, live under `../Results/Result_{BTXRD,FracAtlas}/`; see the root `README.md` for what is and isn't committed there.

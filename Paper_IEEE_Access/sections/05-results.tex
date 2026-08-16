@@ -25,7 +25,7 @@ FracAtlas & $512\times512$ & \textbf{0.8286} & \textbf{0.7925} \\
 }
 \end{table}
 
-The resolution comparison should not be overinterpreted as a pure image-size effect because the prompt representation also changes with resolution through its margin and Gaussian smoothing scale. Even with that caveat, the main trend remains useful: prompt-guided segmentation of small radiographic lesions benefits from preserving more spatial detail, especially when the lesion occupies only a tiny fraction of the image.
+The resolution comparison should not be overinterpreted as a pure image-size effect because the prompt heatmap is built once at the original image resolution with a fixed Gaussian kernel and only then downsampled together with the image, so the same absolute blur is compressed more aggressively into the $256\times256$ frame than into the $512\times512$ one. Even with that caveat, the main trend remains useful: prompt-guided segmentation of small radiographic lesions benefits from preserving more spatial detail, especially when the lesion occupies only a tiny fraction of the image.
 
 
 \subsection{Monte Carlo Cross-Validation}

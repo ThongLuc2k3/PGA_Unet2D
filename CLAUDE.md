@@ -13,6 +13,8 @@ This rule is about file content, not conversation. Everything committed to files
 
 Talking with the user is a separate matter: reply in whatever language the user writes in (this user writes in Vietnamese). Never switch the conversation itself to English just because the repo's file-content rule says English.
 
+The one deliberate, explicit exception: `Paper_IEEE_Access/vietnam/access_vietnam.tex` is a Vietnamese translation of the paper, kept only so the author can self-check the English manuscript. It exists on `main` at the user's explicit request, made after being told this contradicts the rule above. Do not treat its presence as license to add Vietnamese elsewhere; if it drifts out of sync with `access.tex`, that is a real staleness bug worth fixing, not something to leave because "there's already Vietnamese in the repo."
+
 ## Writing style
 
 Do not use an em dash (—), an en dash (–), or a double hyphen as sentence-connecting punctuation in comments, docstrings, print statements, or markdown. It reads as AI-generated prose. Use a period, comma, or colon instead, or just restructure the sentence.
@@ -32,6 +34,7 @@ This does not apply to:
 ## Known structure
 
 - `Source/README.md`: current active notebook layout (BTXRD and FracAtlas datasets, `File_Train/`/`File_Test/`, dataset-specific subfolders).
+- `Results/`: executed test notebooks and per-image CSVs/xlsx are tracked in git; the `best.pth` checkpoints under it are gitignored (`Results/**/*.pth`, ~10-12MB each) and re-downloadable from the Google Drive IDs already in the matching notebook.
 - `Source/Prompt-Guided-XRay-Segmentation/`: shared PGA-UNet package (`dataset.py`, `train.py`, `models/`).
 - Prompt protocol: the covering-box prompt has no minimum margin, it only guarantees full coverage of the GT (`dataset.py` has no `_ensure_min_prompt_margin`, that helper does not exist in the current code). Training zoom range is 0.15 to 0.45, test-time zoom is fixed at 0.30, shift ratio is 0.30.
 - Baselines compared in the paper: Attention U-Net as the automatic baseline, SAM-Med2D as the prompt-based foundation model baseline. Plain U-Net is kept for reference only, not a primary comparison.

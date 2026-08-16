@@ -119,11 +119,13 @@ Cho ảnh X-quang xám $\mathbf{I}\in\mathbb{R}^{H\times W}$ và hộp giới h�
 \end{equation}
 
 \subsection{Biểu diễn prompt \enlabel{Prompt Representation}}
-Prompt đầu vào không được mã hóa như một hình chữ nhật nhị phân cứng. Thay vào đó, phần bên trong hộp được chuyển thành bản đồ ``cao nguyên'' và biên được làm mềm bằng bộ lọc Gaussian. Trong cài đặt dùng cho các thực nghiệm báo cáo, hộp được cấp một biên độ tối thiểu trước khi rasterize, rồi mới làm mượt bằng kernel Gaussian. Ở $256\times256$: biên tối thiểu 5 pixel, kernel $31\times31$. Ở $512\times512$: biên tối thiểu 10 pixel, kernel $61\times61$. Cách này giữ được toàn bộ phạm vi không gian của vùng quan tâm trong khi giảm phụ thuộc quá mức vào một biên đột ngột.
+Prompt đầu vào không được mã hóa như một hình chữ nhật nhị phân cứng. Thay vào đó, phần bên trong hộp được rasterize thành bản đồ ``cao nguyên'' \emph{ở độ phân giải ảnh gốc}, rồi biên được làm mềm bằng kernel Gaussian $31\times31$ \emph{cố định}, trước khi bản đồ nhiệt được resize + pad xuống độ phân giải vuông mục tiêu cùng với ảnh. Kernel không đổi theo độ phân giải mục tiêu ($256\times256$ hay $512\times512$): áp dụng kernel một lần ở độ phân giải gốc, trước khi downsample, giữ cho độ mờ hiệu dụng nhất quán tương đối so với khung ảnh vuông cuối cùng mà mạng nhìn thấy. Cao nguyên chỉ phủ đúng vùng hộp (đã mở rộng nếu có), \textbf{không có biên tối thiểu nào thêm vào}; việc bao phủ vùng quan tâm do chính bước mở rộng hộp (mô tả bên dưới) đảm bảo, không phải do một bước biên riêng.
+
+\textit{[Sửa so với bản .tex tiếng Anh gốc trước đó: đoạn này từng ghi sai là có biên tối thiểu 5px/10px và kernel đổi 31/61 theo độ phân giải — không khớp \texttt{dataset.py} thật (\texttt{self.prompt\_kernel = 31} cố định, không có hàm biên tối thiểu). Đã sửa lại \texttt{access.tex} và bản dịch này cho khớp code.]}
 
 Khi đánh giá, prompt được kiểm thử ở hai chế độ. \textbf{Prompt bao phủ (covering)} mở rộng hộp giới hạn tổn thương thêm 15\%--45\% chiều rộng/cao tổn thương. \textbf{Prompt lệch tâm (off-center)} áp dụng cùng độ mở rộng đó rồi dịch hộp tối đa 30\% chiều rộng/cao trong khi vẫn phải bao phủ tổn thương. Mỗi bộ dữ liệu và độ phân giải huấn luyện một mô hình riêng; điều kiện prompt chỉ thay đổi ở lúc đánh giá, trừ khi ablation nói khác.
 
-Về thuật toán, việc dựng prompt gồm 4 bước: (1) suy ra hộp tổn thương từ đa giác gán nhãn hoặc từ input người dùng, (2) mở rộng hộp đó với biên tối thiểu tùy theo độ phân giải, (3) rasterize vùng đã mở rộng thành mặt nạ cao nguyên, (4) làm mượt biên cao nguyên bằng kernel Gaussian.
+Về thuật toán, việc dựng prompt gồm 3 bước: (1) suy ra hộp tổn thương từ đa giác gán nhãn hoặc từ input người dùng và mở rộng theo tỉ lệ đã mô tả, (2) rasterize vùng đã mở rộng thành mặt nạ cao nguyên ở độ phân giải ảnh gốc, (3) làm mượt biên cao nguyên bằng kernel Gaussian cố định trước khi resize xuống độ phân giải mục tiêu.
 
 \subsection{Prompt Spatial Gate (PSG)}
 Gọi $\mathbf{x}^{l}$ là bản đồ đặc trưng encoder ở tầng $l$. PSG điều biến nó bằng bản đồ attention suy ra từ prompt $\mathbf{A}^{l}_{\mathrm{PSG}}$:
@@ -165,7 +167,7 @@ Sự bất đối xứng này là \textbf{cố ý}: mỗi baseline được hu�
 
 Validation lúc fine-tune SAM-Med2D và tập test cuối cùng dùng cùng giao thức prompt bao phủ như PGA-UNet, batch size 4, tối đa 100 epoch, early stopping patience 30, learning rate $10^{-5}$. Ngoài ra còn có thực nghiệm ổn định bằng Monte Carlo cross-validation — tức là chia tách ngẫu nhiên lặp lại ở mức ảnh, không phải k-fold không chồng lấn nghiêm ngặt.
 
-Hai chi tiết đánh giá quan trọng: (1) việc dựng prompt phụ thuộc độ phân giải — ở $256\times256$ biên tối thiểu 5px/kernel 31; ở $512\times512$ là 10px/kernel 61; (2) các thực nghiệm Monte Carlo cross-validation là bằng chứng ổn định bổ sung, không thay thế cho tập chia train/validation/test cố định dùng trong các bảng chính.
+Hai chi tiết đánh giá quan trọng: (1) bản thân việc dựng prompt \emph{không} phụ thuộc độ phân giải — bản đồ cao nguyên được dựng và làm mượt bằng kernel Gaussian $31\times31$ cố định ở độ phân giải ảnh gốc, sau đó mới resize + pad xuống $256\times256$ hoặc $512\times512$ cùng ảnh, nên cùng một độ mờ tuyệt đối bị nén khác nhau ở 2 độ phân giải mục tiêu chứ không phải được tham số hóa riêng cho từng độ phân giải; (2) các thực nghiệm Monte Carlo cross-validation là bằng chứng ổn định bổ sung, không thay thế cho tập chia train/validation/test cố định dùng trong các bảng chính.
 
 \subsection{Baseline \& độ đo \enlabel{Baselines and Metrics}}
 PGA-UNet được so với \textbf{Attention U-Net} (baseline tự động chính) và \textbf{SAM-Med2D} (baseline có prompt chính). Attention U-Net huấn luyện không có prompt; SAM-Med2D được đánh giá ở $256\times256$, dạng đã fine-tune, cùng tập chia và cùng hộp prompt như PGA-UNet.
@@ -203,7 +205,7 @@ FracAtlas & $512\times512$ & \best{0.8286} & \best{0.7925} \\
 \end{tabular}
 \end{table}
 
-Không nên hiểu đây thuần túy là hiệu ứng ``ảnh lớn hơn thì tốt hơn'', vì cách biểu diễn prompt cũng đổi theo độ phân giải (biên tối thiểu \& độ mượt Gaussian). Dù vậy xu hướng chính vẫn có ý nghĩa: phân đoạn tổn thương nhỏ có lợi khi giữ được nhiều chi tiết không gian hơn.
+Không nên hiểu đây thuần túy là hiệu ứng ``ảnh lớn hơn thì tốt hơn'', vì bản đồ prompt được dựng một lần ở độ phân giải ảnh gốc với kernel Gaussian cố định, rồi mới downsample cùng ảnh — nên cùng một độ mờ tuyệt đối bị nén mạnh hơn vào khung $256\times256$ so với khung $512\times512$. Dù vậy xu hướng chính vẫn có ý nghĩa: phân đoạn tổn thương nhỏ có lợi khi giữ được nhiều chi tiết không gian hơn.
 
 \subsection{Monte Carlo Cross-Validation}
 Thực nghiệm này kiểm tra xem kết quả chính có ổn định không khi chia lại tập ảnh nhiều lần trên dữ liệu hạn chế — bằng chứng bền vững ở mức \emph{chia tách dữ liệu}, khác với bền vững ở mức \emph{nhiễu loạn prompt}. Dùng 4 lần chia ngẫu nhiên lặp lại ở mức ảnh, cấu hình PGA-UNet $512\times512$, đánh giá riêng theo prompt bao phủ và lệch tâm.
