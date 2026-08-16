@@ -313,7 +313,7 @@ class _GridAttentionBlockND_TORR(nn.Module):
         psi_f = self.psi(f)
 
         ############################################
-        # normalisation -- scale compatibility score
+        # normalisation: scale compatibility score
         #  psi^T . f -> (b, 1, t/s1, h/s2, w/s3)
         if self.mode == 'concatenation_softmax':
             sigm_psi_f = F.softmax(psi_f.view(batch_size, 1, -1), dim=2)

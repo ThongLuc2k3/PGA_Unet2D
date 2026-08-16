@@ -17,12 +17,13 @@ The one deliberate, explicit exception: `Paper_IEEE_Access/vietnam/access_vietna
 
 ## Writing style
 
-Do not use an em dash (—), an en dash (–), or a double hyphen as sentence-connecting punctuation in comments, docstrings, print statements, or markdown. It reads as AI-generated prose. Use a period, comma, or colon instead, or just restructure the sentence.
+**Never use an em dash (—), an en dash (–), or a double/triple hyphen (`--`, `---`) as sentence-connecting punctuation, in any file, in any language, on this branch: code comments, docstrings, print/log/assert messages, notebook markdown cells, `.md` files, `.tex` prose (English or the Vietnamese self-check file), commit messages, everything.** It reads as AI-generated prose. Use a period, comma, colon, semicolon, or parentheses instead, or just restructure the sentence into two sentences. This has been violated repeatedly in past sessions (`README.md`, `access_vietnam.tex`, notebook markdown cells) despite being documented here; treat any new writing task as incomplete until you have grepped your own output for `—`, `–`, and `--` before considering it done.
 
 This does not apply to:
 - decorative section-divider lines made of repeated dash or box-drawing characters, for example `# --------------------------------`, which are fine to keep as visual separators,
 - functional code that legitimately manipulates that character, for example sanitizing a string for use in a filename,
-- a single hyphen used as a plain title separator in a heading or comment, for example `# Ablation - CAD only`, which is a normal, human-natural convention and not the AI-writing tell this rule targets.
+- a single hyphen used as a plain title separator in a heading or comment, for example `# Ablation - CAD only`, which is a normal, human-natural convention and not the AI-writing tell this rule targets,
+- LaTeX's own `--` en-dash ligature inside numeric ranges, for example `15\%--45\%` or page ranges in `\bibitem` entries, which is TeX typesetting syntax, not prose punctuation.
 
 ## Scope discipline
 

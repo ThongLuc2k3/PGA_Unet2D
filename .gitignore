@@ -5,7 +5,7 @@
 /Source/Report
 /diagrams
 
-# Trained checkpoints under Results/ — large binaries, re-downloadable via the
+# Trained checkpoints under Results/: large binaries, re-downloadable via the
 # Google Drive IDs already saved in the corresponding notebooks
 Results/**/*.pth
 
