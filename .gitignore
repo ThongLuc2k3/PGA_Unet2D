@@ -1,15 +1,13 @@
 /.claude
 
-# Kết quả CSV sinh ra từ các notebook ablation (results/per-image) — không cần commit
-**/Ablation/**/*.csv
-
 # JSON annotation gốc của dataset (tải riêng, không cần commit)
 /dataset_json/
 /Source/Report
 /diagrams
 
-# Generated test results (checkpoints, CSVs, executed notebooks) — not committed, regenerate via Source/File_Test
-/Results/
+# Trained checkpoints under Results/ — large binaries, re-downloadable via the
+# Google Drive IDs already saved in the corresponding notebooks
+Results/**/*.pth
 
 # LaTeX build artifacts
 Paper_IEEE_Access/**/*.aux

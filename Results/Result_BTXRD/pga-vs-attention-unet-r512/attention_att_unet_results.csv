@@ -1,0 +1,2 @@
+model,dice,iou,precision,recall,hd95,cbl,n_samples
+AttentionAttentionUNet,0.5160,0.4137,0.6220,0.5670,129.6733,0.5995,187
