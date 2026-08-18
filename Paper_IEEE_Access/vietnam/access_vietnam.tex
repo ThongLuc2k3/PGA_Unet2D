@@ -236,7 +236,7 @@ Bộ dữ liệu & Prompt & Dice & CBL & HD95 \\
 \textit{[Hình 2 - \texttt{images/results/prompt\_robustness\_examples.png}]}: Hành vi định tính khi prompt bị nhiễu loạn. PGA-UNet ổn định hơn khi prompt bị dịch khỏi hộp bao phủ lý tưởng, dù các tổn thương gãy mảnh/mỏng vẫn khó hơn tổn thương lớn, gọn.
 
 \subsection{So sánh với baseline tự động (Attention U-Net)}
-Attention U-Net không nhận bounding box từ bác sĩ, nên đây không phải phép so sánh công bằng giữa hai phương pháp cùng dùng prompt. Mục đích của so sánh này là đo xem bài toán phân đoạn tổn thương nhỏ khó đến mức nào khi mạng phải tự khu trú hoàn toàn, tức đúng bước mà một prompt thô từ bác sĩ được thiết kế để loại bỏ. Bảng 4 so sánh PGA-UNet với Attention U-Net ở $512\times512$ trong điều kiện thông tin không đối xứng này.
+Attention U-Net không nhận bounding box từ bác sĩ, nên đây không phải phép so sánh công bằng giữa hai phương pháp cùng dùng prompt. Mục đích của so sánh này là đo xem bài toán phân đoạn này khó đến mức nào, trên toàn bộ tập test, khi mạng phải tự khu trú hoàn toàn, tức đúng bước mà một prompt thô từ bác sĩ được thiết kế để loại bỏ. Bảng 4 so sánh PGA-UNet với Attention U-Net ở $512\times512$ trong điều kiện thông tin không đối xứng này.
 
 \begin{table}[h]
 \caption{Bảng 4 - So sánh với baseline tự động ở $512\times512$, dưới prompt bao phủ.}
