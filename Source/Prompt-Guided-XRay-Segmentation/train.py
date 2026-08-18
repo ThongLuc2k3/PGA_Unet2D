@@ -13,14 +13,21 @@ from models.networks.prompt_unet_2D import PGA_UNet
 # =========================================================
 # Experiment configuration
 # =========================================================
-TRAIN_PROMPT_MODE  = 'zoom_out'  # 'zoom_out' or 'shift'
+# 'zoom_out', 'shift', or 'center_scale' (tight box scaled from its center
+# by PROMPT_SCALE_FACTOR, optionally shifted by PROMPT_SHIFT_RATIO).
+TRAIN_PROMPT_MODE   = os.environ.get("PROMPT_MODE", "zoom_out")
+PROMPT_SCALE_FACTOR = float(os.environ.get("PROMPT_SCALE_FACTOR", "2.0"))
+PROMPT_SHIFT_RATIO  = float(os.environ.get("PROMPT_SHIFT_RATIO", "0.30"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
 EPOCHS     = 100
 LR         = 1e-4
 EARLY_STOP = 15
-EVAL_PROMPT_MODES = ('zoom_out', 'shift')
+# Always validate on the legacy modes for context; add the new mode too when
+# it is the one being trained, so PRIMARY_VAL_MODE below always has a loader.
+EVAL_PROMPT_MODES = ('zoom_out', 'shift') if TRAIN_PROMPT_MODE in ('zoom_out', 'shift') \
+    else ('zoom_out', 'shift', TRAIN_PROMPT_MODE)
 PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
 def resolve_img_size():
     return int(os.environ.get("PROMPT_IMG_SIZE", "512"))
@@ -143,9 +150,20 @@ def setup_logger(exp_name):
 # =========================================================
 # MAIN
 # =========================================================
+def _dataset_kwargs(mode):
+    """scale_factor/shift_ratio only apply to 'center_scale'; the legacy
+    'zoom_out'/'shift' modes keep their own defaults (shift_ratio=0.30)
+    regardless of PROMPT_SHIFT_RATIO, so a center_scale run with shift
+    disabled does not silently zero out the legacy 'shift' validation loader.
+    """
+    if mode == 'center_scale':
+        return dict(scale_factor=PROMPT_SCALE_FACTOR, shift_ratio=PROMPT_SHIFT_RATIO)
+    return {}
+
+
 def main():
-    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift'}:
-        raise ValueError("TRAIN_PROMPT_MODE must be 'zoom_out' or 'shift'.")
+    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift', 'center_scale'}:
+        raise ValueError("TRAIN_PROMPT_MODE must be 'zoom_out', 'shift', or 'center_scale'.")
     if PRIMARY_VAL_MODE not in EVAL_PROMPT_MODES:
         raise ValueError("PRIMARY_VAL_MODE must be one of EVAL_PROMPT_MODES.")
 
@@ -155,6 +173,8 @@ def main():
         f"TrainPrompt: {TRAIN_PROMPT_MODE} | Device: {DEVICE} | "
         f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE} | "
         f"DatasetRoot: {DATASET_ROOT}"
+        + (f" | ScaleFactor: {PROMPT_SCALE_FACTOR} | ShiftRatio: {PROMPT_SHIFT_RATIO}"
+           if TRAIN_PROMPT_MODE == 'center_scale' else "")
     )
     logger.info("=" * 90)
 
@@ -163,7 +183,8 @@ def main():
         image_dir=os.path.join(DATASET_ROOT, "train", "images"),
         json_dir=os.path.join(DATASET_ROOT, "train", "annotations"),
         img_size=IMG_SIZE, is_train=True,
-        prompt_mode=TRAIN_PROMPT_MODE
+        prompt_mode=TRAIN_PROMPT_MODE,
+        **_dataset_kwargs(TRAIN_PROMPT_MODE),
     )
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True,
                               num_workers=2, pin_memory=True)
@@ -174,7 +195,8 @@ def main():
             image_dir=os.path.join(DATASET_ROOT, "val", "images"),
             json_dir=os.path.join(DATASET_ROOT, "val", "annotations"),
             img_size=IMG_SIZE, is_train=False,
-            prompt_mode=mode
+            prompt_mode=mode,
+            **_dataset_kwargs(mode),
         )
         val_loaders[mode] = DataLoader(
             ds,
@@ -195,7 +217,14 @@ def main():
     os.makedirs("checkpoints", exist_ok=True)
     best_val_dice   = 0.0
     patience_counter = 0
-    ckpt_prefix     = f"checkpoints/pga_unet_{TRAIN_PROMPT_MODE}_{IMG_SIZE}"
+    ckpt_tag = TRAIN_PROMPT_MODE
+    if TRAIN_PROMPT_MODE == 'center_scale':
+        # Scale/shift must be in the filename, otherwise every center_scale
+        # run (x2/x3, different shift ratios) would overwrite the same checkpoint.
+        scale_tag = str(PROMPT_SCALE_FACTOR).rstrip('0').rstrip('.') if '.' in str(PROMPT_SCALE_FACTOR) else str(PROMPT_SCALE_FACTOR)
+        shift_tag = "noshift" if PROMPT_SHIFT_RATIO == 0 else f"shift{str(PROMPT_SHIFT_RATIO).replace('.', '')}"
+        ckpt_tag = f"center_scale_x{scale_tag}_{shift_tag}"
+    ckpt_prefix     = f"checkpoints/pga_unet_{ckpt_tag}_{IMG_SIZE}"
 
     for epoch in range(EPOCHS):
         # ── Train ────────────────────────────────────────────────────

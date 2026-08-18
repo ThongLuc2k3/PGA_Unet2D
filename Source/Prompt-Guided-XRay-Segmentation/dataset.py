@@ -15,14 +15,18 @@ class PromptSegmentationDataset(Dataset):
     Each sample corresponds to one GT polygon inside one image.
 
     prompt_mode:
-        'zoom_out': covering prompt expanded around the GT
+        'zoom_out': covering prompt expanded around the GT, each side independently
         'shift': covering prompt with an off-center displacement
+        'center_scale': tight GT box scaled outward from its own center by a
+            fixed factor (all sides together, not independently), optionally
+            with an off-center shift; see scale_factor and shift_ratio below
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
                  prompt_mode='zoom_out',
                  zoom_ratio=(0.15, 0.45),
-                 shift_ratio=0.30):
+                 shift_ratio=0.30,
+                 scale_factor=2.0):
         self.image_dir   = image_dir
         self.json_dir    = json_dir
         self.img_size    = img_size
@@ -30,6 +34,9 @@ class PromptSegmentationDataset(Dataset):
         self.prompt_mode = prompt_mode
         self.zoom_ratio  = zoom_ratio
         self.shift_ratio = shift_ratio
+        # Only used by prompt_mode='center_scale': how many times larger than
+        # the tight GT box the covering box is, measured from the GT center.
+        self.scale_factor = scale_factor
         # Fixed regardless of img_size: applied to heatmap coordinates in
         # original-image pixel space, before the resize-and-pad step. Scaling
         # it with img_size would change the effective blur relative to the
@@ -113,6 +120,48 @@ class PromptSegmentationDataset(Dataset):
 
         return bx_min, bx_max, by_min, by_max
 
+    def _center_scale_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
+        """Scale the tight GT box outward from its own center by scale_factor,
+        so all four sides grow together instead of being expanded by an
+        independent random amount each (contrast with _zoom_out_bbox). This
+        is meant to look closer to how a clinician would actually draw a box:
+        loosely centered on the lesion rather than stretched unevenly per
+        edge. Optionally applies an off-center shift afterward, controlled by
+        shift_ratio (0 disables the shift); the shifted box is still clamped
+        to fully cover the GT.
+        """
+        cx = (x_min + x_max) / 2.0
+        cy = (y_min + y_max) / 2.0
+        half_w = (x_max - x_min) / 2.0 * self.scale_factor
+        half_h = (y_max - y_min) / 2.0 * self.scale_factor
+
+        dx = dy = 0.0
+        if self.shift_ratio > 0:
+            if self.is_train:
+                dx = random.uniform(-half_w, half_w) * self.shift_ratio
+                dy = random.uniform(-half_h, half_h) * self.shift_ratio
+            else:
+                rng = random.Random(seed_idx or 0)
+                dx = rng.uniform(-1.0, 1.0) * half_w * self.shift_ratio
+                dy = rng.uniform(-1.0, 1.0) * half_h * self.shift_ratio
+
+        bx_min, bx_max = cx + dx - half_w, cx + dx + half_w
+        by_min, by_max = cy + dy - half_h, cy + dy + half_h
+
+        # The shifted box must still fully cover the GT, only changing its
+        # relative position inside the box (same guarantee as _shift_bbox).
+        bx_min = min(bx_min, x_min)
+        by_min = min(by_min, y_min)
+        bx_max = max(bx_max, x_max)
+        by_max = max(by_max, y_max)
+
+        bx_min = max(0,      bx_min)
+        by_min = max(0,      by_min)
+        bx_max = min(orig_w, bx_max)
+        by_max = min(orig_h, by_max)
+
+        return bx_min, bx_max, by_min, by_max
+
     def create_plateau_heatmap(self, bbox, orig_h, orig_w):
         heatmap = np.zeros((orig_h, orig_w), dtype=np.float32)
         x_min, y_min, x_max, y_max = bbox
@@ -170,6 +219,10 @@ class PromptSegmentationDataset(Dataset):
 
         elif self.prompt_mode == 'shift':
             bx_min, bx_max, by_min, by_max = self._shift_bbox(
+                x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
+
+        elif self.prompt_mode == 'center_scale':
+            bx_min, bx_max, by_min, by_max = self._center_scale_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
         else:
