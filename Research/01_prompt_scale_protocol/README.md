@@ -23,7 +23,7 @@ Added as a new `prompt_mode='center_scale'` in `Source/Prompt-Guided-XRay-Segmen
 
 ## Training + test notebooks (BTXRD, 512x512)
 
-Four notebooks in this folder, one per (scale, shift) combination, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under the matching env vars, then evaluate the resulting checkpoint (Dice/IoU/Pre/Rec/HD95/CBL) under the same "zoom vs shift" pairing it was trained under: a zoom scenario (the trained scale, shift forced to 0, i.e. perfectly centered) and a shift scenario (the trained scale and shift ratio, i.e. in-distribution), plus the legacy `zoom_out`/`shift` protocols as a reference point against the existing paper baseline. Same qualitative visualization grid used by the existing `pga-train-512.ipynb` template.
+Four notebooks in this folder, one per (scale, shift) combination, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under the matching env vars, then evaluate the resulting checkpoint (Dice/IoU/Pre/Rec/HD95/CBL) under the exact same `center_scale` condition it was trained on, no legacy `zoom_out`/`shift` comparison. Same qualitative visualization grid used by the existing `pga-train-512.ipynb` template.
 
 | Notebook | scale_factor | shift_ratio |
 |---|---|---|
