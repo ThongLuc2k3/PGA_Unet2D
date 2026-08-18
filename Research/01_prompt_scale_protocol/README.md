@@ -19,11 +19,18 @@ A conceptual mockup, not model output: one BTXRD example (IMG000184, the femur l
 
 ## Implementation
 
-Added as a new `prompt_mode='center_scale'` in `Source/Prompt-Guided-XRay-Segmentation/dataset.py` (`_center_scale_bbox`), alongside the existing `zoom_out`/`shift` modes, which are unchanged. It scales the tight GT box outward from its own center by `scale_factor`, then applies a random off-center shift bounded by `shift_ratio` of the scaled half-size, always re-clamped to still fully cover the GT and to stay within the image. `train.py` reads `PROMPT_MODE`, `PROMPT_SCALE_FACTOR`, and `PROMPT_SHIFT_RATIO` from the environment, so each run below only differs in those three variables; checkpoints are named `pga_unet_center_scale_x{scale}_shiftNN_512_best.pth` so the four runs cannot overwrite each other.
+Training, validation, and testing all follow the exact same methodology as the original PGA-UNet protocol: train only on the covering condition, validate each epoch on both the covering and off-center conditions, select the best checkpoint by validation Dice on the covering condition, and test on both conditions. The only thing that changes is the covering-box formula itself.
+
+Added as two new prompt modes in `Source/Prompt-Guided-XRay-Segmentation/dataset.py`, alongside the existing `zoom_out`/`shift` modes, which are unchanged:
+
+- `'center_zoom'` (`_center_zoom_bbox`): the tight GT box scaled outward from its own center by a fixed `scale_factor`, so all sides grow together instead of independently. Deterministic, no randomness. This is the direct replacement for `zoom_out`, and is the only mode training ever samples from.
+- `'center_shift'` (`_center_shift_bbox`): `center_zoom` as the base box, with the exact same random off-center displacement mechanism `shift` applies on top of `zoom_out` (train: random each sample; test: fixed per sample via `seed_idx`), always re-clamped to still fully cover the GT and stay within the image. Evaluation-only, never used for training or checkpoint selection.
+
+`train.py` reads `PROMPT_MODE`, `PROMPT_SCALE_FACTOR`, and `PROMPT_SHIFT_RATIO` from the environment. `PROMPT_MODE=center_zoom` trains covering-only and validates each epoch on both `center_zoom` and `center_shift`, exactly mirroring how the existing code trains on `zoom_out` and validates on `zoom_out` and `shift`. Checkpoints are named `pga_unet_center_zoom_x{scale}_512_best.pth`, by `scale_factor` alone: since training itself never depends on `shift_ratio`, the two files that share a scale (x2/shift0.3 and x2/shift0.5, or x3/shift0.3 and x3/shift0.5) train an equivalent model and only differ in which shift value the test cell evaluates under.
 
 ## Training + test notebooks (BTXRD, 512x512)
 
-Four notebooks in this folder, one per (scale, shift) combination, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under the matching env vars, then evaluate the resulting checkpoint (Dice/IoU/Pre/Rec/HD95/CBL) under the exact same `center_scale` condition it was trained on, no legacy `zoom_out`/`shift` comparison. Same qualitative visualization grid used by the existing `pga-train-512.ipynb` template.
+Four notebooks in this folder, one per (scale, shift) combination, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under `PROMPT_MODE=center_zoom` and the matching `scale_factor`/`shift_ratio`, then evaluate the resulting checkpoint under two scenarios, mirroring the original paper's Covering/Off-center dual-condition test: "Zoom" (`center_zoom` only) and "Zoom + shift" (`center_shift`, same scale and shift the file was configured for). No legacy `zoom_out`/`shift` comparison anywhere. Same qualitative visualization grid used by the existing `pga-train-512.ipynb` template.
 
 | Notebook | scale_factor | shift_ratio |
 |---|---|---|

@@ -16,10 +16,12 @@ class PromptSegmentationDataset(Dataset):
 
     prompt_mode:
         'zoom_out': covering prompt expanded around the GT, each side independently
-        'shift': covering prompt with an off-center displacement
-        'center_scale': tight GT box scaled outward from its own center by a
-            fixed factor (all sides together, not independently), optionally
-            with an off-center shift; see scale_factor and shift_ratio below
+        'shift': 'zoom_out' with an added off-center displacement
+        'center_zoom': like 'zoom_out', but the tight GT box is scaled
+            outward from its own center by a fixed scale_factor (all sides
+            together) instead of independently per side
+        'center_shift': 'center_zoom' with the same added off-center
+            displacement mechanism as 'shift' (see shift_ratio below)
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
@@ -34,8 +36,9 @@ class PromptSegmentationDataset(Dataset):
         self.prompt_mode = prompt_mode
         self.zoom_ratio  = zoom_ratio
         self.shift_ratio = shift_ratio
-        # Only used by prompt_mode='center_scale': how many times larger than
-        # the tight GT box the covering box is, measured from the GT center.
+        # Only used by prompt_mode='center_zoom'/'center_shift': how many
+        # times larger than the tight GT box the covering box is, measured
+        # from the GT center.
         self.scale_factor = scale_factor
         # Fixed regardless of img_size: applied to heatmap coordinates in
         # original-image pixel space, before the resize-and-pad step. Scaling
@@ -120,45 +123,66 @@ class PromptSegmentationDataset(Dataset):
 
         return bx_min, bx_max, by_min, by_max
 
-    def _center_scale_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
-        """Scale the tight GT box outward from its own center by scale_factor,
-        so all four sides grow together instead of being expanded by an
-        independent random amount each (contrast with _zoom_out_bbox). This
-        is meant to look closer to how a clinician would actually draw a box:
-        loosely centered on the lesion rather than stretched unevenly per
-        edge. Optionally applies an off-center shift afterward, controlled by
-        shift_ratio (0 disables the shift); the shifted box is still clamped
-        to fully cover the GT.
+    def _center_zoom_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w):
+        """Like _zoom_out_bbox, but expand the tight GT box outward from its
+        own center by a fixed scale_factor (all four sides together)
+        instead of independently per side. Meant to look closer to how a
+        clinician would actually draw a box: loosely centered on the
+        lesion rather than stretched unevenly per edge. No randomness here
+        (train and test use the same formula); scale_factor is a fixed
+        experiment setting, not sampled per example.
         """
         cx = (x_min + x_max) / 2.0
         cy = (y_min + y_max) / 2.0
         half_w = (x_max - x_min) / 2.0 * self.scale_factor
         half_h = (y_max - y_min) / 2.0 * self.scale_factor
+        bx_min = max(0,       cx - half_w)
+        bx_max = min(orig_w,  cx + half_w)
+        by_min = max(0,       cy - half_h)
+        by_max = min(orig_h,  cy + half_h)
+        return bx_min, bx_max, by_min, by_max
 
-        dx = dy = 0.0
-        if self.shift_ratio > 0:
-            if self.is_train:
-                dx = random.uniform(-half_w, half_w) * self.shift_ratio
-                dy = random.uniform(-half_h, half_h) * self.shift_ratio
-            else:
-                rng = random.Random(seed_idx or 0)
-                dx = rng.uniform(-1.0, 1.0) * half_w * self.shift_ratio
-                dy = rng.uniform(-1.0, 1.0) * half_h * self.shift_ratio
+    def _center_shift_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
+        """Exactly the same off-center-displacement mechanism as
+        _shift_bbox (train: random each sample; test: fixed, reproducible
+        per sample), just built on top of _center_zoom_bbox instead of
+        _zoom_out_bbox as the base box."""
+        gt_w, gt_h = x_max - x_min, y_max - y_min
+        bx_min, bx_max, by_min, by_max = self._center_zoom_bbox(
+            x_min, x_max, y_min, y_max, orig_h, orig_w)
 
-        bx_min, bx_max = cx + dx - half_w, cx + dx + half_w
-        by_min, by_max = cy + dy - half_h, cy + dy + half_h
+        if self.is_train:
+            dx = random.uniform(-gt_w * self.shift_ratio, gt_w * self.shift_ratio)
+            dy = random.uniform(-gt_h * self.shift_ratio, gt_h * self.shift_ratio)
+        else:
+            rng = random.Random(seed_idx or 0)
+            dx = rng.uniform(gt_w * 0.4, gt_w * 0.7) * self.shift_ratio
+            dy = rng.uniform(gt_h * 0.1, gt_h * 0.3) * self.shift_ratio
 
-        # The shifted box must still fully cover the GT, only changing its
-        # relative position inside the box (same guarantee as _shift_bbox).
+        bx_min = max(0,       bx_min + dx)
+        bx_max = min(orig_w,  bx_max + dx)
+        by_min = max(0,       by_min + dy)
+        by_max = min(orig_h,  by_max + dy)
+
+        # Shift must still cover the full GT, only changing its relative position inside the box.
+        box_w = bx_max - bx_min
+        box_h = by_max - by_min
         bx_min = min(bx_min, x_min)
         by_min = min(by_min, y_min)
         bx_max = max(bx_max, x_max)
         by_max = max(by_max, y_max)
 
-        bx_min = max(0,      bx_min)
-        by_min = max(0,      by_min)
-        bx_max = min(orig_w, bx_max)
-        by_max = min(orig_h, by_max)
+        # If clamping to image borders shrinks the shifted box, try to preserve the original box size.
+        if bx_max - bx_min < box_w:
+            if bx_min <= 0:
+                bx_max = min(orig_w, bx_min + box_w)
+            elif bx_max >= orig_w:
+                bx_min = max(0, bx_max - box_w)
+        if by_max - by_min < box_h:
+            if by_min <= 0:
+                by_max = min(orig_h, by_min + box_h)
+            elif by_max >= orig_h:
+                by_min = max(0, by_max - box_h)
 
         return bx_min, bx_max, by_min, by_max
 
@@ -221,8 +245,12 @@ class PromptSegmentationDataset(Dataset):
             bx_min, bx_max, by_min, by_max = self._shift_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
-        elif self.prompt_mode == 'center_scale':
-            bx_min, bx_max, by_min, by_max = self._center_scale_bbox(
+        elif self.prompt_mode == 'center_zoom':
+            bx_min, bx_max, by_min, by_max = self._center_zoom_bbox(
+                x_min, x_max, y_min, y_max, orig_h, orig_w)
+
+        elif self.prompt_mode == 'center_shift':
+            bx_min, bx_max, by_min, by_max = self._center_shift_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
         else:
