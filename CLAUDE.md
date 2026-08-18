@@ -29,6 +29,12 @@ This does not apply to:
 
 **Never add a `Co-Authored-By: Claude ...` (or any AI-attribution) trailer to a commit message, on any branch.** This repo is public on GitHub, and that trailer makes GitHub list the AI as a repo contributor, which the author does not want. This was violated in early sessions on both `main` and `graduation-project`; both branches' histories were later rewritten (`git filter-branch --msg-filter`) to strip the trailer and force-pushed to origin, keeping a local-only `backup/<branch>-pre-claude-trailer-cleanup` branch for each in case anything needed to be recovered. Do not repeat the mistake, and do not force-push over anyone's work to "fix" this again without the user explicitly asking first, since it rewrites public commit hashes.
 
+## No hidden watermarks or AI-identifying metadata
+
+**Never embed any hidden marker of AI involvement in a file: invisible/zero-width Unicode characters (e.g. U+200B, U+200C, U+200D, U+FEFF, U+2060), steganographic text, hidden PDF metadata fields (Producer/Creator/Author/Keywords/XMP), PNG/JPEG metadata chunks (tEXt, EXIF, software tags), or any other covert signature identifying Claude, Anthropic, or AI generation, in any file on any branch.** This applies to `.tex` sources, generated `.pdf` files, and generated image files (e.g. the composite figures under `Paper_IEEE_Access/images/`) alike. The only acceptable place for a tool's own identity to appear is the ordinary, visible metadata a build tool writes about itself (e.g. `pdfTeX`/`xdvipdfmx` as PDF Producer), never anything referencing the AI assistant.
+
+If asked to check for this, verify empirically rather than asserting from memory: grep source files for invisible Unicode ranges, inspect PDF metadata (`pdfinfo`, or search the raw `/Info` dictionary) and actual rendered text (`pdftotext`, not raw `strings`, which produces false positives from compressed binary streams), and check image files for metadata chunks (e.g. via Pillow's `Image.info`). Report findings plainly, including any coincidental false positives found and ruled out, rather than a bare "no."
+
 ## Scope discipline
 
 - Do only what was asked. Do not refactor, rename, delete files, or clean up unrelated code without asking first.
