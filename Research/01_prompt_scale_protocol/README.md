@@ -13,9 +13,12 @@ The current prompt protocol (`dataset.py`, `_zoom_out_bbox` / covering-prompt pa
 
 This keeps the "box always covers the lesion" guarantee, but produces a more natural, roughly-square, centered box instead of the current independently-jittered rectangle.
 
-## `illustration_prompt_scale.png`
+## Illustrations
 
-A conceptual mockup, not model output: one BTXRD example (IMG000184, the femur lesion also used in the paper's Top-Dice qualitative figure). Six panels: the original image, the tight box (x1), and the same box scaled x2 through x5 from its center. At x4/x5 the box is clipped to the image border, showing how large multipliers saturate against the frame. This is only meant to visualize the geometric idea before implementation; it does not use `dataset.py`'s actual letterbox/heatmap pipeline or real prompt heatmaps.
+Conceptual mockups, not model output: all use the same BTXRD example (IMG000184, the femur lesion also used in the paper's Top-Dice qualitative figure). They visualize the geometric idea before/alongside implementation; none use `dataset.py`'s actual letterbox/heatmap pipeline or real prompt heatmaps.
+
+- `illustration_prompt_scale.png`: six panels, the original image, the tight box (x1), and the same box scaled x2 through x5 from its center, no shift. At x4/x5 the box is clipped to the image border, showing how large multipliers saturate against the frame.
+- `illustration_prompt_scale_{tag}.png`, one per real training configuration (`x2_shift03`, `x2_shift05`, `x2.5_shift03`, `x2.5_shift05`, `x3_shift03`, `x3_shift05`): four panels, the original image, the tight box (x1), the `center_zoom` box at that configuration's `scale_factor`, and the `center_shift` box at that same `scale_factor` and `shift_ratio`. Box coordinates use the exact `_center_zoom_bbox`/`_center_shift_bbox` formulas from `dataset.py` (with `seed_idx=0` for the shift, matching the deterministic test-time shift), evaluated directly on the illustration canvas rather than a real dataset sample, so the drawn boxes are geometrically faithful even though the canvas itself is a cropped mockup image.
 
 ## Implementation
 
