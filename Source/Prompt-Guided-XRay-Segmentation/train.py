@@ -27,7 +27,7 @@ PROMPT_SHIFT_RATIO  = float(os.environ.get("PROMPT_SHIFT_RATIO", "0.30"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
-EPOCHS     = 100
+EPOCHS     = int(os.environ.get("PROMPT_EPOCHS", "100"))
 LR         = 1e-4
 EARLY_STOP = 15
 # Validate on the same zoom/shift pair as the one being trained.

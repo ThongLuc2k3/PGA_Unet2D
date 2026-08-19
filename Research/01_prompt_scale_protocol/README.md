@@ -26,25 +26,33 @@ Added as two new prompt modes in `Source/Prompt-Guided-XRay-Segmentation/dataset
 - `'center_zoom'` (`_center_zoom_bbox`): the tight GT box scaled outward from its own center by a fixed `scale_factor`, so all sides grow together instead of independently. Deterministic, no randomness. This is the direct replacement for `zoom_out`, and is the only mode training ever samples from.
 - `'center_shift'` (`_center_shift_bbox`): `center_zoom` as the base box, with the exact same random off-center displacement mechanism `shift` applies on top of `zoom_out` (train: random each sample; test: fixed per sample via `seed_idx`), always re-clamped to still fully cover the GT and stay within the image. Evaluation-only, never used for training or checkpoint selection.
 
-`train.py` reads `PROMPT_MODE`, `PROMPT_SCALE_FACTOR`, and `PROMPT_SHIFT_RATIO` from the environment. `PROMPT_MODE=center_zoom` trains covering-only and validates each epoch on both `center_zoom` and `center_shift`, exactly mirroring how the existing code trains on `zoom_out` and validates on `zoom_out` and `shift`. Checkpoints are named `pga_unet_center_zoom_x{scale}_512_best.pth`, by `scale_factor` alone: since training itself never depends on `shift_ratio`, the two files that share a scale (x2/shift0.3 and x2/shift0.5, or x3/shift0.3 and x3/shift0.5) train an equivalent model and only differ in which shift value the test cell evaluates under.
+`train.py` reads `PROMPT_MODE`, `PROMPT_SCALE_FACTOR`, `PROMPT_SHIFT_RATIO`, and `PROMPT_EPOCHS` from the environment. `PROMPT_MODE=center_zoom` trains covering-only and validates each epoch on both `center_zoom` and `center_shift`, exactly mirroring how the existing code trains on `zoom_out` and validates on `zoom_out` and `shift`. Checkpoints are named `pga_unet_center_zoom_x{scale}_512_best.pth`, by `scale_factor` alone: since training itself never depends on `shift_ratio`, the two files that share a scale (e.g. x2/shift0.3 and x2/shift0.5) train an equivalent model and only differ in which shift value the test cell evaluates under.
+
+The qualitative visualization section shows both test scenarios (Zoom, then Zoom + shift) as two separate 10-sample grids, not just the covering condition, so the off-center behavior is visible directly rather than only in the summary table.
 
 ## Training + test notebooks (BTXRD, 512x512)
 
-Four notebooks in this folder, one per (scale, shift) combination, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under `PROMPT_MODE=center_zoom` and the matching `scale_factor`/`shift_ratio`, then evaluate the resulting checkpoint under two scenarios, mirroring the original paper's Covering/Off-center dual-condition test: "Zoom" (`center_zoom` only) and "Zoom + shift" (`center_shift`, same scale and shift the file was configured for). No legacy `zoom_out`/`shift` comparison anywhere. Same qualitative visualization grid used by the existing `pga-train-512.ipynb` template.
+One notebook per (scale, shift) combination in this folder, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under `PROMPT_MODE=center_zoom` and the matching `scale_factor`/`shift_ratio`/`epochs`, then evaluate the resulting checkpoint under two scenarios, mirroring the original paper's Covering/Off-center dual-condition test: "Zoom" (`center_zoom` only) and "Zoom + shift" (`center_shift`, same scale and shift the file was configured for). No legacy `zoom_out`/`shift` comparison anywhere.
 
-| Notebook | scale_factor | shift_ratio |
-|---|---|---|
-| `train_scale_x2_shift03_btxrd.ipynb` | 2.0 | 0.3 |
-| `train_scale_x2_shift05_btxrd.ipynb` | 2.0 | 0.5 |
-| `train_scale_x3_shift03_btxrd.ipynb` | 3.0 | 0.3 |
-| `train_scale_x3_shift05_btxrd.ipynb` | 3.0 | 0.5 |
+| Notebook | scale_factor | shift_ratio | epochs | status |
+|---|---|---|---|---|
+| `train_scale_x2_shift03_btxrd.ipynb` | 2.0 | 0.3 | 150 | retraining (first 100-epoch run did not early-stop; best Dice 0.8661 at epoch 88) |
+| `train_scale_x2_shift05_btxrd.ipynb` | 2.0 | 0.5 | 150 | retraining (first 100-epoch run early-stopped at epoch 56, best at epoch 41) |
+| `train_scale_x2.5_shift03_btxrd.ipynb` | 2.5 | 0.3 | 150 | not yet run |
+| `train_scale_x2.5_shift05_btxrd.ipynb` | 2.5 | 0.5 | 150 | not yet run |
+| `train_scale_x3_shift03_btxrd.ipynb` | 3.0 | 0.3 | 100 | trained: best Dice 0.8249 at epoch 73, early-stopped at epoch 88 |
+| `train_scale_x3_shift05_btxrd.ipynb` | 3.0 | 0.5 | 100 | trained: best Dice 0.8264 at epoch 69, early-stopped at epoch 84 |
 
 **Before running any of these in Colab/Kaggle, this branch must be pushed to `origin`** (the setup cell clones `-b research/prompt-scale-protocol` from GitHub; a local-only branch cannot be cloned from there).
 
 ## Status
 
-Code and notebooks are written and syntax-checked, with the box-generation logic unit-tested standalone (GT coverage and image-bound clamping hold across scale/shift/train-vs-test combinations). Not yet run for real: no GPU training has happened yet. Next steps:
+x2/shift0.3, x2/shift0.5, x3/shift0.3, x3/shift0.5 have each been trained once for real on BTXRD/512 and evaluated on both Zoom and Zoom + shift. The two x2 runs did not clearly converge within 100 epochs (x2/shift0.3 never triggered early stopping; the Dice/IoU/HD95/CBL trend was still improving at epoch 100), so both are being retrained at 150 epochs. Two new x2.5 configurations were added alongside them to fill in the gap between x2 and x3. x3's two runs are considered done for this round; their notebooks and checkpoints are unchanged.
 
-- Push this branch, then run the four notebooks (a few repeats per config, per the user's plan) and record Dice/CBL/HD95.
-- Compare against the current `zoom_out` protocol's existing numbers (Table 2/4 in the paper: BTXRD Dice 0.8788, CBL 0.9619 at 512x512).
+Across the first-round results, x2 reached higher absolute Dice/CBL under both test conditions than x3, but was noticeably more sensitive to the off-center shift (a much larger Zoom-to-Zoom+shift Dice drop at shift0.5 than x3 shows at the same shift ratio). x2.5 is meant to help tell whether that sensitivity is a smooth function of scale_factor or a sharper break somewhere between x2 and x3.
+
+Next steps:
+
+- Run the four pending notebooks (x2/0.3, x2/0.5 retrain; x2.5/0.3, x2.5/0.5 new) and record Dice/IoU/Pre/Rec/HD95/CBL under both scenarios.
+- Compare all six (scale, shift) configurations against each other and against the current `zoom_out` protocol's existing numbers (Table 2/4 in the paper: BTXRD Dice 0.8788, CBL 0.9619 at 512x512).
 - Decide a winning (scale, shift) setting, then repeat only that configuration on FracAtlas before considering loss-function changes (stage 2).
