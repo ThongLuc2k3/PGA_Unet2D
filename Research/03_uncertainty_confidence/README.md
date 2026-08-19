@@ -2,11 +2,57 @@
 
 ## Motivation
 
-At real inference time there is no ground truth to compute Dice/CBL against, so the model has no way to flag a prediction it is likely wrong about. Three independent, no-GT signals are proposed here: a learned estimate of the model's own Dice trained with a dedicated auxiliary loss, how much the decoder trusts the prompt it was given, and how stable the prediction is under a harmless input transform.
+At real inference time there is no ground truth to compute Dice/CBL against, so the model has no way to flag a prediction it is likely wrong about. Four independent, no-GT signals are proposed here, ordered from cheapest to most expensive: pixel-level prediction entropy, test-time-augmentation agreement, a hand-crafted-feature quality estimator, and a learned estimate of the model's own Dice trained with a dedicated auxiliary loss (`QualityHead`), plus one signal specific to this architecture (the CAD prompt-confidence gates).
 
-## Proposed signals
+## Scope: this stage stays a measurement problem, not a product feature
 
-### 1. Learned quality estimate (dedicated training loss, recommended primary signal)
+This stage only answers "how well does a no-GT signal track real Dice for a single prediction," validated by comparing the signal against real GT on the test set (correlation, Top-1/Top-K agreement between signal ranking and real Dice ranking). It does **not** include generating many candidate prompts for one image, ranking them, clustering for diversity, or presenting a Top-K shortlist to a clinician; that is a distinct downstream feature (a prompt-search / recommendation system) that belongs only in the interactive demo notebook, `Source/File_Test/btxrd/test-Demo_Interactive_PGA_Unet-btxrd.ipynb`, which already has the Gradio interface such a feature would need. Train/test research notebooks in this repo should stick to the narrower measurement question; any future "Top-K prompts for doctor review" flow should be prototyped in the demo notebook only, once a signal from this stage has been shown to actually correlate with real quality.
+
+## Proposed signals, cheapest first
+
+### 1. Pixel-wise prediction entropy (free, no training, weakest signal)
+
+For each pixel, `sigmoid(logits)` close to 0.5 means the model is unsure; close to 0 or 1 means it is sure. Aggregating that over the mask (mean entropy, or restricted to the boundary region where segmentation errors concentrate) gives an immediate no-GT score with zero extra code beyond the model's existing output. No training, no extra model, works on any existing checkpoint today.
+
+Weakest of the four: it measures how sure the model *feels*, not whether it is *right*. A model can be confidently wrong (this is exactly the Attention U-Net failure pattern already documented in the paper: high-confidence predictions that miss the lesion entirely), so entropy alone should be treated as one input signal, not a final answer.
+
+### 2. Test-time-augmentation (TTA) agreement (free, no training)
+
+Run the same image/prompt through the model as-is and lightly perturbed (currently just a horizontal flip, since that is what training augmentation already includes), and measure how much the two predictions agree. Also free, also works on any existing checkpoint, and a somewhat stronger signal than entropy since it tests actual stability rather than self-reported certainty, though it still cannot catch a consistent, repeatable mistake (wrong in the same way under every perturbation).
+
+```python
+def estimate_confidence(model, image, prompt, device):
+    """No-GT confidence for a single batch. Returns a dict of two (B,) tensors,
+    neither of which uses ground truth:
+      - prompt_confidence: mean CAD gate value, from the model itself (see
+        signal 5 below).
+      - tta_agreement: Dice agreement between the prediction and its
+        horizontally-flipped counterpart (flipped back before comparing).
+    """
+    model.eval()
+    with torch.no_grad():
+        logits, prompt_confidence = model(image, prompt, return_confidence=True)
+        pred_a = (torch.sigmoid(logits) > 0.5).float()
+
+        image_f  = torch.flip(image, dims=[3])
+        prompt_f = torch.flip(prompt, dims=[3])
+        logits_f, _ = model(image_f, prompt_f, return_confidence=True)
+        pred_f = torch.flip((torch.sigmoid(logits_f) > 0.5).float(), dims=[3])
+
+        inter = (pred_a * pred_f).sum(dim=(1, 2, 3))
+        union = pred_a.sum(dim=(1, 2, 3)) + pred_f.sum(dim=(1, 2, 3))
+        tta_agreement = (2 * inter + 1e-6) / (union + 1e-6)
+
+    return {'prompt_confidence': prompt_confidence, 'tta_agreement': tta_agreement}
+```
+
+### 3. Hand-crafted-feature quality estimator (cheap to train, no GPU needed)
+
+Not yet implemented. The idea: compute simple statistics that need no GT at inference, entropy (signal 1), TTA agreement (signal 2), predicted mask area, connected-component count, boundary irregularity, prompt size/position, then train a small classical model (logistic regression, or a small gradient-boosted tree model) to regress real Dice from those features, using the test set's real GT only during this small training step. At inference, only the statistics above are needed, no GT.
+
+This sits between the free signals and `QualityHead` below: still needs a training step with GT, but the model being trained is tiny (seconds to minutes on CPU, no GPU), much easier to debug than a CNN, and lower risk of overfitting than a learned head with its own convolutions. Worth trying before `QualityHead`, not after: if this already tracks real Dice well, the more expensive CNN option may not be worth building.
+
+### 4. Learned quality estimate (`QualityHead`, dedicated training loss, most expensive)
 
 `QualityHead` (`models/networks/prompt_unet_2D.py`) is a small auxiliary head that learns to regress this sample's own real Dice. Its own parameters are trained normally by gradient descent; what makes it a "no-GT" signal is only that, once trained, it needs no GT at inference time, not that it is somehow trained without ever learning anything.
 
@@ -46,51 +92,27 @@ logits, predicted_quality = model(images, prompts, return_quality=True)  # infer
 
 `use_quality_head` defaults to `False` so the model architecture, and therefore the state_dict keys, exactly matches every checkpoint already trained; only a run explicitly started with `USE_QUALITY_HEAD=1` builds this head at all, and `return_quality=True` raises a clear error if called on a model that was not.
 
-### 2. Prompt confidence (already learned, just exposed)
+### 5. Prompt confidence (architecture-specific bonus signal, already learned, just exposed)
 
-The Conditional Attention Decoder (`unetUp_PromptAttention` in `models/networks/prompt_unet_2D.py`) already computes a per-level scalar, `self.prompt_confidence`, that gates how much the prompt encoding contributes to the decoder gate at that scale. This value is learned during ordinary training and needs no ground truth to compute at inference; it was simply never exposed outside the module before.
-
-`PGA_UNet.forward` now accepts `return_confidence=False` (default, unchanged behavior). When `True`, it additionally returns a single scalar per sample in `[0, 1]`, the mean of the 4 decoder-level confidence gates:
+The Conditional Attention Decoder (`unetUp_PromptAttention` in `models/networks/prompt_unet_2D.py`) already computes a per-level scalar, `self.prompt_confidence`, that gates how much the prompt encoding contributes to the decoder gate at that scale. This value is learned during ordinary training and needs no ground truth to compute at inference; it was simply never exposed outside the module before. Free with any existing checkpoint, no retraining needed, and already included in the `estimate_confidence` helper above.
 
 ```python
 logits, prompt_confidence = model(images, prompts, return_confidence=True)
 ```
 
-### 3. Result confidence (test-time augmentation agreement)
+## Priority order
 
-Training already includes horizontal flipping as an augmentation, so the model is expected to be roughly flip-invariant. At inference, running the same image and prompt through the model both as-is and horizontally flipped, then measuring the Dice agreement between the two (unflipped-back) binary predictions, gives a second no-GT confidence signal: low agreement suggests the prediction is unstable and less trustworthy.
+Cheapest and least risky first, escalating only if the previous step is not good enough:
 
-```python
-def estimate_confidence(model, image, prompt, device):
-    """No-GT confidence for a single batch. Returns a dict of two (B,) tensors,
-    neither of which uses ground truth:
-      - prompt_confidence: mean CAD gate value, from the model itself.
-      - tta_agreement: Dice agreement between the prediction and its
-        horizontally-flipped counterpart (flipped back before comparing).
-    """
-    model.eval()
-    with torch.no_grad():
-        logits, prompt_confidence = model(image, prompt, return_confidence=True)
-        pred_a = (torch.sigmoid(logits) > 0.5).float()
+1. **Signals 1+2 (entropy, TTA agreement)**: free, no training, run against the x2/shift0.3 checkpoint today. Gives a first correlation-with-Dice number with zero GPU cost.
+2. **Signal 3 (hand-crafted-feature estimator)**: cheap CPU-only training. Try this before touching `QualityHead`; if it already correlates well with real Dice, the CNN option below may not be worth the extra cost and risk.
+3. **Signal 4 (`QualityHead`)**: only build/train this if signal 3 is not good enough. More expensive (GPU fine-tune) and higher overfitting risk than a hand-crafted-feature model, but can in principle pick up patterns manual features miss.
+4. **Signal 5 (CAD prompt confidence)**: free either way, can be computed and checked for correlation alongside any of the above at no extra cost.
 
-        image_f  = torch.flip(image, dims=[3])
-        prompt_f = torch.flip(prompt, dims=[3])
-        logits_f, _ = model(image_f, prompt_f, return_confidence=True)
-        pred_f = torch.flip((torch.sigmoid(logits_f) > 0.5).float(), dims=[3])
+## Validating the signals
 
-        inter = (pred_a * pred_f).sum(dim=(1, 2, 3))
-        union = pred_a.sum(dim=(1, 2, 3)) + pred_f.sum(dim=(1, 2, 3))
-        tta_agreement = (2 * inter + 1e-6) / (union + 1e-6)
-
-    return {'prompt_confidence': prompt_confidence, 'tta_agreement': tta_agreement}
-```
-
-Signal 2 (CAD gates) is free with any existing checkpoint. Signal 1 (QualityHead) requires training a new checkpoint with `USE_QUALITY_HEAD=1`. Signal 3 (TTA agreement) costs one extra forward pass and works with any checkpoint. All three need no ground truth to compute at inference.
-
-## Validating the signals (once training resumes)
-
-None of the three signals is useful until it is shown to actually correlate with real error. The natural check, using the existing test-set ground truth we do have: compute all three confidence signals and the real per-sample Dice on the test set, then look at the correlation (e.g. Spearman) between each signal and Dice. A useful confidence score should be low exactly on the samples where Dice is low. This validation still uses GT, but only to confirm the signal is meaningful; the signals themselves never need GT once validated.
+None of the five signals is useful until it is shown to actually correlate with real error. The check, using the existing test-set ground truth: compute each no-GT signal and the real per-sample Dice on the test set, then look at the correlation (e.g. Spearman) between each signal and Dice. A useful confidence score should be low exactly on the samples where Dice is low. This validation still uses GT, but only to confirm the signal is meaningful; the signals themselves never need GT once validated. This validation, correlation against real per-sample Dice on the existing test set, is the extent of what belongs in the train/test research notebooks (see Scope above); ranking or shortlisting multiple candidate predictions for a clinician is a separate, later feature for the demo notebook only.
 
 ## Status
 
-`QualityHead`, `PGA_UNet.forward`'s `return_confidence`/`return_quality` flags, and the `estimate_confidence` helper above are written but not yet run against a real checkpoint or correlated against real test-set Dice. Suggested next steps: (1) train one x2/shift0.3 run with `USE_QUALITY_HEAD=1 LOSS_CONFIDENCE_WEIGHT=0.3` to get a checkpoint with a trained QualityHead, then (2) evaluate all three signals against real per-sample Dice on the BTXRD test set and check whether any of them actually track Dice before relying on them for anything downstream (e.g. a future box-suggestion module).
+Signal 1 (entropy) and signal 3 (hand-crafted-feature estimator) are not yet implemented. Signal 2 (TTA agreement) and signal 5 (CAD prompt confidence) are implemented via `estimate_confidence` above. Signal 4 (`QualityHead`), `PGA_UNet.forward`'s `return_confidence`/`return_quality` flags are written but not yet run against a real checkpoint or correlated against real test-set Dice. Suggested next steps, in priority order: (1) add entropy and run it plus the already-implemented TTA/CAD signals against the x2/shift0.3 checkpoint on the BTXRD test set, correlating each against real Dice; (2) if none is convincing alone, build the signal 3 hand-crafted-feature estimator; (3) only then consider training `QualityHead` (signal 4) if signal 3 still falls short.
