@@ -8,13 +8,15 @@ At real inference time there is no ground truth to compute Dice/CBL against, so 
 
 ### 1. Learned quality estimate (dedicated training loss, recommended primary signal)
 
-`QualityHead` (`models/networks/prompt_unet_2D.py`) is a small auxiliary head: global-average-pool over the final decoder features (`up1`), then two linear layers down to a single sigmoid output. It learns to regress this sample's own real Dice.
+`QualityHead` (`models/networks/prompt_unet_2D.py`) is a small auxiliary head that learns to regress this sample's own real Dice. Its own parameters are trained normally by gradient descent; what makes it a "no-GT" signal is only that, once trained, it needs no GT at inference time, not that it is somehow trained without ever learning anything.
 
-**How the mechanics actually work, precisely:**
+**What it actually looks at.** An earlier version only pooled the final decoder feature map (`up1`) into one vector, an abstract summary with no explicit view of the image, the prompt region, or the mask actually produced. That is a weak basis for a confidence estimate: a head should be able to compare what was asked for against what came out. `QualityHead` now takes three things concatenated at full spatial resolution, not pre-pooled: `up1` (decoder features, carrying image and prompt context), the predicted probability map (`sigmoid(logits)`, what the model actually produced), and the prompt heatmap (what region was asked for). Two 3x3 convolutions mix these spatially, so the head can pick up on things like the predicted mask extending outside the prompted region or not aligning with it, before pooling down to one score.
 
-- `up1` is the same tensor `self.final(up1)` uses to produce the segmentation logits. Before `QualityHead` sees it, the model detaches it (`self.quality_head(up1.detach())`). Detaching cuts the autograd graph at that point, so gradients computed from the quality loss cannot flow backward into `up1` or anything upstream of it (the whole encoder/decoder). `QualityHead` is a *pure observer*: whatever it learns can never change how the network segments, only how it self-assesses.
+**How the "no influence on segmentation" property actually works, precisely:**
+
+- `up1` and `logits` are the same tensors `self.final(up1)` uses to produce the segmentation output. Before `QualityHead` sees any of its three inputs, the model detaches all of them (`up1.detach()`, `sigmoid(logits).detach()`, `prompt.detach()`). Detaching cuts the autograd graph at that point, so gradients computed from the quality loss cannot flow backward into anything upstream (the whole encoder/decoder). `QualityHead` is a *pure observer*: whatever it learns can never change how the network segments, only how it self-assesses.
 - The training loss is `LOSS_CONFIDENCE_WEIGHT * MSE(predicted_quality, real_dice)`, added in `train.py`, where `real_dice` is computed from the real prediction and GT for that same batch (`per_sample_dice`), then `.detach()`ed as a target (a defensive habit here; the thresholding inside `per_sample_dice` already blocks any gradient regardless).
-- Net effect: this loss term only ever updates `QualityHead`'s own handful of parameters. It cannot make segmentation better or worse, no matter how large `LOSS_CONFIDENCE_WEIGHT` is set.
+- Net effect: this loss term only ever updates `QualityHead`'s own parameters (the two mixing convolutions and the two linear layers). It cannot make segmentation better or worse, no matter how large `LOSS_CONFIDENCE_WEIGHT` is set.
 
 **Consequence: QualityHead does not require retraining segmentation from scratch.** Since it never influences the backbone, it can be trained as a cheap fine-tune on top of an already-trained checkpoint (like the stage 1 x2/shift0.3 winner) instead of a full 100+ epoch run:
 

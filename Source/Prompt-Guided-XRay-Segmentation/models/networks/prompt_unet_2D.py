@@ -107,15 +107,29 @@ class unetUp_PromptAttention(nn.Module):
 
 
 class QualityHead(nn.Module):
-    """Predicts the model's own expected Dice for the current sample from the
-    final decoder features, trained by regression against the real Dice
-    (computed with GT, only available during training). At inference this
-    needs no ground truth at all: it is a learned no-GT quality/confidence
-    estimate, complementary to CAD's prompt-confidence gates, which only
-    reflect trust in the prompt rather than the final predicted mask.
+    """Predicts the model's own expected Dice for the current sample, trained
+    by regression against the real Dice (computed with GT, only available
+    during training). At inference this needs no ground truth at all: it is
+    a learned no-GT quality/confidence estimate, complementary to CAD's
+    prompt-confidence gates, which only reflect trust in the prompt rather
+    than the final predicted mask.
+
+    Takes three things concatenated at full spatial resolution, not just a
+    pooled abstract feature vector: the final decoder features (image and
+    prompt context), the predicted probability map (what the model actually
+    produced), and the prompt heatmap (what region was asked for). Two 3x3
+    convolutions let it compare these spatially, for example whether the
+    predicted mask extends past the prompted region or fails to align with
+    it, before pooling down to a single score.
     """
     def __init__(self, in_channels):
         super().__init__()
+        self.mix = nn.Sequential(
+            nn.Conv2d(in_channels + 2, in_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(in_channels, in_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+        )
         self.pool = nn.AdaptiveAvgPool2d(1)
         self.fc = nn.Sequential(
             nn.Linear(in_channels, max(in_channels // 2, 4)),
@@ -124,8 +138,10 @@ class QualityHead(nn.Module):
             nn.Sigmoid(),
         )
 
-    def forward(self, features):
-        pooled = self.pool(features).flatten(1)
+    def forward(self, decoder_features, prob_map, prompt_map):
+        x = torch.cat([decoder_features, prob_map, prompt_map], dim=1)
+        x = self.mix(x)
+        pooled = self.pool(x).flatten(1)
         return self.fc(pooled).squeeze(1)
 
 
@@ -243,12 +259,17 @@ class PGA_UNet(nn.Module):
             # No-GT "result confidence": a learned estimate of this sample's
             # own Dice, trained by regression against the real Dice during
             # training (see LOSS_CONFIDENCE_WEIGHT in train.py). Needs no
-            # ground truth at inference. up1 is detached first: up1 is the
-            # same tensor self.final() uses for the segmentation output, so
-            # without detaching, the confidence loss's gradient would also
-            # flow back into the shared decoder and quietly perturb
+            # ground truth at inference. Gives QualityHead the decoder
+            # features, the predicted probability map, and the prompt
+            # heatmap, so it can compare the actual mask and the requested
+            # region rather than only summarizing an abstract feature
+            # vector. Everything is detached first: up1 and logits are the
+            # same tensors self.final() used for the segmentation output,
+            # so without detaching, the confidence loss's gradient would
+            # also flow back into the shared decoder and quietly perturb
             # segmentation quality. Detaching makes this head a pure
             # observer that never influences segmentation training.
-            outputs.append(self.quality_head(up1.detach()))
+            prob_map = torch.sigmoid(logits).detach()
+            outputs.append(self.quality_head(up1.detach(), prob_map, prompt.detach()))
 
         return outputs[0] if len(outputs) == 1 else tuple(outputs)
