@@ -100,14 +100,16 @@ The Conditional Attention Decoder (`unetUp_PromptAttention` in `models/networks/
 logits, prompt_confidence = model(images, prompts, return_confidence=True)
 ```
 
-## Priority order
+## Decision: signal 4 (`QualityHead`) is primary, signal 3 is the fallback plan
 
-Cheapest and least risky first, escalating only if the previous step is not good enough:
+Originally planned cheapest-first (try signal 3's hand-crafted-feature estimator before ever training `QualityHead`). Revisited once it became clear PGA-UNet itself will keep being retrained repeatedly (new scales, FracAtlas, etc.), which changes the cost-benefit:
 
-1. **Signals 1+2 (entropy, TTA agreement)**: free, no training, run against the x2/shift0.3 checkpoint today. Gives a first correlation-with-Dice number with zero GPU cost.
-2. **Signal 3 (hand-crafted-feature estimator)**: cheap CPU-only training. Try this before touching `QualityHead`; if it already correlates well with real Dice, the CNN option below may not be worth the extra cost and risk.
-3. **Signal 4 (`QualityHead`)**: only build/train this if signal 3 is not good enough. More expensive (GPU fine-tune) and higher overfitting risk than a hand-crafted-feature model, but can in principle pick up patterns manual features miss.
-4. **Signal 5 (CAD prompt confidence)**: free either way, can be computed and checked for correlation alongside any of the above at no extra cost.
+- **Signal 3** structurally cannot train jointly with PGA-UNet: it always needs a finished PGA checkpoint's outputs as input features first. Every time PGA-UNet is retrained, signal 3's small model needs to be redone (cheap individually, but it compounds if PGA changes often).
+- **Signal 4 (`QualityHead`)** is built into `PGA_UNet` itself and its loss is fully gradient-isolated (see below), so it can simply be turned on (`USE_QUALITY_HEAD=1`) from epoch 1 of any PGA-UNet training run, no separate step, automatically in sync with whichever checkpoint comes out.
+
+Given PGA-UNet is expected to keep changing, **signal 4 is now the one being trained and evaluated**: `train_quality_head_x2_shift03_btxrd.ipynb` trains PGA-UNet fresh under the stage 1 winning protocol (center_zoom, scale_factor=2.0, shift_ratio=0.3) with `USE_QUALITY_HEAD=1 LOSS_CONFIDENCE_WEIGHT=1.0` active from the start, then validates whether `predicted_quality` (and, for free, the CAD `prompt_confidence` gate) actually correlates with real per-sample Dice on the BTXRD test set.
+
+**Signal 3 remains the documented fallback**, to fall back on only if signal 4's correlation with real Dice turns out weak: cheaper, safer, easier to explain, but requires its own redo step each time PGA-UNet changes. Signals 1 (entropy) and 2 (TTA agreement) stay useful regardless of which of 3/4 wins, since they are free and can be added as extra input features to signal 3 later if needed.
 
 ## Validating the signals
 
@@ -115,4 +117,8 @@ None of the five signals is useful until it is shown to actually correlate with 
 
 ## Status
 
-Signal 1 (entropy) and signal 3 (hand-crafted-feature estimator) are not yet implemented. Signal 2 (TTA agreement) and signal 5 (CAD prompt confidence) are implemented via `estimate_confidence` above. Signal 4 (`QualityHead`), `PGA_UNet.forward`'s `return_confidence`/`return_quality` flags are written but not yet run against a real checkpoint or correlated against real test-set Dice. Suggested next steps, in priority order: (1) add entropy and run it plus the already-implemented TTA/CAD signals against the x2/shift0.3 checkpoint on the BTXRD test set, correlating each against real Dice; (2) if none is convincing alone, build the signal 3 hand-crafted-feature estimator; (3) only then consider training `QualityHead` (signal 4) if signal 3 still falls short.
+Signal 1 (entropy) and signal 3 (hand-crafted-feature estimator, the fallback plan) are not yet implemented. Signal 2 (TTA agreement) and signal 5 (CAD prompt confidence) are implemented via `estimate_confidence` above and also folded into the notebook below. Signal 4 (`QualityHead`) is implemented and ready to train.
+
+**Ready to run:** `train_quality_head_x2_shift03_btxrd.ipynb` in this folder. Trains PGA-UNet from scratch on BTXRD/512 under `PROMPT_MODE=center_zoom PROMPT_SCALE_FACTOR=2.0 PROMPT_SHIFT_RATIO=0.3 PROMPT_EPOCHS=150` (the stage 1 x2/shift0.3 winner's exact protocol) with `USE_QUALITY_HEAD=1 LOSS_CONFIDENCE_WEIGHT=1.0` active from epoch 1, then: (1) confirms the Zoom/Zoom+shift segmentation numbers still match the stage 1 winner (sanity check that QualityHead did not affect segmentation), and (2) computes the Spearman correlation between `predicted_quality` (signal 4) and real per-sample Dice, and separately between `prompt_confidence` (signal 5) and real Dice, with a scatter plot of each. Needs this branch pushed to `origin` before it can be cloned from Colab/Kaggle.
+
+Next steps after this run: if the printed `rho` for `predicted_quality` is not clearly positive and reasonably large (a weak or near-zero correlation means the signal does not track real quality and should not be trusted), fall back to signal 3 (hand-crafted-feature estimator) instead, reusing whichever of entropy/TTA/CAD-confidence turned out informative as its input features.
