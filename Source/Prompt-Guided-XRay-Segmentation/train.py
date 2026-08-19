@@ -24,6 +24,15 @@ from models.networks.prompt_unet_2D import PGA_UNet
 TRAIN_PROMPT_MODE   = os.environ.get("PROMPT_MODE", "zoom_out")
 PROMPT_SCALE_FACTOR = float(os.environ.get("PROMPT_SCALE_FACTOR", "2.0"))
 PROMPT_SHIFT_RATIO  = float(os.environ.get("PROMPT_SHIFT_RATIO", "0.30"))
+# Stage 2 (loss function research, Research/02_loss_function/): both default
+# to 0.0, so an unconfigured run reproduces the exact BCE+Dice loss stage 1
+# was trained with. LOSS_CENTROID_WEIGHT adds a differentiable centroid-
+# alignment term (directly targets what the CBL metric measures).
+# LOSS_TVERSKY_WEIGHT adds a Tversky term with LOSS_TVERSKY_BETA weighting
+# false negatives more than false positives, aimed at small-lesion recall.
+LOSS_CENTROID_WEIGHT = float(os.environ.get("LOSS_CENTROID_WEIGHT", "0.0"))
+LOSS_TVERSKY_WEIGHT  = float(os.environ.get("LOSS_TVERSKY_WEIGHT", "0.0"))
+LOSS_TVERSKY_BETA    = float(os.environ.get("LOSS_TVERSKY_BETA", "0.7"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
@@ -70,6 +79,63 @@ def dice_loss(pred, target, smooth=1e-5):
     intersection = (pred_soft * target).sum(dim=(1, 2, 3))
     union        = pred_soft.sum(dim=(1, 2, 3)) + target.sum(dim=(1, 2, 3))
     return (1 - ((2. * intersection + smooth) / (union + smooth))).mean()
+
+
+def centroid_loss(pred, target, smooth=1e-6):
+    """Differentiable centroid-alignment loss: L2 distance between the
+    predicted soft mask's centroid and the GT mask's centroid, normalized by
+    the GT bounding-box diagonal so it stays scale-invariant. Complements
+    BCE/Dice, which only score overlap, by directly targeting what the CBL
+    metric measures. Samples with an empty GT mask are skipped.
+    """
+    B, _, H, W = pred.shape
+    pred_soft = torch.sigmoid(pred)
+
+    ys = torch.arange(H, device=pred.device, dtype=torch.float32)
+    xs = torch.arange(W, device=pred.device, dtype=torch.float32)
+    grid_y, grid_x = torch.meshgrid(ys, xs, indexing='ij')
+
+    losses = []
+    for b in range(B):
+        gt_m = target[b, 0]
+        gt_area = gt_m.sum()
+        if gt_area < smooth:
+            continue
+
+        cx_gt = (grid_x * gt_m).sum() / (gt_area + smooth)
+        cy_gt = (grid_y * gt_m).sum() / (gt_area + smooth)
+
+        nz = gt_m.nonzero()
+        gt_diag = torch.sqrt(
+            ((nz[:, 0].max() - nz[:, 0].min()).float()) ** 2 +
+            ((nz[:, 1].max() - nz[:, 1].min()).float()) ** 2
+        ) + smooth
+
+        pred_m = pred_soft[b, 0]
+        pred_area = pred_m.sum() + smooth
+        cx_p = (grid_x * pred_m).sum() / pred_area
+        cy_p = (grid_y * pred_m).sum() / pred_area
+
+        dist = torch.sqrt((cx_p - cx_gt) ** 2 + (cy_p - cy_gt) ** 2)
+        losses.append(dist / gt_diag)
+
+    if not losses:
+        return torch.zeros((), device=pred.device, dtype=pred.dtype)
+    return torch.stack(losses).mean()
+
+
+def tversky_loss(pred, target, alpha=0.3, beta=0.7, smooth=1e-5):
+    """Tversky loss: generalizes Dice with independent false-positive and
+    false-negative weights. beta > alpha penalizes false negatives more,
+    which helps recall on very small lesions where a handful of missed
+    pixels can otherwise dominate the Dice score.
+    """
+    pred_soft = torch.sigmoid(pred)
+    tp = (pred_soft * target).sum(dim=(1, 2, 3))
+    fp = (pred_soft * (1 - target)).sum(dim=(1, 2, 3))
+    fn = ((1 - pred_soft) * target).sum(dim=(1, 2, 3))
+    tversky = (tp + smooth) / (tp + alpha * fp + beta * fn + smooth)
+    return (1 - tversky).mean()
 
 
 def batch_metrics_sum(pred, target, smooth=1e-5):
@@ -179,6 +245,8 @@ def main():
         f"DatasetRoot: {DATASET_ROOT}"
         + (f" | ScaleFactor: {PROMPT_SCALE_FACTOR}"
            if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift') else "")
+        + (f" | CentroidLossWeight: {LOSS_CENTROID_WEIGHT}" if LOSS_CENTROID_WEIGHT > 0 else "")
+        + (f" | TverskyLossWeight: {LOSS_TVERSKY_WEIGHT} (beta={LOSS_TVERSKY_BETA})" if LOSS_TVERSKY_WEIGHT > 0 else "")
     )
     logger.info("=" * 90)
 
@@ -232,6 +300,10 @@ def main():
         if TRAIN_PROMPT_MODE == 'center_shift':
             shift_tag = f"shift{str(PROMPT_SHIFT_RATIO).replace('.', '')}"
             ckpt_tag = f"center_shift_x{scale_tag}_{shift_tag}"
+    if LOSS_CENTROID_WEIGHT > 0:
+        ckpt_tag += f"_centroid{str(LOSS_CENTROID_WEIGHT).replace('.', '')}"
+    if LOSS_TVERSKY_WEIGHT > 0:
+        ckpt_tag += f"_tversky{str(LOSS_TVERSKY_WEIGHT).replace('.', '')}"
     ckpt_prefix     = f"checkpoints/pga_unet_{ckpt_tag}_{IMG_SIZE}"
 
     for epoch in range(EPOCHS):
@@ -243,6 +315,10 @@ def main():
             images, masks, prompts = (images.to(DEVICE), masks.to(DEVICE), prompts.to(DEVICE))
             preds = model(images, prompts)
             loss  = criterion_bce(preds, masks) + dice_loss(preds, masks)
+            if LOSS_CENTROID_WEIGHT > 0:
+                loss = loss + LOSS_CENTROID_WEIGHT * centroid_loss(preds, masks)
+            if LOSS_TVERSKY_WEIGHT > 0:
+                loss = loss + LOSS_TVERSKY_WEIGHT * tversky_loss(preds, masks, beta=LOSS_TVERSKY_BETA)
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)

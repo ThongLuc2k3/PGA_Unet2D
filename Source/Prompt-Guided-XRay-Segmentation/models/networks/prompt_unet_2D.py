@@ -83,6 +83,9 @@ class unetUp_PromptAttention(nn.Module):
 
         p_encoded = self.prompt_encoder(prompt_rs)
         conf      = self.prompt_confidence(p_encoded)
+        # Exposed for PGA_UNet.forward(..., return_confidence=True); not used
+        # in the forward computation itself, so detaching costs nothing.
+        self.last_conf = conf.detach()
         alpha     = torch.sigmoid(self.alpha_raw)
         g_fused   = gating + (conf * alpha * self.w * p_encoded)
 
@@ -148,7 +151,7 @@ class PGA_UNet(nn.Module):
 
         self.final = nn.Conv2d(filters[0], n_classes, 1)
 
-    def forward(self, inputs, prompt):
+    def forward(self, inputs, prompt, return_confidence=False):
         # Model-level augmentation, training only
         if self.training:
             r = torch.rand(1).item()
@@ -182,4 +185,18 @@ class PGA_UNet(nn.Module):
         up2 = self.up_concat2(c2, up3,    prompt)
         up1 = self.up_concat1(c1, up2,    prompt)
 
-        return self.final(up1)
+        logits = self.final(up1)
+        if not return_confidence:
+            return logits
+
+        # No-GT "prompt confidence" signal: the CAD gate at each decoder level
+        # already learns how much to trust the prompt encoding there (see
+        # unetUp_PromptAttention.prompt_confidence); averaging the 4 levels
+        # gives one scalar per sample in [0, 1], with no ground truth involved.
+        prompt_confidence = torch.cat([
+            self.up_concat4.last_conf.flatten(1),
+            self.up_concat3.last_conf.flatten(1),
+            self.up_concat2.last_conf.flatten(1),
+            self.up_concat1.last_conf.flatten(1),
+        ], dim=1).mean(dim=1)
+        return logits, prompt_confidence

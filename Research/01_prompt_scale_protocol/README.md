@@ -37,25 +37,24 @@ The qualitative visualization section shows both test scenarios (Zoom, then Zoom
 
 One notebook per (scale, shift) combination in this folder, each self-contained: clone the `research/prompt-scale-protocol` branch, download BTXRD, train with `train.py` under `PROMPT_MODE=center_zoom` and the matching `scale_factor`/`shift_ratio`/`epochs`, then evaluate the resulting checkpoint under two scenarios, mirroring the original paper's Covering/Off-center dual-condition test: "Zoom" (`center_zoom` only) and "Zoom + shift" (`center_shift`, same scale and shift the file was configured for). No legacy `zoom_out`/`shift` comparison anywhere.
 
-| Notebook | scale_factor | shift_ratio | epochs | status |
+| Notebook | scale_factor | shift_ratio | epochs | result |
 |---|---|---|---|---|
-| `train_scale_x2_shift03_btxrd.ipynb` | 2.0 | 0.3 | 150 | retraining (first 100-epoch run did not early-stop; best Dice 0.8661 at epoch 88) |
-| `train_scale_x2_shift05_btxrd.ipynb` | 2.0 | 0.5 | 150 | retraining (first 100-epoch run early-stopped at epoch 56, best at epoch 41) |
-| `train_scale_x2.5_shift03_btxrd.ipynb` | 2.5 | 0.3 | 150 | not yet run |
-| `train_scale_x2.5_shift05_btxrd.ipynb` | 2.5 | 0.5 | 150 | not yet run |
-| `train_scale_x3_shift03_btxrd.ipynb` | 3.0 | 0.3 | 100 | trained: best Dice 0.8249 at epoch 73, early-stopped at epoch 88 |
-| `train_scale_x3_shift05_btxrd.ipynb` | 3.0 | 0.5 | 100 | trained: best Dice 0.8264 at epoch 69, early-stopped at epoch 84 |
+| `train-scale-x2-shift03-btxrd.ipynb` | 2.0 | 0.3 | 150 | **winner.** Zoom Dice 0.8700 / CBL 0.9592, Zoom+shift Dice 0.8195 / CBL 0.9245 (best epoch 72, early-stopped at 87) |
+| `train-scale-x2-shift05-btxrd.ipynb` | 2.0 | 0.5 | 150 | Zoom Dice 0.8687 / CBL 0.9544, Zoom+shift Dice 0.6998 / CBL 0.8640 (best epoch 85, early-stopped at 100) |
+| `train-scale-x2-5-shift03-btxrd.ipynb` | 2.5 | 0.3 | 150 | Zoom Dice 0.8348 / CBL 0.9420, Zoom+shift Dice 0.7908 / CBL 0.9118 (best epoch 97, early-stopped at 112) |
+| `train-scale-x2-5-shift05-btxrd.ipynb` | 2.5 | 0.5 | 150 | Zoom Dice 0.8302 / CBL 0.9394, Zoom+shift Dice 0.7357 / CBL 0.8799 (best epoch 84, early-stopped at 99) |
+| `train-scale-x3-shift03-btxrd.ipynb` | 3.0 | 0.3 | 100 | Zoom Dice 0.8095 / CBL 0.9268, Zoom+shift Dice 0.7818 / CBL 0.9078 (best epoch 73, early-stopped at 88) |
+| `train-scale-x3-shift05-btxrd.ipynb` | 3.0 | 0.5 | 100 | Zoom Dice 0.8088 / CBL 0.9288, Zoom+shift Dice 0.7173 / CBL 0.8776 (best epoch 69, early-stopped at 84) |
 
-**Before running any of these in Colab/Kaggle, this branch must be pushed to `origin`** (the setup cell clones `-b research/prompt-scale-protocol` from GitHub; a local-only branch cannot be cloned from there).
+## Decision
 
-## Status
+**x2, shift_ratio=0.3 wins**, with the highest Dice and CBL of all six configurations under both test conditions. This is the box protocol stage 2 (loss function) and stage 3 (uncertainty/confidence) build on top of.
 
-x2/shift0.3, x2/shift0.5, x3/shift0.3, x3/shift0.5 have each been trained once for real on BTXRD/512 and evaluated on both Zoom and Zoom + shift. The two x2 runs did not clearly converge within 100 epochs (x2/shift0.3 never triggered early stopping; the Dice/IoU/HD95/CBL trend was still improving at epoch 100), so both are being retrained at 150 epochs. Two new x2.5 configurations were added alongside them to fill in the gap between x2 and x3. x3's two runs are considered done for this round; their notebooks and checkpoints are unchanged.
+Two consistent patterns across all six real runs, useful context for later stages: (1) a smaller `scale_factor` gives higher absolute Dice/CBL, since a tighter box gives the network less irrelevant background to reason about; (2) a smaller `scale_factor` is also *more* sensitive to shift, not less (x2/shift0.5 drops 20.1% relative Dice under Zoom+shift, versus x3/shift0.5's 11.3%), because the same absolute shift distance covers a larger fraction of a smaller box. x2/shift0.3 sits at the good end of both trends: tight enough for high absolute accuracy, and only a mild 30% shift stress test rather than the more punishing 50%.
 
-Across the first-round results, x2 reached higher absolute Dice/CBL under both test conditions than x3, but was noticeably more sensitive to the off-center shift (a much larger Zoom-to-Zoom+shift Dice drop at shift0.5 than x3 shows at the same shift ratio). x2.5 is meant to help tell whether that sensitivity is a smooth function of scale_factor or a sharper break somewhere between x2 and x3.
+Still below the current paper's `zoom_out` protocol at BTXRD/512 (Dice 0.8788 covering / 0.8496 off-center, Table 2/4): not yet a proven improvement on raw Dice, so any write-up should present this as "a more clinician-realistic box shape at a comparable, slightly lower Dice" rather than a strict win, unless further tuning closes the gap.
 
 Next steps:
 
-- Run the four pending notebooks (x2/0.3, x2/0.5 retrain; x2.5/0.3, x2.5/0.5 new) and record Dice/IoU/Pre/Rec/HD95/CBL under both scenarios.
-- Compare all six (scale, shift) configurations against each other and against the current `zoom_out` protocol's existing numbers (Table 2/4 in the paper: BTXRD Dice 0.8788, CBL 0.9619 at 512x512).
-- Decide a winning (scale, shift) setting, then repeat only that configuration on FracAtlas before considering loss-function changes (stage 2).
+- Repeat x2/shift0.3 on FracAtlas to confirm the winner is not BTXRD-specific.
+- Move to `02_loss_function/` and `03_uncertainty_confidence/`, both built on the x2/shift0.3 box protocol.
