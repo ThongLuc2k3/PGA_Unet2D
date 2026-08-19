@@ -17,6 +17,11 @@ class PromptSegmentationDataset(Dataset):
     prompt_mode:
         'zoom_out': covering prompt expanded around the GT
         'shift': covering prompt with an off-center displacement
+        'mixed': independently picks 'zoom_out' or 'shift' per sample with
+            50/50 probability, matching the SAM-Med2D finetuning protocol
+            (see DataLoader.py's prompt_box_from_mask). Intended for
+            training only; testing should still use 'zoom_out' and 'shift'
+            as two separate, fixed scenarios rather than 'mixed'.
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
@@ -171,6 +176,14 @@ class PromptSegmentationDataset(Dataset):
         elif self.prompt_mode == 'shift':
             bx_min, bx_max, by_min, by_max = self._shift_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
+
+        elif self.prompt_mode == 'mixed':
+            if random.random() < 0.5:
+                bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
+                    x_min, x_max, y_min, y_max, orig_h, orig_w)
+            else:
+                bx_min, bx_max, by_min, by_max = self._shift_bbox(
+                    x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
         else:
             raise ValueError(f"Unknown prompt_mode: {self.prompt_mode}")

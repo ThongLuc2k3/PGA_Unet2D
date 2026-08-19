@@ -13,7 +13,10 @@ from models.networks.prompt_unet_2D import PGA_UNet
 # =========================================================
 # Experiment configuration
 # =========================================================
-TRAIN_PROMPT_MODE  = 'zoom_out'  # 'zoom_out' or 'shift'
+# 'mixed' independently samples 'zoom_out' or 'shift' per training example
+# with 50/50 probability, matching the SAM-Med2D finetuning protocol so
+# neither model is trained on a narrower prompt distribution than the other.
+TRAIN_PROMPT_MODE  = 'mixed'  # 'zoom_out', 'shift', or 'mixed'
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
@@ -21,7 +24,10 @@ EPOCHS     = 100
 LR         = 1e-4
 EARLY_STOP = 15
 EVAL_PROMPT_MODES = ('zoom_out', 'shift')
-PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
+# 'mixed' has no matching validation loader (validation always reports the
+# two pure scenarios separately); checkpoint selection then falls back to
+# the covering-prompt ('zoom_out') validation Dice.
+PRIMARY_VAL_MODE  = 'zoom_out' if TRAIN_PROMPT_MODE == 'mixed' else TRAIN_PROMPT_MODE
 def resolve_img_size():
     return int(os.environ.get("PROMPT_IMG_SIZE", "512"))
 
@@ -144,8 +150,8 @@ def setup_logger(exp_name):
 # MAIN
 # =========================================================
 def main():
-    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift'}:
-        raise ValueError("TRAIN_PROMPT_MODE must be 'zoom_out' or 'shift'.")
+    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift', 'mixed'}:
+        raise ValueError("TRAIN_PROMPT_MODE must be 'zoom_out', 'shift', or 'mixed'.")
     if PRIMARY_VAL_MODE not in EVAL_PROMPT_MODES:
         raise ValueError("PRIMARY_VAL_MODE must be one of EVAL_PROMPT_MODES.")
 
