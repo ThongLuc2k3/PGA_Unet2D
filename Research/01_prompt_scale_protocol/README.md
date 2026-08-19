@@ -57,4 +57,4 @@ Still below the current paper's `zoom_out` protocol at BTXRD/512 (Dice 0.8788 co
 Next steps:
 
 - Repeat x2/shift0.3 on FracAtlas to confirm the winner is not BTXRD-specific.
-- Move to `02_loss_function/` and `03_uncertainty_confidence/`, both built on the x2/shift0.3 box protocol.
+- `02_loss_function/` was investigated and shelved (no evidence either loss term was needed); `03_uncertainty_confidence/` is the active stage, training `QualityHead` jointly on top of this x2/shift0.3 protocol.
