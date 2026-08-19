@@ -8,17 +8,41 @@ At real inference time there is no ground truth to compute Dice/CBL against, so 
 
 ### 1. Learned quality estimate (dedicated training loss, recommended primary signal)
 
-`QualityHead` (`models/networks/prompt_unet_2D.py`) is a small auxiliary head, global-average-pool over the final decoder features (`up1`) followed by two linear layers, that learns to regress this sample's own real Dice. It is trained jointly with the segmentation loss but with its own separate loss term, `LOSS_CONFIDENCE_WEIGHT * MSE(predicted_quality, real_dice.detach())`, in `train.py`. The `.detach()` on the target means gradients from this loss only update the quality head, never the segmentation output.
+`QualityHead` (`models/networks/prompt_unet_2D.py`) is a small auxiliary head: global-average-pool over the final decoder features (`up1`), then two linear layers down to a single sigmoid output. It learns to regress this sample's own real Dice.
 
-At training time, the real Dice is known (GT is available), so the head has a real target to learn from. At inference time, the head still outputs a prediction, using nothing but the image, prompt, and its own learned weights, so no ground truth is needed to produce the confidence score, only during training to teach it what to predict.
+**How the mechanics actually work, precisely:**
+
+- `up1` is the same tensor `self.final(up1)` uses to produce the segmentation logits. Before `QualityHead` sees it, the model detaches it (`self.quality_head(up1.detach())`). Detaching cuts the autograd graph at that point, so gradients computed from the quality loss cannot flow backward into `up1` or anything upstream of it (the whole encoder/decoder). `QualityHead` is a *pure observer*: whatever it learns can never change how the network segments, only how it self-assesses.
+- The training loss is `LOSS_CONFIDENCE_WEIGHT * MSE(predicted_quality, real_dice)`, added in `train.py`, where `real_dice` is computed from the real prediction and GT for that same batch (`per_sample_dice`), then `.detach()`ed as a target (a defensive habit here; the thresholding inside `per_sample_dice` already blocks any gradient regardless).
+- Net effect: this loss term only ever updates `QualityHead`'s own handful of parameters. It cannot make segmentation better or worse, no matter how large `LOSS_CONFIDENCE_WEIGHT` is set.
+
+**Consequence: QualityHead does not require retraining segmentation from scratch.** Since it never influences the backbone, it can be trained as a cheap fine-tune on top of an already-trained checkpoint (like the stage 1 x2/shift0.3 winner) instead of a full 100+ epoch run:
+
+```bash
+PROMPT_DATASET_ROOT=dataset_BTXRD PROMPT_IMG_SIZE=512 \
+PROMPT_MODE=center_zoom PROMPT_SCALE_FACTOR=2.0 PROMPT_SHIFT_RATIO=0.3 \
+USE_QUALITY_HEAD=1 LOSS_CONFIDENCE_WEIGHT=0.3 \
+INIT_CHECKPOINT=checkpoints/pga_unet_center_zoom_x2_512_best.pth \
+FREEZE_BACKBONE=1 \
+PROMPT_EPOCHS=15 \
+python train.py
+```
+
+What each new flag does in `train.py`:
+
+- `INIT_CHECKPOINT=<path>`: loads that checkpoint's weights into the model with `strict=False` (the old checkpoint has no `quality_head.*` keys, and the new model has no keys the old checkpoint lacks otherwise, so this always succeeds cleanly). The backbone starts from the already-trained x2/shift0.3 weights instead of random initialization.
+- `FREEZE_BACKBONE=1`: sets `requires_grad=False` on every parameter except `quality_head.*`, and builds the optimizer over only those parameters. Only `QualityHead`'s few hundred parameters actually receive gradient updates; the rest of the ~2.95M-parameter model stays frozen at its already-trained values.
+- `PROMPT_EPOCHS=15` (or similar, short): since only a tiny head is being trained and the backbone is fixed, this should converge much faster than a full segmentation run.
+
+**A caveat with this cheap fine-tune mode**, since it affects which output file to actually use: with the backbone frozen and the val set deterministic, the segmentation-side validation Dice (`primary_dice`, used for the existing "is this the best epoch" bookkeeping) stays essentially constant every epoch, since predictions don't change once weights are fixed. That means the run's `_best.pth` checkpoint effectively just locks in at whichever epoch happened first, regardless of how much `QualityHead` improved afterward. **Use `{ckpt_prefix}_last.pth` (saved every epoch unconditionally) to get the fully fine-tuned `QualityHead`, not `_best.pth`.**
 
 ```python
-model = PGA_UNet(..., use_quality_head=True)     # constructor flag, off by default
-# training: PROMPT_MODE=... USE_QUALITY_HEAD=1 LOSS_CONFIDENCE_WEIGHT=0.3 python train.py
+model = PGA_UNet(use_encoder_prompt=True, use_quality_head=True)
+model.load_state_dict(torch.load("checkpoints/pga_unet_center_zoom_x2_qhead_512_last.pth"))
 logits, predicted_quality = model(images, prompts, return_quality=True)  # inference, no GT needed
 ```
 
-`use_quality_head` defaults to `False` so the model architecture, and therefore the state_dict keys, exactly matches every checkpoint already trained; only a run explicitly started with `USE_QUALITY_HEAD=1` builds and trains this head.
+`use_quality_head` defaults to `False` so the model architecture, and therefore the state_dict keys, exactly matches every checkpoint already trained; only a run explicitly started with `USE_QUALITY_HEAD=1` builds this head at all, and `return_quality=True` raises a clear error if called on a model that was not.
 
 ### 2. Prompt confidence (already learned, just exposed)
 

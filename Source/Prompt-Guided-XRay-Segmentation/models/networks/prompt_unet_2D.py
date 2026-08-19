@@ -243,7 +243,12 @@ class PGA_UNet(nn.Module):
             # No-GT "result confidence": a learned estimate of this sample's
             # own Dice, trained by regression against the real Dice during
             # training (see LOSS_CONFIDENCE_WEIGHT in train.py). Needs no
-            # ground truth at inference.
-            outputs.append(self.quality_head(up1))
+            # ground truth at inference. up1 is detached first: up1 is the
+            # same tensor self.final() uses for the segmentation output, so
+            # without detaching, the confidence loss's gradient would also
+            # flow back into the shared decoder and quietly perturb
+            # segmentation quality. Detaching makes this head a pure
+            # observer that never influences segmentation training.
+            outputs.append(self.quality_head(up1.detach()))
 
         return outputs[0] if len(outputs) == 1 else tuple(outputs)
