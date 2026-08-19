@@ -17,12 +17,18 @@ Both functions were sanity-checked standalone (NumPy re-implementation): centroi
 
 Checkpoints are tagged with the active loss weights (e.g. `pga_unet_center_zoom_x2_centroid05_512_best.pth`), so loss-variant runs never overwrite the stage 1 winner checkpoint (`pga_unet_center_zoom_x2_512_best.pth`, from `PROMPT_MODE=center_zoom PROMPT_SCALE_FACTOR=2.0 PROMPT_SHIFT_RATIO=0.3`).
 
-## Status
+## Which one to try first
 
-Code is written and unit-checked; no training has happened yet. Suggested starting points once training resumes, all on top of the x2/shift0.3 box protocol from stage 1:
+**Tversky, not centroid, is the recommended first experiment.** Reasoning from the numbers already collected: the x2/shift0.3 winner already reaches CBL 0.9245-0.9592 (Zoom and Zoom+shift), so centroid accuracy is close to ceiling already and a centroid loss has little room to help. The demonstrated weak point, from the paper's SAM-Med2D comparison, the Bottom-Dice subgroup, and small-lesion HD95, is recall on small/faint lesions, missed pixels, not off-center predictions. Tversky with `beta=0.7` targets exactly that.
 
-- `LOSS_CENTROID_WEIGHT=0.5` alone, compare Dice/CBL/HD95 against the stage 1 x2/shift0.3 baseline.
-- `LOSS_TVERSKY_WEIGHT=0.5 LOSS_TVERSKY_BETA=0.7` alone (replacing plain Dice's implicit 0.5/0.5 balance with a recall-leaning one), same comparison.
-- Both together, if each helps independently.
+Suggested order once training resumes, all on top of the x2/shift0.3 box protocol from stage 1:
+
+1. `LOSS_TVERSKY_WEIGHT=0.5 LOSS_TVERSKY_BETA=0.7` alone. Compare Dice/CBL/HD95 against the stage 1 x2/shift0.3 baseline, with particular attention to recall and to performance on the smallest lesions.
+2. Only if step 1 helps, try `LOSS_CENTROID_WEIGHT=0.5` on top of it, to see whether there is any remaining centroid-accuracy headroom once recall improves.
+3. Centroid loss alone is a reasonable control experiment (to isolate its effect) but is not expected to move the numbers much given how high CBL already is.
 
 Weights above 0.5 are unexplored; start small since both terms are new and could destabilize training if too large relative to BCE + Dice.
+
+## Status
+
+Code is written and unit-checked; no training has happened yet.

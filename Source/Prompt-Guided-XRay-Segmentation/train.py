@@ -1,6 +1,7 @@
 import os
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -33,6 +34,13 @@ PROMPT_SHIFT_RATIO  = float(os.environ.get("PROMPT_SHIFT_RATIO", "0.30"))
 LOSS_CENTROID_WEIGHT = float(os.environ.get("LOSS_CENTROID_WEIGHT", "0.0"))
 LOSS_TVERSKY_WEIGHT  = float(os.environ.get("LOSS_TVERSKY_WEIGHT", "0.0"))
 LOSS_TVERSKY_BETA    = float(os.environ.get("LOSS_TVERSKY_BETA", "0.7"))
+# Stage 3 (no-GT confidence, Research/03_uncertainty_confidence/): a small
+# QualityHead learns to regress its own sample's real Dice during training
+# (LOSS_CONFIDENCE_WEIGHT > 0); at inference it needs no ground truth at all.
+# Off by default so the model architecture matches every checkpoint trained
+# so far (adding the head unconditionally would change the state_dict keys).
+USE_QUALITY_HEAD       = os.environ.get("USE_QUALITY_HEAD", "0") == "1"
+LOSS_CONFIDENCE_WEIGHT = float(os.environ.get("LOSS_CONFIDENCE_WEIGHT", "0.0"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
@@ -136,6 +144,19 @@ def tversky_loss(pred, target, alpha=0.3, beta=0.7, smooth=1e-5):
     fn = ((1 - pred_soft) * target).sum(dim=(1, 2, 3))
     tversky = (tp + smooth) / (tp + alpha * fp + beta * fn + smooth)
     return (1 - tversky).mean()
+
+
+def per_sample_dice(pred, target, smooth=1e-5):
+    """Real Dice per sample in the batch (not summed/averaged), used as the
+    regression target for QualityHead. Always detached by the caller before
+    use as a loss target, since the head should learn to predict this value,
+    not backpropagate through the segmentation head to change it.
+    """
+    pred_bin = (torch.sigmoid(pred) > 0.5).float()
+    tp = (pred_bin * target).sum(dim=(1, 2, 3))
+    fp = (pred_bin * (1 - target)).sum(dim=(1, 2, 3))
+    fn = ((1 - pred_bin) * target).sum(dim=(1, 2, 3))
+    return (2. * tp + smooth) / (2. * tp + fp + fn + smooth)
 
 
 def batch_metrics_sum(pred, target, smooth=1e-5):
@@ -247,6 +268,7 @@ def main():
            if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift') else "")
         + (f" | CentroidLossWeight: {LOSS_CENTROID_WEIGHT}" if LOSS_CENTROID_WEIGHT > 0 else "")
         + (f" | TverskyLossWeight: {LOSS_TVERSKY_WEIGHT} (beta={LOSS_TVERSKY_BETA})" if LOSS_TVERSKY_WEIGHT > 0 else "")
+        + (f" | QualityHead: ConfidenceLossWeight={LOSS_CONFIDENCE_WEIGHT}" if USE_QUALITY_HEAD else "")
     )
     logger.info("=" * 90)
 
@@ -280,7 +302,8 @@ def main():
 
     # ── Model ────────────────────────────────────────────────────────
     model = PGA_UNet(in_channels=1, n_classes=1,
-                     use_encoder_prompt=USE_ENCODER_PROMPT).to(DEVICE)
+                     use_encoder_prompt=USE_ENCODER_PROMPT,
+                     use_quality_head=USE_QUALITY_HEAD).to(DEVICE)
     criterion_bce = nn.BCEWithLogitsLoss()
     optimizer     = optim.AdamW(model.parameters(), lr=LR, weight_decay=1e-4)
     scheduler     = optim.lr_scheduler.ReduceLROnPlateau(
@@ -304,6 +327,8 @@ def main():
         ckpt_tag += f"_centroid{str(LOSS_CENTROID_WEIGHT).replace('.', '')}"
     if LOSS_TVERSKY_WEIGHT > 0:
         ckpt_tag += f"_tversky{str(LOSS_TVERSKY_WEIGHT).replace('.', '')}"
+    if USE_QUALITY_HEAD:
+        ckpt_tag += "_qhead"
     ckpt_prefix     = f"checkpoints/pga_unet_{ckpt_tag}_{IMG_SIZE}"
 
     for epoch in range(EPOCHS):
@@ -313,12 +338,22 @@ def main():
         loop = tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS} [Train]")
         for images, masks, prompts in loop:
             images, masks, prompts = (images.to(DEVICE), masks.to(DEVICE), prompts.to(DEVICE))
-            preds = model(images, prompts)
+            if USE_QUALITY_HEAD and LOSS_CONFIDENCE_WEIGHT > 0:
+                preds, pred_quality = model(images, prompts, return_quality=True)
+            else:
+                preds = model(images, prompts)
             loss  = criterion_bce(preds, masks) + dice_loss(preds, masks)
             if LOSS_CENTROID_WEIGHT > 0:
                 loss = loss + LOSS_CENTROID_WEIGHT * centroid_loss(preds, masks)
             if LOSS_TVERSKY_WEIGHT > 0:
                 loss = loss + LOSS_TVERSKY_WEIGHT * tversky_loss(preds, masks, beta=LOSS_TVERSKY_BETA)
+            if USE_QUALITY_HEAD and LOSS_CONFIDENCE_WEIGHT > 0:
+                # QualityHead learns to predict real Dice; detach the target
+                # so this loss only trains the head, not the segmentation
+                # output (which is already driven by the losses above).
+                real_dice = per_sample_dice(preds, masks).detach()
+                confidence_loss = F.mse_loss(pred_quality, real_dice)
+                loss = loss + LOSS_CONFIDENCE_WEIGHT * confidence_loss
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)

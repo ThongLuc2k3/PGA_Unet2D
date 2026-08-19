@@ -106,6 +106,29 @@ class unetUp_PromptAttention(nn.Module):
         return out + self.beta * p_refine
 
 
+class QualityHead(nn.Module):
+    """Predicts the model's own expected Dice for the current sample from the
+    final decoder features, trained by regression against the real Dice
+    (computed with GT, only available during training). At inference this
+    needs no ground truth at all: it is a learned no-GT quality/confidence
+    estimate, complementary to CAD's prompt-confidence gates, which only
+    reflect trust in the prompt rather than the final predicted mask.
+    """
+    def __init__(self, in_channels):
+        super().__init__()
+        self.pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(in_channels, max(in_channels // 2, 4)),
+            nn.ReLU(inplace=True),
+            nn.Linear(max(in_channels // 2, 4), 1),
+            nn.Sigmoid(),
+        )
+
+    def forward(self, features):
+        pooled = self.pool(features).flatten(1)
+        return self.fc(pooled).squeeze(1)
+
+
 class PGA_UNet(nn.Module):
     """
     Prompt-Guided Attention UNet.
@@ -115,9 +138,11 @@ class PGA_UNet(nn.Module):
 
     def __init__(self, feature_scale=4, n_classes=1, in_channels=1,
                  is_batchnorm=True, use_encoder_prompt=True,
-                 prompt_weights=(1.0, 0.7, 0.4, 0.2)):
+                 prompt_weights=(1.0, 0.7, 0.4, 0.2),
+                 use_quality_head=False):
         super().__init__()
         self.use_encoder_prompt = use_encoder_prompt
+        self.use_quality_head   = use_quality_head
 
         w = list(prompt_weights)
         assert len(w) == 4, "prompt_weights must have exactly 4 elements (4 decoder levels)"
@@ -151,7 +176,14 @@ class PGA_UNet(nn.Module):
 
         self.final = nn.Conv2d(filters[0], n_classes, 1)
 
-    def forward(self, inputs, prompt, return_confidence=False):
+        # Optional: adds new parameters, so only construct it when requested,
+        # otherwise a checkpoint saved with use_quality_head=False (the
+        # default, matching every checkpoint trained so far) still loads
+        # cleanly into a model built with the default constructor arguments.
+        if use_quality_head:
+            self.quality_head = QualityHead(filters[0])
+
+    def forward(self, inputs, prompt, return_confidence=False, return_quality=False):
         # Model-level augmentation, training only
         if self.training:
             r = torch.rand(1).item()
@@ -186,17 +218,32 @@ class PGA_UNet(nn.Module):
         up1 = self.up_concat1(c1, up2,    prompt)
 
         logits = self.final(up1)
-        if not return_confidence:
-            return logits
 
-        # No-GT "prompt confidence" signal: the CAD gate at each decoder level
-        # already learns how much to trust the prompt encoding there (see
-        # unetUp_PromptAttention.prompt_confidence); averaging the 4 levels
-        # gives one scalar per sample in [0, 1], with no ground truth involved.
-        prompt_confidence = torch.cat([
-            self.up_concat4.last_conf.flatten(1),
-            self.up_concat3.last_conf.flatten(1),
-            self.up_concat2.last_conf.flatten(1),
-            self.up_concat1.last_conf.flatten(1),
-        ], dim=1).mean(dim=1)
-        return logits, prompt_confidence
+        outputs = [logits]
+        if return_confidence:
+            # No-GT "prompt confidence" signal: the CAD gate at each decoder
+            # level already learns how much to trust the prompt encoding
+            # there (see unetUp_PromptAttention.prompt_confidence);
+            # averaging the 4 levels gives one scalar per sample in [0, 1],
+            # with no ground truth involved.
+            prompt_confidence = torch.cat([
+                self.up_concat4.last_conf.flatten(1),
+                self.up_concat3.last_conf.flatten(1),
+                self.up_concat2.last_conf.flatten(1),
+                self.up_concat1.last_conf.flatten(1),
+            ], dim=1).mean(dim=1)
+            outputs.append(prompt_confidence)
+
+        if return_quality:
+            if not self.use_quality_head:
+                raise RuntimeError(
+                    "return_quality=True requires the model to be constructed "
+                    "with use_quality_head=True."
+                )
+            # No-GT "result confidence": a learned estimate of this sample's
+            # own Dice, trained by regression against the real Dice during
+            # training (see LOSS_CONFIDENCE_WEIGHT in train.py). Needs no
+            # ground truth at inference.
+            outputs.append(self.quality_head(up1))
+
+        return outputs[0] if len(outputs) == 1 else tuple(outputs)
