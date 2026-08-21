@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -18,10 +19,12 @@ from models.networks.prompt_unet_2D import PGA_UNet
 # 'center_zoom'/'center_shift': tight box scaled from its center by
 # PROMPT_SCALE_FACTOR; 'center_shift' additionally displaces it off-center
 # by up to PROMPT_SHIFT_RATIO, exactly like 'shift' does to 'zoom_out'.
-# Training only ever uses the "zoom" side of whichever pair is selected
-# (TRAIN_PROMPT_MODE below); the "shift" side is evaluation-only, matching
-# the original PGA-UNet methodology (train covering-only, test covering
-# and off-center).
+# 'center_mixed': independently samples 'center_zoom' or 'center_shift' per
+# training example with 50/50 probability, so the model is not trained on a
+# narrower prompt distribution than it is tested on. For 'zoom_out'/'shift'
+# and plain 'center_zoom'/'center_shift', training only ever uses the
+# "zoom" side of whichever pair is selected; the "shift" side is
+# evaluation-only.
 TRAIN_PROMPT_MODE   = os.environ.get("PROMPT_MODE", "zoom_out")
 PROMPT_SCALE_FACTOR = float(os.environ.get("PROMPT_SCALE_FACTOR", "2.0"))
 PROMPT_SHIFT_RATIO  = float(os.environ.get("PROMPT_SHIFT_RATIO", "0.30"))
@@ -42,6 +45,16 @@ LOSS_CONFIDENCE_WEIGHT = float(os.environ.get("LOSS_CONFIDENCE_WEIGHT", "0.0"))
 # own small MLP on top of it, a few cheap epochs instead of a full retrain.
 INIT_CHECKPOINT = os.environ.get("INIT_CHECKPOINT", "")
 FREEZE_BACKBONE = os.environ.get("FREEZE_BACKBONE", "0") == "1"
+# Stage 2 (loss function, Research/02_loss_function/): a size-conditioned
+# Tversky term, replacing dice_loss in the main segmentation loss when
+# enabled. Unlike the earlier beta>alpha attempt (removed, see that folder's
+# README), this only shifts weight toward penalizing false positives on
+# small lesions, where a real x2/shift0.3 checkpoint was measured to
+# over-segment (precision trailing recall); large lesions, already well
+# segmented, get alpha=beta=0.5, mathematically identical to dice_loss.
+USE_SIZE_TVERSKY      = os.environ.get("USE_SIZE_TVERSKY", "0") == "1"
+SIZE_TVERSKY_ALPHA_MAX = float(os.environ.get("SIZE_TVERSKY_ALPHA_MAX", "0.7"))
+SIZE_TVERSKY_AREA_PCTL = float(os.environ.get("SIZE_TVERSKY_AREA_PCTL", "25"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
@@ -49,9 +62,12 @@ EPOCHS     = int(os.environ.get("PROMPT_EPOCHS", "100"))
 LR         = 1e-4
 EARLY_STOP = 15
 # Validate on the same zoom/shift pair as the one being trained.
+# 'center_mixed' has no matching validation loader (validation always
+# reports the two pure scenarios separately); checkpoint selection then
+# falls back to the covering-prompt ('center_zoom') validation Dice.
 EVAL_PROMPT_MODES = ('zoom_out', 'shift') if TRAIN_PROMPT_MODE in ('zoom_out', 'shift') \
     else ('center_zoom', 'center_shift')
-PRIMARY_VAL_MODE  = TRAIN_PROMPT_MODE
+PRIMARY_VAL_MODE  = 'center_zoom' if TRAIN_PROMPT_MODE == 'center_mixed' else TRAIN_PROMPT_MODE
 def resolve_img_size():
     return int(os.environ.get("PROMPT_IMG_SIZE", "512"))
 
@@ -88,6 +104,40 @@ def dice_loss(pred, target, smooth=1e-5):
     intersection = (pred_soft * target).sum(dim=(1, 2, 3))
     union        = pred_soft.sum(dim=(1, 2, 3)) + target.sum(dim=(1, 2, 3))
     return (1 - ((2. * intersection + smooth) / (union + smooth))).mean()
+
+
+def size_weighted_tversky_loss(pred, target, area_ref, alpha_max=0.7, smooth=1e-5):
+    """Per-sample Tversky loss with alpha (false-positive weight)
+    interpolated by each sample's own GT area, not fixed for the whole
+    batch. Samples at or above area_ref get alpha=beta=0.5, mathematically
+    identical to dice_loss, so lesions already segmented well are
+    unaffected. Samples below area_ref get alpha up to alpha_max, so false
+    positives are penalized more than false negatives, aimed at the
+    over-segmentation measured on the small-lesion subset (see
+    Research/02_loss_function/).
+    """
+    pred_soft = torch.sigmoid(pred)
+    area = target.sum(dim=(1, 2, 3))
+    shrink = (area_ref - area).clamp(min=0) / area_ref
+    alpha = 0.5 + shrink * (alpha_max - 0.5)
+    beta  = 1.0 - alpha
+
+    tp = (pred_soft * target).sum(dim=(1, 2, 3))
+    fp = (pred_soft * (1 - target)).sum(dim=(1, 2, 3))
+    fn = ((1 - pred_soft) * target).sum(dim=(1, 2, 3))
+    tversky = (tp + smooth) / (tp + alpha * fp + beta * fn + smooth)
+    return (1 - tversky).mean()
+
+
+def compute_area_reference(dataset, percentile):
+    """One-time scan of the training set's per-sample GT mask area (in
+    pixels), used as size_weighted_tversky_loss's large/small boundary.
+    Percentile-based rather than a fixed pixel count, so it self-calibrates
+    to whatever dataset/resolution is in use, instead of a constant tuned
+    for one specific image size.
+    """
+    areas = [dataset[i][1].sum().item() for i in range(len(dataset))]
+    return float(np.percentile(areas, percentile))
 
 
 def per_sample_dice(pred, target, smooth=1e-5):
@@ -187,18 +237,19 @@ def setup_logger(exp_name):
 # MAIN
 # =========================================================
 def _dataset_kwargs(mode):
-    """scale_factor/shift_ratio only apply to 'center_zoom'/'center_shift';
-    the legacy 'zoom_out'/'shift' modes keep their own defaults regardless
-    of these env vars.
+    """scale_factor/shift_ratio only apply to 'center_zoom'/'center_shift'/
+    'center_mixed'; the legacy 'zoom_out'/'shift' modes keep their own
+    defaults regardless of these env vars.
     """
-    if mode in ('center_zoom', 'center_shift'):
+    if mode in ('center_zoom', 'center_shift', 'center_mixed'):
         return dict(scale_factor=PROMPT_SCALE_FACTOR, shift_ratio=PROMPT_SHIFT_RATIO)
     return {}
 
 
 def main():
-    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift', 'center_zoom', 'center_shift'}:
-        raise ValueError("TRAIN_PROMPT_MODE must be 'zoom_out', 'shift', 'center_zoom', or 'center_shift'.")
+    if TRAIN_PROMPT_MODE not in {'zoom_out', 'shift', 'center_zoom', 'center_shift', 'center_mixed'}:
+        raise ValueError(
+            "TRAIN_PROMPT_MODE must be 'zoom_out', 'shift', 'center_zoom', 'center_shift', or 'center_mixed'.")
     if PRIMARY_VAL_MODE not in EVAL_PROMPT_MODES:
         raise ValueError("PRIMARY_VAL_MODE must be one of EVAL_PROMPT_MODES.")
 
@@ -209,8 +260,9 @@ def main():
         f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE} | "
         f"DatasetRoot: {DATASET_ROOT}"
         + (f" | ScaleFactor: {PROMPT_SCALE_FACTOR}"
-           if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift') else "")
+           if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift', 'center_mixed') else "")
         + (f" | QualityHead: ConfidenceLossWeight={LOSS_CONFIDENCE_WEIGHT}" if USE_QUALITY_HEAD else "")
+        + (f" | SizeTversky: AlphaMax={SIZE_TVERSKY_ALPHA_MAX}, AreaPercentile={SIZE_TVERSKY_AREA_PCTL}" if USE_SIZE_TVERSKY else "")
     )
     logger.info("=" * 90)
 
@@ -224,6 +276,14 @@ def main():
     )
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True,
                               num_workers=2, pin_memory=True)
+
+    size_tversky_area_ref = None
+    if USE_SIZE_TVERSKY:
+        size_tversky_area_ref = compute_area_reference(train_ds, SIZE_TVERSKY_AREA_PCTL)
+        logger.info(
+            f"SizeTversky area reference (p{SIZE_TVERSKY_AREA_PCTL:.0f} of train GT area): "
+            f"{size_tversky_area_ref:.1f} px"
+        )
 
     val_loaders = {}
     for mode in EVAL_PROMPT_MODES:
@@ -275,18 +335,23 @@ def main():
     best_val_dice   = 0.0
     patience_counter = 0
     ckpt_tag = TRAIN_PROMPT_MODE
-    if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift'):
+    if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift', 'center_mixed'):
         # scale_factor must be in the filename, otherwise the x2/x3 runs
         # would overwrite the same checkpoint. 'center_zoom' training does
         # not depend on shift_ratio at all, so it is left out of the tag
-        # unless TRAIN_PROMPT_MODE is 'center_shift' itself.
+        # unless TRAIN_PROMPT_MODE is 'center_shift' or 'center_mixed'.
         scale_tag = str(PROMPT_SCALE_FACTOR).rstrip('0').rstrip('.') if '.' in str(PROMPT_SCALE_FACTOR) else str(PROMPT_SCALE_FACTOR)
         ckpt_tag = f"center_zoom_x{scale_tag}"
         if TRAIN_PROMPT_MODE == 'center_shift':
             shift_tag = f"shift{str(PROMPT_SHIFT_RATIO).replace('.', '')}"
             ckpt_tag = f"center_shift_x{scale_tag}_{shift_tag}"
+        elif TRAIN_PROMPT_MODE == 'center_mixed':
+            shift_tag = f"shift{str(PROMPT_SHIFT_RATIO).replace('.', '')}"
+            ckpt_tag = f"center_mixed_x{scale_tag}_{shift_tag}"
     if USE_QUALITY_HEAD:
         ckpt_tag += "_qhead"
+    if USE_SIZE_TVERSKY:
+        ckpt_tag += "_sizetversky"
     ckpt_prefix     = f"checkpoints/pga_unet_{ckpt_tag}_{IMG_SIZE}"
 
     for epoch in range(EPOCHS):
@@ -300,7 +365,12 @@ def main():
                 preds, pred_quality = model(images, prompts, return_quality=True)
             else:
                 preds = model(images, prompts)
-            loss  = criterion_bce(preds, masks) + dice_loss(preds, masks)
+            if USE_SIZE_TVERSKY:
+                seg_loss = size_weighted_tversky_loss(
+                    preds, masks, size_tversky_area_ref, SIZE_TVERSKY_ALPHA_MAX)
+            else:
+                seg_loss = dice_loss(preds, masks)
+            loss  = criterion_bce(preds, masks) + seg_loss
             if USE_QUALITY_HEAD and LOSS_CONFIDENCE_WEIGHT > 0:
                 # QualityHead learns to predict real Dice. Its input (up1)
                 # is detached inside the model itself, so this loss only

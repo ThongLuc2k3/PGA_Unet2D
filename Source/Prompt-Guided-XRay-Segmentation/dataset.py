@@ -22,6 +22,13 @@ class PromptSegmentationDataset(Dataset):
             together) instead of independently per side
         'center_shift': 'center_zoom' with the same added off-center
             displacement mechanism as 'shift' (see shift_ratio below)
+        'center_mixed': independently picks 'center_zoom' or 'center_shift'
+            per sample with 50/50 probability, matching the SAM-Med2D
+            finetuning protocol (see DataLoader.py's prompt_box_from_mask)
+            and this project's own 'mixed' mode on main (which mixes
+            'zoom_out'/'shift' instead). Intended for training only; testing
+            should still use 'center_zoom' and 'center_shift' as two
+            separate, fixed scenarios rather than 'center_mixed'.
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
@@ -252,6 +259,14 @@ class PromptSegmentationDataset(Dataset):
         elif self.prompt_mode == 'center_shift':
             bx_min, bx_max, by_min, by_max = self._center_shift_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
+
+        elif self.prompt_mode == 'center_mixed':
+            if random.random() < 0.5:
+                bx_min, bx_max, by_min, by_max = self._center_zoom_bbox(
+                    x_min, x_max, y_min, y_max, orig_h, orig_w)
+            else:
+                bx_min, bx_max, by_min, by_max = self._center_shift_bbox(
+                    x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
         else:
             raise ValueError(f"Unknown prompt_mode: {self.prompt_mode}")
