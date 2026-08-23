@@ -55,6 +55,16 @@ FREEZE_BACKBONE = os.environ.get("FREEZE_BACKBONE", "0") == "1"
 USE_SIZE_TVERSKY      = os.environ.get("USE_SIZE_TVERSKY", "0") == "1"
 SIZE_TVERSKY_ALPHA_MAX = float(os.environ.get("SIZE_TVERSKY_ALPHA_MAX", "0.7"))
 SIZE_TVERSKY_AREA_PCTL = float(os.environ.get("SIZE_TVERSKY_AREA_PCTL", "25"))
+# Alternative to USE_SIZE_TVERSKY (Research/02_loss_function/, x3/shift0.5
+# follow-up): size-conditioned Tversky only shifted the precision/recall
+# balance on the small-lesion subset without raising Dice itself. Focal Dice
+# stays symmetric (alpha=beta=0.5, no precision/recall bias) and instead
+# raises (1 - Dice) to the focusing exponent 1/FOCAL_GAMMA, amplifying
+# gradient on whichever samples are currently furthest from Dice=1, so it
+# targets Dice directly rather than trading FP against FN. Mutually
+# exclusive with USE_SIZE_TVERSKY (both replace dice_loss).
+USE_FOCAL_DICE = os.environ.get("USE_FOCAL_DICE", "0") == "1"
+FOCAL_GAMMA    = float(os.environ.get("FOCAL_GAMMA", "1.33"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 4
@@ -127,6 +137,22 @@ def size_weighted_tversky_loss(pred, target, area_ref, alpha_max=0.7, smooth=1e-
     fn = ((1 - pred_soft) * target).sum(dim=(1, 2, 3))
     tversky = (tp + smooth) / (tp + alpha * fp + beta * fn + smooth)
     return (1 - tversky).mean()
+
+
+def focal_dice_loss(pred, target, gamma=1.33, smooth=1e-5):
+    """Focal Dice loss: the ordinary (symmetric) Dice score raised to the
+    focusing exponent 1/gamma, so gradient is amplified on samples whose
+    current Dice is furthest from 1.0, regardless of whether the gap comes
+    from false positives or false negatives. gamma=1.0 makes this identical
+    to dice_loss; gamma>1.0 increases the focusing effect. Unlike
+    size_weighted_tversky_loss, alpha/beta are always 0.5, so there is no
+    built-in precision/recall bias, only a per-sample difficulty weighting.
+    """
+    pred_soft    = torch.sigmoid(pred)
+    intersection = (pred_soft * target).sum(dim=(1, 2, 3))
+    union        = pred_soft.sum(dim=(1, 2, 3)) + target.sum(dim=(1, 2, 3))
+    dice = (2. * intersection + smooth) / (union + smooth)
+    return torch.pow(1 - dice, 1.0 / gamma).mean()
 
 
 def compute_area_reference(dataset, percentile):
@@ -252,6 +278,8 @@ def main():
             "TRAIN_PROMPT_MODE must be 'zoom_out', 'shift', 'center_zoom', 'center_shift', or 'center_mixed'.")
     if PRIMARY_VAL_MODE not in EVAL_PROMPT_MODES:
         raise ValueError("PRIMARY_VAL_MODE must be one of EVAL_PROMPT_MODES.")
+    if USE_SIZE_TVERSKY and USE_FOCAL_DICE:
+        raise ValueError("USE_SIZE_TVERSKY and USE_FOCAL_DICE are mutually exclusive (both replace dice_loss).")
 
     logger = setup_logger(TRAIN_PROMPT_MODE)
     logger.info("=" * 90)
@@ -263,6 +291,7 @@ def main():
            if TRAIN_PROMPT_MODE in ('center_zoom', 'center_shift', 'center_mixed') else "")
         + (f" | QualityHead: ConfidenceLossWeight={LOSS_CONFIDENCE_WEIGHT}" if USE_QUALITY_HEAD else "")
         + (f" | SizeTversky: AlphaMax={SIZE_TVERSKY_ALPHA_MAX}, AreaPercentile={SIZE_TVERSKY_AREA_PCTL}" if USE_SIZE_TVERSKY else "")
+        + (f" | FocalDice: Gamma={FOCAL_GAMMA}" if USE_FOCAL_DICE else "")
     )
     logger.info("=" * 90)
 
@@ -352,6 +381,9 @@ def main():
         ckpt_tag += "_qhead"
     if USE_SIZE_TVERSKY:
         ckpt_tag += "_sizetversky"
+    if USE_FOCAL_DICE:
+        gamma_tag = str(FOCAL_GAMMA).replace('.', '')
+        ckpt_tag += f"_focaldice{gamma_tag}"
     ckpt_prefix     = f"checkpoints/pga_unet_{ckpt_tag}_{IMG_SIZE}"
 
     for epoch in range(EPOCHS):
@@ -368,6 +400,8 @@ def main():
             if USE_SIZE_TVERSKY:
                 seg_loss = size_weighted_tversky_loss(
                     preds, masks, size_tversky_area_ref, SIZE_TVERSKY_ALPHA_MAX)
+            elif USE_FOCAL_DICE:
+                seg_loss = focal_dice_loss(preds, masks, FOCAL_GAMMA)
             else:
                 seg_loss = dice_loss(preds, masks)
             loss  = criterion_bce(preds, masks) + seg_loss
