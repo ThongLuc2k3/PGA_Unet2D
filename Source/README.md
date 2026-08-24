@@ -72,7 +72,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 - `test-pga-samzs-samft-r256-{btxrd,fracatlas}.ipynb`: PGA-UNet vs SAM-Med2D (zero-shot and finetuned) at `256`.
 - `test-subcat-small-r256-{btxrd,fracatlas}.ipynb`: GT-area-defined small-lesion analysis at 256, comparing PGA-UNet with SAM-Med2D zero-shot and fine-tuned.
 - `test-subcat-small-r512-{btxrd,fracatlas}.ipynb`: the same type of GT-area-defined analysis for the four R512 architecture models. PGA-256 remains in the R256 file; resolution comparisons are assembled from the two result files when writing the paper.
-- `test-subcat-pga-small-r128-256-512btxrd.ipynb` and `test-subcat-pga-small-r128-256-512fracatlas.ipynb`: dedicated three-resolution PGA-UNet small-lesion comparisons using the same 50 image stems within each dataset, both prompt scenarios, image-level merging, normalized HD95, and paired resolution analysis. Checkpoint IDs remain placeholders until retraining.
+- `test-subcat-pga-small-r128-256-512-btxrd.ipynb` and `test-subcat-pga-small-r128-256-512-fracatlas.ipynb`: dedicated three-resolution PGA-UNet small-lesion comparisons using the same 50 image stems within each dataset, both prompt scenarios, image-level merging, normalized HD95, and paired resolution analysis. Checkpoint IDs remain placeholders until retraining.
 - `test-pga-dataset-1234-{btxrd,fracatlas}.ipynb`: Monte Carlo cross-validation (4 repeated random image-level splits).
 - `test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
 - `Ablation/`: the matching 5 remaining ablation test notebooks.
