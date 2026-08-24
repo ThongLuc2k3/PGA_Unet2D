@@ -47,6 +47,7 @@ Environment variables for Step 2 (all optional, shown with their defaults):
 - `PROMPT_MODE` (default `center_mixed`): `center_zoom`, `center_shift`, or `center_mixed`.
 - `PROMPT_SCALE_FACTOR` (default `3.0`), `PROMPT_SHIFT_RATIO` (default `0.5`), `PROMPT_MIXED_SHIFT_PROB` (default `0.8`, only used by `center_mixed`).
 - `PROMPT_EPOCHS` (default `150`).
+- `PROMPT_SEED` (default `22120196`): fixed training seed used by the main experiments and architecture ablations. It controls Python, NumPy, PyTorch CPU, and PyTorch CUDA randomness. Monte Carlo experiments keep this training seed fixed while changing only the split seed (`1`, `2`, `3`, `4`).
 - `USE_QUALITY_HEAD` (default `1`), `LOSS_CONFIDENCE_WEIGHT` (default `1.0`): set `USE_QUALITY_HEAD=0` to fall back to a plain `PGA_UNet` with no confidence head. `PGA_UNet`'s own constructor also defaults `use_quality_head=True`; pass `use_quality_head=False` there directly to load an older checkpoint trained without one.
 - `USE_SIZE_TVERSKY=1` (default off), with `SIZE_TVERSKY_ALPHA_MAX` (default `0.7`) and `SIZE_TVERSKY_AREA_PCTL` (default `25`): replaces `dice_loss` with `size_weighted_tversky_loss`, penalizing false positives more on small-GT-area samples.
 - `USE_FOCAL_DICE=1` (default off), with `FOCAL_GAMMA` (default `1.33`): replaces `dice_loss` with `focal_dice_loss`, `(1 - Dice)^(1/gamma)`. Mutually exclusive with `USE_SIZE_TVERSKY`.

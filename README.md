@@ -4,9 +4,9 @@ Prompt-guided, lightweight Attention U-Net for interactive bone X-ray lesion seg
 
 This branch (`main`) is the source for an IEEE Access journal submission. See `Paper_IEEE_Access/access.tex` for the manuscript. The `graduation-project` branch holds the original Vietnamese undergraduate thesis this work grew out of, and the two branches are separate deliverables that do not share content.
 
-## Headline results
+## Previous-protocol reference results
 
-On BTXRD and FracAtlas, under covering box prompts at `512x512`, PGA-UNet reaches Dice `0.8788` and `0.8286` respectively, ahead of the Attention U-Net baseline and of fine-tuned SAM-Med2D at the matched `256x256` resolution, including on the 50 smallest lesions per dataset. The model has `2.95M` parameters, about `92x` fewer than SAM-Med2D. Full tables are in the paper (`Paper_IEEE_Access/access.tex`, Section V).
+The previous experiment protocol reported Dice `0.8788` on BTXRD and `0.8286` on FracAtlas at `512x512`, together with comparisons against Attention U-Net and fine-tuned SAM-Med2D. These values are retained only as legacy reference points. They have not been reproduced with the current standardized prompt pipeline, center-shift checkpoint selection, Precision definition, and image-level merged evaluation. The numeric tables in `Paper_IEEE_Access/access.tex` are likewise pending refresh after retraining. The architecture has `2.95M` parameters, about `92x` fewer than SAM-Med2D; this architecture-only comparison is unaffected by retraining.
 
 ## Repository layout
 
@@ -16,15 +16,14 @@ PGA_Unet2D/
 │   ├── Prompt-Guided-XRay-Segmentation/   # shared model + dataset package (dataset.py, train.py, models/)
 │   ├── File_Train/{btxrd,fracatlas}/      # training notebooks, incl. Ablation/
 │   └── File_Test/{btxrd,fracatlas}/       # evaluation notebooks, incl. Ablation/
-├── Results/                                # executed test notebooks + per-image CSVs (checkpoints excluded, see below)
 └── Paper_IEEE_Access/                      # IEEE Access manuscript (access.tex, split into sections/, images/, vietnam/)
 ```
 
 See `Source/README.md` for the full notebook inventory, the covering/off-center prompt protocol, and which checkpoints each notebook needs.
 
-## Results/
+## Experiment results
 
-Executed notebooks and metric CSVs from the runs reported in the paper, organized as `Results/Result_{BTXRD,FracAtlas}/<notebook-name>/`. Trained checkpoints (`best.pth`) are intentionally not committed: they are large binaries, re-downloadable from the Google Drive IDs already saved in the corresponding training/test notebook.
+The obsolete `Results/` tree was removed because it contained outputs from the previous prompt and evaluation protocol. New executed notebooks and image-level merged CSVs will be added only after every affected model has been retrained with the current source. Trained checkpoints remain excluded because they are large binaries; their Google Drive IDs will be added to the corresponding notebooks after retraining and upload.
 
 ## Paper_IEEE_Access/
 

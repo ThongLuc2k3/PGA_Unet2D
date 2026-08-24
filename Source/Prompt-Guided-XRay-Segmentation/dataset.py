@@ -52,6 +52,10 @@ class PromptSegmentationDataset(Dataset):
         # final img_size x img_size frame the network sees, so it stays
         # constant across resolutions instead.
         self.prompt_kernel = 31
+        # Subclasses for binary-prompt ablations may switch this to nearest
+        # neighbor interpolation. Gaussian heatmaps keep linear interpolation.
+        self.prompt_interpolation = cv2.INTER_LINEAR
+        self.prompt_augmentation_interpolation = InterpolationMode.BILINEAR
 
         self.all_samples = []
         for img_name in sorted(os.listdir(image_dir)):
@@ -209,7 +213,7 @@ class PromptSegmentationDataset(Dataset):
         # Preserve aspect ratio before padding so anatomy is not distorted.
         image = self._resize_and_pad(image, cv2.INTER_LINEAR, pad_value=0)
         mask = self._resize_and_pad(mask, cv2.INTER_NEAREST, pad_value=0)
-        prompt_map = self._resize_and_pad(prompt_map, cv2.INTER_LINEAR, pad_value=0.0)
+        prompt_map = self._resize_and_pad(prompt_map, self.prompt_interpolation, pad_value=0.0)
 
         image = (image.astype(np.float32) / 255.0 - 0.5) / 0.5
         mask  = (mask > 127).astype(np.float32)
@@ -226,7 +230,11 @@ class PromptSegmentationDataset(Dataset):
                 angle  = random.uniform(-15, 15)
                 image  = TF.rotate(image,  angle, interpolation=InterpolationMode.BILINEAR)
                 mask   = TF.rotate(mask,   angle, interpolation=InterpolationMode.NEAREST)
-                prompt = TF.rotate(prompt, angle, interpolation=InterpolationMode.BILINEAR)
+                prompt = TF.rotate(
+                    prompt,
+                    angle,
+                    interpolation=self.prompt_augmentation_interpolation,
+                )
 
         mask = (mask > 0.5).float()
         return image, mask, prompt

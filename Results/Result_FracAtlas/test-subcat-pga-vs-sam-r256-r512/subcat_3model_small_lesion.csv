@@ -1,4 +1,0 @@
-group,model,N,dice,iou,precision,recall,hd95,cbl
-Small-lesion subset,SAM-Med2D 256,50,0.3736,0.2628,0.6860,0.2939,105.1918,0.7116
-Small-lesion subset,PGA-UNet 256,50,0.7973,0.6705,0.7070,0.9356,5.6171,0.9569
-Small-lesion subset,PGA-UNet 512,50,0.8348,0.7223,0.8037,0.8895,4.8278,0.9609

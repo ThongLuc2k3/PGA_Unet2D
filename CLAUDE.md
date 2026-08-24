@@ -48,6 +48,6 @@ This file holds durable rules only, not a snapshot of the codebase or current ex
 
 - Current notebook layout, prompt protocol, baselines, and pending-retrain status: `Source/README.md`.
 - Shared PGA-UNet package usage (`dataset.py`, `train.py`, `models/`): `Source/Prompt-Guided-XRay-Segmentation/README.md`.
-- What is and isn't tracked under `Results/`: the root `README.md`.
+- Retraining status and the policy for regenerating `Results/`: the root `README.md`.
 
 Read those before assuming anything about the current architecture, prompt protocol, or baseline set; if you find one of them out of date with the actual code, that is a staleness bug worth fixing, not something to silently work around.

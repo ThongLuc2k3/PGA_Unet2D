@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import logging
 import datetime
+import random
 
 from dataset import PromptSegmentationDataset
 from models.networks.prompt_unet_2D import PGA_UNet
@@ -50,6 +51,7 @@ USE_FOCAL_DICE = os.environ.get("USE_FOCAL_DICE", "0") == "1"
 FOCAL_GAMMA    = float(os.environ.get("FOCAL_GAMMA", "1.33"))
 USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+SEED       = int(os.environ.get("PROMPT_SEED", "22120196"))
 BATCH_SIZE = 4
 EPOCHS     = int(os.environ.get("PROMPT_EPOCHS", "150"))
 LR         = 1e-4
@@ -61,6 +63,17 @@ EVAL_PROMPT_MODES = ('center_zoom', 'center_shift')
 PRIMARY_VAL_MODE  = 'center_shift' if TRAIN_PROMPT_MODE == 'center_mixed' else TRAIN_PROMPT_MODE
 def resolve_img_size():
     return int(os.environ.get("PROMPT_IMG_SIZE", "512"))
+
+
+def seed_everything(seed):
+    """Fix training randomness for reproducible experiment reruns."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 def resolve_dataset_root():
@@ -253,6 +266,7 @@ def _dataset_kwargs(mode):
 
 
 def main():
+    seed_everything(SEED)
     valid_modes = {'center_zoom', 'center_shift', 'center_mixed'}
     if TRAIN_PROMPT_MODE not in valid_modes:
         raise ValueError(f"TRAIN_PROMPT_MODE must be one of {sorted(valid_modes)}.")
@@ -266,7 +280,7 @@ def main():
     logger.info(
         f"TrainPrompt: {TRAIN_PROMPT_MODE} | Device: {DEVICE} | "
         f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE} | "
-        f"DatasetRoot: {DATASET_ROOT} | ScaleFactor: {PROMPT_SCALE_FACTOR} "
+        f"DatasetRoot: {DATASET_ROOT} | Seed: {SEED} | ScaleFactor: {PROMPT_SCALE_FACTOR} "
         f"| ShiftRatio: {PROMPT_SHIFT_RATIO} | MixedShiftProb: {PROMPT_MIXED_SHIFT_PROB}"
         + (f" | QualityHead: ConfidenceLossWeight={LOSS_CONFIDENCE_WEIGHT}" if USE_QUALITY_HEAD else "")
         + (f" | SizeTversky: AlphaMax={SIZE_TVERSKY_ALPHA_MAX}, AreaPercentile={SIZE_TVERSKY_AREA_PCTL}" if USE_SIZE_TVERSKY else "")

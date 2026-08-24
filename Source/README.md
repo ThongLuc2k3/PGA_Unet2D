@@ -36,11 +36,11 @@ Source/
 - `models/networks/utils.py`: shared building blocks (`unetConv2`, `unetUp`) used by the baseline above.
 - `models/layers/grid_attention_layer.py`: original attention gate inherited from Attention U-Net and reused in ablation variants.
 
-**PGA-UNet-{128,256,512}** (`pga-train-{128,256,512}.ipynb`, both datasets where they exist) train on a center-scaled protocol (see `Prompt-Guided-XRay-Segmentation/README.md`, Step 2): `center_mixed`, box scaled from the GT center by `scale_factor=3.0`, off-center displacement `shift_ratio=0.5`, weighted 80% `center_shift` / 20% `center_zoom` per sample (a clinician rarely centers a box exactly on the lesion), plus a `QualityHead` no-GT confidence signal. The segmentation loss defaults to plain Dice + BCE; two candidate replacements (size-conditioned Tversky, Focal Dice) were tried and neither beat the default (see that README for the numbers), but both stay available as opt-in `train.py` flags (`USE_SIZE_TVERSKY`/`USE_FOCAL_DICE`) so PGA-UNet can be compared with either, both, or neither for further paper discussion. Each test cell derives `MODEL_PATH` and its report/CSV loss label automatically from the same flags.
+**PGA-UNet-{128,256,512}** (`pga-train-{128,256,512}.ipynb` for both BTXRD and FracAtlas) train on a center-scaled protocol (see `Prompt-Guided-XRay-Segmentation/README.md`, Step 2): `center_mixed`, box scaled from the GT center by `scale_factor=3.0`, off-center displacement `shift_ratio=0.5`, weighted 80% `center_shift` / 20% `center_zoom` per sample (a clinician rarely centers a box exactly on the lesion), plus a `QualityHead` no-GT confidence signal. The segmentation loss defaults to plain Dice + BCE; two candidate replacements (size-conditioned Tversky, Focal Dice) were tried and neither beat the default (see that README for the numbers), but both stay available as opt-in `train.py` flags (`USE_SIZE_TVERSKY`/`USE_FOCAL_DICE`) so PGA-UNet can be compared with either, both, or neither for further paper discussion. Each test cell derives `MODEL_PATH` and its report/CSV loss label automatically from the same flags.
 
-**SAM-Med2D** (`Finetune_SAMMed2D_test_robust.ipynb`) trains and tests on the same center-scaled protocol, so the comparison against PGA-UNet stays apples-to-apples: `center_zoom`/`center_shift`, `scale_factor=3.0`, `shift_ratio=0.5`, weighted 80/20 during training (own `DataLoader.py` cell, mirrors `dataset.py`'s math exactly), `epochs=150`, default test/validation scenario `center_shift`. Not the original authors' box-noise protocol (`get_boxes_from_mask`, small pixel-level jitter). Training is box-only: the point-prompt branch and the `iter_point` point-refinement loop from the original authors' code are disabled (`iter_point=0`). Checkpoints are named `sam_center_mixed_x3_shift05_{best,last}.pth`.
+**SAM-Med2D** (`Finetune_SAMMed2D_test_robust.ipynb`) trains and tests on the same center-scaled protocol, so the comparison against PGA-UNet stays apples-to-apples: `center_zoom`/`center_shift`, `scale_factor=3.0`, `shift_ratio=0.5`, weighted 80/20 during training (own `DataLoader.py` cell, mirrors `dataset.py`'s math exactly), and `epochs=150`. Validation reports both scenarios and checkpoint selection uses `center_shift`. All models use early-stopping patience 15 except SAM-Med2D, which deliberately uses 30 because its adapter fine-tuning converges more slowly. This is not the original authors' box-noise protocol (`get_boxes_from_mask`, small pixel-level jitter). Training is box-only: the point-prompt branch and the `iter_point` point-refinement loop from the original authors' code are disabled (`iter_point=0`). Checkpoints are named `sam_center_mixed_x3_shift05_{best,last}.pth`.
 
-**Attention U-Net** is unaffected: it has no prompt/box concept at all (plain image-only baseline). The 10 remaining architecture-ablation notebooks (each defining its own fully self-contained inline dataset class, no dependency on `dataset.py`) were migrated to the center-scaled `center_zoom`/`center_shift` protocol (and `center_mixed` for training), matching PGA-UNet and SAM-Med2D.
+**Attention U-Net** is unaffected: it has no prompt/box concept at all (plain image-only baseline). The 10 remaining architecture-ablation notebooks use thin dataset adapters around `PromptSegmentationDataset`, so box generation, Gaussian heatmap construction in original-image coordinates, resize-and-padding, deterministic test shifts, and synchronized augmentation exactly match PGA-UNet. The binary-prompt ablation overrides only heatmap construction and uses nearest-neighbor interpolation. Training uses `center_mixed`; testing reports `center_zoom` and `center_shift` separately.
 
 **Prompt-matched conventional baselines**: two Attention U-Net variants, promoted out of the architecture-ablation set into standalone baselines, give a plain Attention U-Net the same box prompt PGA-UNet gets, without any of PGA-UNet's Gaussian-prior/PSG/CAD machinery, so the comparison isolates "does the architecture matter, or just having the box at all":
 - `concat-prompt-attunet-r512.ipynb`: box heatmap concatenated as a 2nd input channel (`in_channels=2`), plain skip decoder.
@@ -50,7 +50,7 @@ Both baselines train in their own dedicated notebook above, but are tested insid
 
 Both use the same center-scaled protocol (`scale_factor=3.0`, `shift_ratio=0.5`) as PGA-UNet.
 
-> **Pending retrain:** no checkpoint has been trained under the center-scaled protocol yet for either PGA-UNet or SAM-Med2D, so every tracked `Results/` notebook, CSV, and the paper's numeric tables were produced by the previous protocol (independent-per-side zoom/shift, no `QualityHead`). Until the `pga-train-*.ipynb`/`Finetune_SAMMed2D_test_robust.ipynb` notebooks are actually run and the tables refreshed, do not assume tracked numbers reflect this new protocol.
+> **Pending retrain:** no checkpoint has been trained under the current center-scaled and standardized evaluation protocol yet for either PGA-UNet or the affected baselines. The obsolete `Results/` tree was removed. The paper's existing numeric tables still come from the previous protocol and must be refreshed after retraining.
 
 ## Dataset-Specific Notebook Folders
 
@@ -58,7 +58,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 
 `File_Train/{btxrd,fracatlas}/` contains:
 
-- `pga-train-128.ipynb` (btxrd only, no fracatlas counterpart), `pga-train-256.ipynb`, `pga-train-512.ipynb`: PGA-UNet training at each resolution (env vars `PROMPT_DATASET_ROOT` selects the dataset, `PROMPT_IMG_SIZE` selects the resolution for `train.py`), all on the center-scaled `center_mixed` protocol (see "current prompt protocol" above), plus an inline post-train evaluation cell for the center_zoom/center_shift scenarios with no-GT confidence and sample visualizations for both scenarios.
+- `pga-train-128.ipynb`, `pga-train-256.ipynb`, `pga-train-512.ipynb`: official PGA-UNet training entry points at all three resolutions for both datasets. Environment variables `PROMPT_DATASET_ROOT` and `PROMPT_IMG_SIZE` select the dataset and resolution. All use the center-scaled `center_mixed` protocol, followed by image-level merged evaluation for the `center_zoom` and `center_shift` scenarios, no-GT confidence reporting, and sample visualizations.
 - `Attention_Unet2D.ipynb`: Attention U-Net baseline training.
 - `Finetune_SAMMed2D_test_robust.ipynb`: SAM-Med2D finetuning and its own center_zoom/center_shift test cells.
 - `concat-prompt-attunet-r512.ipynb`: Attention U-Net + prompt channel, a prompt-matched conventional baseline (box heatmap concatenated as a 2nd input channel, no PSG, no CAD).
@@ -75,11 +75,15 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 - `test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
 - `Ablation/`: the matching 5 remaining ablation test notebooks.
 
+Reusable model and training implementations live under `Prompt-Guided-XRay-Segmentation/` and are imported by the notebooks. In particular, `train_attunet.py`, `train_attunet_crop.py`, `models/networks/attunet_concat_prompt.py`, `models/networks/prompt_unet_psg_only.py`, and `models/networks/prompt_unet_psg_attention.py` are source files on `main`; notebooks do not create them with `%%writefile`. Remaining `%%writefile` cells only patch files that already exist in the separately cloned SAM-Med2D repository.
+
 There is no single dedicated PGA-only test notebook; PGA-UNet is evaluated inside the comparison notebooks above. Efficiency analysis (parameter count, FLOPs, latency, checkpoint size, peak memory) is measured by `File_Test/test-measure_efficiency_btxrd.ipynb`. These numbers depend only on model architecture and input resolution, not on which dataset the checkpoint was trained on, so a single BTXRD-based notebook covers both datasets.
+
+For comparisons across PGA input resolutions, the per-resolution CSVs retain native-pixel `hd95` and also report `hd95_normalized = hd95 / (sqrt(2) * IMG_SIZE)`. Use the normalized value when comparing 128, 256, and 512. Comparisons evaluated in one shared 512 frame may continue to report HD95 in pixels.
 
 The active comparison story is:
 
-1. PGA-UNet across BTXRD and FracAtlas at `256` and `512`
+1. PGA-UNet across BTXRD and FracAtlas at `128`, `256`, and `512`
 2. Monte Carlo cross-validation for stability
 3. PGA-UNet vs Attention U-Net at `512`
 4. Attention U-Net top-Dice and bottom-Dice subsets
@@ -111,10 +115,12 @@ The repeated stability experiment should be described as:
 
 It should not be described as strict non-overlapping `k`-fold cross-validation.
 
+All main and ablation training runs use the fixed training seed `22120196`. The four Monte Carlo runs use split seeds `1`, `2`, `3`, and `4` while keeping the training seed fixed at `22120196`. This isolates variation due to dataset membership from variation due to model initialization, shuffling, prompt sampling, and augmentation.
+
 ## Notes
 
 - Dataset links have already been separated by folder for `BTXRD` and `FracAtlas`.
 - The paper narrative now uses `Attention U-Net`, `SAM-Med2D`, `small-lesion subset`, and the full `Gaussian prompt + PSG + CAD` ablation story.
 - All notebooks were audited for syntax errors, missing local-module imports, and cross-dataset ID mix-ups (see `CLAUDE.md` at the repo root for the conventions this branch follows).
 - Several notebooks migrated to the center-scaled protocol this session still have their checkpoint download replaced with a `TODO_CHECKPOINT_ID_...` placeholder, since no checkpoint has actually been retrained under it yet (see "Pending retrain" above): `pga512`, `pga256`, `sam256`, `fold1`-`fold4` (in the main comparison notebooks), `attunet_concat_prompt`, `crop_attunet512`, and one per remaining ablation variant (`cad_only`, `psg_only`, `psg_attention`, `full_binary_prompt`, `full_pga_heatmap_reference`). Fill these in with real Drive IDs after training; everything else already has real IDs.
-- Executed copies of these test notebooks, plus their per-image CSVs, live under `../Results/Result_{BTXRD,FracAtlas}/`; see the root `README.md` for what is and isn't committed there.
+- Executed notebooks and image-level merged CSVs will be added to a new `Results/` tree only after the affected models have been retrained under the current protocol.
