@@ -11,13 +11,16 @@ This file records the claims currently planned for the IEEE Access manuscript. I
 - Image-level evaluation groups lesion polygons by source image, merges ground-truth masks by union, merges predicted probability maps by pixelwise maximum, thresholds at 0.5, and then computes the metrics.
 - Main segmentation metrics are Dice, IoU, precision, recall, CBL, and HD95. Resolution comparisons should also report normalized HD95.
 - BTXRD and FracAtlas are trained and evaluated independently. The experiments do not claim cross-dataset generalization unless a cross-dataset test is added.
+- The task scope assumes that the user has identified the suspicious lesion region and provides a box intended to cover that lesion. It is a prompted segmentation task, not an unconstrained detector or a prompt-generation task.
+- The current main protocol does not include partial-coverage boxes, negative boxes, or boxes placed on an unrelated normal region. Those settings are outside the defined task scope and must not be used to claim performance or failure in those settings.
+- The values `31`, `scale_factor=3.0`, `shift_ratio=0.5`, and CAD depth weights `(1.0, 0.7, 0.4, 0.2)` are fixed protocol choices selected through preliminary experiments. They are not claimed to be globally optimal, and no additional sensitivity experiment is required for the current claim scope.
 - `full-heatmap-prompt.ipynb` was removed from both training ablation folders because it duplicates the full Gaussian PGA-UNet configuration represented by `pga-train-512.ipynb`. The corresponding full-heatmap test notebooks remain available for ablation evaluation.
 
 ## Claim 1: PGA-UNet Versus Automatic and Prompt-Matched Attention U-Net
 
 ### Scientific question
 
-Does PGA-UNet perform better because of its prompt-conditioned architecture, rather than only because it receives a box prompt?
+What is the role of external localization, and does PGA-UNet exploit the provided box beyond simple prompt access?
 
 ### Models
 
@@ -47,6 +50,10 @@ The prompt-guided models are evaluated under both `center_zoom` and `center_shif
 > PGA-UNet is compared with an image-only Attention U-Net and two prompt-matched Attention U-Net baselines to distinguish the contribution of prompt access from the contribution of prompt-conditioned processing.
 
 Do not claim that the automatic Attention U-Net comparison is a fully matched architecture comparison.
+
+### Localization interpretation
+
+Attention U-Net without a prompt must localize and segment from the full image. The prompt-channel and prompt-crop variants receive the same type of lesion box as PGA-UNet. Comparing these three settings separates the localization burden of the automatic baseline from the question of how a model consumes an already identified region. The evidence supports the claim that external localization is an important difficulty in this task and that prompt access and prompt-conditioned processing should be discussed separately. It does not prove that localization is the only or universal bottleneck.
 
 ## Claim 2: Attention U-Net Top-Dice and Bottom-Dice Subsets
 
@@ -213,9 +220,9 @@ Train four independent PGA-UNet checkpoints per dataset using split seeds `1`, `
 
 ### Claim wording
 
-> PGA-UNet shows consistent performance trends across the repeated random image-level splits evaluated.
+> Monte Carlo cross-validation evaluates the stability of PGA-UNet across repeated random image-level splits.
 
-Use `suggests stability` rather than `proves generalization`. The current checkpoint IDs are placeholders, so this claim is pending retraining.
+Use `shows stability across the evaluated splits` rather than `proves generalization`. This claim concerns PGA-UNet stability, not superiority over a baseline. The current checkpoint IDs are placeholders, so this claim is pending retraining.
 
 ## Claim 8: Computational Efficiency
 

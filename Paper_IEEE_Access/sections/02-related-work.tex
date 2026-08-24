@@ -25,7 +25,7 @@ DeepIGeoS and related interactive methods \cite{b6} & User guidance reduces sear
 \midrule
 SAM-Med2D / MedSAM \cite{b2,b9} & Promptable foundation segmentation & Large pretrained model with prompt-driven mask decoding & Multi-dataset medical evaluation with prompt-based metrics & Flexible and broadly applicable & Heavy; prompt influence is not designed as a lightweight end-to-end radiograph-specific prior \\
 \midrule
-This work & Prompt as a dense spatial prior throughout the network & Gaussian plateau prompt + PSG + CAD in a lightweight CNN & BTXRD and FracAtlas; Dice, IoU, HD95, CBL, efficiency, small-lesion analysis & Lightweight, prompt-aware from encoder to decoder, robust to prompt perturbation & Still requires supervised masks and fixed-resolution preprocessing \\
+This work & Prompt as a dense spatial prior throughout the network & Gaussian plateau prompt + PSG + CAD in a lightweight CNN & BTXRD and FracAtlas; Dice, IoU, HD95, CBL, efficiency, small-lesion analysis & Lightweight, prompt-aware from encoder to decoder, evaluated under controlled prompt displacement & Still requires supervised masks and fixed-resolution preprocessing \\
 \bottomrule
 \end{tabular}
 }
