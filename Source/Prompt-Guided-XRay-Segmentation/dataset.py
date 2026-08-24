@@ -15,26 +15,37 @@ class PromptSegmentationDataset(Dataset):
     Each sample corresponds to one GT polygon inside one image.
 
     prompt_mode:
-        'zoom_out': covering prompt expanded around the GT
-        'shift': covering prompt with an off-center displacement
-        'mixed': independently picks 'zoom_out' or 'shift' per sample with
-            50/50 probability, matching the SAM-Med2D finetuning protocol
-            (see DataLoader.py's prompt_box_from_mask). Intended for
-            training only; testing should still use 'zoom_out' and 'shift'
-            as two separate, fixed scenarios rather than 'mixed'.
+        'center_zoom': the tight GT box scaled outward from its own center by
+            a fixed scale_factor (all sides together)
+        'center_shift': 'center_zoom' with an added off-center displacement
+            (see shift_ratio below)
+        'center_mixed': independently picks 'center_zoom' or 'center_shift'
+            per sample, with P(center_shift) = mixed_shift_prob (default
+            0.8). Weighted toward 'center_shift' reflects that a clinician
+            drawing a box freehand rarely centers it exactly on the lesion.
+            Intended for training only; testing should still use
+            'center_zoom' and 'center_shift' as two separate, fixed
+            scenarios rather than 'center_mixed'.
     """
 
     def __init__(self, image_dir, json_dir, img_size=512, is_train=True,
-                 prompt_mode='zoom_out',
-                 zoom_ratio=(0.15, 0.45),
-                 shift_ratio=0.30):
+                 prompt_mode='center_mixed',
+                 shift_ratio=0.5,
+                 scale_factor=3.0,
+                 mixed_shift_prob=0.8):
         self.image_dir   = image_dir
         self.json_dir    = json_dir
         self.img_size    = img_size
         self.is_train    = is_train
         self.prompt_mode = prompt_mode
-        self.zoom_ratio  = zoom_ratio
         self.shift_ratio = shift_ratio
+        # Only used by prompt_mode='center_zoom'/'center_shift'/'center_mixed':
+        # how many times larger than the tight GT box the covering box is,
+        # measured from the GT center.
+        self.scale_factor = scale_factor
+        # Only used by prompt_mode='center_mixed': probability of picking
+        # 'center_shift' over 'center_zoom' for a given sample.
+        self.mixed_shift_prob = mixed_shift_prob
         # Fixed regardless of img_size: applied to heatmap coordinates in
         # original-image pixel space, before the resize-and-pad step. Scaling
         # it with img_size would change the effective blur relative to the
@@ -61,26 +72,30 @@ class PromptSegmentationDataset(Dataset):
 
     # ── Prompt helpers ────────────────────────────────────────────────
 
-    def _zoom_out_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w):
-        """Expand the prompt box outside the GT. Train: asymmetric random. Test: fixed."""
-        gt_w, gt_h = x_max - x_min, y_max - y_min
-        lo, hi = self.zoom_ratio
-        if self.is_train:
-            r_l, r_r = random.uniform(lo, hi), random.uniform(lo, hi)
-            r_t, r_b = random.uniform(lo, hi), random.uniform(lo, hi)
-        else:
-            r = 0.30
-            r_l = r_r = r_t = r_b = r
-        bx_min = max(0,       x_min - gt_w * r_l)
-        bx_max = min(orig_w,  x_max + gt_w * r_r)
-        by_min = max(0,       y_min - gt_h * r_t)
-        by_max = min(orig_h,  y_max + gt_h * r_b)
+    def _center_zoom_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w):
+        """Expand the tight GT box outward from its own center by a fixed
+        scale_factor (all four sides together). Meant to look closer to how a
+        clinician would actually draw a box: loosely centered on the
+        lesion rather than stretched unevenly per edge. No randomness here
+        (train and test use the same formula); scale_factor is a fixed
+        experiment setting, not sampled per example.
+        """
+        cx = (x_min + x_max) / 2.0
+        cy = (y_min + y_max) / 2.0
+        half_w = (x_max - x_min) / 2.0 * self.scale_factor
+        half_h = (y_max - y_min) / 2.0 * self.scale_factor
+        bx_min = max(0,       cx - half_w)
+        bx_max = min(orig_w,  cx + half_w)
+        by_min = max(0,       cy - half_h)
+        by_max = min(orig_h,  cy + half_h)
         return bx_min, bx_max, by_min, by_max
 
-    def _shift_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
-        """Create an off-center covering box that still fully contains the GT."""
+    def _center_shift_bbox(self, x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=None):
+        """Displaces _center_zoom_bbox off-center: train picks a random
+        offset each sample, test uses a fixed, reproducible offset per
+        sample (seeded by seed_idx)."""
         gt_w, gt_h = x_max - x_min, y_max - y_min
-        bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
+        bx_min, bx_max, by_min, by_max = self._center_zoom_bbox(
             x_min, x_max, y_min, y_max, orig_h, orig_w)
 
         if self.is_train:
@@ -96,7 +111,7 @@ class PromptSegmentationDataset(Dataset):
         by_min = max(0,       by_min + dy)
         by_max = min(orig_h,  by_max + dy)
 
-        # Shift mode must still cover the full GT, only changing its relative position inside the box.
+        # Shift must still cover the full GT, only changing its relative position inside the box.
         box_w = bx_max - bx_min
         box_h = by_max - by_min
         bx_min = min(bx_min, x_min)
@@ -169,21 +184,21 @@ class PromptSegmentationDataset(Dataset):
         x_max, y_max = np.max(points, axis=0)
 
         # Select the prompt box according to the configured prompt mode.
-        if self.prompt_mode == 'zoom_out':
-            bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
+        if self.prompt_mode == 'center_zoom':
+            bx_min, bx_max, by_min, by_max = self._center_zoom_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w)
 
-        elif self.prompt_mode == 'shift':
-            bx_min, bx_max, by_min, by_max = self._shift_bbox(
+        elif self.prompt_mode == 'center_shift':
+            bx_min, bx_max, by_min, by_max = self._center_shift_bbox(
                 x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
 
-        elif self.prompt_mode == 'mixed':
-            if random.random() < 0.5:
-                bx_min, bx_max, by_min, by_max = self._zoom_out_bbox(
-                    x_min, x_max, y_min, y_max, orig_h, orig_w)
-            else:
-                bx_min, bx_max, by_min, by_max = self._shift_bbox(
+        elif self.prompt_mode == 'center_mixed':
+            if random.random() < self.mixed_shift_prob:
+                bx_min, bx_max, by_min, by_max = self._center_shift_bbox(
                     x_min, x_max, y_min, y_max, orig_h, orig_w, seed_idx=idx)
+            else:
+                bx_min, bx_max, by_min, by_max = self._center_zoom_bbox(
+                    x_min, x_max, y_min, y_max, orig_h, orig_w)
 
         else:
             raise ValueError(f"Unknown prompt_mode: {self.prompt_mode}")

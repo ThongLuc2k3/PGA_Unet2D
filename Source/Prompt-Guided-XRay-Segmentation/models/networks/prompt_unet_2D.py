@@ -83,6 +83,9 @@ class unetUp_PromptAttention(nn.Module):
 
         p_encoded = self.prompt_encoder(prompt_rs)
         conf      = self.prompt_confidence(p_encoded)
+        # Exposed for PGA_UNet.forward(..., return_confidence=True); not used
+        # in the forward computation itself, so detaching costs nothing.
+        self.last_conf = conf.detach()
         alpha     = torch.sigmoid(self.alpha_raw)
         g_fused   = gating + (conf * alpha * self.w * p_encoded)
 
@@ -103,6 +106,45 @@ class unetUp_PromptAttention(nn.Module):
         return out + self.beta * p_refine
 
 
+class QualityHead(nn.Module):
+    """Predicts the model's own expected Dice for the current sample, trained
+    by regression against the real Dice (computed with GT, only available
+    during training). At inference this needs no ground truth at all: it is
+    a learned no-GT quality/confidence estimate, complementary to CAD's
+    prompt-confidence gates, which only reflect trust in the prompt rather
+    than the final predicted mask.
+
+    Takes three things concatenated at full spatial resolution, not just a
+    pooled abstract feature vector: the final decoder features (image and
+    prompt context), the predicted probability map (what the model actually
+    produced), and the prompt heatmap (what region was asked for). Two 3x3
+    convolutions let it compare these spatially, for example whether the
+    predicted mask extends past the prompted region or fails to align with
+    it, before pooling down to a single score.
+    """
+    def __init__(self, in_channels):
+        super().__init__()
+        self.mix = nn.Sequential(
+            nn.Conv2d(in_channels + 2, in_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(in_channels, in_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+        )
+        self.pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(in_channels, max(in_channels // 2, 4)),
+            nn.ReLU(inplace=True),
+            nn.Linear(max(in_channels // 2, 4), 1),
+            nn.Sigmoid(),
+        )
+
+    def forward(self, decoder_features, prob_map, prompt_map):
+        x = torch.cat([decoder_features, prob_map, prompt_map], dim=1)
+        x = self.mix(x)
+        pooled = self.pool(x).flatten(1)
+        return self.fc(pooled).squeeze(1)
+
+
 class PGA_UNet(nn.Module):
     """
     Prompt-Guided Attention UNet.
@@ -112,12 +154,18 @@ class PGA_UNet(nn.Module):
 
     def __init__(self, feature_scale=4, n_classes=1, in_channels=1,
                  is_batchnorm=True, use_encoder_prompt=True,
-                 prompt_weights=(1.0, 0.7, 0.4, 0.2)):
+                 prompt_weights=(1.0, 0.7, 0.4, 0.2),
+                 use_quality_head=True):
         super().__init__()
         self.use_encoder_prompt = use_encoder_prompt
+        self.use_quality_head   = use_quality_head
 
         w = list(prompt_weights)
         assert len(w) == 4, "prompt_weights must have exactly 4 elements (4 decoder levels)"
+        # Reused in forward(..., return_confidence=True) to weight each
+        # decoder level's CAD confidence the same way it weights that
+        # level's gating fusion strength (up_concat4 -> up_concat1).
+        self.prompt_weights = w
 
         filters = [int(x / feature_scale) for x in [64, 128, 256, 512, 1024]]
         # filters = [16, 32, 64, 128, 256]
@@ -148,7 +196,14 @@ class PGA_UNet(nn.Module):
 
         self.final = nn.Conv2d(filters[0], n_classes, 1)
 
-    def forward(self, inputs, prompt):
+        # Optional: adds new parameters, so only construct it when requested.
+        # Default is True (this is the main protocol going forward); pass
+        # use_quality_head=False to load an older checkpoint trained without
+        # QualityHead, whose state_dict has no quality_head keys.
+        if use_quality_head:
+            self.quality_head = QualityHead(filters[0])
+
+    def forward(self, inputs, prompt, return_confidence=False, return_quality=False):
         # Model-level augmentation, training only
         if self.training:
             r = torch.rand(1).item()
@@ -182,4 +237,48 @@ class PGA_UNet(nn.Module):
         up2 = self.up_concat2(c2, up3,    prompt)
         up1 = self.up_concat1(c1, up2,    prompt)
 
-        return self.final(up1)
+        logits = self.final(up1)
+
+        outputs = [logits]
+        if return_confidence:
+            # No-GT "prompt confidence" signal: the CAD gate at each decoder
+            # level already learns how much to trust the prompt encoding
+            # there (see unetUp_PromptAttention.prompt_confidence). Combined
+            # with the same per-level weights (prompt_weights) used to scale
+            # each level's gating fusion strength, rather than an unweighted
+            # mean, so levels with more influence on the output also weigh
+            # more in the reported confidence. One scalar per sample in
+            # [0, 1], with no ground truth involved.
+            confs = torch.cat([
+                self.up_concat4.last_conf.flatten(1),
+                self.up_concat3.last_conf.flatten(1),
+                self.up_concat2.last_conf.flatten(1),
+                self.up_concat1.last_conf.flatten(1),
+            ], dim=1)
+            level_weights = confs.new_tensor(self.prompt_weights)
+            prompt_confidence = (confs * level_weights).sum(dim=1) / level_weights.sum()
+            outputs.append(prompt_confidence)
+
+        if return_quality:
+            if not self.use_quality_head:
+                raise RuntimeError(
+                    "return_quality=True requires the model to be constructed "
+                    "with use_quality_head=True."
+                )
+            # No-GT "result confidence": a learned estimate of this sample's
+            # own Dice, trained by regression against the real Dice during
+            # training (see LOSS_CONFIDENCE_WEIGHT in train.py). Needs no
+            # ground truth at inference. Gives QualityHead the decoder
+            # features, the predicted probability map, and the prompt
+            # heatmap, so it can compare the actual mask and the requested
+            # region rather than only summarizing an abstract feature
+            # vector. Everything is detached first: up1 and logits are the
+            # same tensors self.final() used for the segmentation output,
+            # so without detaching, the confidence loss's gradient would
+            # also flow back into the shared decoder and quietly perturb
+            # segmentation quality. Detaching makes this head a pure
+            # observer that never influences segmentation training.
+            prob_map = torch.sigmoid(logits).detach()
+            outputs.append(self.quality_head(up1.detach(), prob_map, prompt.detach()))
+
+        return outputs[0] if len(outputs) == 1 else tuple(outputs)

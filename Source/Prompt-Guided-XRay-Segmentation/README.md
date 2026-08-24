@@ -5,17 +5,12 @@
 - Image, mask, and prompt map all use the `resize + padding` pipeline, never a direct stretch to a square frame.
 - The long edge is scaled down to `img_size`, then the background is padded to form a square `img_size x img_size` image.
 - `image` uses `cv2.INTER_LINEAR`, `mask` uses `cv2.INTER_NEAREST`, `prompt_map` uses `cv2.INTER_LINEAR`.
-- Three prompt modes: `zoom_out`, `shift`, and `mixed` (independently picks `zoom_out` or `shift` per training sample with 50/50 probability, matching the SAM-Med2D finetuning protocol).
-- `zoom_out` is sampled randomly in `0.15-0.45` during training, and fixed at `0.30` during testing.
-- `shift` uses a fixed relative offset of `0.30`.
-- No minimum context margin is enforced around the GT: the covering box only guarantees
-  full coverage of the GT, nothing more (the `shift` mode already could not guarantee a
-  minimum gap either, since it snaps back to the GT boundary to preserve coverage).
-- The Gaussian kernel is fixed regardless of resolution: `31`, the same for
-  `img_size=256` and `img_size=512`. It is applied to heatmap coordinates in
-  original-image pixel space before the resize-and-pad step, so keeping it constant
-  (rather than scaling with `img_size`) is what keeps the effective blur consistent
-  relative to the final `img_size x img_size` frame the network sees.
+- Three prompt modes, all box-scaled-from-center (no independent-per-side expansion): `center_zoom`, `center_shift`, `center_mixed`.
+- `center_zoom` scales the tight GT box outward from its own center by a fixed `scale_factor` (all four sides together, no per-side randomness, no randomness at all: train and test use the same formula).
+- `center_shift` adds an off-center displacement to `center_zoom`, using `shift_ratio` (train: random each sample; test: fixed, reproducible per sample), then re-clamps so the box still fully covers the GT.
+- `center_mixed` independently picks `center_zoom` or `center_shift` per sample, with `P(center_shift) = mixed_shift_prob` (default `0.8`, i.e. 80% shift / 20% zoom): weighted toward `center_shift` because a clinician drawing a box freehand rarely centers it exactly on the lesion. Intended for training only; testing uses `center_zoom` and `center_shift` as two separate, fixed scenarios.
+- No minimum context margin is enforced around the GT: the covering box only guarantees full coverage of the GT, nothing more (`center_shift` already cannot guarantee a minimum gap either, since it snaps back to the GT boundary to preserve coverage).
+- The Gaussian kernel is fixed regardless of resolution: `31`, the same for `img_size=128`, `256`, and `512`. It is applied to heatmap coordinates in original-image pixel space before the resize-and-pad step, so keeping it constant (rather than scaling with `img_size`) is what keeps the effective blur consistent relative to the final `img_size x img_size` frame the network sees.
 
 ## Required directory structure:
 # dataset_<DATASET_NAME>/
@@ -29,24 +24,50 @@
 # dataset.py
 # train.py
 
-## Step 2: Train on the mixed covering/off-center prompt (main protocol)
-# In train.py: TRAIN_PROMPT_MODE='mixed', USE_ENCODER_PROMPT=True
-- set `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>` and `PROMPT_IMG_SIZE=256` or `512` (defaults to `512` if unset)
+## Step 2: Train on the center-scaled mixed covering/off-center prompt (main protocol)
+# In train.py: TRAIN_PROMPT_MODE='center_mixed' (default), USE_ENCODER_PROMPT=True, USE_QUALITY_HEAD=1 (default)
+- set `PROMPT_DATASET_ROOT=dataset_<DATASET_NAME>` and `PROMPT_IMG_SIZE=128`, `256`, or `512` (defaults to `512` if unset)
 - python train.py
-# produces checkpoints/pga_unet_mixed_256_best.pth or _512_best.pth depending on PROMPT_IMG_SIZE
-# validation reports zoom_out and shift separately; checkpoint selection uses zoom_out val Dice
-- run the matching test notebook under File_Test/ to get the 2-scenario table (`zoom_out` and `shift`), the 6-metric summary, and sample visualizations
+# with no other env vars set, this already runs the current default recipe: center_mixed,
+# scale_factor=3.0, shift_ratio=0.5, mixed_shift_prob=0.8 (80% shift / 20% zoom), QualityHead on
+# produces checkpoints/pga_unet_center_mixed_x3_shift05_qhead_<128|256|512>_best.pth
+# validation reports center_zoom and center_shift separately; checkpoint selection uses center_shift val Dice (the harder, off-center scenario)
+- run the matching test notebook under File_Train/ (each `pga-train-*.ipynb` has its own inline test cell) to get the 2-scenario table (`center_zoom` and `center_shift`), the 6-metric summary, the no-GT confidence (CAD prompt-confidence gate + QualityHead), and sample visualizations for both scenarios
+
+Two candidate segmentation-loss replacements (a size-conditioned Tversky term and a Focal
+Dice term) were tried on top of this same protocol: tested against the plain Dice loss
+baseline (all under 50/50 zoom/shift mixing), size-conditioned Tversky measured worse Dice
+on the small-lesion subset (0.7561 vs. 0.7781), and Focal Dice measured no real improvement
+(0.7786 vs. 0.7781, within noise). Neither is the default (the segmentation loss stays plain
+Dice + BCE unless one is explicitly enabled below), but both remain available as opt-in
+`train.py` flags so PGA-UNet can be compared with either, both attempted together (raises a
+`ValueError`, they replace the same term), or neither, for further paper discussion.
+
+Environment variables for Step 2 (all optional, shown with their defaults):
+- `PROMPT_MODE` (default `center_mixed`): `center_zoom`, `center_shift`, or `center_mixed`.
+- `PROMPT_SCALE_FACTOR` (default `3.0`), `PROMPT_SHIFT_RATIO` (default `0.5`), `PROMPT_MIXED_SHIFT_PROB` (default `0.8`, only used by `center_mixed`).
+- `PROMPT_EPOCHS` (default `150`).
+- `USE_QUALITY_HEAD` (default `1`), `LOSS_CONFIDENCE_WEIGHT` (default `1.0`): set `USE_QUALITY_HEAD=0` to fall back to a plain `PGA_UNet` with no confidence head. `PGA_UNet`'s own constructor also defaults `use_quality_head=True`; pass `use_quality_head=False` there directly to load an older checkpoint trained without one.
+- `USE_SIZE_TVERSKY=1` (default off), with `SIZE_TVERSKY_ALPHA_MAX` (default `0.7`) and `SIZE_TVERSKY_AREA_PCTL` (default `25`): replaces `dice_loss` with `size_weighted_tversky_loss`, penalizing false positives more on small-GT-area samples.
+- `USE_FOCAL_DICE=1` (default off), with `FOCAL_GAMMA` (default `1.33`): replaces `dice_loss` with `focal_dice_loss`, `(1 - Dice)^(1/gamma)`. Mutually exclusive with `USE_SIZE_TVERSKY`.
+- Checkpoint filenames record which loss was used (`_sizetversky` / `_focaldice<gamma>` suffix, nothing added for the plain-Dice default), so `File_Train/{btxrd,fracatlas}/pga-train-{128,256,512}.ipynb`'s test cell can derive `MODEL_PATH` and its report/CSV loss label automatically from the same `USE_SIZE_TVERSKY`/`USE_FOCAL_DICE` variables set in the train cell above it.
+
+No-GT confidence: the CAD prompt-confidence gate (`PGA_UNet.forward(..., return_confidence=True)`)
+combines its 4 decoder levels with a weighted mean using the same `prompt_weights`
+(`1.0, 0.7, 0.4, 0.2`) that scale each level's gating fusion strength, rather than a plain
+average, so levels with more influence on the output also weigh more in the reported
+confidence.
 
 ## Step 3 (optional, single-condition ablation): Train with the covering prompt only
-# In train.py: TRAIN_PROMPT_MODE='zoom_out', USE_ENCODER_PROMPT=True or False
+# In train.py: PROMPT_MODE=center_zoom
 - python train.py
-# produces checkpoints/pga_unet_zoom_out_256_best.pth or _512_best.pth
-- run the matching test notebook under File_Test/
-# compare against step 2 to see whether mixed-prompt training changes covering-condition performance
+# produces checkpoints/pga_unet_center_zoom_x3_qhead_256_best.pth or _512_best.pth
+- run the matching test notebook under File_Train/
+# compare against step 2 to see whether center_mixed training changes covering-condition performance
 
 ## Step 4 (optional, single-condition ablation): Train with the off-center prompt only
-# In train.py: TRAIN_PROMPT_MODE='shift', USE_ENCODER_PROMPT=True
+# In train.py: PROMPT_MODE=center_shift
 - python train.py
-# produces checkpoints/pga_unet_shift_256_best.pth or _512_best.pth
-- run the matching test notebook under File_Test/
-# produces the 2-scenario table (`zoom_out` and `shift`) plus sample visualizations
+# produces checkpoints/pga_unet_center_shift_x3_shift05_qhead_256_best.pth or _512_best.pth
+- run the matching test notebook under File_Train/
+# produces the 2-scenario table (`center_zoom` and `center_shift`) plus sample visualizations
