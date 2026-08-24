@@ -42,11 +42,24 @@ If asked to check for this, verify empirically rather than asserting from memory
 - Before any destructive or broad action (deleting files, rewriting many notebooks at once, force git operations), state the exact list of files or changes first.
 - If you notice something already broken, missing, or changed that you did not touch yourself, say so explicitly instead of silently fixing it or staying quiet about it.
 
+## Efficient agent workflow
+
+- Match the investigation size to the request. For a short question, inspect only the nearest file, symbol, or existing note needed to answer it; do not read the whole repository by default.
+- Before editing, state one local hypothesis and one cheap check that could disconfirm it. After the first edit, run that focused check before reading or changing adjacent areas.
+- Prefer existing README files, claim registers, nearby tests, and call sites over broad repository scans. Expand the search only when the focused evidence is ambiguous or exposes a concrete cross-file dependency.
+- Do not run training, large notebook cells, GPU benchmarks, downloads, or other expensive computations unless the user explicitly requests execution. Static checks and small CPU checks are preferred during code review.
+- Treat notebooks as executable documents. Preserve cell order, metadata, dataset-specific paths, and checkpoint placeholders. Use notebook-aware editing for `.ipynb` files and validate JSON after changes.
+- Keep responses proportional to the request. A short user question normally gets a short direct answer. Report only the relevant finding, decision, command, or next question instead of repeating the full project context.
+- Avoid repeating the same file contents or plan across turns. Refer to the existing claim register or README when it already contains the detail, and report only what changed.
+- Never infer an empirical result from a model definition, a notebook name, a placeholder checkpoint, or an unexecuted cell. Mark it as pending retraining or pending evaluation.
+- Keep model capabilities scoped to the model that implements them. In particular, QualityHead and prompt suggestion belong to PGA-UNet unless another model has an explicit implementation and trained checkpoint.
+- Do not spend tokens auditing unrelated files after a requested local fix passes its focused validation. Finish the local task first, then ask before broadening the review.
+
 ## Where to find current project state
 
 This file holds durable rules only, not a snapshot of the codebase or current experiment status: those change too often to keep in sync here and belong in the docs that live next to the code they describe instead.
 
-- Current notebook layout, prompt protocol, baselines, and pending-retrain status: `Source/README.md`.
+- Current notebook layout, prompt protocol, baselines, claim experiment map, and pending-retrain status: `Source/README.md` and `Paper_IEEE_Access/claims_to_validate.md`.
 - Shared PGA-UNet package usage (`dataset.py`, `train.py`, `models/`): `Source/Prompt-Guided-XRay-Segmentation/README.md`.
 - Retraining status and the policy for regenerating `Results/`: the root `README.md`.
 

@@ -21,6 +21,8 @@ PGA_Unet2D/
 
 See `Source/README.md` for the full notebook inventory, the covering/off-center prompt protocol, and which checkpoints each notebook needs.
 
+The planned IEEE claims and the train/test evidence for each claim are recorded in [`Paper_IEEE_Access/claims_to_validate.md`](Paper_IEEE_Access/claims_to_validate.md). The repository uses the fixed training seed `22120196`; Monte Carlo split experiments additionally use split seeds `1`, `2`, `3`, and `4`.
+
 ## Experiment results
 
 The obsolete `Results/` tree was removed because it contained outputs from the previous prompt and evaluation protocol. New executed notebooks and image-level merged CSVs will be added only after every affected model has been retrained with the current source. Trained checkpoints remain excluded because they are large binaries; their Google Drive IDs will be added to the corresponding notebooks after retraining and upload.
@@ -40,5 +42,7 @@ Compile with `pdflatex access.tex` (run twice for references/figures to resolve)
 - **Attention U-Net**: automatic (no-prompt) baseline.
 - **SAM-Med2D**: prompt-based foundation-model baseline, fine-tuned on the same covering-prompt protocol PGA-UNet is evaluated on (see `Source/README.md` for why).
 - Two prompt-matched conventional baselines give a plain Attention U-Net the same box prompt PGA-UNet gets, without PGA-UNet's own machinery: the heatmap concatenated as a 2nd input channel, or the image cropped to the prompt box before prediction. See `Source/README.md` for details.
+
+The dedicated small-lesion resolution comparisons are `Source/File_Test/btxrd/test-subcat-pga-small-r128-256-512-btxrd.ipynb` and `Source/File_Test/fracatlas/test-subcat-pga-small-r128-256-512-fracatlas.ipynb`. The duplicate full-heatmap training notebooks were removed because the full Gaussian configuration is trained by `pga-train-512.ipynb`; the full-heatmap test notebooks remain for evaluation.
 
 Plain U-Net is not trained or evaluated on this branch; it appears in the paper only as background in the Related Work discussion.
