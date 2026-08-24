@@ -1,66 +1,70 @@
-# Project notes for AI assistants
+# Repository Agent Rules
 
-## Branches: read this first
+## Repository Scope
 
-This repo has two branches with different purposes. Do not mix content, numbers, or checkpoint IDs between them.
+- `main` contains the English IEEE Access submission and current experiments.
+- `graduation-project` contains the submitted Vietnamese thesis. Do not mix files, results, checkpoints, or claims between branches.
+- Read `README.md`, `Source/README.md`, `Source/Prompt-Guided-XRay-Segmentation/README.md`, and `Paper_IEEE_Access/claims_to_validate.md` before making assumptions about the current protocol or experiment status.
 
-- `main` (this branch): source for an IEEE Access journal paper submission. The paper draft is at `Paper_IEEE_Access/access.tex`, split into `Paper_IEEE_Access/sections/*.tex` (one file per paper section), `references.tex`, and `biography.tex`; figures live under `Paper_IEEE_Access/images/<category>/`; a Vietnamese self-check translation (not for submission) lives in `Paper_IEEE_Access/vietnam/access_vietnam.tex`. Experiments here use a cleaned-up, revised prompt protocol.
-- `graduation-project`: the original undergraduate thesis, in Vietnamese, already submitted (full LaTeX report under `Report/`). Read it with `git show graduation-project:<path>` or a separate worktree; do not check it out over uncommitted work on `main`.
+## File Language
 
-## Language rule (main branch only)
+- Files committed on `main` must be in English, including code comments, docstrings, logs, assertions, notebook markdown, names, and documentation.
+- The only intentional exception is `Paper_IEEE_Access/vietnam/access_vietnam.tex`, which is a Vietnamese self-check translation.
+- Reply to the user in the language they use. The file-language rule does not control conversation language.
 
-This rule is about file content, not conversation. Everything committed to files on `main` must be in English: code comments, docstrings, print/log/assert messages, notebook markdown cells, variable and function names. Do not add or leave Vietnamese text in any file on this branch. Vietnamese content belongs only on `graduation-project`.
+## Writing Style
 
-Talking with the user is a separate matter: reply in whatever language the user writes in (this user writes in Vietnamese). Never switch the conversation itself to English just because the repo's file-content rule says English.
+- Do not use em dashes, en dashes, or double hyphens as sentence-connecting punctuation.
+- Prefer short, direct prose. Avoid empty comments and repeated explanations.
+- Do not add copyright or license headers unless requested.
+- Use ASCII by default. Preserve the existing character set when editing the Vietnamese translation.
 
-The one deliberate, explicit exception: `Paper_IEEE_Access/vietnam/access_vietnam.tex` is a Vietnamese translation of the paper, kept only so the author can self-check the English manuscript. It exists on `main` at the user's explicit request, made after being told this contradicts the rule above. Do not treat its presence as license to add Vietnamese elsewhere; if it drifts out of sync with `access.tex`, that is a real staleness bug worth fixing, not something to leave because "there's already Vietnamese in the repo."
+## Safe Editing
 
-## Writing style
+- Make the smallest change that satisfies the request. Do not refactor, rename, delete, or revert unrelated work.
+- Never invent checkpoint IDs, Drive IDs, credentials, metrics, or experimental results. Use an explicit `TODO_...` placeholder when a value is missing.
+- Before destructive or broad changes, state the exact scope and affected files.
+- Do not commit or create branches unless requested. Never force-push unless explicitly requested.
+- Do not add AI attribution trailers or hidden watermarks, invisible Unicode markers, steganographic text, or covert metadata to any file.
 
-**Never use an em dash (—), an en dash (–), or a double/triple hyphen (`--`, `---`) as sentence-connecting punctuation, in any file, in any language, on this branch: code comments, docstrings, print/log/assert messages, notebook markdown cells, `.md` files, `.tex` prose (English or the Vietnamese self-check file), commit messages, everything.** It reads as AI-generated prose. Use a period, comma, colon, semicolon, or parentheses instead, or just restructure the sentence into two sentences. This has been violated repeatedly in past sessions (`README.md`, `access_vietnam.tex`, notebook markdown cells) despite being documented here; treat any new writing task as incomplete until you have grepped your own output for `—`, `–`, and `--` before considering it done.
+## Investigation and Validation
 
-This does not apply to:
-- decorative section-divider lines made of repeated dash or box-drawing characters, for example `# --------------------------------`, which are fine to keep as visual separators,
-- functional code that legitimately manipulates that character, for example sanitizing a string for use in a filename,
-- a single hyphen used as a plain title separator in a heading or comment, for example `# Ablation - CAD only`, which is a normal, human-natural convention and not the AI-writing tell this rule targets,
-- LaTeX's own `--` en-dash ligature inside numeric ranges, for example `15\%--45\%` or page ranges in `\bibitem` entries, which is TeX typesetting syntax, not prose punctuation.
+- Match investigation depth to the request. For a short question, inspect the nearest relevant file or symbol only.
+- Before editing, form one local hypothesis and identify one cheap check that could disconfirm it.
+- After the first substantive edit, run the narrowest available validation before expanding the scope.
+- Prefer existing README files, claim registers, neighboring tests, and call sites over broad repository scans.
+- Use `apply_patch` for text files. Use notebook-aware editing for `.ipynb` files and validate their JSON after changes.
+- Run syntax, type, lint, or focused tests when available. Do not claim a test passed if it was not run.
+- Do not run training, large notebook cells, downloads, GPU benchmarks, or other expensive jobs unless the user explicitly requests execution.
 
-## Git commit conventions
+## Notebook Rules
 
-**Never add a `Co-Authored-By: Claude ...` (or any AI-attribution) trailer to a commit message, on any branch.** This repo is public on GitHub, and that trailer makes GitHub list the AI as a repo contributor, which the author does not want. This was violated in early sessions on both `main` and `graduation-project`; both branches' histories were later rewritten (`git filter-branch --msg-filter`) to strip the trailer and force-pushed to origin, keeping a local-only `backup/<branch>-pre-claude-trailer-cleanup` branch for each in case anything needed to be recovered. Do not repeat the mistake, and do not force-push over anyone's work to "fix" this again without the user explicitly asking first, since it rewrites public commit hashes.
+- Preserve notebook cell order, metadata, dataset-specific paths, and execution intent.
+- Keep dataset names, resolutions, prompt modes, seeds, checkpoint names, and model input or output signatures consistent with the shared source code.
+- Treat unexecuted cells and placeholder checkpoints as pending work, not as experimental evidence.
+- Keep model capabilities scoped to their implementation. QualityHead and prompt suggestion belong to PGA-UNet unless another model has an explicit implementation and trained checkpoint.
+- Distinguish polygon-level metrics from image-level merged metrics.
 
-## No hidden watermarks or AI-identifying metadata
+## Claims and Results
 
-**Never embed any hidden marker of AI involvement in a file: invisible/zero-width Unicode characters (e.g. U+200B, U+200C, U+200D, U+FEFF, U+2060), steganographic text, hidden PDF metadata fields (Producer/Creator/Author/Keywords/XMP), PNG/JPEG metadata chunks (tEXt, EXIF, software tags), or any other covert signature identifying Claude, Anthropic, or AI generation, in any file on any branch.** This applies to `.tex` sources, generated `.pdf` files, and generated image files (e.g. the composite figures under `Paper_IEEE_Access/images/`) alike. The only acceptable place for a tool's own identity to appear is the ordinary, visible metadata a build tool writes about itself (e.g. `pdfTeX`/`xdvipdfmx` as PDF Producer), never anything referencing the AI assistant.
+- Separate implementation claims from empirical claims.
+- Do not infer performance, robustness, calibration, clinical validity, generalization, or causal mechanism from architecture code or notebook names.
+- Report prompt conditions separately when relevant, especially `center_zoom` and `center_shift`.
+- Treat a confidence score as an auxiliary estimate unless held-out calibration evidence supports a probability interpretation.
+- Keep the final decision with the clinician. Do not describe prompt suggestion as automatic lesion detection without dedicated evidence.
 
-If asked to check for this, verify empirically rather than asserting from memory: grep source files for invisible Unicode ranges, inspect PDF metadata (`pdfinfo`, or search the raw `/Info` dictionary) and actual rendered text (`pdftotext`, not raw `strings`, which produces false positives from compressed binary streams), and check image files for metadata chunks (e.g. via Pillow's `Image.info`). Report findings plainly, including any coincidental false positives found and ruled out, rather than a bare "no."
+## Token and Response Efficiency
 
-## Scope discipline
+- For short questions, give a short direct answer. Do not start a full repository audit unless requested or required by a concrete dependency.
+- Do not reread files or repeat plans that are already established in the current conversation.
+- Use targeted searches and small line ranges first. Read broader context only when the local evidence is ambiguous.
+- Parallelize independent read-only checks, then summarize only the findings that affect the decision.
+- Stop searching when the requested local fix passes focused validation. Ask before broadening into unrelated cleanup.
+- Prefer reporting the changed files, validation result, blocker, or next decision instead of restating project background.
 
-- Do only what was asked. Do not refactor, rename, delete files, or clean up unrelated code without asking first.
-- Never invent placeholder values that look real: Google Drive IDs, checkpoint paths, credentials. If a value is genuinely missing, leave a clearly marked `TODO_...` placeholder and say so out loud.
-- Before any destructive or broad action (deleting files, rewriting many notebooks at once, force git operations), state the exact list of files or changes first.
-- If you notice something already broken, missing, or changed that you did not touch yourself, say so explicitly instead of silently fixing it or staying quiet about it.
+## Persistent Project Notes
 
-## Efficient agent workflow
-
-- Match the investigation size to the request. For a short question, inspect only the nearest file, symbol, or existing note needed to answer it; do not read the whole repository by default.
-- Before editing, state one local hypothesis and one cheap check that could disconfirm it. After the first edit, run that focused check before reading or changing adjacent areas.
-- Prefer existing README files, claim registers, nearby tests, and call sites over broad repository scans. Expand the search only when the focused evidence is ambiguous or exposes a concrete cross-file dependency.
-- Do not run training, large notebook cells, GPU benchmarks, downloads, or other expensive computations unless the user explicitly requests execution. Static checks and small CPU checks are preferred during code review.
-- Treat notebooks as executable documents. Preserve cell order, metadata, dataset-specific paths, and checkpoint placeholders. Use notebook-aware editing for `.ipynb` files and validate JSON after changes.
-- Keep responses proportional to the request. A short user question normally gets a short direct answer. Report only the relevant finding, decision, command, or next question instead of repeating the full project context.
-- Avoid repeating the same file contents or plan across turns. Refer to the existing claim register or README when it already contains the detail, and report only what changed.
-- Never infer an empirical result from a model definition, a notebook name, a placeholder checkpoint, or an unexecuted cell. Mark it as pending retraining or pending evaluation.
-- Keep model capabilities scoped to the model that implements them. In particular, QualityHead and prompt suggestion belong to PGA-UNet unless another model has an explicit implementation and trained checkpoint.
-- Do not spend tokens auditing unrelated files after a requested local fix passes its focused validation. Finish the local task first, then ask before broadening the review.
-
-## Where to find current project state
-
-This file holds durable rules only, not a snapshot of the codebase or current experiment status: those change too often to keep in sync here and belong in the docs that live next to the code they describe instead.
-
-- Current notebook layout, prompt protocol, baselines, claim experiment map, and pending-retrain status: `Source/README.md` and `Paper_IEEE_Access/claims_to_validate.md`.
-- Shared PGA-UNet package usage (`dataset.py`, `train.py`, `models/`): `Source/Prompt-Guided-XRay-Segmentation/README.md`.
-- Retraining status and the policy for regenerating `Results/`: the root `README.md`.
-
-Read those before assuming anything about the current architecture, prompt protocol, or baseline set; if you find one of them out of date with the actual code, that is a staleness bug worth fixing, not something to silently work around.
+- Current layout, protocol, baselines, and pending retraining: `Source/README.md`.
+- Claim-to-evidence mapping: `Paper_IEEE_Access/claims_to_validate.md`.
+- Shared package usage: `Source/Prompt-Guided-XRay-Segmentation/README.md`.
+- Manuscript entry point: `Paper_IEEE_Access/access.tex`.
