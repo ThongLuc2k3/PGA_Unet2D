@@ -15,6 +15,7 @@ This file records the claims currently planned for the IEEE Access manuscript. I
 - The current main protocol does not include partial-coverage boxes, negative boxes, or boxes placed on an unrelated normal region. Those settings are outside the defined task scope and must not be used to claim performance or failure in those settings.
 - The values `31`, `scale_factor=3.0`, `shift_ratio=0.5`, and CAD depth weights `(1.0, 0.7, 0.4, 0.2)` are fixed protocol choices selected through preliminary experiments. They are not claimed to be globally optimal, and no additional sensitivity experiment is required for the current claim scope.
 - `full-heatmap-prompt.ipynb` was removed from both training ablation folders because it duplicates the full Gaussian PGA-UNet configuration represented by `pga-train-512.ipynb`. The corresponding full-heatmap test notebooks remain available for ablation evaluation.
+- Any quantitative claim that depends on notebooks still carrying `TODO_CHECKPOINT_ID_...` placeholders remains pending until the matching checkpoints are retrained, uploaded, and referenced with real IDs.
 
 ## Claim 1: PGA-UNet Versus Automatic and Prompt-Matched Attention U-Net
 

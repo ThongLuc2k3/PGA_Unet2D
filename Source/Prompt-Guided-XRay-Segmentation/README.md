@@ -34,15 +34,7 @@
 # validation reports center_zoom and center_shift separately after image-level polygon merging; checkpoint selection uses image-level center_shift val Dice (the harder, off-center scenario)
 - run the matching test notebook under File_Train/ (each `pga-train-*.ipynb` has its own inline test cell) to get the 2-scenario table (`center_zoom` and `center_shift`), the 6-metric summary, the no-GT confidence (CAD prompt-confidence gate + QualityHead), and sample visualizations for both scenarios
 
-Two candidate segmentation-loss replacements (a size-conditioned Tversky term and a Focal
-Dice term) were tried on top of this same protocol: tested against the plain Dice loss
-baseline (all under 50/50 zoom/shift mixing), size-conditioned Tversky measured worse Dice
-on the small-lesion subset (0.7561 vs. 0.7781), and Focal Dice measured no real improvement
-(0.7786 vs. 0.7781, within noise). Neither is the default (the segmentation loss stays plain
-Dice + BCE unless one is explicitly enabled below). Both remain available as separate
-opt-in `train.py` flags, giving exactly three loss configurations: default Dice + BCE,
-size-conditioned Tversky + BCE, and Focal Dice + BCE. Enabling both alternatives together
-is intentionally invalid because they replace the same Dice term.
+Two candidate segmentation-loss replacements remain available as reference options: size-conditioned Tversky and Focal Dice. Reference numbers from the earlier loss check are `0.7561` vs. `0.7781` on the small-lesion subset for size-conditioned Tversky versus plain Dice, and `0.7786` vs. `0.7781` for Focal Dice versus plain Dice. Keep these as reference only. The current default remains plain Dice + BCE unless one alternative is explicitly enabled. The three valid configurations are default Dice + BCE, size-conditioned Tversky + BCE, and Focal Dice + BCE. Enabling both alternatives together is intentionally invalid because they replace the same Dice term.
 
 Environment variables for Step 2 (all optional, shown with their defaults):
 - `PROMPT_MODE` (default `center_mixed`): `center_zoom`, `center_shift`, or `center_mixed`.

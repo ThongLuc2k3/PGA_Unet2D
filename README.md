@@ -6,7 +6,7 @@ This branch (`main`) is the source for an IEEE Access journal submission. See `P
 
 ## Previous-protocol reference results
 
-The previous experiment protocol reported Dice `0.8788` on BTXRD and `0.8286` on FracAtlas at `512x512`, together with comparisons against Attention U-Net and fine-tuned SAM-Med2D. These values are retained only as legacy reference points. They have not been reproduced with the current standardized prompt pipeline, center-shift checkpoint selection, Precision definition, and image-level merged evaluation. The numeric tables in `Paper_IEEE_Access/access.tex` are likewise pending refresh after retraining. The architecture has `2.95M` parameters, about `92x` fewer than SAM-Med2D; this architecture-only comparison is unaffected by retraining.
+Reference only: Dice `0.8788` on BTXRD and `0.8286` on FracAtlas at `512x512` from the previous protocol. Do not reuse these as current results. Refresh the paper tables only after retraining under the current prompt pipeline, center-shift checkpoint selection, Precision definition, and image-level merged evaluation. The architecture has `2.95M` parameters, about `92x` fewer than SAM-Med2D; this architecture-only comparison is unchanged.
 
 ## Repository layout
 
@@ -25,7 +25,7 @@ The planned IEEE claims and the train/test evidence for each claim are recorded 
 
 ## Experiment results
 
-The obsolete `Results/` tree was removed because it contained outputs from the previous prompt and evaluation protocol. New executed notebooks and image-level merged CSVs will be added only after every affected model has been retrained with the current source. Trained checkpoints remain excluded because they are large binaries; their Google Drive IDs will be added to the corresponding notebooks after retraining and upload.
+The obsolete `Results/` tree was removed because it contained outputs from the previous protocol. Add new executed notebooks and image-level merged CSVs only after retraining under the current source. Trained checkpoints remain excluded because they are large binaries; add their Google Drive IDs to the notebooks after retraining and upload.
 
 ## Paper_IEEE_Access/
 

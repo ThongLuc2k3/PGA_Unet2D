@@ -50,7 +50,7 @@ Both baselines train in their own dedicated notebook above, but are tested insid
 
 Both use the same center-scaled protocol (`scale_factor=3.0`, `shift_ratio=0.5`) as PGA-UNet.
 
-> **Pending retrain:** no checkpoint has been trained under the current center-scaled and standardized evaluation protocol yet for either PGA-UNet or the affected baselines. The obsolete `Results/` tree was removed. The paper's existing numeric tables still come from the previous protocol and must be refreshed after retraining. Training checkpoint selection now uses image-level merged validation metrics, matching the reported test aggregation.
+> **Pending retrain:** the current protocol still needs fresh checkpoints for PGA-UNet and the affected prompt-guided baselines. Keep old numeric tables as reference only until retraining is complete. Training checkpoint selection now uses image-level merged validation metrics, matching the reported test aggregation.
 
 ## Dataset-Specific Notebook Folders
 
@@ -124,5 +124,5 @@ All main and ablation training runs use the fixed training seed `22120196`. The 
 - Dataset links have already been separated by folder for `BTXRD` and `FracAtlas`.
 - The paper narrative now uses `Attention U-Net`, `SAM-Med2D`, `small-lesion subset`, and the full `Gaussian prompt + PSG + CAD` ablation story.
 - All notebooks were audited for syntax errors, missing local-module imports, and cross-dataset ID mix-ups (see `AGENTS.md` at the repo root for the conventions this branch follows).
-- Several notebooks migrated to the center-scaled protocol this session still have their checkpoint download replaced with a `TODO_CHECKPOINT_ID_...` placeholder, since no checkpoint has actually been retrained under it yet (see "Pending retrain" above): `pga512`, `pga256`, `sam256`, `fold1`-`fold4` (in the main comparison notebooks), `attunet_concat_prompt`, `crop_attunet512`, and one per remaining ablation variant (`cad_only`, `psg_only`, `psg_attention`, `full_binary_prompt`, `full_pga_heatmap_reference`). Fill these in with real Drive IDs after training; everything else already has real IDs.
+- Several test notebooks still contain `TODO_CHECKPOINT_ID_...` placeholders and are not fully runnable end to end until retraining/upload is complete. The pending IDs cover `pga512`, `pga256`, `sam256`, `fold1`-`fold4`, `attunet_concat_prompt`, `crop_attunet512`, and one ID per remaining ablation variant (`cad_only`, `psg_only`, `psg_attention`, `full_binary_prompt`, `full_pga_heatmap_reference`).
 - Executed notebooks and image-level merged CSVs will be added to a new `Results/` tree only after the affected models have been retrained under the current protocol.

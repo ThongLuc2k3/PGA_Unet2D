@@ -31,12 +31,11 @@ PROMPT_MIXED_SHIFT_PROB = float(os.environ.get("PROMPT_MIXED_SHIFT_PROB", "0.8")
 USE_QUALITY_HEAD       = os.environ.get("USE_QUALITY_HEAD", "1") == "1"
 LOSS_CONFIDENCE_WEIGHT = float(os.environ.get("LOSS_CONFIDENCE_WEIGHT", "1.0"))
 # Stage 2 (loss function, Research/02_loss_function/): two candidate
-# replacements for dice_loss, kept available (off by default) so PGA-UNet
-# can be compared separately against the default for the paper. Enabling both is invalid because they replace the same term. Tested at
-# center_mixed x3/shift0.5 (50/50 mix): size-conditioned Tversky measured
-# worse Dice on the small-lesion subset than plain Dice (0.7561 vs. 0.7781),
-# Focal Dice measured no real improvement (0.7786 vs. 0.7781, within noise).
-# Neither is the default; both stay available for further comparison.
+# replacements for dice_loss remain available as reference options and are
+# off by default. Reference numbers from the earlier loss check were
+# 0.7561 vs. 0.7781 on the small-lesion subset for size-conditioned
+# Tversky versus plain Dice, and 0.7786 vs. 0.7781 for Focal Dice versus
+# plain Dice. Enabling both is invalid because they replace the same term.
 USE_SIZE_TVERSKY      = os.environ.get("USE_SIZE_TVERSKY", "0") == "1"
 SIZE_TVERSKY_ALPHA_MAX = float(os.environ.get("SIZE_TVERSKY_ALPHA_MAX", "0.7"))
 SIZE_TVERSKY_AREA_PCTL = float(os.environ.get("SIZE_TVERSKY_AREA_PCTL", "25"))

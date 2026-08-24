@@ -1,5 +1,5 @@
 \section{Results}
-\noindent\textbf{Status note.} The numerical tables currently shown in this section are legacy reference values from the previous protocol and are retained only to preserve the comparison structure while retraining is still pending. They have not yet been refreshed under the current standardized pipeline, which uses `center_mixed` training with 80\% `center_shift` and 20\% `center_zoom`, 150 training epochs, image-level merged validation selection under `center_shift`, and the current Precision definition. Until the retrained checkpoints and updated CSVs are in place, the text in this section should be read as a description of the intended comparison logic and of the claim scope, not as finalized evidence for the current manuscript version.
+\noindent\textbf{Status note.} The numerical tables currently shown in this section are legacy reference values from the previous protocol and are retained only to preserve the comparison structure while retraining is still pending. They have not yet been refreshed under the current standardized pipeline, which uses \texttt{center\_mixed} training with 80\% \texttt{center\_shift} and 20\% \texttt{center\_zoom}, 150 training epochs, image-level merged validation selection under \texttt{center\_shift}, and the current Precision definition. Until the retrained checkpoints and updated CSVs are in place, the text in this section should be read as a description of the intended comparison logic and of the claim scope, not as finalized evidence for the current manuscript version.
 
 \subsection{Main Comparison Across Datasets and Resolutions}
 This first group of experiments addresses the most basic question: does PGA-UNet remain effective across both datasets, across both tested input resolutions, and across both prompt scenarios? In the refreshed manuscript, this subsection should validate the main system-level contribution, namely that prompt-conditioned processing through both encoder and decoder remains useful after the search space has already been tightened by a coarse box prompt. Because the current tables are legacy placeholders, this subsection should not yet claim reproduced performance for the standardized protocol. After retraining, the interpretation should remain limited to independent within-dataset evaluation on BTXRD and FracAtlas, not to cross-dataset generalization.
@@ -27,11 +27,11 @@ FracAtlas & $512\times512$ & \textbf{0.8286} & \textbf{0.7925} \\
 }
 \end{table}
 
-The resolution comparison should not be overinterpreted as a pure image-size effect because the prompt heatmap is built once at the original image resolution with a fixed Gaussian kernel and only then downsampled together with the image, so the same absolute blur is compressed more aggressively into the $256\times256$ frame than into the $512\times512$ one. Even with that caveat, the main trend remains useful: prompt-guided segmentation of small radiographic lesions benefits from preserving more spatial detail, especially when the lesion occupies only a tiny fraction of the image.
+The resolution comparison should not be overinterpreted as a pure image-size effect because the prompt heatmap is built once at the original image resolution with a fixed Gaussian kernel and only then downsampled together with the image, so the same absolute blur is compressed more aggressively into the $256\times256$ frame than into the $512\times512$ one. In the refreshed manuscript, the safest interpretation is that higher spatial detail may remain important for small-lesion prompt-guided segmentation under this protocol, especially when the lesion occupies only a tiny fraction of the image.
 
 
 \subsection{Monte Carlo Cross-Validation}
-This experiment examines whether the main findings remain stable when the image-level split is redrawn repeatedly under limited data. It supports the robustness claim at the dataset-partition level rather than at the prompt-perturbation level. Supplementary experiments therefore used Monte Carlo cross-validation, that is, four repeated random image-level splits of the $512\times512$ PGA-UNet configuration, evaluated separately under covering and off-center prompts. These results are not intended to replace the fixed-split main tables, but they provide additional evidence that the prompt-guided gains are not tied to a single favorable split.
+This experiment examines whether the PGA-UNet results remain stable when the image-level split is redrawn repeatedly under limited data. It supports stability at the dataset-partition level rather than at the prompt-perturbation level. Supplementary experiments therefore used Monte Carlo cross-validation, that is, four repeated random image-level splits of the $512\times512$ PGA-UNet configuration, evaluated separately under covering and off-center prompts. These results are not intended to replace the fixed-split main tables; in the refreshed manuscript, this subsection should be limited to split-level stability of PGA-UNet under the evaluated protocol.
 
 \begin{table}
 \caption{Monte Carlo cross-validation for PGA-UNet at $512\times512$ (4 repeated random splits, mean $\pm$ standard deviation).}
@@ -60,7 +60,7 @@ In the final refreshed version, this subsection should be used only to support s
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/results/prompt_robustness_examples.png}
-\caption{Qualitative behavior under prompt perturbation. PGA-UNet remains more stable when the prompt is shifted away from the ideal covering box, although thin fracture patterns are still harder than larger compact lesions.}
+\caption{Representative qualitative behavior under prompt perturbation. The figure illustrates the type of degradation observed when the prompt is shifted away from the ideal covering box, while also showing that thin fracture patterns remain harder than larger compact lesions.}
 \label{fig:robust}
 \end{figure}
 
@@ -120,7 +120,7 @@ Dataset & Group & Model & Dice & CBL & HD95 \\
 
 Because the four groups are defined directly from Attention U-Net scores, these values should not be interpreted as global averages or as intrinsic clinical difficulty strata. In the refreshed manuscript, this subsection should keep that narrower interpretation explicit: the top-Dice and bottom-Dice groups only show how the prompt-guided models behave on image stems where the automatic baseline is relatively stronger or weaker.
 
-The qualitative examples help clarify this behavior. In the Attention U-Net top-Dice groups, the automatic baseline can often place the predicted mask in roughly the correct anatomical region, but it may still produce spurious responses far from the lesion. Even when the lesion itself is covered reasonably well, those distant false positives reduce overlap-based metrics such as Dice and IoU, which is consistent with the still-elevated HD95 values (39.32 on BTXRD, 82.08 on FracAtlas) despite a moderate-to-low Dice. PGA-UNet is less prone to this pattern because the bounding box prompt constrains the model to a more relevant spatial region. In the bottom-Dice groups, the failure is more severe: the automatic baseline may localize the wrong region or miss the lesion almost entirely. A likely reason is that the attention gate itself has no guarantee of learning a clinically correct gating policy: it filters whatever features it has learned to emphasize, whether those features correspond to lesions or to spurious high-energy structures. When the learned response is dominated by background clutter or artifact-like signals with strength comparable to, or larger than, the true lesion evidence, the gate can no longer rescue localization. In practice, it may suppress only mild background activity while remaining ineffective against stronger false responses. In contrast, PGA-UNet receives a coarse spatial prior and can therefore identify the lesion region more reliably before refining the mask.
+The qualitative examples help clarify this behavior. In the Attention U-Net top-Dice groups, the automatic baseline can often place the predicted mask in roughly the correct anatomical region, but it may still produce spurious responses far from the lesion. Even when the lesion itself is covered reasonably well, those distant false positives reduce overlap-based metrics such as Dice and IoU, which is consistent with the still-elevated HD95 values (39.32 on BTXRD, 82.08 on FracAtlas) despite a moderate-to-low Dice. PGA-UNet is less prone to this pattern because the bounding box prompt constrains the model to a more relevant spatial region. In the bottom-Dice groups, the failure is more severe: the automatic baseline may localize the wrong region or miss the lesion almost entirely. Within the scope of the present evidence, the safest interpretation is not a definitive account of the Attention U-Net internals, but a system-level one: once the model must solve localization without an external prompt, confusing background structure and weak lesion evidence can lead to qualitatively different failure patterns from those seen in the prompt-guided setting. In contrast, PGA-UNet receives a coarse spatial prior and can therefore identify the lesion region more reliably before refining the mask.
 
 \begin{figure}[t]
 \centering
@@ -161,7 +161,7 @@ When the tables are refreshed, the relative degradation from covering to off-cen
 This experiment is an extension of the SAM-Med2D comparison to the setting in which the contribution of prompt-aware feature preservation should be most visible, namely very small lesions. To keep subgroup analysis objective, we retain only the small-lesion subset because it is defined directly by lesion size rather than by a model-dependent ranking rule. For each dataset, the subset is formed by selecting the 50 test images with the smallest total lesion area, evaluated under covering prompts. This subset is then used for two related comparisons: PGA-UNet versus fine-tuned SAM-Med2D at the matched resolution of $256\times256$, and PGA-UNet$_{256}$ versus PGA-UNet$_{512}$ to examine the effect of resolution. All metrics are computed at a shared $512\times512$ reference frame, with the $256\times256$ predictions of SAM-Med2D and PGA-UNet upsampled before scoring, so that the three models are compared on identical ground-truth masks.
 
 \begin{table}
-\caption{Dice, CBL, and HD95 on the 50 test images with the smallest total lesion area per dataset. IoU is omitted here because it is a noisy, boundary-sensitive statistic at this lesion size; Dice, CBL, and HD95 provide complementary overlap, centroid, and boundary measures.}
+\caption{Dice, CBL, and HD95 on the 50 test images with the smallest total lesion area per dataset. For the R256 comparison, the reported metrics are computed in a shared $512\times512$ reference frame. IoU is omitted here because it is a noisy, boundary-sensitive statistic at this lesion size; Dice, CBL, and HD95 provide complementary overlap, centroid, and boundary measures.}
 \label{tab:small}
 \centering
 \resizebox{\columnwidth}{!}{%
@@ -188,13 +188,13 @@ In the refreshed manuscript, this subsection should remain focused on the narrow
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/results/small_lesion_sam_pga256_pga512.png}
-\caption{Qualitative comparison on small lesions in BTXRD (IMG000868, two small polygons). The examples contrast fine-tuned SAM-Med2D at $256\times256$, PGA-UNet at $256\times256$, and PGA-UNet at $512\times512$; the input-image and box-prompt panels are merged into a single "Input image (with prompt)" panel. SAM-Med2D produces no visible prediction from the same prompt (Dice 0.000), while both PGA-UNet variants recover both lesions.}
+\caption{Representative qualitative comparison on small lesions in BTXRD (IMG000868, two small polygons). The examples contrast fine-tuned SAM-Med2D at $256\times256$, PGA-UNet at $256\times256$, and PGA-UNet at $512\times512$; the input-image and box-prompt panels are merged into a single "Input image (with prompt)" panel. The figure illustrates the type of small-lesion behavior captured by the quantitative comparison in the shared evaluation frame.}
 \label{fig:small-btxrd}
 \end{figure}
 
 
 \subsection{Efficiency Analysis}
-This experiment evaluates whether the proposed gains are achieved with a practical computational profile. It supports the claim that the method is suitable for repeated low-latency interactive use rather than only for offline batch inference. Table~\ref{tab:efficiency} reports the efficiency comparison, measured on the same NVIDIA Tesla T4 GPU used for training (mean latency over repeated forward passes, batch size 1). PGA-UNet contains only 2.95M parameters. In the tested $256\times256$ setting, this corresponds to an approximately 92-fold reduction in parameter count and an 11.9-fold reduction in FLOPs relative to SAM-Med2D, together with 6.0$\times$ faster GPU inference and 11.6$\times$ faster CPU inference.
+This experiment evaluates whether the proposed gains are achieved with a practical computational profile. Table~\ref{tab:efficiency} reports the efficiency comparison, measured on the same NVIDIA Tesla T4 GPU used for training (mean latency over repeated forward passes, batch size 1). PGA-UNet contains only 2.95M parameters. In the tested $256\times256$ setting, this corresponds to an approximately 92-fold reduction in parameter count and an 11.9-fold reduction in FLOPs relative to SAM-Med2D, together with 6.0$\times$ faster GPU inference and 11.6$\times$ faster CPU inference. The safe claim here is limited to lower measured computational cost and latency in the tested implementation, hardware, and input-resolution setting.
 
 \begin{table}
 \caption{Efficiency comparison in the tested environment.}
@@ -269,12 +269,12 @@ The full PGA-UNet configuration (PSG, CAD, and the Gaussian prompt combined) is 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/ablation/ablation_gaussian_vs_binary_case.png}
-\caption{Qualitative comparison between the Gaussian prompt representation and the binary prompt representation. The Gaussian version produces cleaner boundaries and better overlap on this representative BTXRD example.}
+\caption{Representative qualitative comparison between the Gaussian prompt representation and the binary prompt representation. The figure illustrates a case in which the Gaussian version yields cleaner boundaries and better overlap.}
 \label{fig:ablation-gaussian-binary}
 \end{figure}
 
 \subsection{Failure Modes}
-The method still has identifiable failure cases. In the qualitative review collected during the thesis experiments, lower Dice scores were more likely for lesions with highly elongated or branching shapes, lesions located in anatomically cluttered regions such as the shoulder or clavicle, and lesions with weak contrast relative to surrounding structures. These cases are relevant because they show that prompt guidance does not eliminate ambiguity once the local image evidence itself is poor.
+The method still has identifiable failure cases. In the qualitative review collected from the repository's failure-case examples, lower Dice scores were more likely for lesions with highly elongated or branching shapes, lesions located in anatomically cluttered regions such as the shoulder or clavicle, and lesions with weak contrast relative to surrounding structures. These cases are relevant because they show that prompt guidance does not eliminate ambiguity once the local image evidence itself is poor.
 
 \begin{figure}[t]
 \centering
