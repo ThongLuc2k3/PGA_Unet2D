@@ -63,7 +63,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 - `Finetune_SAMMed2D_test_robust.ipynb`: SAM-Med2D finetuning and its own center_zoom/center_shift test cells.
 - `concat-prompt-attunet-r512.ipynb`: Attention U-Net + prompt channel, a prompt-matched conventional baseline (box heatmap concatenated as a 2nd input channel, no PSG, no CAD).
 - `crop-prompt-attunet-r512.ipynb`: Attention U-Net trained on prompt-box crops instead of the full image, the other prompt-matched conventional baseline.
-- `Ablation/`: the 5 remaining architecture-ablation training notebooks (`cad-only`, `psg-only`, `psg-attention`, `full-binary-prompt`, `full-heatmap-prompt`). `no-psg-attention-concat` (original attention gate, no PSG, prompt via concatenation) and `no-psg-no-cad-binary` (no PSG, no CAD, binary prompt via concatenation) were removed at the author's request.
+- `Ablation/`: the 4 remaining architecture-ablation training notebooks (`cad-only`, `psg-only`, `psg-attention`, `full-binary-prompt`). The full Gaussian prompt configuration is the official `pga-train-512.ipynb`, so the duplicate `full-heatmap-prompt` trainer was removed; its test notebook remains for the ablation comparison. `no-psg-attention-concat` (original attention gate, no PSG, prompt via concatenation) and `no-psg-no-cad-binary` (no PSG, no CAD, binary prompt via concatenation) were removed at the author's request.
 
 `File_Test/{btxrd,fracatlas}/` contains:
 
@@ -72,6 +72,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 - `test-pga-samzs-samft-r256-{btxrd,fracatlas}.ipynb`: PGA-UNet vs SAM-Med2D (zero-shot and finetuned) at `256`.
 - `test-subcat-small-r256-{btxrd,fracatlas}.ipynb`: GT-area-defined small-lesion analysis at 256, comparing PGA-UNet with SAM-Med2D zero-shot and fine-tuned.
 - `test-subcat-small-r512-{btxrd,fracatlas}.ipynb`: the same type of GT-area-defined analysis for the four R512 architecture models. PGA-256 remains in the R256 file; resolution comparisons are assembled from the two result files when writing the paper.
+- `test-subcat-pga-small-r128-256-512btxrd.ipynb` and `test-subcat-pga-small-r128-256-512fracatlas.ipynb`: dedicated three-resolution PGA-UNet small-lesion comparisons using the same 50 image stems within each dataset, both prompt scenarios, image-level merging, normalized HD95, and paired resolution analysis. Checkpoint IDs remain placeholders until retraining.
 - `test-pga-dataset-1234-{btxrd,fracatlas}.ipynb`: Monte Carlo cross-validation (4 repeated random image-level splits).
 - `test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
 - `Ablation/`: the matching 5 remaining ablation test notebooks.
@@ -116,7 +117,7 @@ The repeated stability experiment should be described as:
 
 It should not be described as strict non-overlapping `k`-fold cross-validation.
 
-All main and ablation training runs use the fixed training seed `22120196`. The four Monte Carlo runs use split seeds `1`, `2`, `3`, and `4` while keeping the training seed fixed at `22120196`. This isolates variation due to dataset membership from variation due to model initialization, shuffling, prompt sampling, and augmentation.
+All main and ablation training runs use the fixed training seed `22120196`. The four Monte Carlo runs use split seeds `1`, `2`, `3`, and `4` while keeping the training seed fixed at `22120196`. This isolates variation due to dataset membership from variation due to model initialization, shuffling, prompt sampling, and augmentation. The same seed is used for the three-resolution small-lesion PGA comparison.
 
 ## Notes
 
