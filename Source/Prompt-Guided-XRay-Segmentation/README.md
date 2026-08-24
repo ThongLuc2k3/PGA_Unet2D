@@ -60,11 +60,13 @@ combines its 4 decoder levels with a weighted mean using the same `prompt_weight
 average, so levels with more influence on the output also weigh more in the reported
 confidence.
 
-QualityHead validation: `evaluate_quality_head.py` evaluates the PGA-UNet QualityHead against
-held-out ground-truth Dice targets. It reports MAE, RMSE, Pearson and Spearman correlation, plus
-mean Dice and the fraction of usable masks in each predicted-quality bin. The QualityHead score
-is an auxiliary model estimate, not a calibrated probability, until this evaluation supports such
-an interpretation. Example: `python3 evaluate_quality_head.py --dataset-root dataset_BTXRD
+QualityHead validation: `evaluate_quality_head.py` evaluates the PGA-UNet QualityHead at the
+polygon-prompt level against held-out ground-truth Dice targets. Each score refers to the mask
+generated from one lesion prompt, not to an image-level mask after merging multiple lesions. It
+reports MAE, RMSE, Pearson and Spearman correlation, plus mean Dice and the fraction of usable
+masks in each predicted-quality bin. The QualityHead score is an auxiliary model estimate, not a
+calibrated probability, until this evaluation supports such an interpretation. Example:
+`python3 evaluate_quality_head.py --dataset-root dataset_BTXRD
 --checkpoint checkpoints/pga_unet_center_mixed_x3_shift05_qhead_512_best.pth --split val
 --img-size 512 --prompt-mode center_shift`.
 

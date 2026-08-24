@@ -1,4 +1,4 @@
-"""Evaluate PGA-UNet QualityHead against held-out Dice targets."""
+"""Evaluate polygon-level PGA-UNet QualityHead scores against held-out Dice."""
 
 import argparse
 import csv
@@ -90,7 +90,10 @@ def main():
     quality = np.array([row["quality_pred"] for row in rows])
     dice = np.array([row["true_dice"] for row in rows])
     pearson, spearman = correlation(quality, dice)
-    print(f"Samples: {len(rows)} | split={args.split} | prompt={args.prompt_mode}")
+    print(
+        f"Polygon prompts: {len(rows)} | split={args.split} | "
+        f"prompt={args.prompt_mode}"
+    )
     print(f"Quality MAE: {np.mean(np.abs(quality - dice)):.4f}")
     print(f"Quality RMSE: {np.sqrt(np.mean((quality - dice) ** 2)):.4f}")
     print(f"Pearson: {pearson:.4f} | Spearman: {spearman:.4f}")
