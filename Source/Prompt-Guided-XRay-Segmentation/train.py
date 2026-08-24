@@ -32,7 +32,7 @@ USE_QUALITY_HEAD       = os.environ.get("USE_QUALITY_HEAD", "1") == "1"
 LOSS_CONFIDENCE_WEIGHT = float(os.environ.get("LOSS_CONFIDENCE_WEIGHT", "1.0"))
 # Stage 2 (loss function, Research/02_loss_function/): two candidate
 # replacements for dice_loss, kept available (off by default) so PGA-UNet
-# can be compared with either, both, or neither for the paper. Tested at
+# can be compared separately against the default for the paper. Enabling both is invalid because they replace the same term. Tested at
 # center_mixed x3/shift0.5 (50/50 mix): size-conditioned Tversky measured
 # worse Dice on the small-lesion subset than plain Dice (0.7561 vs. 0.7781),
 # Focal Dice measured no real improvement (0.7786 vs. 0.7781, within noise).

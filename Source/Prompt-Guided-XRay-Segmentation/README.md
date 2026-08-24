@@ -39,9 +39,10 @@ Dice term) were tried on top of this same protocol: tested against the plain Dic
 baseline (all under 50/50 zoom/shift mixing), size-conditioned Tversky measured worse Dice
 on the small-lesion subset (0.7561 vs. 0.7781), and Focal Dice measured no real improvement
 (0.7786 vs. 0.7781, within noise). Neither is the default (the segmentation loss stays plain
-Dice + BCE unless one is explicitly enabled below), but both remain available as opt-in
-`train.py` flags so PGA-UNet can be compared with either, both attempted together (raises a
-`ValueError`, they replace the same term), or neither, for further paper discussion.
+Dice + BCE unless one is explicitly enabled below). Both remain available as separate
+opt-in `train.py` flags, giving exactly three loss configurations: default Dice + BCE,
+size-conditioned Tversky + BCE, and Focal Dice + BCE. Enabling both alternatives together
+is intentionally invalid because they replace the same Dice term.
 
 Environment variables for Step 2 (all optional, shown with their defaults):
 - `PROMPT_MODE` (default `center_mixed`): `center_zoom`, `center_shift`, or `center_mixed`.

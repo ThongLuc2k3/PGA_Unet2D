@@ -36,7 +36,7 @@ Source/
 - `models/networks/utils.py`: shared building blocks (`unetConv2`, `unetUp`) used by the baseline above.
 - `models/layers/grid_attention_layer.py`: original attention gate inherited from Attention U-Net and reused in ablation variants.
 
-**PGA-UNet-{128,256,512}** (`pga-train-{128,256,512}.ipynb` for both BTXRD and FracAtlas) train on a center-scaled protocol (see `Prompt-Guided-XRay-Segmentation/README.md`, Step 2): `center_mixed`, box scaled from the GT center by `scale_factor=3.0`, off-center displacement `shift_ratio=0.5`, weighted 80% `center_shift` / 20% `center_zoom` per sample (a clinician rarely centers a box exactly on the lesion), plus a `QualityHead` no-GT confidence signal. The segmentation loss defaults to plain Dice + BCE; two candidate replacements (size-conditioned Tversky, Focal Dice) were tried and neither beat the default (see that README for the numbers), but both stay available as opt-in `train.py` flags (`USE_SIZE_TVERSKY`/`USE_FOCAL_DICE`) so PGA-UNet can be compared with either, both, or neither for further paper discussion. Each test cell derives `MODEL_PATH` and its report/CSV loss label automatically from the same flags.
+**PGA-UNet-{128,256,512}** (`pga-train-{128,256,512}.ipynb` for both BTXRD and FracAtlas) train on a center-scaled protocol (see `Prompt-Guided-XRay-Segmentation/README.md`, Step 2): `center_mixed`, box scaled from the GT center by `scale_factor=3.0`, off-center displacement `shift_ratio=0.5`, weighted 80% `center_shift` / 20% `center_zoom` per sample (a clinician rarely centers a box exactly on the lesion), plus a `QualityHead` no-GT confidence signal. The segmentation loss defaults to plain Dice + BCE. The loss investigation has exactly three configurations: the default, size-conditioned Tversky replacing Dice, and Focal Dice replacing Dice. The two alternatives remain separately selectable through `USE_SIZE_TVERSKY` and `USE_FOCAL_DICE`; enabling both is intentionally invalid because they replace the same loss term. Each test cell derives `MODEL_PATH` and its report/CSV loss label automatically from the selected configuration.
 
 **SAM-Med2D** (`Finetune_SAMMed2D_test_robust.ipynb`) trains and tests on the same center-scaled protocol, so the comparison against PGA-UNet stays apples-to-apples: `center_zoom`/`center_shift`, `scale_factor=3.0`, `shift_ratio=0.5`, weighted 80/20 during training (own `DataLoader.py` cell, mirrors `dataset.py`'s math exactly), and `epochs=150`. Validation reports both scenarios and checkpoint selection uses `center_shift`. All models use early-stopping patience 15 except SAM-Med2D, which deliberately uses 30 because its adapter fine-tuning converges more slowly. This is not the original authors' box-noise protocol (`get_boxes_from_mask`, small pixel-level jitter). Training is box-only: the point-prompt branch and the `iter_point` point-refinement loop from the original authors' code are disabled (`iter_point=0`). Checkpoints are named `sam_center_mixed_x3_shift05_{best,last}.pth`.
 
@@ -46,7 +46,7 @@ Source/
 - `concat-prompt-attunet-r512.ipynb`: box heatmap concatenated as a 2nd input channel (`in_channels=2`), plain skip decoder.
 - `crop-prompt-attunet-r512.ipynb`: trained and evaluated on the image cropped to the prompt box instead of the full image, prediction pasted back into the full frame for a fair comparison.
 
-Both baselines train in their own dedicated notebook above, but are tested inside `test-pga-vs-attention-unet-r512-{btxrd,fracatlas}.ipynb` alongside PGA-UNet and plain Attention U-Net, not in a separate test notebook: all four models are evaluated on the exact same balanced set of test images so their qualitative panels line up row-by-row.
+Both baselines train in their own dedicated notebook above, but are tested inside `test-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb` alongside PGA-UNet and plain Attention U-Net, not in a separate test notebook: all four models are evaluated on the exact same balanced set of test images so their qualitative panels line up row-by-row.
 
 Both use the same center-scaled protocol (`scale_factor=3.0`, `shift_ratio=0.5`) as PGA-UNet.
 
@@ -67,10 +67,11 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 
 `File_Test/{btxrd,fracatlas}/` contains:
 
-- `test-pga-vs-attention-unet-r512-{btxrd,fracatlas}.ipynb`: PGA-UNet vs Attention U-Net vs both prompt-matched conventional baselines (`concat-prompt-attunet-r512`, `crop-prompt-attunet-r512`) at `512`, all four on the same balanced set of test images. There is no separate standalone test notebook for Attention U-Net or the two baselines; this is the only place they are tested.
-- `test-subcat-pga-vs-attention-unet-{btxrd,fracatlas}.ipynb`: Attention U-Net top-Dice and bottom-Dice subsets, PGA-UNet on the same subsets.
+- `test-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb`: PGA-UNet vs Attention U-Net vs both prompt-matched conventional baselines (`concat-prompt-attunet-r512`, `crop-prompt-attunet-r512`) at `512`, all four on the same balanced set of test images. There is no separate standalone test notebook for Attention U-Net or the two baselines; this is the only place they are tested.
+- `test-subcat-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb`: plain Attention U-Net defines the post-hoc top-Dice 50 and bottom-Dice 50 image subsets. PGA-UNet, Attention U-Net + prompt channel, and Attention U-Net + prompt crop are then evaluated on those exact same stems at `512`; the three prompt-guided models report both `center_zoom` and `center_shift` for this focused subset comparison.
 - `test-pga-samzs-samft-r256-{btxrd,fracatlas}.ipynb`: PGA-UNet vs SAM-Med2D (zero-shot and finetuned) at `256`.
-- `test-subcat-pga-vs-sam-r256-r512-{btxrd,fracatlas}.ipynb`: small-lesion subset analysis, SAM-256 vs PGA-256 vs PGA-512.
+- `test-subcat-small-r256-{btxrd,fracatlas}.ipynb`: GT-area-defined small-lesion analysis at 256, comparing PGA-UNet with SAM-Med2D zero-shot and fine-tuned.
+- `test-subcat-small-r512-{btxrd,fracatlas}.ipynb`: the same type of GT-area-defined analysis for the four R512 architecture models. PGA-256 remains in the R256 file; resolution comparisons are assembled from the two result files when writing the paper.
 - `test-pga-dataset-1234-{btxrd,fracatlas}.ipynb`: Monte Carlo cross-validation (4 repeated random image-level splits).
 - `test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`: interactive Gradio demo (click two points, draw a box, get a mask).
 - `Ablation/`: the matching 5 remaining ablation test notebooks.
@@ -86,7 +87,7 @@ The active comparison story is:
 1. PGA-UNet across BTXRD and FracAtlas at `128`, `256`, and `512`
 2. Monte Carlo cross-validation for stability
 3. PGA-UNet vs Attention U-Net at `512`
-4. Attention U-Net top-Dice and bottom-Dice subsets
+4. Attention U-Net-defined top-Dice and bottom-Dice subsets, with PGA-UNet and all three Attention U-Net variants evaluated on the same images
 5. PGA-UNet vs SAM-Med2D at `256`
 6. Small-lesion subset analysis
 7. PGA-UNet vs the two prompt-matched conventional baselines (Attention U-Net + prompt channel, Attention U-Net on prompt crops)
