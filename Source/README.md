@@ -50,7 +50,7 @@ Both baselines train in their own dedicated notebook above, but are tested insid
 
 Both use the same center-scaled protocol (`scale_factor=3.0`, `shift_ratio=0.5`) as PGA-UNet.
 
-> **Pending retrain:** no checkpoint has been trained under the current center-scaled and standardized evaluation protocol yet for either PGA-UNet or the affected baselines. The obsolete `Results/` tree was removed. The paper's existing numeric tables still come from the previous protocol and must be refreshed after retraining.
+> **Pending retrain:** no checkpoint has been trained under the current center-scaled and standardized evaluation protocol yet for either PGA-UNet or the affected baselines. The obsolete `Results/` tree was removed. The paper's existing numeric tables still come from the previous protocol and must be refreshed after retraining. Training checkpoint selection now uses image-level merged validation metrics, matching the reported test aggregation.
 
 ## Dataset-Specific Notebook Folders
 

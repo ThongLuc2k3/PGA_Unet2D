@@ -31,7 +31,7 @@
 # with no other env vars set, this already runs the current default recipe: center_mixed,
 # scale_factor=3.0, shift_ratio=0.5, mixed_shift_prob=0.8 (80% shift / 20% zoom), QualityHead on
 # produces checkpoints/pga_unet_center_mixed_x3_shift05_qhead_<128|256|512>_best.pth
-# validation reports center_zoom and center_shift separately; checkpoint selection uses center_shift val Dice (the harder, off-center scenario)
+# validation reports center_zoom and center_shift separately after image-level polygon merging; checkpoint selection uses image-level center_shift val Dice (the harder, off-center scenario)
 - run the matching test notebook under File_Train/ (each `pga-train-*.ipynb` has its own inline test cell) to get the 2-scenario table (`center_zoom` and `center_shift`), the 6-metric summary, the no-GT confidence (CAD prompt-confidence gate + QualityHead), and sample visualizations for both scenarios
 
 Two candidate segmentation-loss replacements (a size-conditioned Tversky term and a Focal

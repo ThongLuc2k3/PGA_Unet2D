@@ -236,6 +236,59 @@ def calculate_cbl(pred, target, smooth=1e-6):
     return cbl_sum, valid_count
 
 
+def image_level_metrics(model, dataset):
+    """Evaluate polygon prompts after merging predictions by source image."""
+    loader = DataLoader(dataset, batch_size=1, shuffle=False, num_workers=2,
+                        pin_memory=True)
+    image_groups = {}
+    with torch.no_grad():
+        for sample_index, (images, masks, prompts) in enumerate(loader):
+            images, masks, prompts = images.to(DEVICE), masks.to(DEVICE), prompts.to(DEVICE)
+            probabilities = torch.sigmoid(model(images, prompts))[0, 0].cpu().numpy()
+            ground_truth = masks[0, 0].cpu().numpy()
+            image_name, _ = dataset.all_samples[sample_index]
+            if image_name not in image_groups:
+                image_groups[image_name] = {
+                    'probability': probabilities.copy(),
+                    'ground_truth': ground_truth.copy(),
+                }
+            else:
+                group = image_groups[image_name]
+                np.maximum(group['probability'], probabilities, out=group['probability'])
+                np.maximum(group['ground_truth'], ground_truth, out=group['ground_truth'])
+
+    metric_sums = {'dice': 0.0, 'iou': 0.0, 'pre': 0.0, 'rec': 0.0, 'cbl': 0.0}
+    for group in image_groups.values():
+        prediction = group['probability'] > 0.5
+        target = group['ground_truth'] > 0.5
+        tp = np.logical_and(prediction, target).sum()
+        fp = np.logical_and(prediction, ~target).sum()
+        fn = np.logical_and(~prediction, target).sum()
+        smooth = 1e-5
+        metric_sums['dice'] += (2 * tp + smooth) / (2 * tp + fp + fn + smooth)
+        metric_sums['iou'] += (tp + smooth) / (tp + fp + fn + smooth)
+        metric_sums['pre'] += tp / (tp + fp + smooth)
+        metric_sums['rec'] += (tp + smooth) / (tp + fn + smooth)
+
+        if target.any() and prediction.any():
+            target_y, target_x = np.where(target)
+            prediction_y, prediction_x = np.where(prediction)
+            target_diagonal = np.sqrt(
+                (target_y.max() - target_y.min()) ** 2
+                + (target_x.max() - target_x.min()) ** 2
+            ) + 1e-6
+            distance = np.sqrt(
+                (prediction_x.mean() - target_x.mean()) ** 2
+                + (prediction_y.mean() - target_y.mean()) ** 2
+            )
+            metric_sums['cbl'] += max(0.0, 1.0 - distance / target_diagonal)
+
+    image_count = len(image_groups)
+    if image_count == 0:
+        return {name: 0.0 for name in metric_sums}
+    return {name: value / image_count for name, value in metric_sums.items()}
+
+
 # =========================================================
 # LOGGER
 # =========================================================
@@ -394,25 +447,15 @@ def main():
         # ── Validate (all loaders) ─────────────────────────────
         model.eval()
         val_results = {}
-        with torch.no_grad():
-            for vname, vloader in val_loaders.items():
-                s_dice, s_iou, s_pre, s_rec = 0, 0, 0, 0
-                s_cbl, n_cbl, n_total = 0, 0, 0
-                for vi, vm, vp in vloader:
-                    vi, vm, vp = vi.to(DEVICE), vm.to(DEVICE), vp.to(DEVICE)
-                    vout = model(vi, vp)
-                    d, i, p, r = batch_metrics_sum(vout, vm)
-                    s_dice += d; s_iou += i; s_pre += p; s_rec += r
-                    cb, ncb = calculate_cbl(vout, vm)
-                    s_cbl += cb; n_cbl += ncb
-                    n_total += vi.size(0)
-                val_results[vname] = {
-                    'dice': s_dice / n_total,
-                    'iou':  s_iou  / n_total,
-                    'pre':  s_pre  / n_total,
-                    'rec':  s_rec  / n_total,
-                    'cbl':  s_cbl  / n_cbl if n_cbl > 0 else 0.0,
-                }
+        for vname, vloader in val_loaders.items():
+            merged = image_level_metrics(model, vloader.dataset)
+            val_results[vname] = {
+                'dice': merged['dice'],
+                'iou':  merged['iou'],
+                'pre':  merged['pre'],
+                'rec':  merged['rec'],
+                'cbl':  merged['cbl'],
+            }
 
         primary_dice = val_results[PRIMARY_VAL_MODE]['dice']
         scheduler.step(primary_dice)
