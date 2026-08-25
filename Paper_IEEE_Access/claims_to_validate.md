@@ -17,7 +17,7 @@ This file records the claims currently planned for the IEEE Access manuscript. I
 - `full-heatmap-prompt.ipynb` was removed from both training ablation folders because it duplicates the full Gaussian PGA-UNet configuration represented by `pga-train-512.ipynb`. The corresponding full-heatmap test notebooks remain available for ablation evaluation.
 - Any quantitative claim that depends on notebooks still carrying `TODO_CHECKPOINT_ID_...` placeholders remains pending until the matching checkpoints are retrained, uploaded, and referenced with real IDs.
 
-## Claim 1: PGA-UNet Versus Automatic and Prompt-Matched Attention U-Net
+## Claim 1: PGA-UNet Versus Automatic and Prompt-Matched AttUNet
 
 ### Scientific question
 
@@ -26,9 +26,9 @@ What is the role of external localization, and does PGA-UNet exploit the provide
 ### Models
 
 1. PGA-UNet.
-2. Image-only Attention U-Net.
-3. Attention U-Net with the box heatmap concatenated as a second input channel.
-4. Attention U-Net trained on the prompt-box crop.
+2. Image-only AttUNet.
+3. AttUNet with the binary box prompt concatenated as a second input channel.
+4. AttUNet trained on the prompt-box crop.
 
 ### Training files
 
@@ -48,15 +48,15 @@ The prompt-guided models are evaluated under both `center_zoom` and `center_shif
 
 ### Claim wording
 
-> PGA-UNet is compared with an image-only Attention U-Net and two prompt-matched Attention U-Net baselines to distinguish the contribution of prompt access from the contribution of prompt-conditioned processing.
+> PGA-UNet is compared with an image-only AttUNet and two prompt-matched AttUNet baselines to distinguish the contribution of prompt access from the contribution of prompt-conditioned processing.
 
-Do not claim that the automatic Attention U-Net comparison is a fully matched architecture comparison.
+Do not claim that the automatic AttUNet comparison is a fully matched architecture comparison.
 
 ### Localization interpretation
 
-Attention U-Net without a prompt must localize and segment from the full image. The prompt-channel and prompt-crop variants receive the same type of lesion box as PGA-UNet. Comparing these three settings separates the localization burden of the automatic baseline from the question of how a model consumes an already identified region. The evidence supports the claim that external localization is an important difficulty in this task and that prompt access and prompt-conditioned processing should be discussed separately. It does not prove that localization is the only or universal bottleneck.
+AttUNet without a prompt must localize and segment from the full image. The prompt-channel and prompt-crop variants receive the same type of lesion box as PGA-UNet. Comparing these three settings separates the localization burden of the automatic baseline from the question of how a model consumes an already identified region. The evidence supports the claim that external localization is an important difficulty in this task and that prompt access and prompt-conditioned processing should be discussed separately. It does not prove that localization is the only or universal bottleneck.
 
-## Claim 2: Attention U-Net Top-Dice and Bottom-Dice Subsets
+## Claim 2: AttUNet Top-Dice and Bottom-Dice Subsets
 
 ### Scientific question
 
@@ -64,10 +64,10 @@ Does prompt-guided segmentation remain useful on cases where automatic localizat
 
 ### Procedure
 
-1. Run image-only Attention U-Net on the full test set.
-2. Rank test images by Attention U-Net Dice.
+1. Run image-only AttUNet on the full test set.
+2. Rank test images by AttUNet Dice.
 3. Select the top 50 and bottom 50 image stems.
-4. Evaluate PGA-UNet, prompt-channel Attention U-Net, and prompt-crop Attention U-Net on the same stems.
+4. Evaluate PGA-UNet, prompt-channel AttUNet, and prompt-crop AttUNet on the same stems.
 5. Report both `center_zoom` and `center_shift` for the prompt-guided models.
 
 ### Test files
@@ -81,7 +81,7 @@ The required checkpoints come from the four training files listed in Claim 1.
 
 > The top-Dice and bottom-Dice analyses examine whether prompt-guided models retain an advantage on cases where automatic localization is relatively strong or weak, using identical image stems for all compared models.
 
-The subsets are induced by Attention U-Net performance. They must not be described as intrinsic clinical difficulty groups.
+The subsets are induced by AttUNet performance. They must not be described as intrinsic clinical difficulty groups.
 
 ## Claim 3: PGA-UNet Versus SAM-Med2D at 256
 
@@ -133,7 +133,7 @@ Dice, CBL, and HD95. Dice is the primary overlap metric for this subset because 
 
 > On the GT-area-defined small-lesion subset, PGA-UNet is compared with zero-shot and fine-tuned SAM-Med2D at the matched 256 resolution.
 
-## Claim 5: Small PGA-UNet 512 Versus Prompt-Channel and Prompt-Crop Attention U-Net
+## Claim 5: Small PGA-UNet 512 Versus Prompt-Channel and Prompt-Crop AttUNet
 
 ### Scientific question
 
@@ -144,7 +144,7 @@ Does PGA-UNet exploit the prompt more effectively than simple prompt-channel con
 - `Source/File_Train/{btxrd,fracatlas}/pga-train-512.ipynb`
 - `Source/File_Train/{btxrd,fracatlas}/concat-prompt-attunet-r512.ipynb`
 - `Source/File_Train/{btxrd,fracatlas}/crop-prompt-attunet-r512.ipynb`
-- Image-only Attention U-Net is used where the subset notebook requires it.
+- Image-only AttUNet is used where the subset notebook requires it.
 
 ### Test files
 
@@ -155,7 +155,7 @@ These files evaluate the R512 prompt-guided models on the same small-lesion stem
 
 ### Claim wording
 
-> On the small-lesion subset, PGA-UNet is compared with prompt-matched conventional baselines that either concatenate the heatmap or restrict the input to the prompt crop.
+> On the small-lesion subset, PGA-UNet is compared with prompt-matched conventional baselines that either concatenate the binary box prompt or restrict the input to the prompt crop.
 
 ## Claim 6: Ablation of Gaussian Prompt, PSG, and CAD
 
