@@ -136,6 +136,54 @@ def _safe_name(value):
     return value or "qualitative_result"
 
 
+def _resize_panel(panel, height, width):
+    """Resize an RGB panel with nearest-neighbor indexing without extra dependencies."""
+    if panel.shape[:2] == (height, width):
+        return panel
+    y_index = np.linspace(0, panel.shape[0] - 1, height).round().astype(int)
+    x_index = np.linspace(0, panel.shape[1] - 1, width).round().astype(int)
+    return panel[y_index][:, x_index]
+
+
+def _colored_mask(panel, threshold=5):
+    panel = panel.astype(np.int16)
+    return panel.max(axis=-1) - panel.min(axis=-1) >= threshold
+
+
+def _overlay_role_on_input(input_panel, source_panel, role):
+    """Keep the input X-ray visible and transfer only colored annotations."""
+    height, width = input_panel.shape[:2]
+    source_panel = _resize_panel(source_panel, height, width)
+    mask = _colored_mask(source_panel)
+    output = input_panel.astype(np.float32).copy()
+    if not mask.any():
+        return output.astype(np.uint8)
+
+    alpha = 0.62
+    if role == "Prompt":
+        color = np.array([0, 220, 235], dtype=np.float32)
+        alpha = 0.90
+        output[mask] = output[mask] * (1.0 - alpha) + color * alpha
+    elif role == "Prediction":
+        color = np.array([235, 45, 70], dtype=np.float32)
+        output[mask] = output[mask] * (1.0 - alpha) + color * alpha
+    elif role == "Ground Truth":
+        color = np.array([35, 210, 90], dtype=np.float32)
+        output[mask] = output[mask] * (1.0 - alpha) + color * alpha
+    elif role == "TP/FP/FN":
+        source = source_panel.astype(np.int16)
+        red = mask & (source[..., 0] >= source[..., 1]) & (source[..., 0] >= source[..., 2])
+        green = mask & (source[..., 1] > source[..., 0]) & (source[..., 1] >= source[..., 2])
+        blue = mask & ~(red | green)
+        for region, color in (
+            (red, np.array([235, 45, 45], dtype=np.float32)),
+            (green, np.array([35, 210, 90], dtype=np.float32)),
+            (blue, np.array([45, 90, 235], dtype=np.float32)),
+        ):
+            output[region] = output[region] * (1.0 - alpha) + color * alpha
+    return np.clip(output, 0, 255).astype(np.uint8)
+
+
 def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative", prefix=None,
                             metric_fontsize=11, dpi=150, display_images=True):
     """Save and display each axes row as one standalone qualitative result image."""
@@ -182,6 +230,12 @@ def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative"
             top = max(0, source_height - y1)
             bottom = min(source_height, source_height - y0)
             panel_images.append(source_rgba[top:bottom, max(0, x0):max(0, x1), :3])
+
+        input_panel = panel_images[0]
+        panel_images = [
+            input_panel if label == "Input" else _overlay_role_on_input(input_panel, panel, label)
+            for panel, label in zip(panel_images, column_labels)
+        ]
 
         row_fig, row_axes_new = plt.subplots(
             1, len(column_labels), figsize=(4 * len(column_labels), 4.6), squeeze=False)
