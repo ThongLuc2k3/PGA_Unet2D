@@ -5,7 +5,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.ndimage import binary_erosion, distance_transform_edt
+from scipy.ndimage import binary_erosion, distance_transform_edt, label as connected_components
 
 
 METRIC_KEYS = {
@@ -215,6 +215,19 @@ def _blend_color(output, region, color, alpha=0.62):
     output[region] = output[region] * (1.0 - alpha) + color * alpha
 
 
+def _filled_box_mask_from_panel(source_panel):
+    """Convert rendered colored box outlines into filled rectangular prompts."""
+    outline = _colored_mask(source_panel)
+    components, count = connected_components(outline)
+    filled = np.zeros(outline.shape, dtype=bool)
+    for component_index in range(1, count + 1):
+        ys, xs = np.where(components == component_index)
+        if len(xs) < 4:
+            continue
+        filled[ys.min():ys.max() + 1, xs.min():xs.max() + 1] = True
+    return filled
+
+
 def _overlay_role_on_input(input_panel, source_panel, role, record):
     """Keep the input X-ray visible and transfer only colored annotations."""
     height, width = input_panel.shape[:2]
@@ -223,11 +236,18 @@ def _overlay_role_on_input(input_panel, source_panel, role, record):
     if role == "Prompt":
         prompt_map = _record_prompt_map(record, height, width)
         if prompt_map is not None:
-            hot_rgb = plt.get_cmap("hot")(prompt_map)[..., :3] * 255.0
-            output = output * 0.60 + hot_rgb * 0.40
+            intermediate = (prompt_map > 1e-4) & (prompt_map < 1.0 - 1e-4)
+            is_gaussian = np.count_nonzero(intermediate) >= 8
+            if is_gaussian:
+                region = prompt_map > 1e-4
+                hot_rgb = plt.get_cmap("hot")(prompt_map)[..., :3] * 255.0
+                output[region] = output[region] * 0.60 + hot_rgb[region] * 0.40
+            else:
+                region = prompt_map > 0.5
+                _blend_color(output, region, np.array([255, 255, 255], dtype=np.float32), alpha=0.40)
         else:
-            colored = _colored_mask(source_panel)
-            output[colored] = source_panel[colored]
+            region = _filled_box_mask_from_panel(source_panel)
+            _blend_color(output, region, np.array([255, 255, 255], dtype=np.float32), alpha=0.40)
     elif role == "Prediction":
         mask = _record_binary_mask(record, ("pred", "prob", "prediction"), height, width)
         if mask is None:
