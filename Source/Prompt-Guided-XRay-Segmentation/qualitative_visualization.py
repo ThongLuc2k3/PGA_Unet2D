@@ -5,7 +5,6 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.transforms import Bbox
 from scipy.ndimage import binary_erosion, distance_transform_edt
 
 
@@ -21,18 +20,40 @@ METRIC_KEYS = {
 
 def select_shared_stems(records, n_multi=5, n_single=5, name_key="img_name",
                         polygon_key="n_samples"):
-    """Select deterministic qualitative stems from GT-derived polygon counts."""
+    """Select the same deterministic stem order for every model and prompt mode."""
     records = sorted(records, key=lambda record: str(record[name_key]))
-    multi = [str(record[name_key]) for record in records if int(record.get(polygon_key, 1)) >= 2]
-    single = [str(record[name_key]) for record in records if int(record.get(polygon_key, 1)) == 1]
-    stems = multi[:n_multi] + single[:n_single]
     target_count = n_multi + n_single
-    if len(stems) < target_count:
-        fallback = [str(record[name_key]) for record in records if str(record[name_key]) not in stems]
-        stems.extend(fallback[:target_count - len(stems)])
+    stems = [str(record[name_key]) for record in records[:target_count]]
     if not stems:
         raise ValueError("No qualitative image stems are available")
     return stems
+
+
+def resolve_runtime_path(relative_path):
+    """Resolve a project path in local, Colab, or Kaggle notebook runtimes."""
+    relative_path = Path(relative_path)
+    if relative_path.is_absolute() and relative_path.exists():
+        return relative_path
+
+    package_suffix = Path("Source/Prompt-Guided-XRay-Segmentation")
+    candidates = [Path.cwd()]
+    candidates.extend(Path.cwd().parents)
+    candidates.extend([
+        Path("/content/PGA_Unet2D") / package_suffix,
+        Path("/kaggle/working/PGA_Unet2D") / package_suffix,
+        Path("/content/Prompt-Guided-XRay-Segmentation"),
+        Path("/kaggle/working/Prompt-Guided-XRay-Segmentation"),
+    ])
+    searched = []
+    for root in candidates:
+        candidate = root / relative_path
+        searched.append(str(candidate))
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(
+        f"Could not resolve '{relative_path}' in local, Colab, or Kaggle paths. "
+        f"Checked: {searched}"
+    )
 
 
 def records_for_stems(records, stems, name_key="img_name", context="records"):
@@ -118,7 +139,8 @@ def _safe_name(value):
 def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative", prefix=None,
                             metric_fontsize=11, dpi=150, display_images=True):
     """Save and display each axes row as one standalone qualitative result image."""
-    from IPython.display import Image, display
+    if display_images:
+        from IPython.display import Image, display
 
     axes = np.asarray(axes, dtype=object)
     if axes.ndim == 1:
@@ -133,8 +155,19 @@ def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative"
         title = fig._suptitle.get_text() if fig._suptitle is not None else "qualitative_result"
         prefix = _safe_name(title)
 
+    column_labels = {
+        4: ("Input", "Prediction", "Ground Truth", "TP/FP/FN"),
+        5: ("Input", "Prompt", "Prediction", "Ground Truth", "TP/FP/FN"),
+    }.get(axes.shape[1])
+    if column_labels is None:
+        raise ValueError(
+            f"Qualitative figures must have 4 columns without prompts or 5 columns "
+            f"with prompts, got {axes.shape[1]} columns"
+        )
+
     fig.canvas.draw()
-    renderer = fig.canvas.get_renderer()
+    source_rgba = np.asarray(fig.canvas.buffer_rgba()).copy()
+    source_height = source_rgba.shape[0]
     saved_paths = []
     for index, (row_axes, record) in enumerate(zip(axes, records)):
         values = {label: _metric_value(record, keys) for label, keys in METRIC_KEYS.items()}
@@ -143,26 +176,32 @@ def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative"
             for label, value in values.items()
         )
 
-        positions = [ax.get_position() for ax in row_axes]
-        x_center = 0.5 * (min(pos.x0 for pos in positions) + max(pos.x1 for pos in positions))
-        y_bottom = min(pos.y0 for pos in positions)
-        metric_artist = fig.text(
-            x_center, y_bottom - 0.012, metric_text,
-            ha="center", va="top", color="red", fontsize=metric_fontsize,
-            fontweight="bold", transform=fig.transFigure,
-        )
-        fig.canvas.draw()
+        panel_images = []
+        for ax in row_axes:
+            x0, y0, x1, y1 = (int(round(value)) for value in ax.bbox.extents)
+            top = max(0, source_height - y1)
+            bottom = min(source_height, source_height - y0)
+            panel_images.append(source_rgba[top:bottom, max(0, x0):max(0, x1), :3])
 
-        row_bbox = Bbox.union([ax.get_tightbbox(renderer) for ax in row_axes])
-        metric_bbox = metric_artist.get_window_extent(renderer=renderer)
-        crop_bbox = Bbox.union([row_bbox, metric_bbox]).expanded(1.02, 1.08)
-        crop_inches = crop_bbox.transformed(fig.dpi_scale_trans.inverted())
+        row_fig, row_axes_new = plt.subplots(
+            1, len(column_labels), figsize=(4 * len(column_labels), 4.6), squeeze=False)
+        row_fig.patch.set_facecolor("white")
+        row_axes_new = row_axes_new[0]
+        for ax, panel_image, label in zip(row_axes_new, panel_images, column_labels):
+            ax.imshow(panel_image)
+            ax.set_title(label, fontsize=11, fontweight="bold", color="black", pad=6)
+            ax.axis("off")
+        row_fig.subplots_adjust(left=0.01, right=0.99, top=0.90, bottom=0.15, wspace=0.04)
+        row_fig.text(
+            0.5, 0.055, metric_text, ha="center", va="center", color="red",
+            fontsize=metric_fontsize, fontweight="bold",
+        )
 
         record_name = _safe_name(_record_name(record, index))
         output_path = output_dir / f"{_safe_name(prefix)}_{index + 1:02d}_{record_name}.png"
-        fig.savefig(output_path, dpi=dpi, bbox_inches=crop_inches, facecolor="white")
+        row_fig.savefig(output_path, dpi=dpi, facecolor="white")
         saved_paths.append(str(output_path))
-        metric_artist.remove()
+        plt.close(row_fig)
 
         if display_images:
             display(Image(filename=str(output_path)))
