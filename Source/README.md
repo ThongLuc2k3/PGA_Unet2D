@@ -43,7 +43,7 @@ Source/
 **Attention U-Net** is unaffected: it has no prompt/box concept at all (plain image-only baseline). The remaining architecture-ablation notebooks use thin dataset adapters around `PromptSegmentationDataset`, so box generation, Gaussian heatmap construction in original-image coordinates, resize-and-padding, deterministic test shifts, and synchronized augmentation match PGA-UNet. The binary-prompt ablation overrides only heatmap construction and uses nearest-neighbor interpolation. Training uses `center_mixed`; testing reports `center_zoom` and `center_shift` separately.
 
 **Prompt-matched conventional baselines**: two Attention U-Net variants, promoted out of the architecture-ablation set into standalone baselines, give a plain Attention U-Net the same box prompt PGA-UNet gets, without any of PGA-UNet's Gaussian-prior/PSG/CAD machinery, so the comparison isolates "does the architecture matter, or just having the box at all":
-- `concat-prompt-attunet-r512.ipynb`: box heatmap concatenated as a 2nd input channel (`in_channels=2`), plain skip decoder.
+- `concat-prompt-attunet-r512.ipynb`: binary box prompt concatenated as a second input channel (`in_channels=2`), plain skip decoder.
 - `crop-prompt-attunet-r512.ipynb`: trained and evaluated on the image cropped to the prompt box instead of the full image, prediction pasted back into the full frame for a fair comparison.
 
 Both baselines train in their own dedicated notebook above, but are tested inside `test-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb` alongside PGA-UNet and plain Attention U-Net, not in a separate test notebook: all four models are evaluated on the exact same balanced set of test images so their qualitative panels line up row-by-row.
@@ -61,7 +61,7 @@ The active notebooks are dataset-specific, under `File_Train/{btxrd,fracatlas}/`
 - `pga-train-128.ipynb`, `pga-train-256.ipynb`, `pga-train-512.ipynb`: official PGA-UNet training entry points at all three resolutions for both datasets. Environment variables `PROMPT_DATASET_ROOT` and `PROMPT_IMG_SIZE` select the dataset and resolution. All use the center-scaled `center_mixed` protocol, followed by image-level merged evaluation for the `center_zoom` and `center_shift` scenarios, no-GT confidence reporting, and sample visualizations.
 - `Attention_Unet2D.ipynb`: Attention U-Net baseline training.
 - `Finetune_SAMMed2D_test_robust.ipynb`: SAM-Med2D finetuning and its own center_zoom/center_shift test cells.
-- `concat-prompt-attunet-r512.ipynb`: Attention U-Net + prompt channel, a prompt-matched conventional baseline (box heatmap concatenated as a 2nd input channel, no PSG, no CAD).
+- `concat-prompt-attunet-r512.ipynb`: Attention U-Net + prompt channel, a prompt-matched conventional baseline (binary box prompt concatenated as a second input channel, no PSG, no CAD).
 - `crop-prompt-attunet-r512.ipynb`: Attention U-Net trained on prompt-box crops instead of the full image, the other prompt-matched conventional baseline.
 - `Ablation/`: the 4 remaining architecture-ablation training notebooks (`cad-only`, `psg-only`, `psg-attention`, `full-binary-prompt`). The full Gaussian prompt configuration is the official `pga-train-512.ipynb`, so the duplicate `full-heatmap-prompt` trainer was removed; its test notebook remains for the ablation comparison. `no-psg-attention-concat` (original attention gate, no PSG, prompt via concatenation) and `no-psg-no-cad-binary` (no PSG, no CAD, binary prompt via concatenation) were removed at the author's request.
 
@@ -104,7 +104,7 @@ The current main baselines are:
 
 Two additional prompt-matched conventional baselines give a plain Attention U-Net the same box prompt PGA-UNet gets, without PGA-UNet's Gaussian-prior/PSG/CAD machinery, for a fairer box-matched comparison:
 
-- Attention U-Net + prompt channel (box heatmap concatenated as a 2nd input channel)
+- Attention U-Net + prompt channel (binary box prompt concatenated as a second input channel)
 - Attention U-Net on prompt crops (trained and evaluated on the image cropped to the prompt box)
 
 Plain `U-Net` is not trained or evaluated anywhere in this source tree. The paper mentions it only as prior architectural lineage when introducing Attention U-Net (Related Work table, `access.tex`), with no quantitative results to defend, so there is nothing to reconcile if it happens to outperform Attention U-Net on some metric.

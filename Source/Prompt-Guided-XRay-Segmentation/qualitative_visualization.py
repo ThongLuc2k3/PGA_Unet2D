@@ -306,6 +306,13 @@ def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative"
             f"with prompts, got {axes.shape[1]} columns"
         )
 
+    # Source axes may still contain legacy metric labels. Hide every source text
+    # artist before rasterizing so no label can be baked into an image panel.
+    for source_ax in axes.flat:
+        for artist in (*source_ax.texts, source_ax.title,
+                       source_ax.xaxis.label, source_ax.yaxis.label):
+            artist.set_visible(False)
+
     fig.canvas.draw()
     source_rgba = np.asarray(fig.canvas.buffer_rgba()).copy()
     source_height = source_rgba.shape[0]
