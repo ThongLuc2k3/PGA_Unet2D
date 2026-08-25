@@ -159,6 +159,13 @@ def _record_mapping(record):
 def _record_binary_mask(record, keys, height, width):
     source = _record_mapping(record)
     value = next((source.get(key) for key in keys if source.get(key) is not None), None)
+    nested_metrics = source.get("m") if isinstance(source.get("m"), dict) else {}
+    if value is None and any(key in keys for key in ("pred", "prob", "prediction")):
+        value = next(
+            (nested_metrics.get(key) for key in ("pred", "prob", "prediction", "mask")
+             if nested_metrics.get(key) is not None),
+            None,
+        )
     if value is None:
         return None
     value = np.asarray(value)
@@ -175,6 +182,35 @@ def _record_binary_mask(record, keys, height, width):
     return value > 0.5
 
 
+def _record_prompt_map(record, height, width):
+    source = _record_mapping(record)
+    value = next(
+        (source.get(key) for key in ("prompts", "prompt", "prompt_mask", "heatmap", "hm")
+         if source.get(key) is not None),
+        None,
+    )
+    if value is None:
+        return None
+    if isinstance(value, (list, tuple)):
+        maps = [np.squeeze(np.asarray(item)) for item in value]
+        maps = [item for item in maps if item.ndim == 2]
+        if not maps:
+            return None
+        value = np.max(np.stack(maps, axis=0), axis=0)
+    else:
+        value = np.squeeze(np.asarray(value))
+        if value.ndim == 3:
+            channel_axis = 0 if value.shape[0] <= 4 else -1
+            value = value.max(axis=channel_axis)
+    if value.ndim != 2:
+        return None
+    if value.shape != (height, width):
+        y_index = np.linspace(0, value.shape[0] - 1, height).round().astype(int)
+        x_index = np.linspace(0, value.shape[1] - 1, width).round().astype(int)
+        value = value[y_index][:, x_index]
+    return np.clip(value.astype(np.float32), 0.0, 1.0)
+
+
 def _blend_color(output, region, color, alpha=0.62):
     output[region] = output[region] * (1.0 - alpha) + color * alpha
 
@@ -185,11 +221,13 @@ def _overlay_role_on_input(input_panel, source_panel, role, record):
     source_panel = _resize_panel(source_panel, height, width)
     output = input_panel.astype(np.float32).copy()
     if role == "Prompt":
-        mask = _colored_mask(source_panel)
-        if not mask.any():
-            return output.astype(np.uint8)
-        color = np.array([0, 220, 235], dtype=np.float32)
-        _blend_color(output, mask, color, alpha=0.90)
+        prompt_map = _record_prompt_map(record, height, width)
+        if prompt_map is not None:
+            hot_rgb = plt.get_cmap("hot")(prompt_map)[..., :3] * 255.0
+            output = output * 0.60 + hot_rgb * 0.40
+        else:
+            colored = _colored_mask(source_panel)
+            output[colored] = source_panel[colored]
     elif role == "Prediction":
         mask = _record_binary_mask(record, ("pred", "prob", "prediction"), height, width)
         if mask is None:
