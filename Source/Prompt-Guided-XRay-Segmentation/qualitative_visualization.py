@@ -150,37 +150,72 @@ def _colored_mask(panel, threshold=5):
     return panel.max(axis=-1) - panel.min(axis=-1) >= threshold
 
 
-def _overlay_role_on_input(input_panel, source_panel, role):
+def _record_mapping(record):
+    if isinstance(record, (tuple, list)) and len(record) == 2 and isinstance(record[1], dict):
+        return record[1]
+    return record if isinstance(record, dict) else {}
+
+
+def _record_binary_mask(record, keys, height, width):
+    source = _record_mapping(record)
+    value = next((source.get(key) for key in keys if source.get(key) is not None), None)
+    if value is None:
+        return None
+    value = np.asarray(value)
+    value = np.squeeze(value)
+    if value.ndim == 3:
+        channel_axis = 0 if value.shape[0] <= 4 else -1
+        value = value.max(axis=channel_axis)
+    if value.ndim != 2:
+        return None
+    if value.shape != (height, width):
+        y_index = np.linspace(0, value.shape[0] - 1, height).round().astype(int)
+        x_index = np.linspace(0, value.shape[1] - 1, width).round().astype(int)
+        value = value[y_index][:, x_index]
+    return value > 0.5
+
+
+def _blend_color(output, region, color, alpha=0.62):
+    output[region] = output[region] * (1.0 - alpha) + color * alpha
+
+
+def _overlay_role_on_input(input_panel, source_panel, role, record):
     """Keep the input X-ray visible and transfer only colored annotations."""
     height, width = input_panel.shape[:2]
     source_panel = _resize_panel(source_panel, height, width)
-    mask = _colored_mask(source_panel)
     output = input_panel.astype(np.float32).copy()
-    if not mask.any():
-        return output.astype(np.uint8)
-
-    alpha = 0.62
     if role == "Prompt":
+        mask = _colored_mask(source_panel)
+        if not mask.any():
+            return output.astype(np.uint8)
         color = np.array([0, 220, 235], dtype=np.float32)
-        alpha = 0.90
-        output[mask] = output[mask] * (1.0 - alpha) + color * alpha
+        _blend_color(output, mask, color, alpha=0.90)
     elif role == "Prediction":
+        mask = _record_binary_mask(record, ("pred", "prob", "prediction"), height, width)
+        if mask is None:
+            raise KeyError("Prediction qualitative record must contain 'pred' or 'prob'")
         color = np.array([235, 45, 70], dtype=np.float32)
-        output[mask] = output[mask] * (1.0 - alpha) + color * alpha
+        _blend_color(output, mask, color)
     elif role == "Ground Truth":
+        mask = _record_binary_mask(record, ("gt", "ground_truth", "mask"), height, width)
+        if mask is None:
+            raise KeyError("Ground-truth qualitative record must contain 'gt'")
         color = np.array([35, 210, 90], dtype=np.float32)
-        output[mask] = output[mask] * (1.0 - alpha) + color * alpha
+        _blend_color(output, mask, color)
     elif role == "TP/FP/FN":
-        source = source_panel.astype(np.int16)
-        red = mask & (source[..., 0] >= source[..., 1]) & (source[..., 0] >= source[..., 2])
-        green = mask & (source[..., 1] > source[..., 0]) & (source[..., 1] >= source[..., 2])
-        blue = mask & ~(red | green)
+        pred = _record_binary_mask(record, ("pred", "prob", "prediction"), height, width)
+        gt = _record_binary_mask(record, ("gt", "ground_truth", "mask"), height, width)
+        if pred is None or gt is None:
+            raise KeyError("TP/FP/FN qualitative record must contain both prediction and ground truth")
+        green = pred & gt
+        red = pred & ~gt
+        blue = ~pred & gt
         for region, color in (
             (red, np.array([235, 45, 45], dtype=np.float32)),
             (green, np.array([35, 210, 90], dtype=np.float32)),
             (blue, np.array([45, 90, 235], dtype=np.float32)),
         ):
-            output[region] = output[region] * (1.0 - alpha) + color * alpha
+            _blend_color(output, region, color)
     return np.clip(output, 0, 255).astype(np.uint8)
 
 
@@ -233,7 +268,7 @@ def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative"
 
         input_panel = panel_images[0]
         panel_images = [
-            input_panel if label == "Input" else _overlay_role_on_input(input_panel, panel, label)
+            input_panel if label == "Input" else _overlay_role_on_input(input_panel, panel, label, record)
             for panel, label in zip(panel_images, column_labels)
         ]
 
