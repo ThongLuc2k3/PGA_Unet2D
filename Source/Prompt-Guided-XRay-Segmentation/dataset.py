@@ -32,7 +32,8 @@ class PromptSegmentationDataset(Dataset):
                  prompt_mode='center_mixed',
                  shift_ratio=0.5,
                  scale_factor=3.0,
-                 mixed_shift_prob=0.8):
+                 mixed_shift_prob=0.8,
+                 binary_prompt=False):
         self.image_dir   = image_dir
         self.json_dir    = json_dir
         self.img_size    = img_size
@@ -52,10 +53,18 @@ class PromptSegmentationDataset(Dataset):
         # final img_size x img_size frame the network sees, so it stays
         # constant across resolutions instead.
         self.prompt_kernel = 31
-        # Subclasses for binary-prompt ablations may switch this to nearest
-        # neighbor interpolation. Gaussian heatmaps keep linear interpolation.
-        self.prompt_interpolation = cv2.INTER_LINEAR
-        self.prompt_augmentation_interpolation = InterpolationMode.BILINEAR
+        # binary_prompt=True is the ablation that feeds a hard box instead of
+        # the Gaussian-smoothed plateau: create_plateau_heatmap skips the blur
+        # and prompt resizing switches to nearest neighbor so the box stays
+        # hard through resize-and-pad and rotation. Gaussian heatmaps keep
+        # linear/bilinear interpolation.
+        self.binary_prompt = binary_prompt
+        if binary_prompt:
+            self.prompt_interpolation = cv2.INTER_NEAREST
+            self.prompt_augmentation_interpolation = InterpolationMode.NEAREST
+        else:
+            self.prompt_interpolation = cv2.INTER_LINEAR
+            self.prompt_augmentation_interpolation = InterpolationMode.BILINEAR
 
         self.all_samples = []
         for img_name in sorted(os.listdir(image_dir)):
@@ -146,11 +155,12 @@ class PromptSegmentationDataset(Dataset):
         y_max = min(orig_h, int(y_max))
         if x_max > x_min and y_max > y_min:
             heatmap[y_min:y_max, x_min:x_max] = 1.0
-            heatmap = cv2.GaussianBlur(
-                heatmap,
-                (self.prompt_kernel, self.prompt_kernel),
-                0,
-            )
+            if not self.binary_prompt:
+                heatmap = cv2.GaussianBlur(
+                    heatmap,
+                    (self.prompt_kernel, self.prompt_kernel),
+                    0,
+                )
         return heatmap
 
     def _resize_and_pad(self, array, interpolation, pad_value=0):

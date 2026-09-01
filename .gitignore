@@ -5,6 +5,10 @@
 /Source/Report
 /diagrams
 
+# Executed training/testing notebooks and their exported CSVs: large, and the
+# canonical copies live under Source/. Re-run on Kaggle rather than committed.
+/Result/
+
 # Trained checkpoints under Results/: large binaries, re-downloadable via the
 # Google Drive IDs already saved in the corresponding notebooks
 Results/**/*.pth

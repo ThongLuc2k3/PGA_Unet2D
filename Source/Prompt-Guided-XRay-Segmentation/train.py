@@ -11,7 +11,8 @@ import datetime
 import random
 
 from dataset import PromptSegmentationDataset
-from models.networks.prompt_unet_2D import PGA_UNet
+# The segmentation network is imported inside main() so PROMPT_VARIANT can
+# select between the full PGA-UNet and the two encoder-only ablation nets.
 
 # =========================================================
 # Experiment configuration
@@ -48,7 +49,26 @@ SIZE_TVERSKY_AREA_PCTL = float(os.environ.get("SIZE_TVERSKY_AREA_PCTL", "25"))
 # Mutually exclusive with USE_SIZE_TVERSKY (both replace dice_loss).
 USE_FOCAL_DICE = os.environ.get("USE_FOCAL_DICE", "0") == "1"
 FOCAL_GAMMA    = float(os.environ.get("FOCAL_GAMMA", "1.33"))
-USE_ENCODER_PROMPT = True    # True enables PromptSpatialGate in the encoder
+# Ablation switches. The default (PROMPT_VARIANT=full, USE_ENCODER_PROMPT=1,
+# BINARY_PROMPT=0) is the full PGA-UNet and reproduces the main protocol.
+#   PROMPT_VARIANT=full          -> prompt_unet_2D: PSG encoder + CAD decoder
+#   PROMPT_VARIANT=psg_only      -> PSG encoder, plain decoder, no CAD, no QualityHead
+#   PROMPT_VARIANT=psg_attention -> PSG encoder, vanilla attention gate decoder, no CAD, no QualityHead
+# USE_ENCODER_PROMPT=0 with PROMPT_VARIANT=full is the CAD-only (no PSG) ablation.
+# BINARY_PROMPT=1 feeds a hard box instead of the Gaussian-smoothed plateau.
+PROMPT_VARIANT     = os.environ.get("PROMPT_VARIANT", "full").lower()
+USE_ENCODER_PROMPT = os.environ.get("USE_ENCODER_PROMPT", "1") == "1"
+BINARY_PROMPT      = os.environ.get("BINARY_PROMPT", "0") == "1"
+# Optional free-form suffix on the checkpoint name so repeated-seed and
+# ablation runs never overwrite each other (e.g. RUN_TAG=seed2).
+RUN_TAG            = os.environ.get("RUN_TAG", "").strip()
+_VALID_VARIANTS = ("full", "psg_only", "psg_attention")
+if PROMPT_VARIANT not in _VALID_VARIANTS:
+    raise ValueError(f"PROMPT_VARIANT must be one of {_VALID_VARIANTS}.")
+# psg_only / psg_attention have no QualityHead branch; keep the flag honest so
+# the training loop does not try to read a quality output they never return.
+if PROMPT_VARIANT != "full" and USE_QUALITY_HEAD:
+    USE_QUALITY_HEAD = False
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 SEED       = int(os.environ.get("PROMPT_SEED", "22120196"))
 BATCH_SIZE = 4
@@ -308,13 +328,14 @@ def setup_logger(exp_name):
 # MAIN
 # =========================================================
 def _dataset_kwargs(mode):
-    """scale_factor/shift_ratio apply to every mode; mixed_shift_prob only
-    applies to 'center_mixed'.
+    """scale_factor/shift_ratio/binary_prompt apply to every mode;
+    mixed_shift_prob only applies to 'center_mixed'.
     """
+    kwargs = dict(scale_factor=PROMPT_SCALE_FACTOR, shift_ratio=PROMPT_SHIFT_RATIO,
+                  binary_prompt=BINARY_PROMPT)
     if mode == 'center_mixed':
-        return dict(scale_factor=PROMPT_SCALE_FACTOR, shift_ratio=PROMPT_SHIFT_RATIO,
-                    mixed_shift_prob=PROMPT_MIXED_SHIFT_PROB)
-    return dict(scale_factor=PROMPT_SCALE_FACTOR, shift_ratio=PROMPT_SHIFT_RATIO)
+        kwargs['mixed_shift_prob'] = PROMPT_MIXED_SHIFT_PROB
+    return kwargs
 
 
 def main():
@@ -331,8 +352,11 @@ def main():
     logger.info("=" * 90)
     logger.info(
         f"TrainPrompt: {TRAIN_PROMPT_MODE} | Device: {DEVICE} | "
-        f"EncoderPrompt: {USE_ENCODER_PROMPT} | ImgSize: {IMG_SIZE} | "
-        f"DatasetRoot: {DATASET_ROOT} | Seed: {SEED} | ScaleFactor: {PROMPT_SCALE_FACTOR} "
+        f"Variant: {PROMPT_VARIANT} | EncoderPrompt: {USE_ENCODER_PROMPT} | "
+        f"BinaryPrompt: {BINARY_PROMPT} | ImgSize: {IMG_SIZE} | "
+        f"DatasetRoot: {DATASET_ROOT} | Seed: {SEED}"
+        + (f" | RunTag: {RUN_TAG}" if RUN_TAG else "")
+        + f" | ScaleFactor: {PROMPT_SCALE_FACTOR} "
         f"| ShiftRatio: {PROMPT_SHIFT_RATIO} | MixedShiftProb: {PROMPT_MIXED_SHIFT_PROB}"
         + (f" | QualityHead: ConfidenceLossWeight={LOSS_CONFIDENCE_WEIGHT}" if USE_QUALITY_HEAD else "")
         + (f" | SizeTversky: AlphaMax={SIZE_TVERSKY_ALPHA_MAX}, AreaPercentile={SIZE_TVERSKY_AREA_PCTL}" if USE_SIZE_TVERSKY else "")
@@ -377,9 +401,17 @@ def main():
         )
 
     # ── Model ────────────────────────────────────────────────────────
-    model = PGA_UNet(in_channels=1, n_classes=1,
-                     use_encoder_prompt=USE_ENCODER_PROMPT,
-                     use_quality_head=USE_QUALITY_HEAD).to(DEVICE)
+    if PROMPT_VARIANT == "psg_only":
+        from models.networks.prompt_unet_psg_only import PGA_UNet
+        model = PGA_UNet(in_channels=1, n_classes=1).to(DEVICE)
+    elif PROMPT_VARIANT == "psg_attention":
+        from models.networks.prompt_unet_psg_attention import PGA_UNet
+        model = PGA_UNet(in_channels=1, n_classes=1).to(DEVICE)
+    else:
+        from models.networks.prompt_unet_2D import PGA_UNet
+        model = PGA_UNet(in_channels=1, n_classes=1,
+                         use_encoder_prompt=USE_ENCODER_PROMPT,
+                         use_quality_head=USE_QUALITY_HEAD).to(DEVICE)
 
     criterion_bce = nn.BCEWithLogitsLoss()
     optimizer     = optim.AdamW(model.parameters(), lr=LR, weight_decay=1e-4)
@@ -403,7 +435,15 @@ def main():
     if USE_FOCAL_DICE:
         gamma_tag = str(FOCAL_GAMMA).replace('.', '')
         ckpt_tag += f"_focaldice{gamma_tag}"
+    if PROMPT_VARIANT != "full":
+        ckpt_tag += f"_{PROMPT_VARIANT}"
+    elif not USE_ENCODER_PROMPT:
+        ckpt_tag += "_nopsg"
+    if BINARY_PROMPT:
+        ckpt_tag += "_binaryprompt"
     ckpt_prefix     = f"checkpoints/pga_unet_{ckpt_tag}_{IMG_SIZE}"
+    if RUN_TAG:
+        ckpt_prefix += f"_{RUN_TAG}"
 
     for epoch in range(EPOCHS):
         # ── Train ────────────────────────────────────────────────────
