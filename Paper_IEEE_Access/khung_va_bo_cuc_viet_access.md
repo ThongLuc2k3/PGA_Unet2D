@@ -410,6 +410,24 @@ Commit: `b6f98f4` (notebook Q 4-cue) -> `1c5473d` (bỏ QualityHead) -> `e6aa2e5
 - Nếu BTXRD không đạt: C9/C10 gạt sang một bên, chỉ 1 câu hạn chế + 1 câu kết mở.
 - Gộp số loss vào `00`: chưa làm.
 
+## L1. Nháp section đã có (2026-09-04, commit `cedd971`)
+
+- `Paper_IEEE_Access/nhap/nhap_02_related_work.md` (II Related Work)
+- `Paper_IEEE_Access/nhap/nhap_03_method.md` (III Method A..E, không có III-F)
+- `Paper_IEEE_Access/nhap/nhap_04_experimental_setup.md` (IV Experimental Setup A..D)
+
+Mỗi file: ghi chú thay đổi + text tiếng Anh đề xuất. Do agent soạn, đã verify (git diff sạch,
+không dấu gạch ngang, không bịa số). Chờ user duyệt rồi mới ghép vào `.tex`.
+
+Điểm cần user chốt khi ghép:
+1. `references.tex` mới có `b1..b9`. Nháp II dùng `b10..b13` (nnU-Net, ScribblePrompt,
+   EMedSAM, Med-SA) cho AUTHOR ACTION số 4. 4 `\bibitem` đã có sẵn trong ghi chú của
+   `nhap_02_related_work.md`, cần thêm vào `references.tex`.
+2. Nháp IV-D đổi câu "auxiliary screening pipeline" thành "self-assessment + prompt
+   suggestion ngoài phạm vi". Bộ phân loại có/không tổn thương (thầy hỏi mục 3.10 ke_hoach,
+   nhóm đã thử rồi bỏ) nên vẫn giữ 1 câu riêng. User quyết.
+3. Chưa xử: redline 3.8 (số Dice 2 bài gốc BTXRD/FracAtlas làm mốc) thuộc Results/Discussion.
+
 ## L. Nếu chat bị ngắt, đọc để tiếp tục
 
 1. Trạng thái mới nhất: mục I.1 (đoạn "Cập nhật 2026-09-04") + mục K "2026-09-04".
