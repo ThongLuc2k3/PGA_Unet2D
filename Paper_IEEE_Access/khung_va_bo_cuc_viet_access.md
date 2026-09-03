@@ -330,14 +330,33 @@ gì về phương pháp.
 
 Notebook + số C9/C10 giữ lại trong repo làm bằng chứng, không đưa vào manuscript.
 
-**Cập nhật 2026-09-04, thử cứu bằng điểm training-free (Cách A):**
-`test-auxiliary-signals-r512-*` đã viết lại: bỏ đọc QualityHead, thay bằng
-`Q = mean(S_sharp, S_fill, S_size, S_stab)` tính thẳng từ output suy luận, không train
-lại. S_stab (IoU giữa mask gốc và mask khi nhích box) là tín hiệu đặt cược. Part A so
-Spearman của Q và từng thành phần với Dice thật; Part B xếp hạng 50 box theo Q so với theo
-QualityHead. User chạy. Nếu Spearman của Q lên tầm 0.4+ thì C9/C10 quay lại bài dưới dạng
-"training-free self-assessment", cập nhật demo + chụp ảnh. Nếu không, giữ future work như
-trên. Commit `b6f98f4`.
+**Cập nhật 2026-09-04, thử cứu bằng điểm training-free Q (Cách A). ĐANG CÓ TRIỂN VỌNG.**
+
+`test-auxiliary-signals-r512-*` viết lại: bỏ đọc QualityHead, thay bằng điểm `Q` tính
+thẳng từ output suy luận, KHÔNG train lại.
+
+- **Q chính thức = mean(S_sharp, S_stab)** (2 cue bền vững).
+  - S_sharp = độ dứt khoát của mask (trung bình `2p-1` trên vùng mask).
+  - S_stab = IoU trung bình giữa mask gốc và 6 mask khi nhích box (dịch 0.12, co giãn +-0.10).
+- S_fill, S_size bị bỏ khỏi Q vì trên FracAtlas chúng ra hằng số (tổn thương quá nhỏ so với
+  box 3x). Notebook vẫn in S_fill/S_size riêng và `Q4 = mean cả 4` để đối chiếu BTXRD.
+
+**Kết quả FracAtlas Part A (đã chạy):** S_sharp Spearman 0.47/0.43 (zoom/shift), S_stab
+0.63/0.45, **Q 0.65/0.48**. Đạt ngưỡng.
+
+**Đang chờ:** BTXRD Part A + Part B cả 2 dataset (user chạy). Ngưỡng: BTXRD Q Spearman
+>= ~0.4.
+- Đạt -> C9/C10 **quay lại bài**: mục V-L sống lại dưới tên "training-free self-assessment
+  score"; Method III-F mô tả công thức Q thay vì QualityHead; Experimental Setup thêm 1 câu
+  "mô hình có nhánh QualityHead detach, không dùng đầu ra"; demo mới (Q) dùng để chụp ảnh.
+- Không đạt -> giữ nguyên "gạt sang một bên" như phần trên.
+
+**Demo:** `test-Demo_Interactive_PGA_Unet-*` đã đổi sang tính Q (2 cue) + sửa gallery
+(`object_fit=contain`). User chạy, chụp ảnh luồng vẽ box -> mask. Ảnh cuối để sau khi chốt
+Q qua BTXRD.
+
+Commit: `b6f98f4` (notebook Q 4-cue) -> `1c5473d` (bỏ QualityHead) -> `e6aa2e5` (demo Q) ->
+`f5767f4` (Q = 2 cue, cả notebook + demo).
 
 ### I.2. Các mục còn thiếu khác
 
@@ -357,24 +376,49 @@ trên. Commit `b6f98f4`.
 
 ## J. Việc
 
-1. File đuôi kép (mục H): giữ bản sửa, đã commit `cfef8ba`.
-2. Notebook C9 + C10: đã tạo và đã chạy. Kết quả âm tính, gạt sang một bên (mục I.1).
-3. Demo: đã đổi checkpoint sang `00` ở 2 file `test-Demo_Interactive_PGA_Unet-*`. User chạy
-   Kaggle, chụp 1 ảnh luồng vẽ box -> mask.
-4. Gộp số loss vào notebook `00` (mục G). [Chưa làm]
-5. Viết nháp `.md` (đã có `nhap_method_setup.md` cho III + IV, cần chỉnh theo quyết định
-   C9/C10). Tiếp: II Related Work, khung V/VI/VII. Mỗi mục `.md` nháp trước khi sửa `.tex`.
+**Đã xong:**
+1. File đuôi kép (mục H): bản sửa `qualitative_visualization.py`, commit `cfef8ba`.
+2. Notebook C9 + C10 `test-auxiliary-signals-r512-*`: viết lại theo điểm Q training-free
+   (mục I.1). Commit `f5767f4`.
+3. Demo `test-Demo_Interactive_PGA_Unet-*`: checkpoint `00`, tính điểm Q, sửa gallery.
+   Commit `f5767f4`.
+
+**Đang chờ user (Kaggle):**
+4. Chạy 2 notebook `test-auxiliary-signals-r512-{btxrd,fracatlas}` -> gửi bảng Part A + Part B.
+5. Chạy 2 demo -> gửi ảnh chụp luồng vẽ box -> mask.
+
+**Chưa làm:**
+6. Chốt C9/C10 dựa trên bảng BTXRD (mục I.1): quay lại bài hay giữ future work.
+7. Gộp số loss vào notebook `00` (mục G).
+8. Viết nháp `.md`: `nhap_method_setup.md` (III + IV) đã có, cần chỉnh theo kết quả Q.
+   Tiếp: II Related Work, khung V/VI/VII. Mỗi mục `.md` nháp trước khi sửa `.tex`.
 
 ## K. Trạng thái quyết định
 
 **2026-09-03**
-- File đuôi kép: bug `qualitative_visualization.py`, giữ bản sửa. Đã commit.
+- File đuôi kép: bug `qualitative_visualization.py`, giữ bản sửa. Commit `cfef8ba`.
 - Checkpoint PGA-512: thư mục `00` là chính thức. BTXRD 0.782/0.774, FracAtlas 0.727/0.713.
 - Baseline prompt hiện đại thêm (MedSAM/ScribblePrompt): future work, không làm vòng này.
 
 **2026-09-04**
-- C9 + C10: đã chạy, **âm tính** (QualityHead sập về hằng số, Spearman 0.04 đến 0.19).
-  **Gạt sang một bên**: bỏ mục V-L, giữ III-F mô tả kiến trúc, thêm 1 câu hạn chế ở
-  Discussion + 1 câu kết mở ở Conclusion. Demo giữ làm minh hoạ giao diện, đã đổi checkpoint
-  sang `00`.
+- QualityHead có sẵn trong mô hình: **hỏng** (sập về hằng số ~0.69, Spearman 0.04 đến 0.19).
+  Không đọc nữa, không đưa vào bài.
+- Thay bằng điểm training-free **Q = mean(S_sharp, S_stab)**, không train lại. FracAtlas
+  Part A: Q Spearman 0.65/0.48 -> đạt. **Chờ BTXRD để chốt.**
+- Nếu BTXRD cũng đạt: C9/C10 quay lại bài (mục V-L), tên "training-free self-assessment
+  score", dùng demo Q để chụp ảnh.
+- Nếu BTXRD không đạt: C9/C10 gạt sang một bên, chỉ 1 câu hạn chế + 1 câu kết mở.
 - Gộp số loss vào `00`: chưa làm.
+
+## L. Nếu chat bị ngắt, đọc để tiếp tục
+
+1. Trạng thái mới nhất: mục I.1 (đoạn "Cập nhật 2026-09-04") + mục K "2026-09-04".
+2. Việc kế tiếp: user gửi bảng số BTXRD từ `test-auxiliary-signals-r512-btxrd`. Nhìn dòng
+   `Q` (headline, 2 cue) và `Q4` (4 cue) trong Part A. Spearman `Q` >= ~0.4 ở cả 2 prompt
+   mode -> C9/C10 quay lại bài.
+3. Số Q FracAtlas đã có: S_sharp 0.47/0.43, S_stab 0.63/0.45, Q 0.65/0.48 (zoom/shift).
+4. 4 file liên quan đều ở `Source/File_Test/{btxrd,fracatlas}/`:
+   `test-auxiliary-signals-r512-*` và `test-Demo_Interactive_PGA_Unet-*`. Commit hiện tại
+   `f5767f4` trở về sau.
+5. Memory `access-results-refresh-status` có toàn bộ số liệu Results mới + các quyết định.
+6. Chưa đụng file `.tex` nào. `nhap_method_setup.md` là nháp chờ duyệt.
