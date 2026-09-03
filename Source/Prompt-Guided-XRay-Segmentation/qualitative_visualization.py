@@ -351,7 +351,9 @@ def export_qualitative_rows(fig, axes, records, output_dir="results/qualitative"
             fontsize=metric_fontsize, fontweight="bold",
         )
 
-        record_name = _safe_name(_record_name(record, index))
+        raw_name = re.sub(r"\.(png|jpg|jpeg|bmp|tif|tiff)$", "", _record_name(record, index),
+                          flags=re.IGNORECASE)
+        record_name = _safe_name(raw_name)
         output_path = output_dir / f"{_safe_name(prefix)}_{index + 1:02d}_{record_name}.png"
         row_fig.savefig(output_path, dpi=dpi, facecolor="white")
         saved_paths.append(str(output_path))
