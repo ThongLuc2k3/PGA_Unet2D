@@ -135,26 +135,28 @@ sang mục lục IEEE ở phần F. Không claim nào bị bỏ hoặc gộp ch�
 
 ### Nhóm 5: Sử dụng tương tác và tín hiệu phụ trợ
 
-| # | Claim | So sánh cụ thể | File bằng chứng | Trạng thái số | Nằm ở mục |
-|---|---|---|---|---|---|
-| C9 | Điểm ước lượng chất lượng mask mức polygon (QualityHead) | Toàn tập test: MAE/RMSE/Pearson/Spearman giữa điểm QualityHead và Dice thật, `center_zoom` và `center_shift` riêng | `test-auxiliary-signals-r512-{btxrd,fracatlas}` Phần A (bọc `evaluate_quality_head.py`) | **notebook đã tạo 2026-09-03**, chạy được ngay với checkpoint `00`; thành Mode B sau khi chạy | V-L |
-| C10 | Gợi ý vùng box cho bác sĩ | Mỗi ảnh: 50 box ứng viên, QualityHead chấm điểm, lấy top-5 (kèm @3); chấm theo độ phủ tổn thương của box (bao trọn = 1.0, một phần = tỉ lệ), không dùng mask mô hình. Báo Độ phủ trung bình, Độ phủ trung bình tốt nhất, Tỉ lệ ảnh khoanh trọn (>= 1 ô bao trọn 100% tổn thương) | `test-auxiliary-signals-r512-{btxrd,fracatlas}` Phần B | **notebook đã tạo 2026-09-03**, chạy được ngay với checkpoint `00`; thành Mode B sau khi chạy | V-L |
-| C-fail | Failure modes | Tổn thương dài/phân nhánh, vùng giải phẫu chồng lấn, tương phản yếu | `Paper_IEEE_Access/images/failure/` | định tính | V-K |
+| # | Claim | Trạng thái | Nằm ở mục |
+|---|---|---|---|
+| C9 | Điểm ước lượng chất lượng mask (QualityHead) | **GẠT SANG 1 BÊN 2026-09-04.** Đã chạy `test-auxiliary-signals-r512-*`: QualityHead ra gần như hằng số (~0.69 BTXRD, ~0.72 FracAtlas), Pearson −0.05 đến 0.16, Spearman 0.04 đến 0.19. Không phân biệt được tốt/tệ. Không đưa vào Results. | không có mục Results; 1 câu ở VI Discussion + 1 câu future work ở VII |
+| C10 | Gợi ý vùng box cho bác sĩ | **GẠT SANG 1 BÊN 2026-09-04.** Cùng notebook Phần B: vì QualityHead hằng số nên xếp hạng vô nghĩa, "top-5" = 5 box tùy tiện. BTXRD 38% khoanh trọn, FracAtlas 87% nhưng chỉ do hình học (vết nhỏ + box to). Không đo được gì về phương pháp. Không đưa vào Results. | như C9 |
+| C-fail | Failure modes | định tính | V-K |
 
 ### Thay đổi so với bản sổ claim trước
 
 Nhóm 0 đến 4: không đổi (claim, so sánh, file, mục đều giữ nguyên).
 
-Nhóm 5:
+Nhóm 5, chốt 2026-09-04:
 
-- **C9** trước ghi "định tính; muốn số phải chạy `evaluate_quality_head.py`". Nay đã có
-  notebook định lượng `test-auxiliary-signals-r512-{btxrd,fracatlas}` Phần A: MAE, RMSE,
-  Pearson, Spearman giữa điểm QualityHead và Dice thật mức polygon, `center_zoom` và
-  `center_shift` riêng, kèm hình reliability theo bin. Vẫn ở V-L, thành Mode B sau khi chạy.
-- **C10** trước ghi "định tính". Nay đã có notebook định lượng, Phần B cùng file. Chấm theo
-  **độ phủ box với tổn thương GT** (bao trọn = 1.0, một phần = tỉ lệ diện tích), **không
-  dùng mask mô hình**. K = 5, kèm @3. Số báo: Độ phủ trung bình, Độ phủ trung bình tốt nhất,
-  Tỉ lệ ảnh khoanh trọn (>= 1 ô bao trọn 100% tổn thương). Vẫn ở V-L, thành Mode B sau khi chạy.
+- **C9 và C10 gạt sang một bên**, không đưa vào phần kết quả. Đã chạy
+  `test-auxiliary-signals-r512-{btxrd,fracatlas}` (kết quả nằm ở `Result/File_test/*`):
+  QualityHead sập về đoán hằng số, không có tín hiệu phân biệt; C10 do đó cũng không đo
+  được gì. Notebook và số giữ lại trong repo làm bằng chứng, không trích vào bài.
+- Trong bài: bỏ mục V-L. Method III-F vẫn định nghĩa QualityHead và điểm prompt-use của CAD
+  (chúng có thật trong kiến trúc), nhưng đóng khung là "chưa cho tín hiệu dùng được".
+  Discussion thêm 1 câu hạn chế, Conclusion thêm 1 câu kết mở (hướng nghiên cứu sau).
+- Demo Gradio (`test-Demo_Interactive_PGA_Unet-*`) giữ nguyên làm minh hoạ giao diện, đã
+  cập nhật checkpoint sang `00`. User tự chạy và chụp 1 ảnh minh hoạ luồng vẽ box -> mask
+  (không chụp phần "Suggest prompts").
 
 ## F. Mục lục IEEE (mọi tiểu mục ghi rõ claim)
 
@@ -176,7 +178,8 @@ III. METHOD
      C. Prompt representation (Gaussian plateau, center_zoom/shift/mixed, phạm vi box mô phỏng)
      D. Prompt Spatial Gate (PSG)
      E. Conditional Attention Decoder (CAD)
-     F. Auxiliary outputs: prompt-use score and QualityHead   [nền cho C9, C10]
+     F. Auxiliary outputs: prompt-use score and QualityHead
+        [mô tả kiến trúc; đóng khung "chưa cho tín hiệu dùng được", trỏ sang VI]
      Hình 1: kiến trúc
 
 IV.  EXPERIMENTAL SETUP
@@ -203,17 +206,21 @@ V.   RESULTS
      I. Efficiency analysis                                   [C8]  (Mode B)
      J. Exploratory comparison of segmentation losses         [E1]  (Mode B, ket qua am tinh)
      K. Failure modes                                         [C-fail]
-     L. Interactive demonstration and auxiliary quality signal   [C9, C10]  (dinh tinh)
+     (khong con muc L. C9/C10 gat sang mot ben, xem VI + VII)
 
 VI.  DISCUSSION
      dien giai 4 truc; thu hep pham vi; han che
      (do phan giai co dinh, prompt mo phong, train tach 2 dataset, patient-level,
       protocol heuristic, loss chua nham vung nho/tam + loss thay the da thu khong cai thien,
       ablation mot split, Monte Carlo = on dinh khong phai vuot troi, chua probing feature-level,
-      QualityHead chua hieu chuan, chua them baseline prompt hien dai ngoai SAM-Med2D vong nay)
+      chua them baseline prompt hien dai ngoai SAM-Med2D vong nay)
+     + 1 cau: QualityHead da thu nhung sap ve gan hang so, khong cho tin hieu phan biet
+       theo tung prompt (Spearman 0.04 den 0.19); coi nhu chua hoat dong.
 
 VII. CONCLUSION
      PGA-UNet la gi, da danh gia gi, khong thiet lap dieu gi, future work
+     + 1 cau ket mo: mot huong tiep theo la mot tin hieu tu danh gia dang tin cay hon
+       (hieu chuan / loss xep hang) va tu do la goi y vung nghi ngo
 
 BACK MATTER
      Data availability, Author contributions, Ethics statement,
@@ -231,7 +238,10 @@ BACK MATTER
 - **V-F** là mục mới gom claim robustness xuyên suốt lại một chỗ, đồng thời chuyển hình
   `fig:robust` (đang nằm nhầm dưới Monte Carlo) về đây.
 - **V-J** là mục mới cho thí nghiệm loss, để thể hiện rõ "đã thử theo gợi ý thầy".
-- Discussion và Conclusion giữ khung hiện tại, thêm 1 dòng cho kết quả loss âm tính.
+- **Không còn V-L**. C9/C10 chạy ra âm tính (2026-09-04), gạt sang một bên: chỉ còn III-F
+  mô tả kiến trúc + 1 câu hạn chế ở VI + 1 câu kết mở ở VII. Xem mục I.1.
+- Discussion và Conclusion giữ khung hiện tại, thêm 1 dòng cho loss âm tính và 1 dòng cho
+  QualityHead chưa hoạt động.
 
 ## F. Số liệu
 
@@ -279,38 +289,46 @@ Chỉ cần anh xác nhận đây đúng là file anh nói, rồi commit chung k
 
 ## I. Thông tin còn thiếu để viết IEEE
 
-### I.1. C9 và C10: gộp 1 notebook định lượng (đã chốt cách làm 2026-09-03)
+### I.1. C9 và C10: đã chạy, kết quả âm tính, gạt sang một bên (chốt 2026-09-04)
 
-Một notebook cho mỗi dataset: `test-auxiliary-signals-r512-{btxrd,fracatlas}.ipynb`, 5 cell,
-dùng đúng checkpoint `00` (đã có QualityHead) và tập test. Chạy Kaggle được ngay, không train
-thêm.
+Notebook `test-auxiliary-signals-r512-{btxrd,fracatlas}.ipynb` đã chạy xong, output ở
+`Result/File_test/{btxrd,fracatlas}/`.
 
-- Cell 1: setup (clone, tải checkpoint `00`, tải dataset)
-- Cell 2: load model + hàm dùng chung (`run_prompt`, tiền xử lý, độ phủ)
-- Cell 3, Phần A (C9): bọc logic `evaluate_quality_head.py`, chạy `center_zoom` và
-  `center_shift`. Xuất bảng: Dataset, Prompt, Số polygon, MAE, RMSE, Pearson, Spearman
-  (giữa điểm QualityHead và Dice thật mức polygon). Xuất hình: scatter điểm dự đoán vs Dice
-  thật + đường theo bin (Dice trung bình mỗi bin điểm).
-- Cell 4, Phần B (C10): mỗi ảnh test lấy 50 box ứng viên (kích thước 0.15 đến 0.55 khung),
-  QualityHead chấm điểm, sắp xếp, lấy **top-5** (K chốt = 5). Với mỗi box top-5 tính
-  **độ phủ** = tỉ lệ diện tích tổn thương nằm trong box (bao trọn thì 1.0, bao một phần
-  thì theo tỉ lệ, không chạm thì 0). Không dùng mask mô hình để chấm, chỉ xét hình học box
-  với tổn thương GT.
-  - Mỗi ảnh: `độ phủ trung bình nhóm 5` và `độ phủ box tốt nhất nhóm 5`.
-  - Toàn dataset: trung bình 2 số đó qua tất cả ảnh, gọi là **Độ phủ trung bình** (trung
-    bình qua ảnh của độ phủ trung bình nhóm 5) và **Độ phủ trung bình tốt nhất** (trung
-    bình qua ảnh của độ phủ box tốt nhất nhóm 5).
-  - **Tỉ lệ ảnh khoanh trọn** = tỉ lệ ảnh mà trong nhóm 5 ô có ít nhất một ô bao trọn
-    100% diện tích tổn thương (độ phủ ô tốt nhất = 1.0). Bao thiếu dù chỉ một phần nhỏ
-    cũng không tính.
-  - Bảng xuất: Dataset, Độ phủ trung bình, Độ phủ trung bình tốt nhất, Tỉ lệ ảnh khoanh trọn.
-- Cell 5 (tuỳ chọn): 1 hình định tính, 1 ảnh với 3 box gợi ý điểm cao nhất + điểm QualityHead.
+**C9 (QualityHead):**
 
-Trong bài: cả A và B nằm mục V-L, mỗi phần một bảng nhỏ. Câu chữ cho C10: "xếp hạng vùng
-box ứng viên cho bác sĩ duyệt", không gọi là detection, không nói recall như một bộ phát hiện.
-Câu chữ cho C9: nêu MAE và Spearman, kèm câu cấm "không phải xác suất hiệu chuẩn".
+| dataset | prompt | MAE | RMSE | Pearson | Spearman |
+|---|---|---|---|---|---|
+| BTXRD | zoom | 0.148 | 0.186 | −0.046 | 0.060 |
+| BTXRD | shift | 0.151 | 0.189 | −0.049 | 0.037 |
+| FracAtlas | zoom | 0.103 | 0.133 | 0.160 | 0.186 |
+| FracAtlas | shift | 0.112 | 0.152 | 0.060 | 0.097 |
 
-Demo giữ `top_k=5` cho khớp bài. Chưa có file kết quả nào trong `Result/`.
+QualityHead ra gần như hằng số (~0.69 BTXRD, ~0.72 FracAtlas) cho mọi ca. Tương quan gần 0.
+Head học đoán về mức trung bình để tối thiểu MSE (đầu vào bị detach, head nhỏ, trọng số loss
+nhỏ). Không phải bug test, không phải bug train, là điểm yếu thiết kế.
+
+**C10 (gợi ý vùng box):** BTXRD top-5 độ phủ trung bình 0.223 / tốt nhất 0.688 / khoanh trọn
+38%. FracAtlas 0.608 / 0.953 / 87.5%. Nhưng vì QualityHead hằng số nên top-5 = 5 box tùy
+tiện; FracAtlas cao chỉ do hình học (vết gãy nhỏ nằm giữa + box ứng viên to). Không đo được
+gì về phương pháp.
+
+**Xử lý trong bài:**
+
+- Bỏ mục V-L. Không trích số C9/C10.
+- Method III-F: giữ định nghĩa QualityHead + điểm prompt-use của CAD (có thật trong kiến
+  trúc). Câu cuối đổi thành "we find this head does not yet provide a usable signal, see
+  Limitations".
+- Discussion: thêm 1 câu "the auxiliary QualityHead collapsed toward a near-constant estimate
+  and did not provide a discriminative per-prompt signal (Spearman 0.04 to 0.19); it should
+  be treated as non-functional under the current training".
+- Conclusion: thêm 1 câu kết mở, hướng nghiên cứu sau là một tín hiệu tự đánh giá đáng tin
+  hơn và từ đó là gợi ý vùng.
+- Làm nhẹ chỗ nhắc QualityHead ở abstract/introduction (abstract đã hedge "does not establish
+  calibrated confidence", chỉ cần bỏ chỗ nào ngụ ý nó hoạt động).
+- Demo Gradio giữ nguyên làm minh hoạ giao diện, đã cập nhật checkpoint sang `00`. User chụp
+  1 ảnh luồng vẽ box -> mask (không chụp "Suggest prompts").
+
+Notebook + số C9/C10 giữ lại trong repo làm bằng chứng, không đưa vào manuscript.
 
 ### I.2. Các mục còn thiếu khác
 
@@ -330,23 +348,24 @@ Demo giữ `top_k=5` cho khớp bài. Chưa có file kết quả nào trong `Res
 
 ## J. Việc
 
-1. Giữ bản sửa file đuôi kép (mục H). [Đã chốt: giữ nguyên]
-2. Viết `test-auxiliary-signals-r512-{btxrd,fracatlas}.ipynb` cho C9 + C10 (theo mục I.1),
-   bản canonical trong `Source/File_Test/{btxrd,fracatlas}/`. **[Đã tạo 2026-09-03]**
-   User tự chạy trên Kaggle, điền lại `CKPT_ID` nếu ID checkpoint `00` thay đổi.
-3. Gộp số loss vào notebook `00` (theo mục G). [Chưa làm, chờ]
-4. Trong lúc user chạy notebook: viết trước các mục KHÔNG phụ thuộc kết quả đó (II Related
-   Work, III Method, IV Experimental Setup, và phần khung V, VI, VII). Có kết quả C9/C10
-   thì viết tiếp V-L. Mỗi mục viết `.md` nháp cho user duyệt trước khi sửa `.tex`, rồi
-   đồng bộ `access_vietnam.tex`.
+1. File đuôi kép (mục H): giữ bản sửa, đã commit `cfef8ba`.
+2. Notebook C9 + C10: đã tạo và đã chạy. Kết quả âm tính, gạt sang một bên (mục I.1).
+3. Demo: đã đổi checkpoint sang `00` ở 2 file `test-Demo_Interactive_PGA_Unet-*`. User chạy
+   Kaggle, chụp 1 ảnh luồng vẽ box -> mask.
+4. Gộp số loss vào notebook `00` (mục G). [Chưa làm]
+5. Viết nháp `.md` (đã có `nhap_method_setup.md` cho III + IV, cần chỉnh theo quyết định
+   C9/C10). Tiếp: II Related Work, khung V/VI/VII. Mỗi mục `.md` nháp trước khi sửa `.tex`.
 
-## K. Trạng thái quyết định (2026-09-03)
+## K. Trạng thái quyết định
 
-- File đuôi kép: đúng là bug `qualitative_visualization.py`, giữ bản sửa hiện có.
-- Gộp số loss: chờ duyệt khung.
-- Checkpoint PGA-512: thư mục `00` là chính thức. FracAtlas 0.727 / 0.713.
+**2026-09-03**
+- File đuôi kép: bug `qualitative_visualization.py`, giữ bản sửa. Đã commit.
+- Checkpoint PGA-512: thư mục `00` là chính thức. BTXRD 0.782/0.774, FracAtlas 0.727/0.713.
 - Baseline prompt hiện đại thêm (MedSAM/ScribblePrompt): future work, không làm vòng này.
-- C9 + C10: gộp 1 notebook `test-auxiliary-signals-r512-*` mỗi dataset. C10 dùng **K = 5**,
-  chấm theo **độ phủ tổn thương của box** (không dùng mask), báo Độ phủ trung bình + Độ phủ
-  trung bình tốt nhất + Tỉ lệ ảnh khoanh trọn (ít nhất 1 ô bao trọn 100% tổn thương). Demo
-  giữ `top_k = 5`.
+
+**2026-09-04**
+- C9 + C10: đã chạy, **âm tính** (QualityHead sập về hằng số, Spearman 0.04 đến 0.19).
+  **Gạt sang một bên**: bỏ mục V-L, giữ III-F mô tả kiến trúc, thêm 1 câu hạn chế ở
+  Discussion + 1 câu kết mở ở Conclusion. Demo giữ làm minh hoạ giao diện, đã đổi checkpoint
+  sang `00`.
+- Gộp số loss vào `00`: chưa làm.
