@@ -330,6 +330,15 @@ gì về phương pháp.
 
 Notebook + số C9/C10 giữ lại trong repo làm bằng chứng, không đưa vào manuscript.
 
+**Cập nhật 2026-09-04, thử cứu bằng điểm training-free (Cách A):**
+`test-auxiliary-signals-r512-*` đã viết lại: bỏ đọc QualityHead, thay bằng
+`Q = mean(S_sharp, S_fill, S_size, S_stab)` tính thẳng từ output suy luận, không train
+lại. S_stab (IoU giữa mask gốc và mask khi nhích box) là tín hiệu đặt cược. Part A so
+Spearman của Q và từng thành phần với Dice thật; Part B xếp hạng 50 box theo Q so với theo
+QualityHead. User chạy. Nếu Spearman của Q lên tầm 0.4+ thì C9/C10 quay lại bài dưới dạng
+"training-free self-assessment", cập nhật demo + chụp ảnh. Nếu không, giữ future work như
+trên. Commit `b6f98f4`.
+
 ### I.2. Các mục còn thiếu khác
 
 1. **Số của 2 bài gốc BTXRD và FracAtlas** (thầy yêu cầu, mục 3.8 redline): cần trích
