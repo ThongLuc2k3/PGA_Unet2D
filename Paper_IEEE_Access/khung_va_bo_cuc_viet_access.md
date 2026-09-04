@@ -89,74 +89,165 @@ trên tập tổn thương nhỏ, chứ không phải ở việc thắng một b
 
 Mỗi mục Results phải quay về đúng một mắt xích của câu này.
 
-## E. Sổ claim đầy đủ, sắp theo thứ tự đọc mạch lạc
+## E. Sổ claim đầy đủ (mỗi claim ghi rõ MỤC TIÊU: chứng minh cho điều gì)
 
-Mọi claim trong `claims_to_validate.md` cộng thí nghiệm loss của thầy. Cột "Nằm ở mục" trỏ
-sang mục lục IEEE ở phần F. Không claim nào bị bỏ hoặc gộp chìm vào đoạn văn.
+Cập nhật 2026-09-04: **C9 và C10 đã QUAY LẠI bài** (không còn gạt bỏ) vì điểm training-free
+Q đạt ngưỡng trên cả 2 dataset. Cột "Số" là số hiện có; toàn bộ đã viết vào `05-results.tex`
+(trừ Ablation C6 đang Mode A).
 
-### Nhóm 0: Nền tảng
+Câu chuyện xuyên suốt (spine): *bài toán tổn thương nhỏ khó chủ yếu ở bước khu trú; PGA-UNet
+dùng box của bác sĩ để nhảy cóc qua detection, rồi PSG + CAD giữ tín hiệu vùng nhỏ xuyên
+suốt mạng; đóng góp thật nằm ở cách khai thác prompt, rõ nhất ở tổn thương nhỏ.*
 
-| # | Claim | So sánh cụ thể | File bằng chứng | Trạng thái số | Nằm ở mục |
-|---|---|---|---|---|---|
-| C13 | Đánh giá độc lập trên 2 dataset, xu hướng lặp lại | Mọi claim dưới đây chạy song song BTXRD và FracAtlas | tất cả notebook `Result/*` | có số mới | xuyên suốt V, chốt lại 1 câu ở VI |
-| C11 | Ảnh hưởng độ phân giải 128 / 256 / 512 | PGA-UNet 3 độ phân giải, 2 điều kiện prompt, mỗi dataset | test cell nhúng trong `pga-train-{128,256,512}` (`Result/File_train/*/pga 128,256,512`) | có số mới (`00` là 512 chính thức); cần đối chiếu lại 128/256 với `Result/` | V-A |
+Ký hiệu tên mô hình:
+- **PGA-UNet** = `Source/Prompt-Guided-XRay-Segmentation/models/networks/prompt_unet_2D.py` (class `PGA_UNet`),
+  checkpoint `pga_unet_center_mixed_x3_shift05_qhead_{128,256,512}_best.pth`, train bằng
+  `pga-train-{128,256,512}.ipynb`.
+- **Attention U-Net** = `models/networks/attention_unet_2D.py` (class `Attention_UNet_2D`), train
+  `Attention_Unet2D.ipynb`, checkpoint `attunet_best.pth` (không có box).
+- **AttUNet + prompt-channel** = `models/networks/attunet_concat_prompt.py`, train
+  `concat-prompt-attunet-r512.ipynb`, ckpt `attunet_concat_prompt_best.pth` (box nhị phân ghép kênh 2).
+- **AttUNet + prompt-crop** = `train_attunet_crop.py`, train `crop-prompt-attunet-r512.ipynb`,
+  ckpt `attunet_crop_best.pth` (cắt ảnh theo box, dán mask lại full-frame).
+- **SAM-Med2D** = repo `OpenGVLab/SAM-Med2D`; zero-shot `sam_med2d.pth`, fine-tuned
+  `sam_center_mixed_x3_shift05_best.pth`, train/test `Finetune_SAMMed2D_test_robust.ipynb`.
+- **Q** = `mean(S_sharp, S_stab)`, tính trong `test-auxiliary-signals-r512-*` và trong demo;
+  đầu học sẵn cũ = `QualityHead` trong `prompt_unet_2D.py` (không dùng).
 
-### Nhóm 1: Prompt có thiết yếu không (tầng tham chiếu tự động)
+---
 
-| # | Claim | So sánh cụ thể | File bằng chứng | Trạng thái số | Nằm ở mục |
-|---|---|---|---|---|---|
-| C1a | Bài toán không-prompt khó tới đâu | PGA-UNet vs Attention U-Net ảnh-only (không box) | `test-pga-vs-attunet-variants-r512-{btxrd,fracatlas}` | có số mới (AttUNet 0.52 / 0.34) | V-B |
-| C1b | Có box rồi thì kiến trúc có còn quan trọng, hay chỉ cần "có box" | PGA-UNet vs Attention U-Net + prompt-channel (box nhị phân ghép kênh 2) vs Attention U-Net + prompt-crop (cắt ảnh theo box) | cùng notebook trên, cùng tập ảnh 4 model | có số mới (channel 0.768/0.754 BTXRD, crop 0.741/0.733; PGA hơn nhẹ BTXRD, hơn rõ FracAtlas) | V-B |
-| C2 | Lợi ích tập trung ở đâu | Top-50 và Bottom-50 ảnh theo Dice của Attention U-Net; chạy lại PGA-UNet, prompt-channel, prompt-crop trên đúng các ảnh đó | `test-subcat-pga-vs-attunet-variants-r512-{btxrd,fracatlas}` | có số mới | V-C |
+## Nhóm 0. Nền tảng
 
-### Nhóm 2: Đã có prompt thì khai thác thế nào cho tốt (tầng khớp prompt)
+### C13. Đánh giá độc lập trên hai dataset
+So sánh: PGA-UNet chạy song song trên BTXRD (u xương) và FracAtlas (gãy xương).
+Mục đích: xu hướng lặp lại được trên hai loại tổn thương rất khác nhau, không ăn may một dataset. KHÔNG phải tổng quát hóa chéo miền.
+Bằng chứng: tất cả notebook trong `Result/File_test/{btxrd,fracatlas}/`.
+Nằm ở: xuyên suốt V, chốt 1 câu ở VI.
 
-| # | Claim | So sánh cụ thể | File bằng chứng | Trạng thái số | Nằm ở mục |
-|---|---|---|---|---|---|
-| C3 | PGA-UNet vs mô hình nền tảng dùng prompt, cùng box cùng độ phân giải | PGA-UNet-256 vs SAM-Med2D zero-shot vs SAM-Med2D fine-tuned, @256, cả zoom và shift | `test-pga-samzs-samft-r256-{btxrd,fracatlas}` | có số mới (SAM-ZS 0.255/0.262, SAM-FT 0.630/0.563, PGA-256 0.762/0.629) | V-D |
-| C6 | Thành phần nào đóng góp | CAD-only, PSG-only, PSG + vanilla attention gate, full + binary prompt, full + Gaussian (PGA-UNet đầy đủ) | `Source/File_Test/{btxrd,fracatlas}/Ablation/` + `test-full-pga-heatmap-reference-*` | có số nhưng anh quyết chạy lại multi-seed | V-H (Mode A, 1 câu, chưa đưa số) |
+### C11. Ảnh hưởng độ phân giải
+So sánh: PGA-UNet @128 / 256 / 512, mỗi dataset, `center_zoom` và `center_shift`.
+Mục đích: độ phân giải đầu vào là yếu tố quan trọng; giữ chi tiết không gian giúp phân đoạn tốt hơn (512 > 256 > 128 cả 2 dataset).
+Bằng chứng: cell test nhúng trong `pga-train-128.ipynb`, `pga-train-256.ipynb`, `pga-train-512.ipynb` (`Result/File_train/*/pga 128,256,512/`).
+Nằm ở: V-A.
 
-### Nhóm 3: Tổn thương nhỏ, nơi thiết kế ăn tiền nhất
+---
 
-| # | Claim | So sánh cụ thể | File bằng chứng | Trạng thái số | Nằm ở mục |
-|---|---|---|---|---|---|
-| C4 | Tổn thương rất nhỏ: PGA-UNet vs SAM-Med2D | Subset 50 ảnh diện tích GT nhỏ nhất: PGA-UNet-256 vs SAM-Med2D ZS/FT, @256, khung metric 512 chung | `test-subcat-small-r256-{btxrd,fracatlas}` | có số mới (SAM-FT 0.19 BTXRD / 0.37 FracAtlas, PGA-256 ~0.76) | V-E.1 |
-| C5 | Tổn thương rất nhỏ: PGA-UNet vs baseline prompt-matched thường | Cùng subset nhỏ: PGA-UNet-512 vs Attention U-Net + prompt-channel vs Attention U-Net + prompt-crop, @512 | `test-subcat-small-r512-{btxrd,fracatlas}` | có số mới | V-E.2 |
-| C12 | Hiệu ứng độ phân giải rõ hơn khi tổn thương nhỏ | Cùng 50 stem nhỏ trong mỗi dataset: PGA-UNet @128 / 256 / 512, 2 điều kiện prompt, kèm mức tụt so với 512 | `test-subcat-pga-small-r128-256-512-{btxrd,fracatlas}` (đã sửa bug N=0 ngày 2026-09-01) | có số mới sau khi sửa bug | V-E.3 |
+## Nhóm 1. Prompt có thiết yếu không (tầng tham chiếu tự động)
 
-### Nhóm 4: Ổn định, chi phí, và các thử nghiệm phụ
+### C1a. PGA-UNet vs Attention U-Net không prompt
+So sánh: PGA-UNet vs `Attention U-Net` ảnh-only (không box) @512.
+Mục đích: bài toán KHÔNG-prompt rất khó, phần lớn độ khó nằm ở bước tự khu trú (AttUNet chỉ 0.52 / 0.34) -> prompt của bác sĩ là thiết yếu. KHÔNG phải "kiến trúc PGA thắng kiến trúc AttUNet".
+Bằng chứng: `test-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-B đoạn 1.
 
-| # | Claim | So sánh cụ thể | File bằng chứng | Trạng thái số | Nằm ở mục |
-|---|---|---|---|---|---|
-| Cross | Nhạy cảm với dịch prompt | Với mọi claim C1-C6, C11-C12: chênh lệch giữa `center_zoom` và `center_shift` (Dice, CBL, HD95, mức tụt tương đối) | mọi notebook trên (đều báo 2 điều kiện riêng) | có số mới | V-F (gom lại), và 2 cột trong mọi bảng |
-| C7 | Ổn định qua các lần chia ngẫu nhiên mức ảnh | 4 checkpoint PGA-UNet-512 với split seed 1-4, seed train cố định 22120196; mean ± std | `test-pga-dataset-1234-{btxrd,fracatlas}` | có số mới (std < 0.012 mọi hàng) | V-G |
-| C8 | Chi phí tính toán | PGA-UNet 256/512 vs SAM-Med2D 256: params, FLOPs, size, latency GPU/CPU | `test-measure_efficiency_btxrd.ipynb` | **Mode B, viết ngay** (2.955M vs 271M, ~92x) | V-I |
-| E1 | Thí nghiệm loss theo gợi ý của thầy (redline 3.5) | PGA-UNet-512 `00` Dice+BCE vs `01` Focal Dice vs `10` size Tversky, 2 dataset, 2 điều kiện prompt | `Result/File_train/{btxrd,fracatlas}/pga 512/{00,01,10}` (test cell nhúng đã chạy) | **Mode B, viết ngay**, kết quả âm tính | V-J |
+### C1b. PGA-UNet vs Attention U-Net có prompt (prompt-matched)
+So sánh: PGA-UNet vs `AttUNet + prompt-channel` vs `AttUNet + prompt-crop`, cùng box @512 (4 mô hình cùng tập ảnh).
+Mục đích: chỉ "có box" chưa đủ; cách kiến trúc khai thác box (Gaussian + PSG + CAD) còn tạo thêm lợi thế so với ghép box thô vào input. Biên FracAtlas +0.13.
+Bằng chứng: `test-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-B đoạn 2.
 
-### Nhóm 5: Sử dụng tương tác và tín hiệu phụ trợ
+### C2. Nhóm Top-Dice / Bottom-Dice của Attention U-Net
+So sánh: Top-50 / Bottom-50 ảnh theo Dice của `Attention U-Net`; chạy lại PGA-UNet + prompt-channel + prompt-crop trên đúng các ảnh đó @512.
+Mục đích: lợi thế của xử lý theo prompt tập trung đúng vào các ca khu trú tự động thất bại (bottom: AttUNet 0.03, PGA 0.71). Subset do AttUNet định nghĩa, không phải nhóm độ khó khách quan.
+Bằng chứng: `test-subcat-pga-vs-attunet-variants-r512-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-C.
 
-| # | Claim | Trạng thái | Nằm ở mục |
-|---|---|---|---|
-| C9 | Điểm ước lượng chất lượng mask (QualityHead) | **GẠT SANG 1 BÊN 2026-09-04.** Đã chạy `test-auxiliary-signals-r512-*`: QualityHead ra gần như hằng số (~0.69 BTXRD, ~0.72 FracAtlas), Pearson −0.05 đến 0.16, Spearman 0.04 đến 0.19. Không phân biệt được tốt/tệ. Không đưa vào Results. | không có mục Results; 1 câu ở VI Discussion + 1 câu future work ở VII |
-| C10 | Gợi ý vùng box cho bác sĩ | **GẠT SANG 1 BÊN 2026-09-04.** Cùng notebook Phần B: vì QualityHead hằng số nên xếp hạng vô nghĩa, "top-5" = 5 box tùy tiện. BTXRD 38% khoanh trọn, FracAtlas 87% nhưng chỉ do hình học (vết nhỏ + box to). Không đo được gì về phương pháp. Không đưa vào Results. | như C9 |
-| C-fail | Failure modes | định tính | V-K |
+---
+
+## Nhóm 2. Đã có prompt thì khai thác thế nào cho tốt (tầng khớp prompt)
+
+### C3. PGA-UNet vs SAM-Med2D
+So sánh: PGA-UNet-256 vs `SAM-Med2D zero-shot` vs `SAM-Med2D fine-tuned`, cùng box @256.
+Mục đích: so sánh công bằng nhất (cùng mô hình dùng prompt); PSG + CAD giữ tín hiệu xuyên suốt mạng hiệu quả hơn cách SAM chỉ dùng box ở mask decoder (PGA 0.762 vs SAM-FT 0.630).
+Bằng chứng: `test-pga-samzs-samft-r256-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-D.
+
+### C6. Ablation Gaussian / PSG / CAD
+So sánh: `cad-only`, `psg-only`, `psg-attention` (PSG + vanilla gate), `full-binary-prompt`, và full Gaussian PGA-UNet.
+Mục đích: từng thành phần và tổ hợp đều đóng góp, không phải một phần gánh hết. Dùng "consistent with complementary contributions", cấm "proves synergy".
+Bằng chứng: `Source/File_Test/{btxrd,fracatlas}/Ablation/*.ipynb` + `test-full-pga-heatmap-reference-*.ipynb`.
+Nằm ở: V-H. **Mode A**: chờ multi-seed, chưa đưa số.
+
+---
+
+## Nhóm 3. Tổn thương nhỏ, nơi thiết kế ăn tiền nhất
+
+### C4. Tổn thương nhỏ: PGA-UNet vs SAM-Med2D
+So sánh: subset 50 ảnh diện tích tổn thương nhỏ nhất, PGA-UNet-256 vs SAM-Med2D ZS / FT @256, khung metric 512 chung.
+Mục đích: ở ca khắc nghiệt nhất, khoảng cách PGA vs SAM giãn rất rộng (SAM-FT 0.26 / 0.37 vs PGA 0.71 / 0.65) -> bảo toàn tín hiệu vùng nhỏ là mấu chốt, prompt chỉ khoanh vùng chưa đủ.
+Bằng chứng: `test-subcat-small-r256-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-E.1.
+
+### C5. Tổn thương nhỏ: PGA-UNet vs baseline prompt-matched thường
+So sánh: cùng subset nhỏ, PGA-UNet-512 vs `AttUNet + prompt-channel` vs `AttUNet + prompt-crop` @512 (kèm AttUNet ảnh-only).
+Mục đích: cùng ở tổn thương nhỏ, PGA vẫn hơn baseline prompt-matched thường -> lợi thế không phải chỉ do "có box".
+Bằng chứng: `test-subcat-small-r512-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-E.2.
+
+### C12. Tổn thương nhỏ: hiệu ứng độ phân giải
+So sánh: PGA-UNet @128 / 256 / 512 trên cùng 50 stem nhỏ, kèm mức tụt so với 512.
+Mục đích: hiệu ứng độ phân giải rõ hơn khi tổn thương nhỏ (tụt từ 512 xuống 128 là 0.135 / 0.112, lớn hơn full set) -> downsampling ăn mòn bằng chứng vùng nhỏ.
+Bằng chứng: `test-subcat-pga-small-r128-256-512-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-E.3.
+
+---
+
+## Nhóm 4. Ổn định, chi phí, thử nghiệm phụ
+
+### Cross-cutting. Nhạy cảm với dịch prompt
+So sánh: chênh `center_zoom` vs `center_shift` cho mọi claim C1-C6, C11-C12.
+Mục đích: PGA-UNet ít nhạy với dịch prompt trong protocol đã định (tụt < 0.015 Dice) -> box không cần chính xác tuyệt đối. KHÔNG suy ra robustness với box tuỳ ý của bác sĩ.
+Bằng chứng: mọi notebook ở trên (đều báo 2 điều kiện riêng).
+Nằm ở: V-F, và 2 cột trong mọi bảng.
+
+### C7. Monte Carlo cross-validation
+So sánh: 4 checkpoint PGA-UNet-512 với split seed 1, 2, 3, 4; seed train cố định `22120196`.
+Mục đích: kết quả ổn định qua các lần chia ngẫu nhiên mức ảnh (std ≤ 0.011), không ăn may 1 lần chia. KHÔNG phải bằng chứng vượt trội baseline.
+Bằng chứng: `test-pga-dataset-1234-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-G.
+
+### C8. Chi phí tính toán
+So sánh: PGA-UNet 256/512 vs SAM-Med2D 256 (params, FLOPs, checkpoint size, latency GPU/CPU).
+Mục đích: lợi thế đạt được với chi phí thấp (~92x nhẹ hơn SAM), phù hợp suy luận lặp lại nhiều lần trong quy trình tương tác. Chỉ giới hạn phần cứng / độ phân giải đã test.
+Bằng chứng: `test-measure_efficiency_btxrd.ipynb`.
+Nằm ở: V-I.
+
+### E1. Thí nghiệm loss (gợi ý của thầy)
+So sánh: PGA-UNet-512, `00` Dice+BCE (mặc định) vs `01` Focal Dice vs `10` size-conditioned Tversky.
+Mục đích: (kết quả âm tính) loss Dice+BCE mặc định đã đủ tốt dưới protocol này; loss phức tạp hơn không cải thiện, Focal Dice còn làm hỏng FracAtlas.
+Bằng chứng: `Result/File_train/{btxrd,fracatlas}/pga 512/{00,01,10}/pga-train-512.ipynb` (cell test nhúng).
+Nằm ở: V-J.
+
+---
+
+## Nhóm 5. Tự đánh giá không cần đáp án và gợi ý vùng (ĐÃ QUAY LẠI BÀI)
+
+### C9. Điểm tự đánh giá training-free Q
+So sánh: `Q = mean(S_sharp, S_stab)` của PGA-UNet-512 vs Dice thật (Spearman + Pearson), 2 điều kiện prompt; đối chiếu với đầu học sẵn `QualityHead`.
+Mục đích: mô hình tự cho một điểm tin cậy KHÔNG cần đáp án, dùng để bác sĩ biết ca nào nên xem lại (Spearman 0.48 đến 0.70). Điểm training-free tốt hơn đầu học sẵn (`QualityHead` sập về hằng số, Spearman < 0.2). Q là heuristic, KHÔNG phải xác suất hiệu chuẩn.
+Bằng chứng: `test-auxiliary-signals-r512-{btxrd,fracatlas}.ipynb` Phần A (`Result/File_test/`).
+Nằm ở: V-L đoạn 1.
+
+### C10. Gợi ý vùng box theo Q
+So sánh: PGA-UNet-512 chấm 50 box ngẫu nhiên bằng Q, giữ top-3/5, đo độ phủ tổn thương của box (không dùng mask).
+Mục đích: Q lọc ra một danh sách ngắn vùng nghi ngờ cho bác sĩ (top-5 khoanh trọn 67% / 82%, độ phủ tốt nhất 0.84 / 0.90) -> tiền đề quy trình tương tác không bắt bác sĩ tự khoanh từ đầu. KHÔNG phải detection.
+Bằng chứng: `test-auxiliary-signals-r512-{btxrd,fracatlas}.ipynb` Phần B + demo `test-Demo_Interactive_PGA_Unet-{btxrd,fracatlas}.ipynb`.
+Nằm ở: V-L đoạn 2, hình `fig:demo-suggest`.
+
+### C-fail. Failure modes
+So sánh: PGA-UNet trên các ca tổn thương dài / phân nhánh, vùng giải phẫu chồng lấn, tương phản yếu.
+Mục đích: giới hạn của phương pháp; prompt không cứu được ca mà bằng chứng ảnh cục bộ đã kém.
+Bằng chứng: `Paper_IEEE_Access/images/failure/failure_case_overlap.png`.
+Nằm ở: V-K.
 
 ### Thay đổi so với bản sổ claim trước
 
-Nhóm 0 đến 4: không đổi (claim, so sánh, file, mục đều giữ nguyên).
-
-Nhóm 5, chốt 2026-09-04:
-
-- **C9 và C10 gạt sang một bên**, không đưa vào phần kết quả. Đã chạy
-  `test-auxiliary-signals-r512-{btxrd,fracatlas}` (kết quả nằm ở `Result/File_test/*`):
-  QualityHead sập về đoán hằng số, không có tín hiệu phân biệt; C10 do đó cũng không đo
-  được gì. Notebook và số giữ lại trong repo làm bằng chứng, không trích vào bài.
-- Trong bài: bỏ mục V-L. Method III-F vẫn định nghĩa QualityHead và điểm prompt-use của CAD
-  (chúng có thật trong kiến trúc), nhưng đóng khung là "chưa cho tín hiệu dùng được".
-  Discussion thêm 1 câu hạn chế, Conclusion thêm 1 câu kết mở (hướng nghiên cứu sau).
-- Demo Gradio (`test-Demo_Interactive_PGA_Unet-*`) giữ nguyên làm minh hoạ giao diện, đã
-  cập nhật checkpoint sang `00`. User tự chạy và chụp 1 ảnh minh hoạ luồng vẽ box -> mask
-  (không chụp phần "Suggest prompts").
+- **C9, C10 quay lại bài** (trước đây gạt bỏ vì QualityHead học sẵn sập). Nay dùng điểm
+  **training-free Q**, đạt Spearman 0.48 đến 0.70 cả 2 dataset. Có mục V-L trở lại, có
+  III-F mô tả công thức Q, có đóng góp trong Introduction, có 1 câu ở Discussion/Conclusion.
+  QualityHead học sẵn chỉ còn 1 câu ở V-L như phương án thất bại đối chiếu.
+- **Mỗi claim giờ có cột "Mục tiêu"** nói rõ nó chứng minh cho mắt xích nào của spine.
+- Nhóm 0 đến 4: claim và số không đổi, chỉ thêm cột mục tiêu.
 
 ## F. Mục lục IEEE (mọi tiểu mục ghi rõ claim)
 
@@ -178,9 +269,10 @@ III. METHOD
      C. Prompt representation (Gaussian plateau, center_zoom/shift/mixed, phạm vi box mô phỏng)
      D. Prompt Spatial Gate (PSG)
      E. Conditional Attention Decoder (CAD)
-     F. Auxiliary outputs: prompt-use score and QualityHead
-        [mô tả kiến trúc; đóng khung "chưa cho tín hiệu dùng được", trỏ sang VI]
-     Hình 1: kiến trúc
+     F. Training-Free Self-Assessment Score
+        [công thức Q = mean(S_sharp, S_stab), K=6, "không phải xác suất hiệu chuẩn";
+         nền cho C9/C10 ở V-L]
+     Hình 1: kiến trúc; Hình demo workflow (fig:demo-seg)
 
 IV.  EXPERIMENTAL SETUP
      A. Datasets (BTXRD, FracAtlas; chia mức ảnh; hạn chế patient-level)   [C13]
@@ -206,21 +298,20 @@ V.   RESULTS
      I. Efficiency analysis                                   [C8]  (Mode B)
      J. Exploratory comparison of segmentation losses         [E1]  (Mode B, ket qua am tinh)
      K. Failure modes                                         [C-fail]
-     (khong con muc L. C9/C10 gat sang mot ben, xem VI + VII)
+     L. Training-free self-assessment and candidate suggestion [C9, C10]  + fig:demo-suggest
 
 VI.  DISCUSSION
-     dien giai 4 truc; thu hep pham vi; han che
+     cau hoi trung tam; 2 ket qua phu (loss am tinh, Q duong tinh); han che
      (do phan giai co dinh, prompt mo phong, train tach 2 dataset, patient-level,
-      protocol heuristic, loss chua nham vung nho/tam + loss thay the da thu khong cai thien,
-      ablation mot split, Monte Carlo = on dinh khong phai vuot troi, chua probing feature-level,
-      chua them baseline prompt hien dai ngoai SAM-Med2D vong nay)
-     + 1 cau: QualityHead da thu nhung sap ve gan hang so, khong cho tin hieu phan biet
-       theo tung prompt (Spearman 0.04 den 0.19); coi nhu chua hoat dong.
+      protocol heuristic, ablation mot split -> multi-seed, Monte Carlo = on dinh khong phai
+      vuot troi, chua probing feature-level, chua them baseline prompt hien dai ngoai SAM-Med2D)
+     + Q la positive vua phai: Spearman 0.5-0.7, tot hon dau hoc san (sap ve hang so);
+       Q van la heuristic, chua hieu chuan.
 
 VII. CONCLUSION
      PGA-UNet la gi, da danh gia gi, khong thiet lap dieu gi, future work
-     + 1 cau ket mo: mot huong tiep theo la mot tin hieu tu danh gia dang tin cay hon
-       (hieu chuan / loss xep hang) va tu do la goi y vung nghi ngo
+     + future work: hoan tat ablation multi-seed, them baseline promptable moi, prompt long
+       hon, va bien Q thanh tin hieu hieu chuan roi dung de goi y vung.
 
 BACK MATTER
      Data availability, Author contributions, Ethics statement,
@@ -237,11 +328,10 @@ BACK MATTER
 - **Small-lesion tách 3 mục con** để C4, C5, C12 đều hiện rõ, không dồn thành 1 đoạn.
 - **V-F** là mục mới gom claim robustness xuyên suốt lại một chỗ, đồng thời chuyển hình
   `fig:robust` (đang nằm nhầm dưới Monte Carlo) về đây.
-- **V-J** là mục mới cho thí nghiệm loss, để thể hiện rõ "đã thử theo gợi ý thầy".
-- **Không còn V-L**. C9/C10 chạy ra âm tính (2026-09-04), gạt sang một bên: chỉ còn III-F
-  mô tả kiến trúc + 1 câu hạn chế ở VI + 1 câu kết mở ở VII. Xem mục I.1.
-- Discussion và Conclusion giữ khung hiện tại, thêm 1 dòng cho loss âm tính và 1 dòng cho
-  QualityHead chưa hoạt động.
+- **V-J** là mục cho thí nghiệm loss (negative control).
+- **V-L quay lại** cho C9/C10 với điểm training-free Q (đạt Spearman 0.48-0.70). III-F mô tả
+  công thức Q. Đầu học sẵn QualityHead chỉ còn 1 câu ở V-L làm phương án thất bại đối chiếu.
+- Discussion và Conclusion: 1 dòng loss âm tính + 1 dòng Q là positive vừa phải.
 
 ## F. Số liệu
 

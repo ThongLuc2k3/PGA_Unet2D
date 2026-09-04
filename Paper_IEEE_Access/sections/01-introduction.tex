@@ -17,6 +17,7 @@ The main contributions of this article are as follows.
 \item We propose PGA-UNet, a lightweight prompt-guided architecture for interactive bone X-ray lesion segmentation.
 \item We design a prompt-conditioning mechanism that combines a plateau-style Gaussian prompt, an encoder-side Prompt Spatial Gate (PSG), and a decoder-side Conditional Attention Decoder (CAD).
 \item We formulate an offline training and online interactive inference framework, with explicit mathematical definitions for prompt encoding, encoder gating, and decoder conditioning.
-\item We evaluate the method on the BTXRD and FracAtlas datasets under covering and off-center prompt conditions, comparing against Attention U-Net and SAM-Med2D using Dice, a center-based localization score (CBL), and HD95, together with Monte Carlo cross-validation and computational efficiency measurements.
-\item We report component-contribution analysis, efficiency evaluation, and small-lesion analysis that clarify where the proposed prompt-conditioning design provides the greatest benefit.
+\item We evaluate the method on the BTXRD and FracAtlas datasets under covering and off-center prompt conditions, comparing against an automatic Attention U-Net, two prompt-matched Attention U-Net baselines that receive the same box, and SAM-Med2D, using Dice, a center-based localization score (CBL), and HD95, together with Monte Carlo cross-validation and computational efficiency measurements.
+\item We show, through a small-lesion analysis and an Attention U-Net-defined difficulty split, that the benefit of prompt-conditioned processing is concentrated where automatic localization fails and where lesions are smallest.
+\item We describe a training-free self-assessment score, built from mask decisiveness and stability under prompt jitter, that gives a usable no-ground-truth ranking of prediction quality and can shortlist candidate regions for clinician review.
 \end{itemize}

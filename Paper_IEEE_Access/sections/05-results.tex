@@ -1,40 +1,193 @@
 \section{Results}
-\noindent\textbf{Status note.} The numerical tables currently shown in this section are legacy reference values from the previous protocol and are retained only to preserve the comparison structure while retraining is still pending. They have not yet been refreshed under the current standardized pipeline, which uses \texttt{center\_mixed} training with 80\% \texttt{center\_shift} and 20\% \texttt{center\_zoom}, 150 training epochs, image-level merged validation selection under \texttt{center\_shift}, and the current Precision definition. Until the retrained checkpoints and updated CSVs are in place, the text in this section should be read as a description of the intended comparison logic and of the claim scope, not as finalized evidence for the current manuscript version.
+\label{sec:results}
+Unless stated otherwise, every table reports current-protocol numbers: \texttt{center\_mixed} training with 80\% \texttt{center\_shift} and 20\% \texttt{center\_zoom}, 150 epochs, model selection by image-level merged validation Dice under \texttt{center\_shift}, and image-level merged test evaluation. The two test prompt conditions, covering (\texttt{center\_zoom}) and off-center (\texttt{center\_shift}), are always reported separately. The ablation study in Section~\ref{sec:ablation} is the one exception and is still being refreshed under repeated seeds.
 
-\subsection{Main Comparison Across Datasets and Resolutions}
-This first group of experiments addresses the most basic question: does PGA-UNet remain effective across both datasets, across both tested input resolutions, and across both prompt scenarios? In the refreshed manuscript, this subsection should validate the main system-level contribution, namely that prompt-conditioned processing through both encoder and decoder remains useful after the search space has already been tightened by a coarse box prompt. Because the current tables are legacy placeholders, this subsection should not yet claim reproduced performance for the standardized protocol. After retraining, the interpretation should remain limited to independent within-dataset evaluation on BTXRD and FracAtlas, not to cross-dataset generalization.
+\subsection{Main Results Across Datasets and Resolutions}
+\label{sec:main}
+PGA-UNet was trained from scratch at $128\times128$, $256\times256$, and $512\times512$ on each dataset, giving six models. Table~\ref{tab:resolution} lists their Dice and CBL under the two test prompt conditions.
 
-
-\subsection{Effect of Input Resolution}
-This experiment isolates the contribution of image resolution within the same architecture and prompt protocol. It is meant to support the claim that the proposed method is especially useful when small-lesion evidence would otherwise be weakened after the search space has been reduced but the lesion signal itself is still fragile. PGA-UNet is trained independently at $256\times256$ and $512\times512$ on each dataset. Until retraining is complete, the specific numbers in Table~\ref{tab:resolution} should not be cited as current-protocol evidence; only the intended comparison design should be carried forward.
-
-\begin{table}
-\caption{PGA-UNet Dice under covering and off-center prompts at two resolutions.}
+\begin{table}[t]
+\caption{PGA-UNet across resolutions, image-level merged. Dice and CBL are given as covering / off-center.}
 \label{tab:resolution}
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{llcc}
 \toprule
-Dataset & Resolution & Covering & Off-center \\
+Dataset & Resolution & Dice & CBL \\
 \midrule
-BTXRD & $256\times256$ & 0.8449 & 0.8111 \\
-BTXRD & $512\times512$ & \textbf{0.8788} & \textbf{0.8496} \\
+\multirow{3}{*}{BTXRD}
+& $128\times128$ & 0.714 / 0.717 & 0.859 / 0.857 \\
+& $256\times256$ & 0.762 / 0.743 & 0.902 / 0.885 \\
+& $512\times512$ & \textbf{0.782} / \textbf{0.774} & \textbf{0.918} / \textbf{0.912} \\
 \midrule
-FracAtlas & $256\times256$ & 0.7974 & 0.7619 \\
-FracAtlas & $512\times512$ & \textbf{0.8286} & \textbf{0.7925} \\
+\multirow{3}{*}{FracAtlas}
+& $128\times128$ & 0.596 / 0.542 & 0.849 / 0.790 \\
+& $256\times256$ & 0.629 / 0.594 & 0.895 / 0.849 \\
+& $512\times512$ & \textbf{0.727} / \textbf{0.713} & \textbf{0.913} / \textbf{0.897} \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
-The resolution comparison should not be overinterpreted as a pure image-size effect because the prompt heatmap is built once at the original image resolution with a fixed Gaussian kernel and only then downsampled together with the image, so the same absolute blur is compressed more aggressively into the $256\times256$ frame than into the $512\times512$ one. In the refreshed manuscript, the safest interpretation is that higher spatial detail may remain important for small-lesion prompt-guided segmentation under this protocol, especially when the lesion occupies only a tiny fraction of the image.
+Higher resolution helps at every step. Dice follows $512>256>128$ on both datasets and under both prompt conditions, and FracAtlas gains more, which fits its thin fracture lesions losing proportionally more detail when the image shrinks. Raw HD95 in pixels cannot be compared across frame sizes, so we normalize it as $\mathrm{HD95}/(\sqrt{2}\,S)$. Normalized, boundary error stays near $0.03$ across the BTXRD resolutions and actually falls on FracAtlas, from about $0.044$ to $0.015$, so it does not worsen as the frame grows. Each model is evaluated only on its own dataset; no cross-dataset claim is made.
 
+\subsection{Comparison Against Automatic and Prompt-Matched Attention U-Net}
+\label{sec:baseline}
+Left to find the lesion on its own, Attention U-Net manages a Dice of only 0.517 on BTXRD and 0.342 on FracAtlas at $512\times512$, with HD95 past 120 pixels on both (Table~\ref{tab:baseline}). That number is not an architecture verdict, since this model never sees the box; it is a measure of how hard automatic localization is, which is exactly the step the prompt removes.
+
+Give the same box to a plain Attention U-Net and the picture changes but a gap remains. On BTXRD, PGA-UNet is ahead of the prompt-channel variant by 0.022 Dice under covering prompts and 0.026 under off-center prompts, and ahead of the prompt-crop variant by about 0.041 in both. On FracAtlas those gaps grow to 0.134 / 0.125 and 0.137 / 0.151. HD95 is lower for PGA-UNet than for either variant on both datasets.
+
+\begin{table}[t]
+\caption{Comparison at $512\times512$ under covering prompts. Attention U-Net receives no box; the other rows use the same box PGA-UNet receives.}
+\label{tab:baseline}
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+Dataset & Model & Dice & CBL & HD95 \\
+\midrule
+\multirow{4}{*}{BTXRD}
+& Attention U-Net (no prompt) & 0.517 & 0.620 & 120.4 \\
+& Attention U-Net + prompt channel & 0.760 & 0.895 & 33.0 \\
+& Attention U-Net + prompt crop & 0.741 & 0.912 & 24.7 \\
+& PGA-UNet & \textbf{0.782} & \textbf{0.918} & \textbf{22.8} \\
+\midrule
+\multirow{4}{*}{FracAtlas}
+& Attention U-Net (no prompt) & 0.342 & 0.478 & 139.9 \\
+& Attention U-Net + prompt channel & 0.593 & 0.887 & 22.9 \\
+& Attention U-Net + prompt crop & 0.590 & 0.865 & 22.0 \\
+& PGA-UNet & \textbf{0.727} & \textbf{0.913} & \textbf{10.5} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+So localization is a large part of the difficulty here, but having the box is not the whole story. The way PGA-UNet consumes that box buys a further, consistent margin over a conventional network given the identical input, and the margin is much wider on the harder FracAtlas data.
+
+\subsection{Attention U-Net Top-Dice and Bottom-Dice Subsets}
+\label{sec:extreme}
+Where does that margin come from? We ranked the test images by Attention U-Net Dice, kept the top 50 and the bottom 50 per dataset, and re-ran the prompt-guided models on those exact stems (Table~\ref{tab:extreme}). On the top-50, where Attention U-Net is already at 0.872 on BTXRD and 0.493 on FracAtlas, the prompt-guided models bunch together. On the bottom-50, Attention U-Net falls apart, to 0.031 and 0.169, while PGA-UNet still holds 0.712 and 0.687 under covering prompts. The two conventional prompt baselines recover too, but less: PGA-UNet leads them on the BTXRD bottom-50 by 0.044 to 0.074 Dice and on the FracAtlas bottom-50 by 0.104 to 0.189. These groups are defined by Attention U-Net, not by any objective notion of difficulty, so the only claim is that the benefit of prompt-conditioned processing is concentrated exactly where automatic localization breaks down.
+
+\begin{table}[t]
+\caption{Top-Dice and bottom-Dice subsets at $512\times512$, 50 images per group, covering prompts. Groups are defined by plain Attention U-Net.}
+\label{tab:extreme}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lllcc}
+\toprule
+Dataset & Group & Model & Dice & CBL \\
+\midrule
+\multirow{4}{*}{BTXRD}
+& \multirow{2}{*}{Top-Dice} & Attention U-Net & 0.872 & 0.945 \\
+& & PGA-UNet & 0.862 & 0.944 \\
+& \multirow{2}{*}{Bottom-Dice} & Attention U-Net & 0.031 & 0.105 \\
+& & PGA-UNet & \textbf{0.712} & \textbf{0.879} \\
+\midrule
+\multirow{4}{*}{FracAtlas}
+& \multirow{2}{*}{Top-Dice} & Attention U-Net & 0.493 & 0.640 \\
+& & PGA-UNet & \textbf{0.754} & \textbf{0.927} \\
+& \multirow{2}{*}{Bottom-Dice} & Attention U-Net & 0.169 & 0.315 \\
+& & PGA-UNet & \textbf{0.687} & \textbf{0.896} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{images/results/unet_extreme_groups_btxrd.png}
+\caption{Qualitative comparison between Attention U-Net and PGA-UNet on BTXRD for one Attention U-Net top-Dice case (IMG000184) and one bottom-Dice case (IMG000791). The rows use identical image stems; for PGA-UNet the input-image and box-prompt panels are merged into one.}
+\label{fig:extreme-btxrd}
+\end{figure}
+
+\subsection{Matched Comparison Against SAM-Med2D}
+\label{sec:sam}
+Both models get the same box at $256\times256$ (Table~\ref{tab:sam}). Zero-shot, SAM-Med2D barely works on bone radiographs: 0.255 Dice on BTXRD, 0.262 on FracAtlas. Fine-tuning on the same split and prompt protocol lifts it to 0.630 and 0.563, but PGA-UNet at that resolution is at 0.762 and 0.629 under covering prompts, ahead by 0.132 and 0.066 Dice and by a similar amount in CBL. SAM-Med2D pulls ahead in only one place, boundary distance on FracAtlas, where its fine-tuned HD95 of 8.0 pixels beats PGA-UNet's 10.6. Absolute accuracy and the covering-to-off-center change are separate questions; Section~\ref{sec:robust} takes up the second.
+
+\begin{table}[t]
+\caption{Comparison with SAM-Med2D at $256\times256$, image-level merged, covering prompts.}
+\label{tab:sam}
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+Dataset & Model & Dice & CBL & HD95 \\
+\midrule
+\multirow{3}{*}{BTXRD}
+& SAM-Med2D zero-shot & 0.255 & 0.734 & 41.2 \\
+& SAM-Med2D fine-tuned & 0.630 & 0.836 & 17.3 \\
+& PGA-UNet & \textbf{0.762} & \textbf{0.902} & \textbf{10.9} \\
+\midrule
+\multirow{3}{*}{FracAtlas}
+& SAM-Med2D zero-shot & 0.262 & 0.752 & 21.3 \\
+& SAM-Med2D fine-tuned & 0.563 & 0.846 & \textbf{8.0} \\
+& PGA-UNet & \textbf{0.629} & \textbf{0.895} & 10.6 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Performance on Small Lesions}
+\label{sec:small}
+If keeping weak evidence alive through the network matters anywhere, it is here. The small-lesion subset is the 50 test images per dataset with the least total lesion area, 7 to 433 pixels on BTXRD and 145 to 944 on FracAtlas. Table~\ref{tab:small} scores three comparisons on it in a shared $512\times512$ frame.
+
+SAM-Med2D struggles badly at this size: fine-tuned, it reaches only 0.256 Dice on BTXRD and 0.371 on FracAtlas, and zero-shot it is close to nothing, while PGA-UNet at $256$ holds 0.705 and 0.648. The conventional prompt baselines at $512$ trail PGA-UNet by 0.04 to 0.11 Dice on BTXRD and 0.11 to 0.16 on FracAtlas, and the prompt-free Attention U-Net drops to around 0.28. Resolution bites hardest here too: on the fixed small-lesion stems, PGA-UNet Dice falls from 0.766 at $512$ to 0.714 at $256$ and 0.631 at $128$ on BTXRD, and from 0.720 to 0.642 and 0.609 on FracAtlas, a $512$-to-$128$ loss of 0.135 and 0.112, more than on the full test set.
+
+\begin{table}[t]
+\caption{Small-lesion subset, 50 images per dataset, covering prompts, scored in a shared $512\times512$ frame. IoU is omitted here because it is noisy at this lesion size.}
+\label{tab:small}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+Dataset & Model & Dice & CBL & HD95 \\
+\midrule
+\multirow{5}{*}{BTXRD}
+& SAM-Med2D fine-tuned $256$ & 0.256 & 0.561 & 123.8 \\
+& Attention U-Net + prompt channel $512$ & 0.728 & 0.879 & 14.2 \\
+& Attention U-Net + prompt crop $512$ & 0.724 & 0.909 & \textbf{5.5} \\
+& PGA-UNet $256$ & 0.705 & 0.877 & 14.7 \\
+& PGA-UNet $512$ & \textbf{0.766} & \textbf{0.897} & 14.0 \\
+\midrule
+\multirow{5}{*}{FracAtlas}
+& SAM-Med2D fine-tuned $256$ & 0.371 & 0.736 & 62.1 \\
+& Attention U-Net + prompt channel $512$ & 0.610 & 0.888 & 21.9 \\
+& Attention U-Net + prompt crop $512$ & 0.564 & 0.855 & 22.6 \\
+& PGA-UNet $256$ & 0.648 & 0.897 & 20.6 \\
+& PGA-UNet $512$ & \textbf{0.720} & \textbf{0.907} & \textbf{8.3} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{images/results/small_lesion_sam_pga256_pga512.png}
+\caption{Representative small-lesion comparison on BTXRD (IMG000868, two small polygons): fine-tuned SAM-Med2D at $256\times256$, PGA-UNet at $256\times256$, and PGA-UNet at $512\times512$. The input-image and box-prompt panels are merged into one.}
+\label{fig:small-btxrd}
+\end{figure}
+
+Read narrowly, this says that the smallest lesions are the stress case for the whole approach, and that both the prompt conditioning and the input resolution count for more here than on the full set.
+
+\subsection{Sensitivity to Prompt Displacement}
+\label{sec:robust}
+Moving the box off-center costs PGA-UNet very little at $512\times512$: 0.008 Dice on BTXRD, 0.014 on FracAtlas, with CBL down by 0.006 and 0.015. On the small-lesion subset the loss stays under 0.01 Dice on both datasets. The conventional prompt baselines lose a comparable or slightly larger amount, and fine-tuned SAM-Med2D about 0.03. All of this is sensitivity to one displacement rule fixed in advance. It says nothing about arbitrary radiologist-drawn boxes, and partial or off-target boxes were never tested.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{images/results/prompt_robustness_examples.png}
+\caption{Representative behavior under prompt perturbation on both datasets. Thin fracture patterns remain harder than compact lesions even when the box still covers the target.}
+\label{fig:robust}
+\end{figure}
 
 \subsection{Monte Carlo Cross-Validation}
-This experiment examines whether the PGA-UNet results remain stable when the image-level split is redrawn repeatedly under limited data. It supports stability at the dataset-partition level rather than at the prompt-perturbation level. Supplementary experiments therefore used Monte Carlo cross-validation, that is, four repeated random image-level splits of the $512\times512$ PGA-UNet configuration, evaluated separately under covering and off-center prompts. These results are not intended to replace the fixed-split main tables; in the refreshed manuscript, this subsection should be limited to split-level stability of PGA-UNet under the evaluated protocol.
+\label{sec:mccv}
+One fixed split could flatter or hurt the method by chance, so PGA-UNet at $512\times512$ was retrained on four fresh random image-level splits, with the training seed held at 22120196 and only the split seed changed (Table~\ref{tab:mccv}). Dice varies by at most 0.011 across splits on either dataset and either prompt condition; CBL by at most 0.013. The FracAtlas repeated-split mean, 0.733, sits just above the fixed-split test result of 0.727, so if anything the reported split is slightly harder than typical. This is evidence that PGA-UNet is stable across splits, not that it beats any baseline.
 
-\begin{table}
-\caption{Monte Carlo cross-validation for PGA-UNet at $512\times512$ (4 repeated random splits, mean $\pm$ standard deviation).}
+\begin{table}[t]
+\caption{Monte Carlo cross-validation of PGA-UNet at $512\times512$, four repeated random splits, mean $\pm$ standard deviation.}
 \label{tab:mccv}
 \centering
 \scriptsize
@@ -44,160 +197,34 @@ This experiment examines whether the PGA-UNet results remain stable when the ima
 Dataset & Prompt & Dice & CBL & HD95 \\
 \midrule
 \multirow{2}{*}{BTXRD}
-& Covering & $0.8715\pm0.0083$ & $0.9600\pm0.0028$ & $8.09\pm0.67$ \\
-& Off-center & $0.8357\pm0.0120$ & $0.9390\pm0.0062$ & $10.45\pm0.65$ \\
+& Covering & $0.769\pm0.005$ & $0.905\pm0.005$ & $25.0\pm2.5$ \\
+& Off-center & $0.762\pm0.004$ & $0.901\pm0.007$ & $25.7\pm2.0$ \\
 \midrule
 \multirow{2}{*}{FracAtlas}
-& Covering & $0.8281\pm0.0052$ & $0.9597\pm0.0039$ & $6.93\pm0.08$ \\
-& Off-center & $0.7862\pm0.0114$ & $0.9297\pm0.0054$ & $8.75\pm0.48$ \\
+& Covering & $0.733\pm0.007$ & $0.909\pm0.006$ & $14.1\pm2.7$ \\
+& Off-center & $0.728\pm0.011$ & $0.904\pm0.013$ & $15.6\pm3.9$ \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
-In the final refreshed version, this subsection should be used only to support split-level stability of PGA-UNet under the evaluated protocol. It should not be used by itself to claim superiority over any baseline. If paired statistical comparisons against baselines are later added, they should be presented separately rather than folded into this Monte Carlo section.
+\subsection{Ablation Study}
+\label{sec:ablation}
+A first single-split run left the configurations close enough that the ordering was not safe to report. The ablation is therefore being rerun under repeated seeds, and the numbers will appear here once those runs finish. The design compares the full model, Gaussian prompt with PSG and CAD, against variants that drop one factor at a time or swap the Gaussian prompt for a binary box; the aim is to test the combination as a system, not to claim a unique internal mechanism. Figure~\ref{fig:ablation-gaussian-binary} shows one case where the Gaussian prompt gives cleaner boundaries than the binary box.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{images/results/prompt_robustness_examples.png}
-\caption{Representative qualitative behavior under prompt perturbation. The figure illustrates the type of degradation observed when the prompt is shifted away from the ideal covering box, while also showing that thin fracture patterns remain harder than larger compact lesions.}
-\label{fig:robust}
+\includegraphics[width=\columnwidth]{images/ablation/ablation_gaussian_vs_binary_case.png}
+\caption{Representative comparison between the Gaussian plateau prompt and a binary box prompt within the full architecture.}
+\label{fig:ablation-gaussian-binary}
 \end{figure}
 
+\subsection{Efficiency}
+\label{sec:efficiency}
+PGA-UNet is small: 2.955M parameters, all trainable, an 11.4 MB checkpoint, 7.74 GFLOPs at $256\times256$ and 31.0 at $512\times512$. On the Tesla T4 it runs in 8.5 ms per image at $256$ and 18.5 ms at $512$, and on CPU in 112 ms and 375 ms. Fine-tuned SAM-Med2D at $256\times256$ carries 271.24M parameters, a 2.4 GB checkpoint, and 92.0 GFLOPs, and takes 50.1 ms on GPU and 1324 ms on CPU. At the matched resolution PGA-UNet is therefore about 92 times lighter in parameters, 12 times lighter in FLOPs, 215 times smaller on disk, and 6 times faster on GPU. These are measured costs on one implementation, one GPU, and two resolutions, nothing more.
 
-\subsection{Comparison with the Automatic Baseline}
-Attention U-Net receives no clinician-provided box, so this comparison is not a like-for-like test of two prompt-guided methods. Its purpose is instead to measure how difficult this segmentation task is, over the full test set, when the network must localize the lesion entirely on its own, which is exactly the step that a coarse clinician prompt is meant to remove. Table~\ref{tab:baseline} therefore serves as an automatic-reference comparison, not as a fully matched architecture comparison. In the refreshed manuscript, this subsection should support the narrower claim that automatic localization is a major challenge in this task setting, while avoiding any wording that would treat the Attention U-Net row as proof that PGA-UNet is architecturally superior in a like-for-like sense.
-
-\begin{table}
-\caption{Comparison with the automatic baseline at $512\times512$ under covering prompts.}
-\label{tab:baseline}
-\centering
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{llccc}
-\toprule
-Dataset & Model & Dice & CBL & HD95 \\
-\midrule
-\multirow{2}{*}{BTXRD}
-& Attention U-Net & 0.5160 & 0.5995 & 129.67 \\
-& PGA-UNet & \textbf{0.8788} & \textbf{0.9619} & \textbf{9.08} \\
-\midrule
-\multirow{2}{*}{FracAtlas}
-& Attention U-Net & 0.3075 & 0.4658 & 110.83 \\
-& PGA-UNet & \textbf{0.8286} & \textbf{0.9615} & \textbf{6.21} \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-
-\subsection{Attention U-Net Top- and Bottom-Dice Subsets}
-This subgroup analysis is an extension of the automatic-baseline comparison. After comparing PGA-UNet with Attention U-Net at the dataset level, we ask a more specific question: how does PGA-UNet behave on images where the automatic baseline is relatively strong versus relatively weak? The purpose is to clarify the practical meaning of the Attention U-Net comparison rather than to define objective data difficulty. We therefore compare Attention U-Net top-Dice and bottom-Dice image groups on both BTXRD and FracAtlas. Specifically, for each dataset we select the 50 test images with the highest Attention U-Net Dice scores and the 50 test images with the lowest Attention U-Net Dice scores, then re-evaluate PGA-UNet on the same two groups. This analysis does not define intrinsic data difficulty; it only reports performance on subsets induced by the Attention U-Net ranking.
-
-\begin{table}
-\caption{Top-Dice and bottom-Dice comparison under covering prompts at $512\times512$ (50 images per group).}
-\label{tab:extreme}
-\centering
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{lllccc}
-\toprule
-Dataset & Group & Model & Dice & CBL & HD95 \\
-\midrule
-\multirow{4}{*}{BTXRD}
-& \multirow{2}{*}{Top-Dice} & Attention U-Net & 0.8629 & 0.9436 & 39.32 \\
-& & PGA-UNet & \textbf{0.9036} & \textbf{0.9709} & \textbf{9.23} \\
-& \multirow{2}{*}{Bottom-Dice} & Attention U-Net & 0.0335 & 0.0928 & 270.72 \\
-& & PGA-UNet & \textbf{0.8521} & \textbf{0.9459} & \textbf{5.19} \\
-\midrule
-\multirow{4}{*}{FracAtlas}
-& \multirow{2}{*}{Top-Dice} & Attention U-Net & 0.4428 & 0.6277 & 82.08 \\
-& & PGA-UNet & \textbf{0.8318} & \textbf{0.9666} & \textbf{6.37} \\
-& \multirow{2}{*}{Bottom-Dice} & Attention U-Net & 0.1529 & 0.3345 & 135.76 \\
-& & PGA-UNet & \textbf{0.8151} & \textbf{0.9582} & \textbf{6.25} \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-Because the four groups are defined directly from Attention U-Net scores, these values should not be interpreted as global averages or as intrinsic clinical difficulty strata. In the refreshed manuscript, this subsection should keep that narrower interpretation explicit: the top-Dice and bottom-Dice groups only show how the prompt-guided models behave on image stems where the automatic baseline is relatively stronger or weaker.
-
-The qualitative examples help clarify this behavior. In the Attention U-Net top-Dice groups, the automatic baseline can often place the predicted mask in roughly the correct anatomical region, but it may still produce spurious responses far from the lesion. Even when the lesion itself is covered reasonably well, those distant false positives reduce overlap-based metrics such as Dice and IoU, which is consistent with the still-elevated HD95 values (39.32 on BTXRD, 82.08 on FracAtlas) despite a moderate-to-low Dice. PGA-UNet is less prone to this pattern because the bounding box prompt constrains the model to a more relevant spatial region. In the bottom-Dice groups, the failure is more severe: the automatic baseline may localize the wrong region or miss the lesion almost entirely. Within the scope of the present evidence, the safest interpretation is not a definitive account of the Attention U-Net internals, but a system-level one: once the model must solve localization without an external prompt, confusing background structure and weak lesion evidence can lead to qualitatively different failure patterns from those seen in the prompt-guided setting. In contrast, PGA-UNet receives a coarse spatial prior and can therefore identify the lesion region more reliably before refining the mask.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{images/results/unet_extreme_groups_btxrd.png}
-\caption{Qualitative comparison between Attention U-Net and PGA-UNet on BTXRD for one case from the Attention U-Net top-Dice group (IMG000184) and one case from the Attention U-Net bottom-Dice group (IMG000791). Each row shows four panels; for PGA-UNet, the input-image and box-prompt panels are merged into a single "Input image (with prompt)" panel.}
-\label{fig:extreme-btxrd}
-\end{figure}
-
-
-\subsection{Matched Comparison with SAM-Med2D}
-This comparison tests the architectural contribution of the proposed prompt handling against a prompt-based foundation baseline under matched input conditions. Both models receive the same prompt type and the same resolution, so the difference is more directly tied to how prompt information is represented and propagated after localization has already been externally provided. Table~\ref{tab:sam} reports the intended matched comparison at $256\times256$ under both covering and off-center prompts. Because the present table still contains legacy values, this subsection should currently be interpreted as the comparison structure and claim scope only; the final wording about relative performance against SAM-Med2D must be decided after retraining.
-
-\begin{table}
-\caption{Dice comparison with fine-tuned SAM-Med2D at $256\times256$.}
-\label{tab:sam}
-\centering
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{llcc}
-\toprule
-Dataset & Prompt & PGA-UNet & SAM-Med2D-FT \\
-\midrule
-\multirow{2}{*}{BTXRD}
-& Covering & \textbf{0.8449} & 0.7624 \\
-& Off-center & \textbf{0.8111} & 0.7542 \\
-\midrule
-\multirow{2}{*}{FracAtlas}
-& Covering & \textbf{0.7974} & 0.7439 \\
-& Off-center & \textbf{0.7619} & 0.7275 \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-When the tables are refreshed, the relative degradation from covering to off-center prompts should be reported separately from absolute accuracy. The two prompt conditions measure sensitivity to the controlled displacement defined in this study; they do not establish robustness to arbitrary clinician prompts. Any comparison with SAM-Med2D should therefore report both absolute Dice and the change between the two conditions without assuming that the model with the higher absolute Dice also has the smaller relative degradation.
-
-
-\subsection{Performance on Small Lesions}
-This experiment is an extension of the SAM-Med2D comparison to the setting in which the contribution of prompt-aware feature preservation should be most visible, namely very small lesions. To keep subgroup analysis objective, we retain only the small-lesion subset because it is defined directly by lesion size rather than by a model-dependent ranking rule. For each dataset, the subset is formed by selecting the 50 test images with the smallest total lesion area, evaluated under covering prompts. This subset is then used for two related comparisons: PGA-UNet versus fine-tuned SAM-Med2D at the matched resolution of $256\times256$, and PGA-UNet$_{256}$ versus PGA-UNet$_{512}$ to examine the effect of resolution. All metrics are computed at a shared $512\times512$ reference frame, with the $256\times256$ predictions of SAM-Med2D and PGA-UNet upsampled before scoring, so that the three models are compared on identical ground-truth masks.
-
-\begin{table}
-\caption{Dice, CBL, and HD95 on the 50 test images with the smallest total lesion area per dataset. For the R256 comparison, the reported metrics are computed in a shared $512\times512$ reference frame. IoU is omitted here because it is a noisy, boundary-sensitive statistic at this lesion size; Dice, CBL, and HD95 provide complementary overlap, centroid, and boundary measures.}
-\label{tab:small}
-\centering
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{llccc}
-\toprule
-Dataset & Model & Dice & CBL & HD95 \\
-\midrule
-\multirow{3}{*}{BTXRD}
-& SAM-Med2D-FT $256\times256$ & 0.1903 & 0.4489 & 240.72 \\
-& PGA-UNet $256\times256$ & 0.7650 & 0.9261 & 3.11 \\
-& PGA-UNet $512\times512$ & \textbf{0.8483} & \textbf{0.9451} & \textbf{2.32} \\
-\midrule
-\multirow{3}{*}{FracAtlas}
-& SAM-Med2D-FT $256\times256$ & 0.3736 & 0.7116 & 105.19 \\
-& PGA-UNet $256\times256$ & 0.7973 & 0.9569 & 5.62 \\
-& PGA-UNet $512\times512$ & \textbf{0.8348} & \textbf{0.9609} & \textbf{4.83} \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-In the refreshed manuscript, this subsection should remain focused on the narrow small-lesion question and should avoid overextending from subgroup results to broad clinical robustness. The safest interpretation is that very small lesions are an especially relevant stress case for prompt-conditioned segmentation, and that both explicit prompt conditioning and higher spatial resolution may matter more strongly there than on the full test set.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{images/results/small_lesion_sam_pga256_pga512.png}
-\caption{Representative qualitative comparison on small lesions in BTXRD (IMG000868, two small polygons). The examples contrast fine-tuned SAM-Med2D at $256\times256$, PGA-UNet at $256\times256$, and PGA-UNet at $512\times512$; the input-image and box-prompt panels are merged into a single "Input image (with prompt)" panel. The figure illustrates the type of small-lesion behavior captured by the quantitative comparison in the shared evaluation frame.}
-\label{fig:small-btxrd}
-\end{figure}
-
-
-\subsection{Efficiency Analysis}
-This experiment evaluates whether the proposed gains are achieved with a practical computational profile. Table~\ref{tab:efficiency} reports the efficiency comparison, measured on the same NVIDIA Tesla T4 GPU used for training (mean latency over repeated forward passes, batch size 1). PGA-UNet contains only 2.95M parameters. In the tested $256\times256$ setting, this corresponds to an approximately 92-fold reduction in parameter count and an 11.9-fold reduction in FLOPs relative to SAM-Med2D, together with 6.0$\times$ faster GPU inference and 11.6$\times$ faster CPU inference. The safe claim here is limited to lower measured computational cost and latency in the tested implementation, hardware, and input-resolution setting.
-
-\begin{table}
-\caption{Efficiency comparison in the tested environment.}
+\begin{table}[t]
+\caption{Efficiency in the tested environment (NVIDIA Tesla T4, batch size 1).}
 \label{tab:efficiency}
 \centering
 \scriptsize
@@ -206,79 +233,38 @@ This experiment evaluates whether the proposed gains are achieved with a practic
 \toprule
 Model & Params & GFLOPs & Size & GPU ms & CPU ms \\
 \midrule
-PGA-UNet 256 & 2.95M & 7.74 & 11.35 MB & 8.17 & 109.17 \\
-PGA-UNet 512 & 2.95M & 30.97 & 11.35 MB & 18.28 & 336.74 \\
-SAM-Med2D 256 & 271.24M & 92.02 & 2443.16 MB & 48.75 & 1263.77 \\
+PGA-UNet $256$ & 2.96M & 7.74 & 11.4 MB & 8.5 & 112 \\
+PGA-UNet $512$ & 2.96M & 30.97 & 11.4 MB & 18.5 & 375 \\
+SAM-Med2D $256$ & 271.24M & 92.02 & 2443 MB & 50.1 & 1324 \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
-
-\subsection{Ablation Study}
-The ablation study directly tests which proposed components are responsible for the observed gains. In particular, it examines whether performance comes from the prompt representation itself, from encoder-side prompt gating (PSG), from decoder-side prompt-conditioned attention (CAD), or from their combination. We isolate three factors: whether PSG is present in the encoder, what form of decoder skip-attention is used (none, the original unconditioned Attention U-Net gate, or CAD), and whether the prompt is represented as a binary box or a Gaussian-smoothed plateau. Combining these factors gives eight trained configurations per dataset, all at $512\times512$: the seven partial variants that isolate individual factors and their pairwise interactions, plus the full proposed PGA-UNet, which uses PSG, CAD, and the Gaussian prompt together. Tables~\ref{tab:ablation-btxrd} and~\ref{tab:ablation-fracatlas} report Dice under covering and off-center prompts for BTXRD and FracAtlas, respectively.
-
-\begin{table}
-\caption{Ablation results (Dice) on BTXRD at $512\times512$.}
-\label{tab:ablation-btxrd}
-\centering
-\scriptsize
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{ccccc}
-\toprule
-PSG & Decoder attention & Prompt & Covering & Off-center \\
-\midrule
-No & None & Gaussian & 0.8596 & 0.8230 \\
-No & None & Binary & 0.8597 & 0.8253 \\
-No & Vanilla gate & Gaussian & 0.8671 & 0.8408 \\
-No & CAD & Gaussian & 0.8685 & 0.8358 \\
-Yes & None & Gaussian & 0.8567 & 0.8297 \\
-Yes & Vanilla gate & Gaussian & 0.8611 & 0.8314 \\
-Yes & CAD & Binary & 0.8611 & 0.8317 \\
-Yes & CAD & Gaussian (PGA-UNet) & \textbf{0.8788} & \textbf{0.8496} \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-\begin{table}
-\caption{Ablation results (Dice) on FracAtlas at $512\times512$.}
-\label{tab:ablation-fracatlas}
-\centering
-\scriptsize
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{ccccc}
-\toprule
-PSG & Decoder attention & Prompt & Covering & Off-center \\
-\midrule
-No & None & Gaussian & 0.7727 & 0.7356 \\
-No & None & Binary & 0.7670 & 0.7199 \\
-No & Vanilla gate & Gaussian & 0.7560 & 0.7311 \\
-No & CAD & Gaussian & 0.8158 & 0.7777 \\
-Yes & None & Gaussian & 0.7115 & 0.6990 \\
-Yes & Vanilla gate & Gaussian & 0.7372 & 0.7170 \\
-Yes & CAD & Binary & 0.8132 & 0.7896 \\
-Yes & CAD & Gaussian (PGA-UNet) & \textbf{0.8286} & \textbf{0.7925} \\
-\bottomrule
-\end{tabular}
-}
-\end{table}
-
-The full PGA-UNet configuration (PSG, CAD, and the Gaussian prompt combined) is the intended reference row in this ablation design. Once retrained under the current protocol, the safest wording is that the resulting pattern may be consistent with complementary contributions from PSG, CAD, and Gaussian prompt encoding within the evaluated configurations. Without repeated multi-seed ablation runs or factorial statistical analysis, the manuscript should avoid stronger language such as ``proves synergy'' or any claim of definitive mechanistic decomposition.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{images/ablation/ablation_gaussian_vs_binary_case.png}
-\caption{Representative qualitative comparison between the Gaussian prompt representation and the binary prompt representation. The figure illustrates a case in which the Gaussian version yields cleaner boundaries and better overlap.}
-\label{fig:ablation-gaussian-binary}
-\end{figure}
+\subsection{Exploratory Comparison of Segmentation Losses}
+\label{sec:loss}
+Because the targets are small, we also tried swapping the Dice term for a size-conditioned Tversky loss, and separately for a Focal Dice loss, everything else held fixed. Neither helped. On BTXRD the default Dice + BCE gives 0.782 / 0.774 Dice (covering / off-center), against 0.778 / 0.767 for Tversky and 0.773 / 0.765 for Focal Dice. On FracAtlas the default gives 0.727 / 0.713, against 0.709 / 0.680 for Tversky and 0.642 / 0.578 for Focal Dice, the last a plain regression with HD95 above 100 pixels. We keep this as a negative control: under the current protocol the default objective is already a good choice, and neither alternative is adopted.
 
 \subsection{Failure Modes}
-The method still has identifiable failure cases. In the qualitative review collected from the repository's failure-case examples, lower Dice scores were more likely for lesions with highly elongated or branching shapes, lesions located in anatomically cluttered regions such as the shoulder or clavicle, and lesions with weak contrast relative to surrounding structures. These cases are relevant because they show that prompt guidance does not eliminate ambiguity once the local image evidence itself is poor.
+\label{sec:failure}
+PGA-UNet still fails, and the failures have a pattern. In the qualitative review, low Dice clusters on lesions that are elongated or branching, that sit in cluttered anatomy such as the shoulder or clavicle, or that barely stand out from the bone around them. A covering box does not fix a case where the local image evidence is itself poor.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/failure/failure_case_overlap.png}
-\caption{Representative failure case in an anatomically overlapping region. Even with a covering prompt, the lesion boundary remains difficult because the local X-ray structures are visually confounded.}
+\caption{Representative failure in an anatomically overlapping region. Even with a covering prompt the boundary remains hard because the local structures are visually confounded.}
 \label{fig:failure}
 \end{figure}
+
+\subsection{Training-Free Self-Assessment and Candidate Suggestion}
+\label{sec:selfassess-results}
+Without any ground truth, the score $Q$ from Section~\ref{sec:selfassess} still tracks the true per-prompt Dice. Its Spearman correlation with the true Dice is 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas. The two cues pull their weight: mask decisiveness alone reaches a Spearman near 0.4, jitter stability near 0.5 to 0.6, and their mean is at least as good as either. We also trained a small head to regress the Dice directly; it collapsed to a near-constant output, Spearman under 0.2 on both datasets, and is not used.
+
+Turned around, $Q$ can rank 50 random candidate boxes and keep the top five (Figure~\ref{fig:demo-suggest}). At least one of the five then covers more than half the lesion for 67\% of BTXRD images and 82\% of FracAtlas images, and the best of the five covers 0.84 and 0.90 of the lesion area on average; a top-three list gives 58\% / 78\% and 0.77 / 0.87. This is a review aid and nothing stronger: $Q$ is a heuristic, not a calibrated probability, and the shortlist is not a detector.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{images/demo/demo_suggestion_btxrd.png}
+\caption{Candidate-region shortlist on a BTXRD case. Fifty boxes are sampled with no prompt, scored by the self-assessment score $Q$, and the five highest-scoring boxes are shown for the clinician to accept, adjust, or reject. A FracAtlas case is shown in the supplementary material.}
+\label{fig:demo-suggest}
+\end{figure*}
