@@ -355,9 +355,16 @@ Bộ dữ liệu & Nhóm & Mô hình & Dice & IoU & HD95 & CBL \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../images/results/unet_extreme_groups_btxrd.png}
-\caption{So sánh định tính giữa Attention U-Net và PGA-UNet trên BTXRD cho một ca nhóm Top-Dice (IMG000184) và một ca nhóm Bottom-Dice (IMG000791) của Attention U-Net. Các hàng dùng cùng stem ảnh; với PGA-UNet, panel ảnh đầu vào và panel hộp prompt được gộp làm một.}
-\label{fig:extreme}
+\includegraphics[width=\linewidth]{../images/results/unet_extreme_groups_btxrd_top.png}
+\caption{Attention U-Net (không prompt) so với PGA-UNet trên BTXRD, ca nhóm Top-Dice của Attention U-Net (IMG001375). Cả hai mô hình đều tốt trên ca dễ.}
+\label{fig:extreme-top}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/results/unet_extreme_groups_btxrd_bottom.png}
+\caption{Attention U-Net (không prompt) so với PGA-UNet trên BTXRD, ca nhóm Bottom-Dice của Attention U-Net (IMG000791). Không có prompt, dự đoán của Attention U-Net lệch hẳn vị trí; PGA-UNet có điều kiện hóa theo prompt vẫn khôi phục được tổn thương.}
+\label{fig:extreme-bottom}
 \end{figure}
 
 \subsection{So sánh khớp với SAM-Med2D}
@@ -416,6 +423,13 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/results/small_lesion_sam_pga256.png}
+\caption{Ca tổn thương nhỏ trên BTXRD (IMG000932): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, và PGA-UNet, cùng ở $256\times256$. Cả hai biến thể SAM-Med2D đều bỏ sót hoàn toàn tổn thương; PGA-UNet thì không.}
+\label{fig:small-sam}
+\end{figure}
+
 \textbf{So với Attention U-Net khớp prompt ở $512$.} Nhận cùng hộp ở $512$, hai baseline prompt quy ước kém PGA-UNet 0.04 trên BTXRD và 0.11 đến 0.16 trên FracAtlas, và Attention U-Net không prompt tụt xuống khoảng 0.28 (Bảng~\ref{tab:small-att}). Biến thể prompt-crop đạt HD95 thấp hơn trên BTXRD, nơi crop chật hợp với mục tiêu gọn, nhưng không trên FracAtlas.
 
 \begin{table}[h]
@@ -443,6 +457,13 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 \end{tabular}
 }
 \end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/results/small_lesion_pga_vs_attunet.png}
+\caption{Ca tổn thương nhỏ trên BTXRD (IMG000932): Attention U-Net (không prompt), Attention U-Net kênh prompt, Attention U-Net crop theo prompt, và PGA-UNet, cùng ở $512\times512$.}
+\label{fig:small-att}
+\end{figure}
 
 \textbf{Độ phân giải trên các stem tổn thương nhỏ.} Độ phân giải cắn mạnh nhất ở đây. Trên các stem tổn thương nhỏ cố định, Dice của PGA-UNet tụt từ 0.766 ở $512$ xuống 0.631 ở $128$ trên BTXRD và từ 0.720 xuống 0.609 trên FracAtlas, mức mất $512$ xuống $128$ là 0.135 và 0.111, lớn hơn trên toàn tập test (Bảng~\ref{tab:small-res}).
 
@@ -472,9 +493,9 @@ Bộ dữ liệu & Độ p.giải & Dice & IoU & CBL & HD95$_\mathrm{px}$\,/\,$_
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../images/results/small_lesion_sam_pga256_pga512.png}
-\caption{So sánh tổn thương nhỏ tiêu biểu trên BTXRD (IMG000868, hai đa giác nhỏ): SAM-Med2D đã fine-tune ở $256\times256$, PGA-UNet ở $256\times256$, và PGA-UNet ở $512\times512$. Panel ảnh đầu vào và panel hộp prompt được gộp làm một.}
-\label{fig:small}
+\includegraphics[width=\linewidth]{../images/results/small_lesion_pga_128_256_512.png}
+\caption{PGA-UNet trên cùng một ca tổn thương nhỏ trên BTXRD (IMG000932) ở $128\times128$, $256\times256$, và $512\times512$. Dự đoán khít dần quanh tổn thương khi độ phân giải tăng.}
+\label{fig:small-res}
 \end{figure}
 
 Đọc hẹp, các tổn thương nhỏ nhất là ca thử thách cho toàn bộ cách tiếp cận, và cả điều kiện hóa prompt lẫn độ phân giải đầu vào đều đáng giá hơn ở đây so với trên toàn tập.
@@ -514,7 +535,7 @@ Bộ dữ liệu & Mô hình & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CB
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{../images/results/prompt_robustness_examples.png}
-\caption{Hành vi tiêu biểu khi nhiễu loạn prompt trên cả hai bộ dữ liệu. Các vết gãy mảnh vẫn khó hơn tổn thương gọn ngay cả khi hộp vẫn phủ mục tiêu.}
+\caption{PGA-UNet trên cùng một ca BTXRD (IMG000020) dưới prompt bao phủ (trên) và prompt lệch tâm (dưới); Dice không đổi ở 0.942.}
 \label{fig:robust}
 \end{figure}
 
@@ -578,7 +599,7 @@ Bộ dữ liệu & Cấu hình & Dice & IoU & HD95 & CBL \\
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{../images/ablation/ablation_gaussian_vs_binary_case.png}
-\caption{So sánh tiêu biểu giữa biểu diễn prompt Gaussian dạng cao nguyên và một hộp nhị phân trong kiến trúc đầy đủ.}
+\caption{PGA-UNet đầy đủ trên cùng một ca BTXRD (IMG000054) với prompt Gaussian dạng cao nguyên so với prompt hộp nhị phân, cùng ở $512\times512$. Biến thể nhị phân mất khả năng định vị dù PSG và CAD không đổi.}
 \label{fig:ablation-gb}
 \end{figure}
 
@@ -634,7 +655,7 @@ PGA-UNet vẫn lỗi, và các lỗi có một khuôn. Trong rà soát định t
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{../images/failure/failure_case_overlap.png}
-\caption{Ca lỗi tiêu biểu ở vùng giải phẫu chồng lấn. Ngay cả với một hộp bao phủ, biên vẫn khó vì các cấu trúc cục bộ bị nhầm lẫn về mặt thị giác.}
+\caption{Ca lỗi trên BTXRD (IMG000013, Dice 0.120): prompt phủ đúng tổn thương ở bờ ngực/sườn, nhưng dự đoán của PGA-UNet lại lệch ra chỗ khác. Một hộp bao phủ không sửa được ca mà bản thân bằng chứng ảnh cục bộ đã mơ hồ.}
 \label{fig:failure}
 \end{figure}
 

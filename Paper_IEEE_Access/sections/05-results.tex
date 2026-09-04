@@ -112,9 +112,16 @@ Dataset & Group & Model & Dice & IoU & HD95 & CBL \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{images/results/unet_extreme_groups_btxrd.png}
-\caption{Qualitative comparison between Attention U-Net and PGA-UNet on BTXRD for one Attention U-Net top-Dice case (IMG000184) and one bottom-Dice case (IMG000791). The rows use identical image stems; for PGA-UNet the input-image and box-prompt panels are merged into one.}
-\label{fig:extreme-btxrd}
+\includegraphics[width=\columnwidth]{images/results/unet_extreme_groups_btxrd_top.png}
+\caption{Attention U-Net (no prompt) vs PGA-UNet on BTXRD, Attention U-Net top-Dice case (IMG001375). Both models do well on an easy case.}
+\label{fig:extreme-btxrd-top}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{images/results/unet_extreme_groups_btxrd_bottom.png}
+\caption{Attention U-Net (no prompt) vs PGA-UNet on BTXRD, Attention U-Net bottom-Dice case (IMG000791). Without a prompt, Attention U-Net's prediction is badly mislocated; the prompt-conditioned PGA-UNet still recovers the lesion.}
+\label{fig:extreme-btxrd-bottom}
 \end{figure}
 
 \subsection{Matched Comparison Against SAM-Med2D}
@@ -176,6 +183,13 @@ Dataset & Model & Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{images/results/small_lesion_sam_pga256.png}
+\caption{Small-lesion case on BTXRD (IMG000932): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, and PGA-UNet, all at $256\times256$. Both SAM-Med2D variants miss the lesion entirely; PGA-UNet does not.}
+\label{fig:small-sam}
+\end{figure}
+
 \paragraph{Against prompt-matched Attention U-Net at $512$}
 Given the same box at $512$, the two conventional prompt baselines trail PGA-UNet by 0.04 on BTXRD and by 0.11 to 0.16 on FracAtlas, and the prompt-free Attention U-Net drops to around 0.28 (Table~\ref{tab:small-att}). The prompt-crop variant reaches a lower HD95 on BTXRD, where its tight crop suits a compact target, but not on FracAtlas.
 
@@ -204,6 +218,13 @@ Dataset & Model & Dice & IoU & HD95 & CBL \\
 \end{tabular}
 }
 \end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{images/results/small_lesion_pga_vs_attunet.png}
+\caption{Small-lesion case on BTXRD (IMG000932): Attention U-Net (no prompt), Attention U-Net with prompt channel, Attention U-Net with prompt crop, and PGA-UNet, all at $512\times512$.}
+\label{fig:small-att}
+\end{figure}
 
 \paragraph{Resolution on the small-lesion stems}
 Resolution bites hardest here. On the fixed small-lesion stems, PGA-UNet Dice falls from 0.766 at $512$ to 0.631 at $128$ on BTXRD and from 0.720 to 0.609 on FracAtlas, a $512$-to-$128$ loss of 0.135 and 0.111, more than on the full test set (Table~\ref{tab:small-res}).
@@ -234,9 +255,9 @@ Dataset & Res. & Dice & IoU & CBL & HD95$_\mathrm{px}$\,/\,$_n$ & $\Delta$Dice \
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{images/results/small_lesion_sam_pga256_pga512.png}
-\caption{Representative small-lesion comparison on BTXRD (IMG000868, two small polygons): fine-tuned SAM-Med2D at $256\times256$, PGA-UNet at $256\times256$, and PGA-UNet at $512\times512$. The input-image and box-prompt panels are merged into one.}
-\label{fig:small-btxrd}
+\includegraphics[width=\columnwidth]{images/results/small_lesion_pga_128_256_512.png}
+\caption{PGA-UNet on the same small-lesion case on BTXRD (IMG000932) at $128\times128$, $256\times256$, and $512\times512$. The prediction tightens around the lesion as resolution increases.}
+\label{fig:small-res}
 \end{figure}
 
 Read narrowly, the smallest lesions are the stress case for the whole approach, and both the prompt conditioning and the input resolution count for more here than on the full set.
@@ -276,7 +297,7 @@ Dataset & Model & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/results/prompt_robustness_examples.png}
-\caption{Representative behavior under prompt perturbation on both datasets. Thin fracture patterns remain harder than compact lesions even when the box still covers the target.}
+\caption{PGA-UNet on the same BTXRD case (IMG000020) under a covering prompt (top) and an off-center prompt (bottom); Dice is unchanged at 0.942.}
 \label{fig:robust}
 \end{figure}
 
@@ -315,7 +336,7 @@ Dataset & Configuration & Dice & IoU & HD95 & CBL \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/ablation/ablation_gaussian_vs_binary_case.png}
-\caption{Representative comparison between the Gaussian plateau prompt and a binary box prompt within the full architecture.}
+\caption{Full PGA-UNet on the same BTXRD case (IMG000054) with a Gaussian-plateau prompt vs a binary box prompt, both at $512\times512$. The binary variant loses localization even though PSG and CAD are unchanged.}
 \label{fig:ablation-gaussian-binary}
 \end{figure}
 
@@ -402,7 +423,7 @@ PGA-UNet still fails, and the failures have a pattern. In the qualitative review
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/failure/failure_case_overlap.png}
-\caption{Representative failure in an anatomically overlapping region. Even with a covering prompt the boundary remains hard because the local structures are visually confounded.}
+\caption{Failure case on BTXRD (IMG000013, Dice 0.120): the prompt covers the lesion at the chest/rib margin, but PGA-UNet's prediction lands away from it. A covering box does not fix a case where the local image evidence is itself ambiguous.}
 \label{fig:failure}
 \end{figure}
 
