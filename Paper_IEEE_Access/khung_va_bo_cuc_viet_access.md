@@ -1,7 +1,16 @@
-# Khung lập luận và bố cục viết lại bài IEEE Access (bản để duyệt)
+# Khung lập luận và bố cục viết lại bài IEEE Access
 
-Ngày 2026-09-03. Chưa đụng `.tex`. Đây là bản đọc hiểu, đánh giá hiện trạng, và đề xuất
-bố cục để anh duyệt trước khi bắt đầu viết.
+Ngày 2026-09-03 (gốc). **CẬP NHẬT 2026-09-04: đã viết `.tex` xong.**
+
+> **Trạng thái 2026-09-04**: `05-results.tex` + `04-experimental-setup.tex` (EN) và
+> `vietnam/access_vietnam.tex` (VI) đã viết lại theo hướng "mọi claim định lượng = 1 bảng".
+> Sổ đăng ký bảng cuối cùng + con số: **`nhap/nhap_05_claim_register_va_bang.md`** (đọc file
+> đó, không phải mục V bên dưới). 16 bảng đánh số (2 ngoài Results: tab:related, tab:splits).
+> `tab:ablation` đã vào bài với số 1-split, chờ đa seed. Build sạch EN 12 trang / VI 24 trang.
+> Chưa commit. Mục "G. So sánh loss" bên dưới: số đã viết thẳng vào `tab:loss` từ output
+> notebook `01`/`10`, KHÔNG gộp vào notebook `00` như đề xuất cũ.
+
+Phần dưới là bản đọc hiểu + đề xuất bố cục gốc, giữ lại để tham chiếu lập luận.
 
 ## A. Đã đọc những gì
 

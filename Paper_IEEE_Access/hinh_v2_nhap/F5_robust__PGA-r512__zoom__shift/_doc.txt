@@ -1,0 +1,16 @@
+F5  ->  prompt_robustness_examples_V2.png     (mục V-F robustness)
+
+Notebook: Result/File_test/btxrd/test-pga-vs-attunet-variants-r512-btxrd.ipynb
+   (section PGA-UNet chạy cả center_zoom lẫn center_shift)
+PGA-UNet @512. CÙNG 1 ca, 2 hàng = 2 điều kiện. Chọn ca nhiều polygon, Dice trung bình.
+
+Dán 2 file (cùng stem):
+
+  01_pga_zoom.png     PGA-UNet 512, center_zoom    (5 cột)
+  02_pga_shift.png    PGA-UNet 512, center_shift   (5 cột)
+
+Nhãn trái: "Bao phủ (center_zoom)" / "Lệch tâm (center_shift)".
+Ghi tên stem vào ghi_chu.txt.
+
+(Tùy chọn: nếu muốn thêm 1 ca FracAtlas -> dán thêm 03_pga_zoom_frac.png /
+04_pga_shift_frac.png, tôi ghép thành 4 hàng.)

@@ -127,7 +127,7 @@ Is prompt-conditioned processing particularly useful for very small lesions?
 
 ### Primary metrics
 
-Dice, CBL, and HD95. Dice is the primary overlap metric for this subset because very small regions make IoU highly sensitive to boundary changes.
+Dice, IoU, CBL, and HD95 (aligned with every other comparison table). Dice remains the primary overlap metric for this subset because very small regions make IoU low in absolute terms and sensitive to a few boundary pixels; IoU is still shown so the tables are consistent. (Updated 2026-09-04: the manuscript keeps IoU in the small-lesion tables.)
 
 ### Claim wording
 
@@ -203,6 +203,8 @@ The full-heatmap test files remain:
 - The difference between `center_zoom` and `center_shift` measures sensitivity to prompt displacement.
 
 Use `consistent with complementary contributions` instead of `proves synergy` unless a suitable factorial statistical analysis is added.
+
+**Status 2026-09-04:** a single-split image-level ablation (Dice / IoU / HD95 / CBL, both prompt conditions) is now in the manuscript as `tab:ablation`. Framing there: the full model has the best Dice in 3 of 4 dataset x prompt cells; the exception is BTXRD covering, where the binary-box variant is +0.006 Dice within single-split noise while the full model keeps the lowest HD95 and highest CBL; the Gaussian advantage is clearest under off-center prompts and on FracAtlas. The multi-seed rerun is still pending; when it lands, only the numbers in `tab:ablation` and the "rerun in progress" wording (caption, V-G prose, discussion) change.
 
 ## Claim 7: Monte Carlo Cross-Validation
 

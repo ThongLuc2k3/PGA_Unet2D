@@ -1,0 +1,18 @@
+F6  ->  ablation_gaussian_vs_binary_case_V2.png     (mục V-G Claim 6)
+
+Notebook:
+  - Gaussian: Result/File_test/btxrd/ablation/test-full-pga-heatmap-reference-btxrd/test-full-pga-heatmap-reference-btxrd.ipynb
+  - Binary:   Result/File_test/btxrd/ablation/test-full-binary-prompt-btxrd/test-full-binary-prompt-btxrd.ipynb
+   -> 2 notebook này đang vẽ IMG000013, KHÔNG có IMG001464.
+      Thêm 'IMG001464' vào danh sách stem hiển thị của cả 2 rồi chạy lại cell vẽ.
+      (Muốn đổi sang stem khác có ở CẢ hai thì báo tôi.)
+PGA-UNet full @512, stem IMG001464.
+
+Dán 2 file:
+
+  01_1464_gaussian.png    PGA-UNet full (Gaussian + PSG + CAD), IMG001464   (5 cột)
+  02_1464_binary.png      PGA-UNet full + hộp nhị phân, IMG001464           (5 cột, prompt là box đặc)
+
+Prompt: anh chọn zoom hay shift (ghi vào ghi_chu.txt), dùng cùng điều kiện cho cả 2 hàng.
+
+Nhãn trái: "PGA-UNet (Gaussian)" / "PGA-UNet (Binary)". Dice/IoU tôi đọc từ chữ trên hàng.

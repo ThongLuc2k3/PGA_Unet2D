@@ -1,0 +1,23 @@
+HƯỚNG DẪN CHUNG - thư mục nháp ghép hình V2
+===========================================
+
+7 thư mục con = 7 hình. Anh crop NGUYÊN HÀNG NGANG của model tương ứng (đủ mọi cột +
+phần chữ metric, chừa lề rộng, KHÔNG cắt cột), dán vào đúng thư mục, đặt tên file theo
+_doc.txt trong mỗi thư mục.
+
+Số cột giữ như notebook gốc (như ảnh hiện tại):
+- Model KHÔNG prompt (Attention U-Net no-prompt): 4 cột
+  = Input | Prediction | Ground truth | TP/FP/FN
+- Model CÓ prompt (mọi cái còn lại): 5 cột
+  = Input | Prompt (Image + prompts) | Prediction | Ground truth | TP/FP/FN
+
+Mỗi hàng chỉ 1 điều kiện prompt (zoom HAY shift) - anh chọn ảnh nào đẹp, khác nhau giữa
+các hình cũng được. RIÊNG F5 cần đủ 2 hàng zoom + shift.
+
+Trong tên file hoặc 1 file ghi_chu.txt, ghi rõ mỗi hàng: stem gì, prompt zoom hay shift.
+
+Claude sẽ: ghép các hàng theo thứ tự, thêm tiêu đề section, header cột, nhãn model bên
+trái mỗi hàng, và giá trị Dice/IoU... đọc từ chữ metric trên hàng - đúng bố cục 7 ảnh
+hiện tại trong Paper_IEEE_Access/images/.
+
+Xuất ra: <tên gốc>_V2.png trong Paper_IEEE_Access/images/... (bản nháp để anh duyệt).

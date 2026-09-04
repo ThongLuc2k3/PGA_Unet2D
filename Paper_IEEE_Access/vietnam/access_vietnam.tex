@@ -10,6 +10,7 @@
 \usepackage{fontspec}
 \setmainfont{DejaVu Serif}
 \setsansfont{DejaVu Sans}
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{array}
@@ -73,7 +74,7 @@ Góc nhìn này cũng định hình cách đọc thực nghiệm. Vì Attention 
 \item Đề xuất PGA-UNet, một kiến trúc nhẹ có định hướng bằng prompt cho phân đoạn tổn thương xương trên ảnh X-quang tương tác.
 \item Thiết kế cơ chế điều kiện hóa prompt kết hợp prompt Gaussian dạng cao nguyên, Prompt Spatial Gate (PSG) phía encoder, và Conditional Attention Decoder (CAD) phía decoder.
 \item Xây dựng khung huấn luyện ngoại tuyến và suy luận tương tác trực tuyến, với định nghĩa toán học rõ ràng cho mã hóa prompt, cổng hóa encoder, và điều kiện hóa decoder.
-\item Đánh giá phương pháp trên BTXRD và FracAtlas dưới các điều kiện prompt bao phủ và lệch tâm, so sánh với một Attention U-Net tự động, hai baseline Attention U-Net khớp prompt nhận cùng hộp, và SAM-Med2D, dùng Dice, độ đo định vị theo tâm (CBL), và HD95, kèm Monte Carlo cross-validation và đo hiệu năng tính toán.
+\item Đánh giá phương pháp trên BTXRD và FracAtlas dưới các điều kiện prompt bao phủ và lệch tâm, so sánh với một Attention U-Net tự động, hai baseline Attention U-Net khớp prompt nhận cùng hộp, và SAM-Med2D, dùng Dice và IoU cho độ chồng lấn vùng, độ đo định vị theo tâm (CBL), và HD95 cho khoảng cách biên, kèm Monte Carlo cross-validation và đo hiệu năng tính toán.
 \item Cho thấy, qua phân tích tổn thương nhỏ và một lát cắt độ khó do Attention U-Net định nghĩa, rằng lợi ích của xử lý có điều kiện theo prompt tập trung ở nơi khu trú tự động thất bại và ở nơi tổn thương nhỏ nhất.
 \item Mô tả một điểm tự đánh giá không cần huấn luyện, dựng từ độ dứt khoát của mask và độ ổn định khi nhích prompt, cho một thứ hạng độ tin cậy không cần đáp án dùng được và có thể lọc ra một danh sách ngắn vùng nghi ngờ cho bác sĩ xem lại.
 \end{itemize}
@@ -88,7 +89,8 @@ Các mô hình nền tảng nhận prompt đẩy ý này đi xa hơn. SAM làm p
 Câu hỏi đó là nơi bài báo này bắt đầu. Trên ảnh X-quang xương thang xám, biết tổn thương nằm khoảng đâu chỉ giải quyết được một phần; phần khó hơn là giữ được bằng chứng mờ nhạt trong khi lọc bỏ nhiễu sau khi không gian tìm kiếm đã thu hẹp. Một CNN nhẹ có định hướng bằng prompt có thể tốt hơn nhờ giữ prompt luôn sống từ tầng encoder đầu tiên đến tầng decoder cuối, thay vì dùng một lần rồi để nó phai đi. Chúng tôi nghiên cứu bối cảnh đó trực tiếp, với SAM-Med2D làm tham chiếu nhận prompt; một so sánh rộng hơn với các mô hình y tế nhận prompt mới hơn được để dành cho công việc sau.
 
 \begin{table}[h]
-\caption{Bảng 1. Công trình tiêu biểu trước đây và khoảng trống còn lại mà bài báo này giải quyết.}
+\caption{Công trình tiêu biểu trước đây và khoảng trống còn lại mà bài báo này giải quyết.}
+\label{tab:relwork}
 \centering
 \scriptsize
 \begin{tabular}{L{1.9cm}L{2.0cm}L{2.4cm}L{2.4cm}L{1.9cm}L{1.9cm}}
@@ -121,9 +123,14 @@ Hệ thống có hai giai đoạn. Ở giai đoạn offline, mô hình được 
 
 Điểm khác biệt là chỗ prompt sống. Nó không phải một đầu vào phụ được tiêu thụ ở lớp đầu tiên rồi quên đi. Nó trở thành một prior không gian dày đặc, luôn hoạt động xuyên suốt encoder và decoder, và đó là điều nên giúp ích khi hộp thô, hơi lệch tâm, hoặc bọc quanh một tổn thương rất nhỏ.
 
-Một minh họa tương tác của giai đoạn online được cho ở Hình 1: người dùng vẽ một hộp trên ảnh X-quang, và mô hình trả về mask cùng với điểm dùng prompt của CAD và điểm tự đánh giá ở Mục III.F, cả hai đều không cần đáp án.
+Một minh họa tương tác của giai đoạn online được cho ở Hình~\ref{fig:demo-seg}: người dùng vẽ một hộp trên ảnh X-quang, và mô hình trả về mask cùng với điểm dùng prompt của CAD và điểm tự đánh giá ở Mục III.F, cả hai đều không cần đáp án.
 
-\textit{[Hình 1. \texttt{images/demo/demo\_segmentation\_btxrd.png}]}: Minh họa tương tác giai đoạn online trên một ca BTXRD. Bác sĩ vẽ một hộp trên canvas bên trái; panel bên phải phủ mask dự đoán, và panel bên dưới báo cáo các độ đo tham chiếu cùng điểm dùng prompt của CAD và điểm tự đánh giá $Q$, đều không cần đáp án. Một ca FracAtlas theo cùng bố cục ở phần bổ sung.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/demo/demo_segmentation_btxrd.png}
+\caption{Minh họa tương tác giai đoạn online trên một ca BTXRD. Bác sĩ vẽ một hộp trên canvas bên trái; panel bên phải phủ mask dự đoán, và panel bên dưới báo cáo các độ đo tham chiếu cùng điểm dùng prompt của CAD và điểm tự đánh giá $Q$, đều không cần đáp án. Một ca FracAtlas theo cùng bố cục ở phần bổ sung.}
+\label{fig:demo-seg}
+\end{figure}
 
 \subsection{Bài toán \enlabel{Problem Setting}}
 Cho ảnh X-quang xám $\mathbf{I}\in\mathbb{R}^{H\times W}$ và hộp giới hạn $\mathbf{B}$ do người dùng cung cấp, mục tiêu là dự đoán mask tổn thương nhị phân $\hat{\mathbf{M}}$. Gọi $\mathbf{H}(\mathbf{B})$ là bản đồ nhiệt prompt suy ra từ hộp. PGA-UNet dự đoán
@@ -158,7 +165,12 @@ Bộ mã hóa prompt trong CAD dùng hai tích chập $3\times3$ với instance 
 
 Tóm lại, phương pháp gồm 4 bước: (1) tiền xử lý ảnh và prompt về cùng độ phân giải vuông, (2) mã hóa prior không gian liên quan đến prompt bằng PSG ở encoder, (3) lan truyền ngữ cảnh có điều kiện theo prompt qua CAD ở decoder, (4) dự đoán mask tổn thương nhị phân cuối cùng. Ý nghĩa khoa học: thông tin prompt vừa được làm mềm về không gian, vừa được tái sử dụng liên tục, chứ không chỉ tiêm vào một lần rồi mất dần.
 
-\textit{[Hình 2. \texttt{images/architecture/architecture\_pga\_unet.png}]}: Tổng quan PGA-UNet. Thông tin prompt suy ra từ hộp giới hạn được tiêm vào đặc trưng encoder qua PSG, và tái sử dụng ở skip-attention của decoder qua CAD.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/architecture/architecture_pga_unet.png}
+\caption{Tổng quan PGA-UNet. Thông tin prompt suy ra từ hộp giới hạn được tiêm vào đặc trưng encoder qua PSG, và tái sử dụng ở skip-attention của decoder qua CAD.}
+\label{fig:arch}
+\end{figure}
 
 \subsection{Điểm tự đánh giá không cần huấn luyện \enlabel{Training-Free Self-Assessment Score}}
 PGA-UNet cũng trả về một số vô hướng $Q$ ước lượng, không cần đáp án, một dự đoán đáng tin đến đâu. Không có gì trong $Q$ được học. Nó được đọc từ chính đầu ra của mô hình lúc suy luận, là trung bình của hai chỉ dấu.
@@ -182,9 +194,28 @@ Cùng điểm này được tái dùng để lọc ra một danh sách ngắn v�
 \section{Thiết lập thực nghiệm \enlabel{Experimental Setup}}
 
 \subsection{Bộ dữ liệu \enlabel{Datasets}}
-Đánh giá trên hai bộ dữ liệu X-quang xương công khai. BTXRD là bộ dữ liệu u xương nguyên phát, có nhãn đa giác cho phân loại, định vị, phân đoạn. Tập chia BTXRD: 1.493/187/187 ảnh, 1.848/238/232 đa giác tổn thương cho train/validation/test. FracAtlas là bộ dữ liệu gãy xương có nhãn phân loại, định vị, phân đoạn. Sau làm sạch và chuẩn hóa đa giác, tập chia FracAtlas: 573/72/72 ảnh, 730/95/92 đa giác tổn thương.
+Đánh giá trên hai bộ dữ liệu X-quang xương công khai. BTXRD là bộ dữ liệu u xương nguyên phát, có nhãn đa giác cho phân loại, định vị, phân đoạn. FracAtlas là bộ dữ liệu gãy xương cùng loại nhãn; chúng tôi làm sạch và chuẩn hóa đa giác trước khi dùng. Cả hai được chia ở mức ảnh, mọi đa giác của cùng một ảnh nằm cùng một tập (Bảng~\ref{tab:splits}).
 
-Việc chia tách ở mức ảnh, mọi đa giác của cùng một ảnh nằm cùng một tập. Metadata công khai không đủ để xác minh tách biệt nghiêm ngặt theo bệnh nhân, nên về nguyên tắc các ảnh của cùng một bệnh nhân có thể rơi vào các tập khác nhau; chúng tôi coi đây là một hạn chế của đánh giá. Mỗi đa giác được coi là một mẫu tổn thương có thể prompt riêng khi huấn luyện. Khi đánh giá ở mức ảnh, nếu một ảnh có nhiều tổn thương, mô hình chạy riêng cho từng hộp, rồi hợp bản đồ xác suất bằng max theo từng pixel trước khi ngưỡng hóa ở 0.5. Mask ground-truth được hợp bằng union trên cùng một ảnh.
+\begin{table}[h]
+\caption{Tập chia train / validation / test ở mức ảnh. Mỗi đa giác tổn thương là một mẫu có thể prompt.}
+\label{tab:splits}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{Ảnh} & \multicolumn{3}{c}{Đa giác tổn thương} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Bộ dữ liệu & Train & Val & Test & Train & Val & Test \\
+\midrule
+BTXRD & 1.493 & 187 & 187 & 1.848 & 238 & 232 \\
+FracAtlas & 573 & 72 & 72 & 730 & 95 & 92 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+Metadata công khai không đủ để xác minh tách biệt nghiêm ngặt theo bệnh nhân, nên về nguyên tắc các ảnh của cùng một bệnh nhân có thể rơi vào các tập khác nhau; chúng tôi coi đây là một hạn chế của đánh giá. Khi đánh giá ở mức ảnh, nếu một ảnh có nhiều tổn thương, mô hình chạy riêng cho từng hộp, rồi hợp bản đồ xác suất bằng max theo từng pixel trước khi ngưỡng hóa ở 0.5, và mask ground-truth được hợp bằng union.
 
 Ảnh đầu vào được resize đẳng hướng giữ tỉ lệ và pad về hình vuông $256\times256$ hoặc $512\times512$. Ảnh, mask, và bản đồ prompt đều qua cùng phép tiền xử lý hình học này.
 
@@ -202,7 +233,7 @@ PGA-UNet được so với Attention U-Net làm baseline tự động chính và
 
 Để tách bạch xem lợi thế của PGA-UNet đến từ kiến trúc hay chỉ từ việc có prompt hộp, chúng tôi bổ sung hai baseline quy ước khớp prompt, cùng khung Attention U-Net, nhận đúng hộp prompt mà PGA-UNet nhận, nhưng không có bản đồ nhiệt Gaussian, PSG, hay CAD của PGA-UNet. Attention U-Net + kênh prompt ghép bản đồ nhiệt prompt làm channel đầu vào thứ hai, dự đoán trên toàn ảnh qua một decoder skip-connection thuần. Attention U-Net trên vùng crop theo prompt thu hẹp trường nhìn của mạng: ảnh đầu vào được crop theo hộp prompt trước khi resize về độ phân giải đầu vào của mô hình, Attention U-Net thuần dự đoán mask chỉ trên vùng crop đó, rồi kết quả được dán lại vào khung ảnh đầy đủ để đánh giá. Cả hai baseline đều huấn luyện dưới cùng giao thức hộp bao phủ và lệch tâm như PGA-UNet, nên khoảng cách còn lại phản ánh kiến trúc chứ không phải một prompt không công bằng. So sánh chéo mô hình dùng các độ đo full-frame đã dán lại cho baseline prompt-crop, không phải các giá trị chẩn đoán trong khung crop.
 
-Bài báo nhấn mạnh Dice, CBL, và HD95, trong khi mã nguồn và báo cáo xuất ra còn ghi IoU, precision, và recall. Với tâm mask dự đoán $(x_p,y_p)$, tâm ground-truth $(x_g,y_g)$, và đường chéo $D_{\mathrm{GT}}$ của hộp ground-truth, CBL được định nghĩa:
+Mọi bảng so sánh báo cáo Dice và IoU cho độ chồng lấn vùng, CBL cho định vị, và HD95 cho khoảng cách biên; Dice và IoU là hai độ đo chồng lấn tương quan mạnh, để cạnh nhau chỉ để người đọc đối chiếu. Trên các tập con tổn thương nhỏ, IoU thấp về giá trị tuyệt đối và nhạy với vài pixel biên, nên Dice là độ đo chồng lấn chính ở đó. Precision và recall nằm trong log công bố. Với tâm mask dự đoán $(x_p,y_p)$, tâm ground-truth $(x_g,y_g)$, và đường chéo $D_{\mathrm{GT}}$ của hộp ground-truth, CBL được định nghĩa:
 \begin{equation}
 \mathrm{CBL}=\max\left(0,1-\frac{\sqrt{(x_p-x_g)^2+(y_p-y_g)^2}}{D_{\mathrm{GT}}}\right).
 \end{equation}
@@ -215,186 +246,348 @@ Bài báo tập trung vào bản thân phân đoạn có định hướng prompt
 
 \section{Kết quả \enlabel{Results}}
 \label{sec:results}
-Trừ khi nói khác, mọi bảng báo cáo số theo protocol hiện tại: huấn luyện \texttt{center\_mixed} với 80\% \texttt{center\_shift} và 20\% \texttt{center\_zoom}, 150 epoch, chọn mô hình theo Dice validation merge ở mức ảnh dưới \texttt{center\_shift}, và đánh giá test merge ở mức ảnh. Hai điều kiện prompt test, bao phủ và lệch tâm, luôn báo cáo riêng. Nghiên cứu ablation ở Mục V.H là ngoại lệ duy nhất và vẫn đang được chạy lại với nhiều seed.
+Trừ khi nói khác, mọi bảng báo cáo số theo protocol hiện tại: huấn luyện \texttt{center\_mixed} với 80\% \texttt{center\_shift} và 20\% \texttt{center\_zoom}, 150 epoch, chọn mô hình theo Dice validation merge ở mức ảnh dưới \texttt{center\_shift}, và đánh giá test merge ở mức ảnh. Hai điều kiện prompt test, bao phủ (\texttt{center\_zoom}) và lệch tâm (\texttt{center\_shift}), được báo cáo riêng ở mọi bảng có cả hai. Ablation ở Mục V.H là một tập chia; bản chạy lại nhiều seed đang tiến hành.
 
 \subsection{Kết quả chính giữa các bộ dữ liệu và độ phân giải}
-PGA-UNet được huấn luyện từ đầu ở $128\times128$, $256\times256$, và $512\times512$ trên từng bộ dữ liệu, cho sáu mô hình. Bảng 2 liệt kê Dice và CBL của chúng dưới hai điều kiện prompt.
+PGA-UNet được huấn luyện từ đầu ở $128\times128$, $256\times256$, và $512\times512$ trên từng bộ dữ liệu, cho sáu mô hình. Bảng~\ref{tab:resolution} liệt kê chúng dưới hai điều kiện prompt.
 
 \begin{table}[h]
-\caption{Bảng 2. PGA-UNet qua các độ phân giải, merge ở mức ảnh. Dice và CBL cho ở dạng bao phủ / lệch tâm.}
-\centering
-\begin{tabular}{llcc}
-\toprule
-Bộ dữ liệu & Độ phân giải & Dice & CBL \\
-\midrule
-\multirow{3}{*}{BTXRD}
-& $128\times128$ & 0.714 / 0.717 & 0.859 / 0.857 \\
-& $256\times256$ & 0.762 / 0.743 & 0.902 / 0.885 \\
-& $512\times512$ & \best{0.782} / \best{0.774} & \best{0.918} / \best{0.912} \\
-\midrule
-\multirow{3}{*}{FracAtlas}
-& $128\times128$ & 0.596 / 0.542 & 0.849 / 0.790 \\
-& $256\times256$ & 0.629 / 0.594 & 0.895 / 0.849 \\
-& $512\times512$ & \best{0.727} / \best{0.713} & \best{0.913} / \best{0.897} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Độ phân giải cao hơn giúp ở mọi bước. Dice theo thứ tự $512>256>128$ trên cả hai bộ dữ liệu và cả hai điều kiện prompt, và FracAtlas được lợi nhiều hơn, phù hợp với các vết gãy mảnh mất tỉ lệ chi tiết lớn hơn khi ảnh thu nhỏ. HD95 pixel thô không so sánh được qua các khung, nên chúng tôi chuẩn hóa nó thành $\mathrm{HD95}/(\sqrt{2}\,S)$. Chuẩn hóa rồi, sai số biên giữ ở gần $0.03$ qua các độ phân giải BTXRD và thực ra giảm trên FracAtlas, từ khoảng $0.044$ xuống $0.015$, nên nó không xấu đi khi khung lớn lên. Mỗi mô hình chỉ được đánh giá trên chính bộ dữ liệu của nó; không có tuyên bố chuyển giao chéo dataset.
-
-\subsection{So sánh với Attention U-Net tự động và khớp prompt}
-Bị bỏ mặc phải tự tìm tổn thương, Attention U-Net chỉ đạt Dice 0.517 trên BTXRD và 0.342 trên FracAtlas ở $512\times512$, với HD95 vượt 120 pixel trên cả hai (Bảng 3). Con số đó không phải một phán quyết về kiến trúc, vì mô hình này không hề thấy hộp; nó đo việc khu trú tự động khó đến đâu, đúng bước mà prompt loại bỏ.
-
-Đưa cùng một hộp cho một Attention U-Net thuần thì bức tranh đổi khác nhưng khoảng cách vẫn còn. Trên BTXRD, PGA-UNet dẫn trước biến thể kênh prompt 0.022 Dice ở prompt bao phủ và 0.026 ở lệch tâm, và dẫn trước biến thể prompt-crop khoảng 0.041 ở cả hai. Trên FracAtlas các khoảng cách đó lớn lên thành 0.134 / 0.125 và 0.137 / 0.151. HD95 của PGA-UNet thấp hơn cả hai biến thể trên cả hai bộ dữ liệu.
-
-\begin{table}[h]
-\caption{Bảng 3. So sánh ở $512\times512$ dưới prompt bao phủ. Attention U-Net không nhận hộp; các dòng còn lại dùng đúng hộp PGA-UNet nhận.}
-\centering
-\begin{tabular}{llccc}
-\toprule
-Bộ dữ liệu & Mô hình & Dice & CBL & HD95 \\
-\midrule
-\multirow{4}{*}{BTXRD}
-& Attention U-Net (không prompt) & 0.517 & 0.620 & 120.4 \\
-& Attention U-Net + kênh prompt & 0.760 & 0.895 & 33.0 \\
-& Attention U-Net + crop theo prompt & 0.741 & 0.912 & 24.7 \\
-& PGA-UNet & \best{0.782} & \best{0.918} & \best{22.8} \\
-\midrule
-\multirow{4}{*}{FracAtlas}
-& Attention U-Net (không prompt) & 0.342 & 0.478 & 139.9 \\
-& Attention U-Net + kênh prompt & 0.593 & 0.887 & 22.9 \\
-& Attention U-Net + crop theo prompt & 0.590 & 0.865 & 22.0 \\
-& PGA-UNet & \best{0.727} & \best{0.913} & \best{10.5} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Vậy khu trú là một phần lớn của độ khó ở đây, nhưng có hộp chưa phải toàn bộ câu chuyện. Cách PGA-UNet tiêu thụ hộp đó mua thêm một biên nhất quán so với một mạng quy ước nhận cùng đầu vào, và biên rộng hơn nhiều trên dữ liệu khó hơn là FracAtlas.
-
-\subsection{Nhóm Top-Dice và Bottom-Dice của Attention U-Net}
-Biên đó đến từ đâu? Chúng tôi xếp hạng các ảnh test theo Dice của Attention U-Net, giữ 50 ảnh cao nhất và 50 ảnh thấp nhất mỗi bộ dữ liệu, rồi chạy lại các mô hình có prompt trên đúng các stem đó (Bảng 4). Ở nhóm top 50, nơi Attention U-Net đã ở 0.872 trên BTXRD và 0.493 trên FracAtlas, các mô hình có prompt xúm lại gần nhau. Ở nhóm bottom 50, Attention U-Net sập, xuống 0.031 và 0.169, trong khi PGA-UNet vẫn giữ 0.712 và 0.687 dưới prompt bao phủ. Hai baseline prompt quy ước cũng hồi phục, nhưng kém hơn: PGA-UNet dẫn trước chúng ở nhóm bottom BTXRD 0.044 đến 0.074 Dice và ở nhóm bottom FracAtlas 0.104 đến 0.189. Các nhóm này do Attention U-Net định nghĩa, không phải theo bất kỳ khái niệm độ khó khách quan nào, nên tuyên bố duy nhất là lợi ích của xử lý có điều kiện theo prompt tập trung đúng nơi khu trú tự động đổ vỡ.
-
-\begin{table}[h]
-\caption{Bảng 4. Nhóm Top-Dice và Bottom-Dice ở $512\times512$, 50 ảnh mỗi nhóm, prompt bao phủ. Nhóm do Attention U-Net thuần định nghĩa.}
+\caption{PGA-UNet qua các độ phân giải, merge ở mức ảnh. Dice, IoU, CBL và HD95 (pixel gốc và chuẩn hóa $\mathrm{HD95}/(\sqrt{2}\,S)$) cho ở dạng bao phủ / lệch tâm.}
+\label{tab:resolution}
 \centering
 \scriptsize
-\begin{tabular}{lllcc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccc}
 \toprule
-Bộ dữ liệu & Nhóm & Mô hình & Dice & CBL \\
-\midrule
-\multirow{4}{*}{BTXRD}
-& \multirow{2}{*}{Top-Dice} & Attention U-Net & 0.872 & 0.945 \\
-& & PGA-UNet & 0.862 & 0.944 \\
-& \multirow{2}{*}{Bottom-Dice} & Attention U-Net & 0.031 & 0.105 \\
-& & PGA-UNet & \best{0.712} & \best{0.879} \\
-\midrule
-\multirow{4}{*}{FracAtlas}
-& \multirow{2}{*}{Top-Dice} & Attention U-Net & 0.493 & 0.640 \\
-& & PGA-UNet & \best{0.754} & \best{0.927} \\
-& \multirow{2}{*}{Bottom-Dice} & Attention U-Net & 0.169 & 0.315 \\
-& & PGA-UNet & \best{0.687} & \best{0.896} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textit{[Hình 3. \texttt{images/results/unet\_extreme\_groups\_btxrd.png}]}: So sánh định tính giữa Attention U-Net và PGA-UNet trên BTXRD cho một ca nhóm Top-Dice (IMG000184) và một ca nhóm Bottom-Dice (IMG000791) của Attention U-Net. Các hàng dùng cùng stem ảnh; với PGA-UNet, panel ảnh đầu vào và panel hộp prompt được gộp làm một.
-
-\subsection{So sánh khớp với SAM-Med2D}
-Cả hai mô hình nhận cùng hộp ở $256\times256$ (Bảng 5). Zero-shot, SAM-Med2D gần như không chạy được trên X-quang xương: 0.255 Dice trên BTXRD, 0.262 trên FracAtlas. Fine-tune trên cùng tập chia và protocol prompt nâng nó lên 0.630 và 0.563, nhưng PGA-UNet ở độ phân giải đó đạt 0.762 và 0.629 dưới prompt bao phủ, dẫn trước 0.132 và 0.066 Dice và một khoảng tương tự ở CBL. SAM-Med2D chỉ vượt lên ở một chỗ, khoảng cách biên trên FracAtlas, nơi HD95 đã fine-tune của nó là 8.0 pixel, thấp hơn 10.6 của PGA-UNet. Độ chính xác tuyệt đối và mức đổi từ bao phủ sang lệch tâm là hai câu hỏi riêng; Mục V.F bàn câu thứ hai.
-
-\begin{table}[h]
-\caption{Bảng 5. So sánh với SAM-Med2D ở $256\times256$, merge ở mức ảnh, prompt bao phủ.}
-\centering
-\begin{tabular}{llccc}
-\toprule
-Bộ dữ liệu & Mô hình & Dice & CBL & HD95 \\
+Bộ dữ liệu & Độ p.giải & Dice & IoU & HD95$_\mathrm{px}$ & HD95$_n$ & CBL \\
 \midrule
 \multirow{3}{*}{BTXRD}
-& SAM-Med2D zero-shot & 0.255 & 0.734 & 41.2 \\
-& SAM-Med2D fine-tuned & 0.630 & 0.836 & 17.3 \\
-& PGA-UNet & \best{0.762} & \best{0.902} & \best{10.9} \\
+& $128$ & 0.714 / 0.717 & 0.572 / 0.577 & 5.8 / 5.3 & 0.032 / 0.029 & 0.859 / 0.857 \\
+& $256$ & 0.762 / 0.743 & 0.633 / 0.611 & 10.9 / 12.8 & 0.030 / 0.035 & 0.902 / 0.885 \\
+& $512$ & \best{0.782} / \best{0.774} & \best{0.661} / \best{0.652} & 22.8 / 24.5 & 0.031 / 0.034 & \best{0.918} / \best{0.912} \\
 \midrule
 \multirow{3}{*}{FracAtlas}
-& SAM-Med2D zero-shot & 0.262 & 0.752 & 21.3 \\
-& SAM-Med2D fine-tuned & 0.563 & 0.846 & \best{8.0} \\
-& PGA-UNet & \best{0.629} & \best{0.895} & 10.6 \\
+& $128$ & 0.596 / 0.542 & 0.445 / 0.389 & 8.1 / 9.5 & 0.044 / 0.053 & 0.849 / 0.790 \\
+& $256$ & 0.629 / 0.594 & 0.470 / 0.436 & 10.6 / 11.7 & 0.029 / 0.032 & 0.895 / 0.849 \\
+& $512$ & \best{0.727} / \best{0.713} & \best{0.585} / \best{0.570} & 10.5 / 10.4 & \best{0.015} / \best{0.014} & \best{0.913} / \best{0.897} \\
 \bottomrule
 \end{tabular}
+}
+\end{table}
+
+Độ phân giải cao hơn giúp ở mọi bước. Dice theo thứ tự $512>256>128$ trên cả hai bộ dữ liệu và cả hai điều kiện prompt, và FracAtlas được lợi nhiều hơn, phù hợp với các vết gãy mảnh mất tỉ lệ chi tiết lớn hơn khi ảnh thu nhỏ. HD95 pixel thô không so sánh được qua các khung, nên bảng cũng cho dạng chuẩn hóa: nó giữ gần $0.03$ qua các độ phân giải BTXRD và giảm trên FracAtlas khi khung lớn lên, nên sai số biên không xấu đi ở độ phân giải cao hơn. Mỗi mô hình chỉ được đánh giá trên chính bộ dữ liệu của nó; không có tuyên bố chuyển giao chéo dataset.
+
+\subsection{So sánh với Attention U-Net tự động và khớp prompt}
+Bị bỏ mặc phải tự tìm tổn thương, Attention U-Net chỉ đạt Dice 0.517 trên BTXRD và 0.342 trên FracAtlas ở $512\times512$, với HD95 vượt 120 pixel trên cả hai (Bảng~\ref{tab:baseline}). Con số đó không phải một phán quyết về kiến trúc, vì mô hình này không hề thấy hộp; nó đo việc khu trú tự động khó đến đâu, đúng bước mà prompt loại bỏ.
+
+Đưa cùng một hộp cho một Attention U-Net thuần thì bức tranh đổi khác nhưng khoảng cách vẫn còn (Bảng~\ref{tab:baseline}, cột $\Delta$Dice). PGA-UNet dẫn trước cả hai biến thể khớp prompt trên cả hai bộ dữ liệu, biên nhỏ trên BTXRD và rộng hơn nhiều trên FracAtlas, với HD95 thấp hơn cả hai.
+
+\begin{table}[h]
+\caption{So sánh ở $512\times512$ dưới prompt bao phủ. Attention U-Net (không prompt) không nhận hộp; các dòng còn lại dùng đúng hộp PGA-UNet nhận. $\Delta$Dice là mỗi dòng trừ PGA-UNet.}
+\label{tab:baseline}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccc}
+\toprule
+Bộ dữ liệu & Mô hình & Dice & $\Delta$Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{4}{*}{BTXRD}
+& Attention U-Net (không prompt) & 0.517 & $-0.265$ & 0.418 & 120.4 & 0.620 \\
+& Attention U-Net + kênh prompt & 0.760 & $-0.022$ & 0.635 & 33.0 & 0.895 \\
+& Attention U-Net + crop theo prompt & 0.741 & $-0.041$ & 0.615 & 24.7 & 0.912 \\
+& PGA-UNet & \best{0.782} & --- & \best{0.661} & \best{22.8} & \best{0.918} \\
+\midrule
+\multirow{4}{*}{FracAtlas}
+& Attention U-Net (không prompt) & 0.342 & $-0.385$ & 0.253 & 139.9 & 0.478 \\
+& Attention U-Net + kênh prompt & 0.593 & $-0.134$ & 0.434 & 22.9 & 0.887 \\
+& Attention U-Net + crop theo prompt & 0.590 & $-0.137$ & 0.451 & 22.0 & 0.865 \\
+& PGA-UNet & \best{0.727} & --- & \best{0.585} & \best{10.5} & \best{0.913} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+Vậy khu trú là một phần lớn của độ khó ở đây, nhưng có hộp chưa phải toàn bộ câu chuyện. Cách PGA-UNet tiêu thụ hộp đó mua thêm một biên nhất quán so với một mạng quy ước nhận cùng đầu vào.
+
+\subsection{Nhóm Top-Dice và Bottom-Dice của Attention U-Net}
+Biên đó đến từ đâu? Chúng tôi xếp hạng các ảnh test theo Dice của Attention U-Net, giữ 50 ảnh cao nhất và 50 ảnh thấp nhất mỗi bộ dữ liệu, rồi chạy lại cả bốn mô hình trên đúng các stem đó (Bảng~\ref{tab:extreme}, prompt bao phủ). Ở nhóm top 50, các mô hình có prompt xúm lại gần nhau. Ở nhóm bottom 50, Attention U-Net sập, xuống 0.031 trên BTXRD và 0.169 trên FracAtlas, trong khi PGA-UNet vẫn giữ 0.712 và 0.687. Hai baseline prompt quy ước cũng hồi phục, nhưng kém hơn: ở nhóm bottom, PGA-UNet dẫn trước chúng 0.04 đến 0.07 Dice trên BTXRD và 0.10 đến 0.19 trên FracAtlas. Vậy có prompt là cần nhưng chưa đủ; lợi ích của xử lý có điều kiện theo prompt tập trung đúng nơi khu trú tự động đổ vỡ. Các nhóm này do Attention U-Net định nghĩa, không phải theo bất kỳ khái niệm độ khó khách quan nào.
+
+\begin{table}[h]
+\caption{Nhóm Top-Dice và Bottom-Dice ở $512\times512$, 50 ảnh mỗi nhóm, prompt bao phủ. Nhóm do Attention U-Net thuần định nghĩa.}
+\label{tab:extreme}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lllcccc}
+\toprule
+Bộ dữ liệu & Nhóm & Mô hình & Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{8}{*}{BTXRD}
+& \multirow{4}{*}{Top-50}
+  & Attention U-Net & 0.872 & 0.775 & 35.0 & 0.945 \\
+& & AttUNet + kênh & 0.846 & 0.740 & 24.3 & 0.942 \\
+& & AttUNet + crop & 0.844 & 0.739 & 27.5 & 0.946 \\
+& & PGA-UNet & 0.862 & 0.763 & 19.2 & 0.944 \\
+\cmidrule(l){2-7}
+& \multirow{4}{*}{Bottom-50}
+  & Attention U-Net & 0.031 & 0.016 & 277.8 & 0.105 \\
+& & AttUNet + kênh & 0.668 & 0.541 & 43.3 & 0.831 \\
+& & AttUNet + crop & 0.652 & 0.518 & 17.6 & 0.875 \\
+& & PGA-UNet & \best{0.712} & \best{0.589} & 23.2 & \best{0.879} \\
+\midrule
+\multirow{8}{*}{FracAtlas}
+& \multirow{4}{*}{Top-50}
+  & Attention U-Net & 0.493 & 0.365 & 85.7 & 0.640 \\
+& & AttUNet + kênh & 0.605 & 0.447 & 26.6 & 0.887 \\
+& & AttUNet + crop & 0.658 & 0.515 & 24.9 & 0.881 \\
+& & PGA-UNet & \best{0.754} & \best{0.615} & 10.6 & \best{0.927} \\
+\cmidrule(l){2-7}
+& \multirow{4}{*}{Bottom-50}
+  & Attention U-Net & 0.169 & 0.106 & 182.3 & 0.315 \\
+& & AttUNet + kênh & 0.574 & 0.416 & 25.3 & 0.875 \\
+& & AttUNet + crop & 0.509 & 0.369 & 26.0 & 0.834 \\
+& & PGA-UNet & \best{0.687} & \best{0.535} & 11.8 & \best{0.896} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/results/unet_extreme_groups_btxrd.png}
+\caption{So sánh định tính giữa Attention U-Net và PGA-UNet trên BTXRD cho một ca nhóm Top-Dice (IMG000184) và một ca nhóm Bottom-Dice (IMG000791) của Attention U-Net. Các hàng dùng cùng stem ảnh; với PGA-UNet, panel ảnh đầu vào và panel hộp prompt được gộp làm một.}
+\label{fig:extreme}
+\end{figure}
+
+\subsection{So sánh khớp với SAM-Med2D}
+Cả hai mô hình nhận cùng hộp ở $256\times256$ (Bảng~\ref{tab:sam}). Zero-shot, SAM-Med2D gần như không chạy được trên X-quang xương: 0.255 Dice trên BTXRD, 0.262 trên FracAtlas. Fine-tune trên cùng tập chia và protocol prompt nâng nó lên 0.630 và 0.563, nhưng PGA-UNet ở độ phân giải đó đạt 0.762 và 0.629 dưới prompt bao phủ, dẫn trước 0.132 và 0.066 Dice và một khoảng tương tự ở CBL. SAM-Med2D chỉ vượt lên ở một chỗ, khoảng cách biên trên FracAtlas, nơi HD95 đã fine-tune của nó là 8.0 pixel, thấp hơn 10.6 của PGA-UNet. Mức đổi từ bao phủ sang lệch tâm là một câu hỏi riêng; Mục V.F bàn nó.
+
+\begin{table}[h]
+\caption{So sánh với SAM-Med2D ở $256\times256$, merge ở mức ảnh, prompt bao phủ.}
+\label{tab:sam}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{3}{*}{BTXRD}
+& SAM-Med2D zero-shot & 0.255 & 0.156 & 41.2 & 0.734 \\
+& SAM-Med2D fine-tuned & 0.630 & 0.497 & 17.3 & 0.836 \\
+& PGA-UNet & \best{0.762} & \best{0.633} & \best{10.9} & \best{0.902} \\
+\midrule
+\multirow{3}{*}{FracAtlas}
+& SAM-Med2D zero-shot & 0.262 & 0.156 & 21.3 & 0.752 \\
+& SAM-Med2D fine-tuned & 0.563 & 0.417 & \best{8.0} & 0.846 \\
+& PGA-UNet & \best{0.629} & \best{0.470} & 10.6 & \best{0.895} \\
+\bottomrule
+\end{tabular}
+}
 \end{table}
 
 \subsection{Hiệu năng trên tổn thương nhỏ}
-Nếu việc giữ bằng chứng yếu sống qua mạng có ý nghĩa ở đâu, thì là ở đây. Tập con tổn thương nhỏ là 50 ảnh test mỗi bộ dữ liệu có tổng diện tích tổn thương nhỏ nhất, 7 đến 433 pixel trên BTXRD và 145 đến 944 trên FracAtlas. Bảng 6 chấm ba so sánh trên nó trong một khung $512\times512$ chung.
+Nếu việc giữ bằng chứng yếu sống qua mạng có ý nghĩa ở đâu, thì là ở đây. Tập con tổn thương nhỏ là 50 ảnh test mỗi bộ dữ liệu có tổng diện tích tổn thương nhỏ nhất, 7 đến 433 pixel trên BTXRD và 145 đến 944 trên FracAtlas. Mọi số được chấm trong một khung $512\times512$ chung.
 
-SAM-Med2D chật vật rõ ở kích thước này: đã fine-tune, nó chỉ đạt 0.256 Dice trên BTXRD và 0.371 trên FracAtlas, và zero-shot thì gần bằng không, trong khi PGA-UNet ở $256$ giữ 0.705 và 0.648. Các baseline prompt quy ước ở $512$ kém PGA-UNet 0.04 đến 0.11 Dice trên BTXRD và 0.11 đến 0.16 trên FracAtlas, và Attention U-Net không prompt tụt xuống khoảng 0.28. Độ phân giải cắn mạnh nhất ở đây: trên các stem tổn thương nhỏ cố định, Dice của PGA-UNet tụt từ 0.766 ở $512$ xuống 0.714 ở $256$ và 0.631 ở $128$ trên BTXRD, và từ 0.720 xuống 0.642 và 0.609 trên FracAtlas, mức mất từ $512$ xuống $128$ là 0.135 và 0.112, lớn hơn trên toàn tập test.
+\textbf{So với SAM-Med2D ở cùng độ phân giải.} SAM-Med2D chật vật rõ ở kích thước này (Bảng~\ref{tab:small-sam}). Đã fine-tune ở $256$, nó chỉ đạt 0.256 Dice trên BTXRD và 0.371 trên FracAtlas, và zero-shot thì gần bằng không, trong khi PGA-UNet ở cùng $256$ giữ 0.705 và 0.648 với HD95 thấp hơn nhiều.
 
 \begin{table}[h]
-\caption{Bảng 6. Tập con tổn thương nhỏ, 50 ảnh mỗi bộ dữ liệu, prompt bao phủ, chấm trong khung $512\times512$ chung. Bảng không đưa IoU vì nó nhiễu ở kích thước tổn thương này.}
+\caption{Tập con tổn thương nhỏ, PGA-UNet so với SAM-Med2D ở cùng độ phân giải $256\times256$. 50 ảnh mỗi bộ dữ liệu, prompt bao phủ, chấm trong khung $512\times512$ chung.}
+\label{tab:small-sam}
 \centering
 \scriptsize
-\begin{tabular}{llccc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
 \toprule
-Bộ dữ liệu & Mô hình & Dice & CBL & HD95 \\
+Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 \midrule
-\multirow{5}{*}{BTXRD}
-& SAM-Med2D fine-tuned $256$ & 0.256 & 0.561 & 123.8 \\
-& Attention U-Net + kênh prompt $512$ & 0.728 & 0.879 & 14.2 \\
-& Attention U-Net + crop theo prompt $512$ & 0.724 & 0.909 & \best{5.5} \\
-& PGA-UNet $256$ & 0.705 & 0.877 & 14.7 \\
-& PGA-UNet $512$ & \best{0.766} & \best{0.897} & 14.0 \\
+\multirow{3}{*}{BTXRD}
+& SAM-Med2D zero-shot $256$ & 0.139 & 0.082 & 62.4 & 0.515 \\
+& SAM-Med2D fine-tuned $256$ & 0.256 & 0.170 & 123.8 & 0.561 \\
+& PGA-UNet $256$ & \best{0.705} & \best{0.559} & \best{14.7} & \best{0.877} \\
 \midrule
-\multirow{5}{*}{FracAtlas}
-& SAM-Med2D fine-tuned $256$ & 0.371 & 0.736 & 62.1 \\
-& Attention U-Net + kênh prompt $512$ & 0.610 & 0.888 & 21.9 \\
-& Attention U-Net + crop theo prompt $512$ & 0.564 & 0.855 & 22.6 \\
-& PGA-UNet $256$ & 0.648 & 0.897 & 20.6 \\
-& PGA-UNet $512$ & \best{0.720} & \best{0.907} & \best{8.3} \\
+\multirow{3}{*}{FracAtlas}
+& SAM-Med2D zero-shot $256$ & 0.205 & 0.123 & 33.5 & 0.659 \\
+& SAM-Med2D fine-tuned $256$ & 0.371 & 0.256 & 62.1 & 0.736 \\
+& PGA-UNet $256$ & \best{0.648} & \best{0.491} & \best{20.6} & \best{0.897} \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
-\textit{[Hình 4. \texttt{images/results/small\_lesion\_sam\_pga256\_pga512.png}]}: So sánh tổn thương nhỏ tiêu biểu trên BTXRD (IMG000868, hai đa giác nhỏ): SAM-Med2D đã fine-tune ở $256\times256$, PGA-UNet ở $256\times256$, và PGA-UNet ở $512\times512$. Panel ảnh đầu vào và panel hộp prompt được gộp làm một.
+\textbf{So với Attention U-Net khớp prompt ở $512$.} Nhận cùng hộp ở $512$, hai baseline prompt quy ước kém PGA-UNet 0.04 trên BTXRD và 0.11 đến 0.16 trên FracAtlas, và Attention U-Net không prompt tụt xuống khoảng 0.28 (Bảng~\ref{tab:small-att}). Biến thể prompt-crop đạt HD95 thấp hơn trên BTXRD, nơi crop chật hợp với mục tiêu gọn, nhưng không trên FracAtlas.
 
-Đọc hẹp, điều này nói rằng các tổn thương nhỏ nhất là ca thử thách cho toàn bộ cách tiếp cận, và cả điều kiện hóa prompt lẫn độ phân giải đầu vào đều đáng giá hơn ở đây so với trên toàn tập.
+\begin{table}[h]
+\caption{Tập con tổn thương nhỏ ở $512\times512$, PGA-UNet so với các baseline Attention U-Net. 50 ảnh mỗi bộ dữ liệu, prompt bao phủ.}
+\label{tab:small-att}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{4}{*}{BTXRD}
+& Attention U-Net (không prompt) & 0.283 & 0.219 & 178.2 & 0.283 \\
+& Attention U-Net + kênh prompt & 0.728 & 0.591 & 14.2 & 0.879 \\
+& Attention U-Net + crop theo prompt & 0.724 & 0.602 & \best{5.5} & \best{0.909} \\
+& PGA-UNet & \best{0.766} & \best{0.637} & 14.0 & 0.897 \\
+\midrule
+\multirow{4}{*}{FracAtlas}
+& Attention U-Net (không prompt) & 0.291 & 0.216 & 139.4 & 0.401 \\
+& Attention U-Net + kênh prompt & 0.610 & 0.449 & 21.9 & 0.888 \\
+& Attention U-Net + crop theo prompt & 0.564 & 0.425 & 22.6 & 0.855 \\
+& PGA-UNet & \best{0.720} & \best{0.578} & \best{8.3} & \best{0.907} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\textbf{Độ phân giải trên các stem tổn thương nhỏ.} Độ phân giải cắn mạnh nhất ở đây. Trên các stem tổn thương nhỏ cố định, Dice của PGA-UNet tụt từ 0.766 ở $512$ xuống 0.631 ở $128$ trên BTXRD và từ 0.720 xuống 0.609 trên FracAtlas, mức mất $512$ xuống $128$ là 0.135 và 0.111, lớn hơn trên toàn tập test (Bảng~\ref{tab:small-res}).
+
+\begin{table}[h]
+\caption{PGA-UNet trên tập con tổn thương nhỏ qua các độ phân giải, 50 stem cố định mỗi bộ dữ liệu. Dice, CBL và HD95 (pixel gốc / chuẩn hóa) ở dạng bao phủ / lệch tâm. $\Delta$ là mức mất Dice bao phủ so với $512$.}
+\label{tab:small-res}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccc}
+\toprule
+Bộ dữ liệu & Độ p.giải & Dice & IoU & CBL & HD95$_\mathrm{px}$\,/\,$_n$ & $\Delta$Dice \\
+\midrule
+\multirow{3}{*}{BTXRD}
+& $128$ & 0.631 / 0.662 & 0.488 / 0.517 & 0.738 / 0.758 & 3.9 / 0.022 & $-0.135$ \\
+& $256$ & 0.714 / 0.695 & 0.570 / 0.548 & 0.869 / 0.849 & 7.2 / 0.020 & $-0.052$ \\
+& $512$ & \best{0.766} / \best{0.757} & \best{0.637} / \best{0.627} & \best{0.897} / \best{0.890} & 14.0 / 0.019 & --- \\
+\midrule
+\multirow{3}{*}{FracAtlas}
+& $128$ & 0.609 / 0.543 & 0.462 / 0.393 & 0.828 / 0.757 & 8.9 / 0.049 & $-0.111$ \\
+& $256$ & 0.642 / 0.610 & 0.484 / 0.451 & 0.887 / 0.845 & 10.3 / 0.029 & $-0.079$ \\
+& $512$ & \best{0.720} / \best{0.712} & \best{0.578} / \best{0.570} & \best{0.907} / \best{0.893} & 8.3 / 0.012 & --- \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/results/small_lesion_sam_pga256_pga512.png}
+\caption{So sánh tổn thương nhỏ tiêu biểu trên BTXRD (IMG000868, hai đa giác nhỏ): SAM-Med2D đã fine-tune ở $256\times256$, PGA-UNet ở $256\times256$, và PGA-UNet ở $512\times512$. Panel ảnh đầu vào và panel hộp prompt được gộp làm một.}
+\label{fig:small}
+\end{figure}
+
+Đọc hẹp, các tổn thương nhỏ nhất là ca thử thách cho toàn bộ cách tiếp cận, và cả điều kiện hóa prompt lẫn độ phân giải đầu vào đều đáng giá hơn ở đây so với trên toàn tập.
 
 \subsection{Độ nhạy với dịch prompt}
 \label{sec:robust}
-Dịch hộp lệch tâm tốn của PGA-UNet rất ít ở $512\times512$: 0.008 Dice trên BTXRD, 0.014 trên FracAtlas, với CBL giảm 0.006 và 0.015. Trên tập con tổn thương nhỏ, mức mất giữ dưới 0.01 Dice trên cả hai bộ dữ liệu. Các baseline prompt quy ước mất một lượng tương đương hoặc hơi lớn hơn, và SAM-Med2D đã fine-tune khoảng 0.03. Tất cả những cái này là độ nhạy với một quy tắc dịch đã cố định trước. Nó không nói gì về hộp tùy ý do bác sĩ vẽ, và hộp phủ một phần hay sai vùng chưa bao giờ được thử.
-
-\textit{[Hình 5. \texttt{images/results/prompt\_robustness\_examples.png}]}: Hành vi tiêu biểu khi nhiễu loạn prompt trên cả hai bộ dữ liệu. Các vết gãy mảnh vẫn khó hơn tổn thương gọn ngay cả khi hộp vẫn phủ mục tiêu.
-
-\subsection{Monte Carlo cross-validation}
-Một tập chia cố định có thể vô tình có lợi hoặc có hại cho phương pháp, nên PGA-UNet ở $512\times512$ được huấn luyện lại trên bốn tập chia ngẫu nhiên mức ảnh mới, seed huấn luyện giữ ở 22120196 và chỉ đổi seed chia tách (Bảng 7). Dice biến động tối đa 0.011 qua các lần chia trên mỗi bộ dữ liệu và mỗi điều kiện prompt; CBL tối đa 0.013. Trung bình các lần chia lặp lại của FracAtlas, 0.733, nằm ngay trên kết quả tập chia cố định 0.727, nên nếu có thì tập chia được báo cáo hơi khó hơn mức điển hình. Đây là bằng chứng PGA-UNet ổn định qua các lần chia, không phải nó thắng baseline nào.
+Bảng~\ref{tab:robust} dịch hộp lệch tâm theo một quy tắc cố định. PGA-UNet mất 0.008 Dice trên BTXRD và 0.014 trên FracAtlas, với CBL giảm 0.006 và 0.015; trên tập con tổn thương nhỏ, mức mất giữ dưới 0.01 trên cả hai. Các baseline prompt quy ước mất một lượng tương đương hoặc hơi lớn hơn, và SAM-Med2D đã fine-tune khoảng 0.03. Đây là độ nhạy với một quy tắc dịch đã cố định trước. Nó không nói gì về hộp tùy ý do bác sĩ vẽ, và hộp phủ một phần hay sai vùng chưa bao giờ được thử.
 
 \begin{table}[h]
-\caption{Bảng 7. Monte Carlo cross-validation của PGA-UNet ở $512\times512$, bốn lần chia ngẫu nhiên lặp lại, trung bình $\pm$ độ lệch chuẩn.}
+\caption{Độ nhạy với dịch prompt. Mọi mô hình dưới prompt bao phủ (z) và lệch tâm (s). Attention U-Net (không prompt) bất biến với prompt. Các dòng AttUNet và PGA-UNet ở $512\times512$; SAM-Med2D fine-tuned ở $256\times256$, merge ở mức ảnh.}
+\label{tab:robust}
 \centering
 \scriptsize
-\begin{tabular}{llccc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccc}
 \toprule
-Bộ dữ liệu & Prompt & Dice & CBL & HD95 \\
+Bộ dữ liệu & Mô hình & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
 \midrule
-\multirow{2}{*}{BTXRD}
-& Bao phủ & $0.769\pm0.005$ & $0.905\pm0.005$ & $25.0\pm2.5$ \\
-& Lệch tâm & $0.762\pm0.004$ & $0.901\pm0.007$ & $25.7\pm2.0$ \\
+\multirow{5}{*}{BTXRD}
+& Attention U-Net (không prompt) & 0.517 / 0.517 & $0.000$ & 0.418 / 0.418 & 120.4 / 120.4 & 0.620 / 0.620 \\
+& Attention U-Net + kênh prompt & 0.760 / 0.748 & $-0.012$ & 0.635 / 0.626 & 33.0 / 32.6 & 0.895 / 0.890 \\
+& Attention U-Net + crop theo prompt & 0.741 / 0.733 & $-0.008$ & 0.615 / 0.607 & 24.7 / 26.4 & 0.912 / 0.896 \\
+& SAM-Med2D fine-tuned & 0.630 / 0.601 & $-0.029$ & 0.497 / 0.471 & 17.3 / 17.5 & 0.836 / 0.813 \\
+& PGA-UNet & \best{0.782 / 0.774} & $\mathbf{-0.008}$ & \best{0.661 / 0.652} & 22.8 / 24.5 & \best{0.918 / 0.912} \\
 \midrule
-\multirow{2}{*}{FracAtlas}
-& Bao phủ & $0.733\pm0.007$ & $0.909\pm0.006$ & $14.1\pm2.7$ \\
-& Lệch tâm & $0.728\pm0.011$ & $0.904\pm0.013$ & $15.6\pm3.9$ \\
+\multirow{5}{*}{FracAtlas}
+& Attention U-Net (không prompt) & 0.342 / 0.342 & $0.000$ & 0.253 / 0.253 & 139.9 / 139.9 & 0.478 / 0.478 \\
+& Attention U-Net + kênh prompt & 0.593 / 0.588 & $\mathbf{-0.005}$ & 0.434 / 0.428 & 22.9 / 24.0 & 0.887 / 0.860 \\
+& Attention U-Net + crop theo prompt & 0.590 / 0.563 & $-0.027$ & 0.451 / 0.428 & 22.0 / 23.8 & 0.865 / 0.833 \\
+& SAM-Med2D fine-tuned & 0.563 / 0.532 & $-0.031$ & 0.417 / 0.389 & 8.0 / 8.4 & 0.846 / 0.816 \\
+& PGA-UNet & \best{0.727 / 0.713} & $-0.014$ & \best{0.585 / 0.570} & \best{10.5 / 10.4} & \best{0.913 / 0.897} \\
 \bottomrule
 \end{tabular}
+}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/results/prompt_robustness_examples.png}
+\caption{Hành vi tiêu biểu khi nhiễu loạn prompt trên cả hai bộ dữ liệu. Các vết gãy mảnh vẫn khó hơn tổn thương gọn ngay cả khi hộp vẫn phủ mục tiêu.}
+\label{fig:robust}
+\end{figure}
+
+\subsection{Monte Carlo cross-validation}
+Một tập chia cố định có thể vô tình có lợi hoặc có hại cho phương pháp, nên PGA-UNet ở $512\times512$ được huấn luyện lại trên bốn tập chia ngẫu nhiên mức ảnh mới, seed huấn luyện giữ ở 22120196 và chỉ đổi seed chia tách (Bảng~\ref{tab:mccv}). Dice biến động tối đa 0.011 qua các lần chia trên mỗi bộ dữ liệu và mỗi điều kiện prompt; CBL tối đa 0.013. Trung bình các lần chia lặp lại của FracAtlas, 0.733, nằm ngay trên kết quả tập chia cố định 0.727, nên nếu có thì tập chia được báo cáo hơi khó hơn mức điển hình. Đây là bằng chứng PGA-UNet ổn định qua các lần chia, không phải nó thắng baseline nào.
+
+\begin{table}[h]
+\caption{Monte Carlo cross-validation của PGA-UNet ở $512\times512$, bốn lần chia ngẫu nhiên mức ảnh lặp lại, trung bình $\pm$ độ lệch chuẩn.}
+\label{tab:mccv}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Bộ dữ liệu & Prompt & Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{2}{*}{BTXRD}
+& Bao phủ & $0.769\pm0.005$ & $0.647\pm0.006$ & $25.0\pm2.5$ & $0.905\pm0.005$ \\
+& Lệch tâm & $0.762\pm0.004$ & $0.639\pm0.007$ & $25.7\pm2.0$ & $0.901\pm0.007$ \\
+\midrule
+\multirow{2}{*}{FracAtlas}
+& Bao phủ & $0.733\pm0.007$ & $0.595\pm0.007$ & $14.1\pm2.7$ & $0.909\pm0.006$ \\
+& Lệch tâm & $0.728\pm0.011$ & $0.590\pm0.010$ & $15.6\pm3.9$ & $0.904\pm0.013$ \\
+\bottomrule
+\end{tabular}
+}
 \end{table}
 
 \subsection{Nghiên cứu ablation}
 \label{sec:ablation}
-Một lần chạy đơn tập chia đầu tiên để các cấu hình đủ gần nhau đến mức thứ tự không an toàn để báo cáo. Ablation vì vậy đang được chạy lại với nhiều seed, và các con số sẽ xuất hiện ở đây khi các lần chạy đó xong. Thiết kế so sánh mô hình đầy đủ, prompt Gaussian với PSG và CAD, với các biến thể bỏ một yếu tố mỗi lần hoặc thay prompt Gaussian bằng một hộp nhị phân; mục tiêu là kiểm tra tổ hợp như một hệ thống, không phải khẳng định một cơ chế nội tại duy nhất. Hình 6 cho một ca mà prompt Gaussian cho biên sạch hơn hộp nhị phân.
-
-\textit{[Hình 6. \texttt{images/ablation/ablation\_gaussian\_vs\_binary\_case.png}]}: So sánh tiêu biểu giữa biểu diễn prompt Gaussian dạng cao nguyên và một hộp nhị phân trong kiến trúc đầy đủ.
-
-\subsection{Hiệu năng tính toán}
-PGA-UNet nhỏ: 2.955M tham số, đều là trainable, checkpoint 11.4 MB, 7.74 GFLOPs ở $256\times256$ và 31.0 ở $512\times512$. Trên Tesla T4 nó chạy 8.5 ms mỗi ảnh ở $256$ và 18.5 ms ở $512$, và trên CPU là 112 ms và 375 ms. SAM-Med2D đã fine-tune ở $256\times256$ mang 271.24M tham số, checkpoint 2.4 GB, và 92.0 GFLOPs, mất 50.1 ms trên GPU và 1324 ms trên CPU. Ở độ phân giải khớp, PGA-UNet vì vậy nhẹ hơn khoảng 92 lần về tham số, 12 lần về FLOPs, nhỏ hơn 215 lần trên đĩa, và nhanh hơn 6 lần trên GPU. Đây là chi phí đo được trên một cài đặt, một GPU, và hai độ phân giải, không hơn.
+Ablation bỏ một yếu tố mỗi lần khỏi mô hình đầy đủ, prompt Gaussian với PSG và CAD, và riêng thay prompt Gaussian bằng một hộp nhị phân (Bảng~\ref{tab:ablation}). Mô hình đầy đủ có Dice tốt nhất ở ba trong bốn ô dataset và điều kiện prompt. Ngoại lệ là BTXRD dưới prompt bao phủ, nơi biến thể hộp nhị phân hơn 0.006 Dice, nằm trong khoảng nhiễu một tập chia, trong khi mô hình đầy đủ vẫn giữ HD95 thấp nhất và CBL cao nhất ở đó. Ưu thế của prompt Gaussian rõ nhất dưới prompt lệch tâm, nơi mô hình đầy đủ thắng cả hai bộ dữ liệu, và trên FracAtlas, nơi nó thắng mọi cấu hình ở mọi độ đo. Mục tiêu là kiểm tra tổ hợp như một hệ thống, không phải khẳng định một cơ chế nội tại duy nhất. Đây là số một tập chia; bản chạy lại nhiều seed đang tiến hành để xác nhận thứ tự.
 
 \begin{table}[h]
-\caption{Bảng 8. Hiệu năng trong môi trường kiểm thử (NVIDIA Tesla T4, batch size 1).}
+\caption{Ablation ở $512\times512$, merge ở mức ảnh, một tập chia. Dice, IoU, HD95 và CBL ở dạng bao phủ / lệch tâm. Bản lặp nhiều seed đang chạy.}
+\label{tab:ablation}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Bộ dữ liệu & Cấu hình & Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{5}{*}{BTXRD}
+& Chỉ CAD & 0.771 / 0.759 & 0.649 / 0.635 & 23.1 / 24.2 & 0.915 / 0.905 \\
+& Chỉ PSG & 0.779 / 0.771 & 0.660 / 0.651 & 29.4 / 28.4 & 0.908 / 0.902 \\
+& PSG + cổng attention thường & 0.769 / 0.757 & 0.645 / 0.633 & 26.4 / 28.7 & 0.906 / 0.896 \\
+& Đầy đủ + hộp nhị phân & \best{0.788} / 0.770 & \best{0.668} / 0.651 & 23.1 / 28.5 & 0.914 / 0.900 \\
+& PGA-UNet đầy đủ (Gaussian + PSG + CAD) & 0.782 / \best{0.774} & 0.661 / \best{0.652} & \best{22.8} / \best{24.5} & \best{0.918} / \best{0.912} \\
+\midrule
+\multirow{5}{*}{FracAtlas}
+& Chỉ CAD & 0.696 / 0.685 & 0.551 / 0.540 & 18.0 / \best{12.0} & 0.903 / 0.885 \\
+& Chỉ PSG & 0.635 / 0.611 & 0.479 / 0.459 & 14.5 / 14.8 & 0.894 / 0.857 \\
+& PSG + cổng attention thường & 0.690 / 0.691 & 0.548 / 0.547 & 14.0 / 14.1 & 0.892 / 0.881 \\
+& Đầy đủ + hộp nhị phân & 0.668 / 0.657 & 0.514 / 0.505 & 12.0 / 13.2 & 0.904 / 0.886 \\
+& PGA-UNet đầy đủ (Gaussian + PSG + CAD) & \best{0.727} / \best{0.713} & \best{0.585} / \best{0.570} & \best{10.5} / 10.4 & \best{0.913} / \best{0.897} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/ablation/ablation_gaussian_vs_binary_case.png}
+\caption{So sánh tiêu biểu giữa biểu diễn prompt Gaussian dạng cao nguyên và một hộp nhị phân trong kiến trúc đầy đủ.}
+\label{fig:ablation-gb}
+\end{figure}
+
+\subsection{Hiệu năng tính toán}
+PGA-UNet nhỏ, và cả 2.955M tham số đều là trainable (Bảng~\ref{tab:efficiency}). Ở độ phân giải khớp $256\times256$, nó nhẹ hơn SAM-Med2D đã fine-tune khoảng 92 lần về tham số, 12 lần về FLOPs, nhỏ hơn 215 lần trên đĩa, và nhanh hơn 6 lần trên GPU. Đây là chi phí đo được trên một cài đặt, một GPU, và hai độ phân giải, không hơn.
+
+\begin{table}[h]
+\caption{Hiệu năng trong môi trường kiểm thử (NVIDIA Tesla T4, batch size 1).}
+\label{tab:efficiency}
 \centering
 \scriptsize
 \begin{tabular}{lccccc}
@@ -409,22 +602,96 @@ SAM-Med2D $256$ & 271.24M & 92.02 & 2443 MB & 50.1 & 1324 \\
 \end{table}
 
 \subsection{So sánh thăm dò các hàm loss phân đoạn}
-Vì mục tiêu nhỏ, chúng tôi cũng thử thay số hạng Dice bằng một size-conditioned Tversky loss, và riêng bằng một Focal Dice loss, mọi thứ khác giữ nguyên. Không cái nào giúp. Trên BTXRD, Dice + BCE mặc định cho 0.782 / 0.774 Dice (bao phủ / lệch tâm), so với 0.778 / 0.767 cho Tversky và 0.773 / 0.765 cho Focal Dice. Trên FracAtlas, mặc định cho 0.727 / 0.713, so với 0.709 / 0.680 cho Tversky và 0.642 / 0.578 cho Focal Dice, cái sau là một bước lùi rõ với HD95 vượt 100 pixel. Chúng tôi giữ đây như một đối chứng âm: dưới protocol hiện tại, hàm mục tiêu mặc định đã là một lựa chọn tốt, và không nhận biến thể nào.
+Vì mục tiêu nhỏ, chúng tôi cũng thử thay số hạng Dice bằng một size-conditioned Tversky loss, và riêng bằng một Focal Dice loss, mọi thứ khác giữ nguyên (Bảng~\ref{tab:loss}). Không cái nào giúp. Dice + BCE mặc định tốt nhất hoặc ngang bằng trên cả hai bộ dữ liệu và cả hai điều kiện prompt, và Focal Dice là một bước lùi rõ trên FracAtlas với HD95 vượt 100 pixel. Chúng tôi giữ đây như một đối chứng âm: dưới protocol hiện tại, hàm mục tiêu mặc định đã là một lựa chọn tốt, và không nhận biến thể nào.
+
+\begin{table}[h]
+\caption{So sánh thăm dò hàm loss phân đoạn cho PGA-UNet ở $512\times512$, mọi thứ khác giữ nguyên. Dice, IoU, CBL ở dạng bao phủ / lệch tâm. Mặc định không đổi.}
+\label{tab:loss}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Bộ dữ liệu & Loss & Dice & IoU & HD95 & CBL \\
+\midrule
+\multirow{3}{*}{BTXRD}
+& Dice + BCE (mặc định) & \best{0.782} / \best{0.774} & \best{0.661} / \best{0.652} & 22.8 / 24.5 & \best{0.918} / \best{0.912} \\
+& Size-conditioned Tversky & 0.778 / 0.767 & 0.660 / 0.649 & 25.2 / 30.3 & 0.916 / 0.903 \\
+& Focal Dice & 0.773 / 0.765 & 0.649 / 0.642 & 25.6 / 25.6 & 0.913 / 0.907 \\
+\midrule
+\multirow{3}{*}{FracAtlas}
+& Dice + BCE (mặc định) & \best{0.727} / \best{0.713} & \best{0.585} / \best{0.570} & \best{10.5} / \best{10.4} & 0.913 / \best{0.897} \\
+& Size-conditioned Tversky & 0.709 / 0.680 & 0.561 / 0.530 & 11.0 / 12.2 & \best{0.918} / 0.888 \\
+& Focal Dice & 0.642 / 0.578 & 0.493 / 0.425 & 105.5 / 110.1 & 0.802 / 0.732 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \subsection{Các kiểu lỗi \enlabel{Failure Modes}}
 PGA-UNet vẫn lỗi, và các lỗi có một khuôn. Trong rà soát định tính, Dice thấp tụ vào các tổn thương dài hoặc phân nhánh, các tổn thương nằm ở giải phẫu rối rắm như vai hoặc xương đòn, hoặc các tổn thương gần như không nổi lên so với xương xung quanh. Một hộp bao phủ không sửa được một ca mà bản thân bằng chứng ảnh cục bộ đã kém.
 
-\textit{[Hình 7. \texttt{images/failure/failure\_case\_overlap.png}]}: Ca lỗi tiêu biểu ở vùng giải phẫu chồng lấn. Ngay cả với một hộp bao phủ, biên vẫn khó vì các cấu trúc cục bộ bị nhầm lẫn về mặt thị giác.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/failure/failure_case_overlap.png}
+\caption{Ca lỗi tiêu biểu ở vùng giải phẫu chồng lấn. Ngay cả với một hộp bao phủ, biên vẫn khó vì các cấu trúc cục bộ bị nhầm lẫn về mặt thị giác.}
+\label{fig:failure}
+\end{figure}
 
 \subsection{Tự đánh giá không cần huấn luyện và gợi ý vùng}
-Không cần đáp án, điểm $Q$ ở Mục III.F vẫn bám theo Dice thật của từng prompt. Tương quan Spearman của nó với Dice thật là 0.70 (bao phủ) và 0.60 (lệch tâm) trên BTXRD, và 0.65 và 0.48 trên FracAtlas. Hai chỉ dấu đều có sức nặng: độ dứt khoát của mask một mình đạt Spearman gần 0.4, độ ổn định khi nhích gần 0.5 đến 0.6, và trung bình của chúng tốt ít nhất bằng từng cái. Chúng tôi cũng huấn luyện một đầu nhỏ để hồi quy Dice trực tiếp; nó sập về một đầu ra gần như hằng số, Spearman dưới 0.2 trên cả hai bộ dữ liệu, và không được dùng.
+Không cần đáp án, điểm $Q$ ở Mục III.F vẫn bám theo Dice thật của từng prompt (Bảng~\ref{tab:selfassess}). Tương quan Spearman của nó với Dice thật là 0.70 (bao phủ) và 0.60 (lệch tâm) trên BTXRD, và 0.65 và 0.48 trên FracAtlas. Hai chỉ dấu đều có sức nặng: độ dứt khoát của mask một mình đạt Spearman gần 0.4, độ ổn định khi nhích gần 0.5 đến 0.6, và trung bình của chúng tốt ít nhất bằng từng cái. Chúng tôi cũng huấn luyện một đầu nhỏ để hồi quy Dice trực tiếp; nó sập về một đầu ra gần như hằng số, Spearman dưới 0.2 trên cả hai bộ dữ liệu, và không được dùng.
 
-Lật lại, $Q$ có thể xếp hạng 50 hộp ứng viên ngẫu nhiên và giữ năm hộp đầu (Hình 8). Khi đó ít nhất một trong năm hộp phủ hơn một nửa tổn thương cho 67\% ảnh BTXRD và 82\% ảnh FracAtlas, và hộp tốt nhất trong năm phủ trung bình 0.84 và 0.90 diện tích tổn thương; một danh sách ba hộp cho 58\% / 78\% và 0.77 / 0.87. Đây là một công cụ hỗ trợ xem lại chứ không hơn: $Q$ là một heuristic, không phải xác suất đã hiệu chuẩn, và danh sách ngắn không phải một bộ phát hiện.
+\begin{table}[h]
+\caption{Tương quan Spearman giữa mỗi chỉ dấu không cần huấn luyện và Dice thật của từng prompt. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
+\label{tab:selfassess}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{BTXRD} & \multicolumn{2}{c}{FracAtlas} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Chỉ dấu & bao phủ & lệch tâm & bao phủ & lệch tâm \\
+\midrule
+$S_\mathrm{sharp}$ (độ dứt khoát mask) & 0.42 & 0.39 & 0.47 & 0.43 \\
+$S_\mathrm{stab}$ (độ ổn định khi nhích) & 0.64 & 0.56 & 0.63 & 0.45 \\
+$Q$ & \best{0.70} & \best{0.60} & \best{0.65} & \best{0.48} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
-\textit{[Hình 8. \texttt{images/demo/demo\_suggestion\_btxrd.png}]}: Danh sách ngắn vùng ứng viên trên một ca BTXRD. Năm mươi hộp được lấy mẫu không có prompt, chấm bằng điểm tự đánh giá $Q$, và năm hộp điểm cao nhất được hiển thị để bác sĩ chấp nhận, chỉnh, hoặc bỏ. Một ca FracAtlas ở phần bổ sung.
+Lật lại, $Q$ có thể xếp hạng 50 hộp ứng viên ngẫu nhiên và giữ vài hộp đầu (Bảng~\ref{tab:suggest}, Hình~\ref{fig:demo-suggest}). Ít nhất một trong năm hộp đầu phủ hơn một nửa tổn thương cho 67\% ảnh BTXRD và 82\% ảnh FracAtlas, và hộp tốt nhất trong năm phủ trung bình 0.84 và 0.90 diện tích tổn thương. Đây là một công cụ hỗ trợ xem lại chứ không hơn: $Q$ là một heuristic, không phải xác suất đã hiệu chuẩn, và danh sách ngắn không phải một bộ phát hiện.
+
+\begin{table}[h]
+\caption{Danh sách ngắn vùng ứng viên xếp theo $Q$. 50 hộp không prompt mỗi ảnh được chấm và giữ $k$ hộp đầu. Độ phủ là tỉ lệ pixel tổn thương nằm trong một hộp; tỉ lệ phủ-đủ đếm các ảnh có hộp tốt nhất trong danh sách phủ hơn nửa tổn thương.}
+\label{tab:suggest}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+Bộ dữ liệu & Danh sách & Phủ TB & Phủ tốt nhất & Tỉ lệ phủ-đủ \\
+\midrule
+\multirow{2}{*}{BTXRD} & top-3 & 0.55 & 0.77 & 57.8\% \\
+                       & top-5 & 0.52 & 0.84 & 66.8\% \\
+\midrule
+\multirow{2}{*}{FracAtlas} & top-3 & 0.68 & 0.87 & 77.8\% \\
+                           & top-5 & 0.62 & 0.90 & 81.9\% \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../images/demo/demo_suggestion_btxrd.png}
+\caption{Danh sách ngắn vùng ứng viên trên một ca BTXRD. Năm mươi hộp được lấy mẫu không có prompt, chấm bằng điểm tự đánh giá $Q$, và năm hộp điểm cao nhất được hiển thị để bác sĩ chấp nhận, chỉnh, hoặc bỏ. Một ca FracAtlas ở phần bổ sung.}
+\label{fig:demo-suggest}
+\end{figure}
 
 \section{Thảo luận \enlabel{Discussion}}
-Câu hỏi bài báo đặt ra chưa bao giờ là prompt có ích theo nghĩa trừu tượng hay không. Nó là liệu cách một mô hình xử lý prompt có còn quan trọng một khi một hộp thô đã thu hẹp việc tìm kiếm. Attention U-Net không hộp trả lời một câu hỏi khác, và Dice thấp của nó, gần 0.34 trên FracAtlas, đo phần bài toán chỉ là tìm tổn thương. Các so sánh thực sự kiểm tra thiết kế đưa cùng một hộp cho một Attention U-Net thuần và cho SAM-Med2D đã fine-tune. Ở cả hai, PGA-UNet giữ một biên: khiêm tốn trên BTXRD, rõ hơn trên FracAtlas, và lớn nhất ở nhóm Bottom-Dice của Attention U-Net và ở các tổn thương nhỏ nhất. Đó là khuôn ta trông đợi nếu PSG và CAD đang làm đúng việc của chúng, giữ prompt sống qua encoder và decoder để một tín hiệu mờ nhạt không bị mất vào downsampling. Ablation từng thành phần để chốt điều này vẫn đang chạy lại với nhiều seed.
+Câu hỏi bài báo đặt ra chưa bao giờ là prompt có ích theo nghĩa trừu tượng hay không. Nó là liệu cách một mô hình xử lý prompt có còn quan trọng một khi một hộp thô đã thu hẹp việc tìm kiếm. Attention U-Net không hộp trả lời một câu hỏi khác, và Dice thấp của nó, gần 0.34 trên FracAtlas, đo phần bài toán chỉ là tìm tổn thương. Các so sánh thực sự kiểm tra thiết kế đưa cùng một hộp cho một Attention U-Net thuần và cho SAM-Med2D đã fine-tune. Ở cả hai, PGA-UNet giữ một biên: khiêm tốn trên BTXRD, rõ hơn trên FracAtlas, và lớn nhất ở nhóm Bottom-Dice của Attention U-Net và ở các tổn thương nhỏ nhất. Đó là khuôn ta trông đợi nếu PSG và CAD đang làm đúng việc của chúng, giữ prompt sống qua encoder và decoder để một tín hiệu mờ nhạt không bị mất vào downsampling. Ablation từng thành phần một tập chia (Bảng~\ref{tab:ablation}) nhất quán với điều này, với prompt Gaussian dẫn trước dưới prompt lệch tâm và trên FracAtlas; bản chạy lại nhiều seed để xác nhận thứ tự đang tiến hành.
 
 Hai kết quả bên lề đáng nói không cần vòng vo. So sánh loss là một âm tính sạch: một size-conditioned Tversky loss hay một Focal Dice loss không giúp, và Focal Dice trên FracAtlas làm mọi thứ tệ hơn, nên hàm mục tiêu Dice + BCE thuần được giữ. Điểm tự đánh giá là một dương tính vừa phải: $Q$ tương quan với Dice thật ở mức thứ hạng khoảng 0.5 đến 0.7 mà không cần nhãn nào, và nó làm được ở nơi một đầu hồi quy học nhỏ không làm được, vì đầu đó chỉ đơn giản dự đoán mức trung bình. $Q$ vẫn là một heuristic. Nó chưa được hiệu chuẩn, và danh sách ngắn vùng ứng viên dựng từ nó là một cách hướng sự chú ý của bác sĩ, không phải một bộ phát hiện.
 

@@ -1,0 +1,16 @@
+F4  ->  small_lesion_pga_128_256_512_V2.png     (mục V-A Claim 11 + V-E.3 Claim 12)
+
+Notebook: Result/File_test/btxrd/test-subcat-pga-small-r128-256-512-btxrd.ipynb
+   -> notebook này KHÔNG vẽ ảnh. Thêm 1 cell vẽ IMG000868 ở cả 3 độ phân giải,
+      HOẶC lấy IMG000868 từ 3 notebook pga-train-128 / pga-train-256 / pga-train-512.
+Subset tổn thương nhỏ, stem IMG000868.
+
+Dán 3 file:
+
+  01_868_pga128.png    PGA-UNet 128, IMG000868   (5 cột)
+  02_868_pga256.png    PGA-UNet 256, IMG000868   (5 cột)
+  03_868_pga512.png    PGA-UNet 512, IMG000868   (5 cột)
+
+Prompt: anh chọn zoom hay shift (ghi vào ghi_chu.txt), NÊN dùng cùng 1 điều kiện cho cả 3.
+
+Nhãn trái: "PGA-UNet 128x128" / "PGA-UNet 256x256" / "PGA-UNet 512x512".
