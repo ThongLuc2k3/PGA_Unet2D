@@ -11,6 +11,7 @@
 \setmainfont{DejaVu Serif}
 \setsansfont{DejaVu Sans}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{array}
@@ -46,49 +47,49 @@
 
 \section*{Tóm tắt \enlabel{Abstract}}
 \addcontentsline{toc}{section}{Tóm tắt}
-Phân đoạn tổn thương xương trên ảnh X-quang là bài toán khó vì tổn thương thường nhỏ, tương phản thấp, và lẫn vào cấu trúc giải phẫu xung quanh về mặt thị giác. Trong bối cảnh đó, thách thức chính thường nằm ở khâu định vị vùng nghi ngờ hơn là tinh chỉnh đường biên. Một hướng thực tế là thu hẹp vùng tìm kiếm trước khi phân đoạn. Chúng tôi hiện thực hóa ý tưởng này theo cách tương tác trực tiếp: bác sĩ cung cấp một hộp giới hạn thô để mô hình dùng làm tín hiệu định hướng không gian.
+Phân đoạn tổn thương xương trên ảnh X-quang gặp nhiều khó khăn do tổn thương thường có kích thước nhỏ, độ tương phản thấp và dễ lẫn vào cấu trúc giải phẫu xung quanh. Trên thực tế, khâu quyết định thường là định vị đúng vùng nghi ngờ, chứ không phải tinh chỉnh đường biên tổn thương. Từ nhận định đó, chúng tôi chọn hướng thu hẹp vùng tìm kiếm trước khi phân đoạn, thông qua một cơ chế tương tác: bác sĩ vẽ một hộp giới hạn thô quanh vùng nghi ngờ, mô hình dùng hộp này làm tín hiệu định hướng không gian.
 
-Chúng tôi đề xuất \textbf{PGA-UNet}, một CNN nhẹ có định hướng bằng prompt, chuyển prompt hộp giới hạn thành bản đồ nhiệt Gaussian dạng cao nguyên, điều biến đặc trưng encoder theo prompt qua \textbf{Prompt Spatial Gate (PSG)}, và duy trì ảnh hưởng của prompt ở decoder qua \textbf{Conditional Attention Decoder (CAD)}. Mục tiêu không chỉ là dùng prompt để chỉ vùng cần phân đoạn, mà còn giữ các đặc trưng liên quan đến tổn thương nhỏ luôn hoạt động xuyên suốt mạng.
+Bài báo đề xuất \textbf{PGA-UNet}, một mạng CNN nhẹ có định hướng bằng prompt. Hộp giới hạn được chuyển thành bản đồ nhiệt Gaussian dạng cao nguyên, sau đó dùng để điều biến đặc trưng encoder qua \textbf{Prompt Spatial Gate (PSG)} và duy trì ảnh hưởng ở decoder qua \textbf{Conditional Attention Decoder (CAD)}. Thiết kế này không chỉ dùng prompt để chỉ định vùng cần phân đoạn, mà còn giữ cho các đặc trưng liên quan đến tổn thương nhỏ luôn được kích hoạt xuyên suốt mạng.
 
-Attention U-Net không prompt đóng vai trò tham chiếu tự động, còn SAM-Med2D là tham chiếu khớp prompt. Trên BTXRD và FracAtlas, đánh giá ở các độ phân giải 128, 256, 512 dưới hộp bao phủ và lệch tâm có kiểm soát, phân đoạn không prompt là bài toán khó: Attention U-Net chỉ đạt 0.52 và 0.34 Dice. Với cùng một hộp, PGA-UNet luôn dẫn trước hai baseline quy ước khớp prompt và SAM-Med2D đã fine-tune, biên rộng nhất trên dữ liệu khó hơn là FracAtlas và trên các tổn thương nhỏ nhất, nơi SAM-Med2D đã fine-tune tụt xuống 0.26 đến 0.37 Dice còn PGA-UNet giữ 0.65 đến 0.72. Các lần chia ngẫu nhiên lặp lại cho thấy xu hướng ổn định, và PGA-UNet nhẹ hơn SAM-Med2D khoảng 92 lần về số tham số. Một điểm tính không cần huấn luyện, dựng từ độ dứt khoát của mask và độ ổn định khi nhích prompt, cho một thứ hạng độ tin cậy không cần đáp án dùng được, với tương quan thứ hạng với Dice thật vào khoảng 0.5 đến 0.7.
+Chúng tôi dùng Attention U-Net không prompt làm mô hình tham chiếu tự động, và SAM-Med2D làm mô hình tham chiếu có prompt. Thực nghiệm trên hai bộ dữ liệu BTXRD và FracAtlas, ở ba độ phân giải 128, 256 và 512, dưới hai kiểu hộp: bao phủ và lệch tâm có kiểm soát. Kết quả cho thấy phân đoạn không prompt là bài toán rất khó: Attention U-Net chỉ đạt 0.52 và 0.34 Dice trên hai bộ dữ liệu. Khi được cấp cùng một hộp, PGA-UNet luôn vượt trội so với hai baseline quy ước có prompt và SAM-Med2D đã fine-tune. Khoảng cách này rộng nhất trên FracAtlas, bộ dữ liệu khó hơn, và trên nhóm tổn thương nhỏ nhất: SAM-Med2D fine-tune tụt xuống còn 0.26 đến 0.37 Dice, trong khi PGA-UNet vẫn giữ được 0.65 đến 0.72. Kết quả ổn định qua nhiều lần chia dữ liệu ngẫu nhiên, và PGA-UNet nhẹ hơn SAM-Med2D khoảng 92 lần về số tham số. Ngoài ra, một điểm tự đánh giá không cần huấn luyện, dựa trên độ dứt khoát của mask và độ ổn định khi prompt bị nhiễu, cho phép xếp hạng độ tin cậy của dự đoán mà không cần nhãn thật, đạt tương quan thứ hạng khoảng 0.5 đến 0.7 với Dice thực tế.
 
-Vì mọi hộp đều được mô phỏng quanh vùng tổn thương đã gán nhãn, bằng chứng nói về phân đoạn có prompt sau khi đã khu trú có kiểm soát, không phải phát hiện tự do, hộp phủ một phần hay sai vùng, xác suất tin cậy đã hiệu chuẩn, khả năng dùng lâm sàng, tổng quát hóa mức bệnh nhân, hay chuyển giao chéo dataset. Một ablation từng thành phần với nhiều seed vẫn đang chạy.
+Cần lưu ý là mọi hộp trong thực nghiệm đều được mô phỏng quanh vùng tổn thương đã có nhãn sẵn, nên các kết quả trên chỉ phản ánh khả năng phân đoạn khi đã có một prompt tốt. Bài báo chưa trả lời được các câu hỏi về: phát hiện tổn thương hoàn toàn tự động, hộp chỉ phủ một phần hoặc sai vùng, độ tin cậy đã hiệu chuẩn, khả năng ứng dụng lâm sàng thực tế, khả năng tổng quát theo từng bệnh nhân, hay việc chuyển sang bộ dữ liệu khác.
 
 \textbf{Từ khóa:} ảnh X-quang xương, phân đoạn tương tác, phân đoạn ảnh y tế, học có định hướng bằng prompt, Attention U-Net.
 
 \section{Giới thiệu \enlabel{Introduction}}
-Ảnh X-quang xương được dùng rộng rãi trong sàng lọc, hỗ trợ chẩn đoán, và theo dõi nhờ tốc độ, chi phí thấp, và khả năng tiếp cận. Tuy nhiên, phân đoạn tổn thương vẫn khó khi tổn thương rất nhỏ, tương phản mờ, hoặc bị che một phần bởi giải phẫu xung quanh. Trong các trường hợp này, một thách thức chính nằm ở khâu định vị: trước khi tinh chỉnh đường biên, mô hình phải xác định được vùng nghi ngờ trong toàn ảnh.
+Nhờ chi phí thấp, tốc độ nhanh và dễ tiếp cận, ảnh X-quang xương được dùng rộng rãi trong sàng lọc, hỗ trợ chẩn đoán và theo dõi điều trị. Tuy nhiên, việc phân đoạn tổn thương trên loại ảnh này không hề đơn giản khi tổn thương có kích thước rất nhỏ, độ tương phản thấp, hoặc bị che khuất một phần bởi cấu trúc xương xung quanh. Ở những trường hợp như vậy, khó khăn chính không nằm ở việc vẽ đường biên chính xác, mà nằm ở khâu định vị: mô hình phải tìm ra vùng nghi ngờ trong toàn bộ ảnh trước khi có thể tinh chỉnh bất kỳ đường biên nào.
 
-Đây là lý do phân đoạn tổn thương nhỏ hiếm khi chỉ là bài toán vẽ đường biên. Khi tổn thương chỉ chiếm một phần rất nhỏ, tìm kiếm trên toàn ảnh vừa kém hiệu quả vừa dễ sai. Một hướng tự nhiên là thu hẹp không gian tìm kiếm trước, rồi phân đoạn trong vùng đã thu hẹp. Các phương pháp tự động hoàn toàn cố học quá trình này một cách nội tại. U-Net và Attention U-Net là các mô hình đại diện của hướng này, nhưng vẫn buộc mạng tự định vị và phân đoạn tổn thương hoàn toàn từ đầu, không có trợ giúp nào từ bên ngoài.
+Chính vì vậy, phân đoạn tổn thương nhỏ hiếm khi chỉ đơn thuần là bài toán vẽ đường biên. Khi tổn thương chỉ chiếm một phần rất nhỏ của ảnh, tìm kiếm trên toàn bộ ảnh vừa tốn kém vừa dễ dẫn đến sai sót. Cách tiếp cận tự nhiên là thu hẹp không gian tìm kiếm trước, rồi mới phân đoạn trong vùng đã thu hẹp. Các phương pháp phân đoạn tự động hoàn toàn, tiêu biểu là U-Net và Attention U-Net, cố gắng học ngầm cả quá trình định vị lẫn phân đoạn trong cùng một mạng, không có bất kỳ trợ giúp nào từ bên ngoài.
 
-Một hướng khác là lấy chỉ dẫn về vùng quan tâm từ nguồn bên ngoài. Trong thực hành lâm sàng, bác sĩ có thể dễ dàng vẽ một hộp giới hạn thô quanh vùng nghi ngờ, điều mà mô hình tự động khó làm đáng tin cậy với tổn thương rất nhỏ. Theo nghĩa đó, prompt hộp giới hạn không chỉ là tiện ích tương tác, mà là một cách thực tế để đưa tri thức không gian vào quy trình trước khi phân đoạn chi tiết. Các phương pháp phân đoạn tương tác theo prompt lớn lên từ ý này, từ click và scribble đến các mô hình nền tảng nhận prompt gần đây như SAM và SAM-Med2D.
+Một hướng đi khác là tận dụng chỉ dẫn từ bên ngoài về vị trí tổn thương. Trên thực hành lâm sàng, bác sĩ hoàn toàn có thể vẽ nhanh một hộp giới hạn thô quanh vùng nghi ngờ, việc mà một mô hình tự động khó làm tốt với những tổn thương rất nhỏ. Nhìn theo hướng này, hộp giới hạn không đơn thuần là một tiện ích tương tác, mà là cách thực tế để đưa tri thức không gian vào mô hình trước khi bước vào phân đoạn chi tiết. Nhiều phương pháp phân đoạn tương tác theo prompt đã ra đời từ ý tưởng này, từ các thao tác đơn giản như click, vẽ nguệch ngoạc (scribble), cho đến các mô hình nền tảng gần đây như SAM và SAM-Med2D.
 
-Tuy vậy, với bài toán ở đây, một vấn đề vẫn để ngỏ. Một khi prompt đã xác định vùng quan tâm, prompt chỉ nên là một ràng buộc vị trí để sinh mask, hay cần tiếp tục định hình việc trích xuất đặc trưng để tín hiệu tổn thương mờ nhạt sống sót qua downsampling? Sự khác biệt này quan trọng nhất với tổn thương rất nhỏ, nơi một sai lệch không gian nhỏ có thể ảnh hưởng đáng kể đến kết quả.
+Dù vậy, một câu hỏi vẫn chưa có lời giải: sau khi prompt đã xác định được vùng quan tâm, nó chỉ nên đóng vai trò một ràng buộc vị trí để sinh mask, hay cần tiếp tục tham gia định hình quá trình trích xuất đặc trưng, giúp tín hiệu tổn thương vốn đã mờ nhạt không bị mất đi qua các lớp downsampling? Câu hỏi này quan trọng nhất đối với tổn thương rất nhỏ, bởi chỉ một sai lệch không gian nhỏ cũng có thể ảnh hưởng đáng kể đến kết quả cuối cùng.
 
-Chúng tôi giải quyết câu hỏi đó bằng PGA-UNet, một CNN nhẹ có định hướng bằng prompt, trong đó box prompt được xem như một prior không gian có cấu trúc thay vì một kênh đầu vào phụ. Prompt được mã hóa thành bản đồ nhiệt Gaussian dạng cao nguyên, điều biến vào đặc trưng encoder qua Prompt Spatial Gate (PSG), và tái sử dụng ở decoder qua Conditional Attention Decoder (CAD). Thiết kế này nhằm giữ các đặc trưng tổn thương được định hướng bởi prompt luôn hoạt động xuyên suốt mạng, thay vì chỉ giới hạn phân đoạn trong một vùng hộp đã cho.
+Bài báo trả lời câu hỏi trên bằng PGA-UNet, một mạng CNN nhẹ có định hướng bằng prompt, trong đó hộp giới hạn được xem như một prior không gian có cấu trúc, chứ không chỉ là một kênh đầu vào phụ. Hộp được mã hóa thành bản đồ nhiệt Gaussian dạng cao nguyên, dùng để điều biến đặc trưng encoder qua Prompt Spatial Gate (PSG), rồi tiếp tục được tái sử dụng ở decoder qua Conditional Attention Decoder (CAD). Nhờ vậy, đặc trưng tổn thương được prompt định hướng luôn ở trạng thái hoạt động xuyên suốt mạng, thay vì chỉ dừng lại ở việc giới hạn phân đoạn trong phạm vi hộp đã cho.
 
-Góc nhìn này cũng định hình cách đọc thực nghiệm. Vì Attention U-Net không nhận chỉ dẫn không gian nào từ bác sĩ, vai trò của nó chỉ là cho thấy bài toán khó đến mức nào khi việc khu trú phải hoàn toàn tự động. SAM-Med2D, ngược lại, được chọn làm so sánh trực tiếp vì nhận cùng đầu vào là prompt hộp giới hạn. Câu hỏi trọng tâm vì vậy không phải prompt có hữu ích chung chung hay không, mà là liệu một kiến trúc nhẹ có khai thác prompt thô của bác sĩ hiệu quả hơn bằng cách bảo toàn tín hiệu tổn thương yếu, thay vì chỉ coi prompt như một ràng buộc không gian.
+Cách nhìn nhận này cũng quyết định cách chúng tôi thiết kế và đọc kết quả thực nghiệm. Attention U-Net không nhận bất kỳ chỉ dẫn không gian nào từ bác sĩ, nên vai trò của nó chỉ để cho thấy bài toán khó đến mức nào khi khâu định vị phải hoàn toàn tự động. Ngược lại, SAM-Med2D được chọn làm mô hình so sánh trực tiếp vì cùng nhận đầu vào là hộp giới hạn. Câu hỏi trọng tâm của bài báo, do đó, không phải prompt có hữu ích hay không nói chung, mà là liệu một kiến trúc nhẹ có thể khai thác một prompt thô từ bác sĩ hiệu quả hơn hay không, bằng cách giữ lại tín hiệu tổn thương yếu thay vì chỉ dùng prompt như một ràng buộc vị trí đơn thuần.
 
 \subsection*{Đóng góp chính \enlabel{Main contributions}}
 \begin{itemize}[leftmargin=1.4em]
-\item Đề xuất PGA-UNet, một kiến trúc nhẹ có định hướng bằng prompt cho phân đoạn tổn thương xương trên ảnh X-quang tương tác.
-\item Thiết kế cơ chế điều kiện hóa prompt kết hợp prompt Gaussian dạng cao nguyên, Prompt Spatial Gate (PSG) phía encoder, và Conditional Attention Decoder (CAD) phía decoder.
-\item Xây dựng khung huấn luyện ngoại tuyến và suy luận tương tác trực tuyến, với định nghĩa toán học rõ ràng cho mã hóa prompt, cổng hóa encoder, và điều kiện hóa decoder.
-\item Đánh giá phương pháp trên BTXRD và FracAtlas dưới các điều kiện prompt bao phủ và lệch tâm, so sánh với một Attention U-Net tự động, hai baseline Attention U-Net khớp prompt nhận cùng hộp, và SAM-Med2D, dùng Dice và IoU cho độ chồng lấn vùng, độ đo định vị theo tâm (CBL), và HD95 cho khoảng cách biên, kèm Monte Carlo cross-validation và đo hiệu năng tính toán.
-\item Cho thấy, qua phân tích tổn thương nhỏ và một lát cắt độ khó do Attention U-Net định nghĩa, rằng lợi ích của xử lý có điều kiện theo prompt tập trung ở nơi khu trú tự động thất bại và ở nơi tổn thương nhỏ nhất.
-\item Mô tả một điểm tự đánh giá không cần huấn luyện, dựng từ độ dứt khoát của mask và độ ổn định khi nhích prompt, cho một thứ hạng độ tin cậy không cần đáp án dùng được và có thể lọc ra một danh sách ngắn vùng nghi ngờ cho bác sĩ xem lại.
+\item Đề xuất PGA-UNet: kiến trúc nhẹ, có định hướng bằng prompt, dùng cho phân đoạn tương tác tổn thương xương trên ảnh X-quang.
+\item Xây dựng cơ chế điều kiện hóa prompt gồm ba phần: prompt Gaussian dạng cao nguyên, Prompt Spatial Gate (PSG) ở phía encoder, và Conditional Attention Decoder (CAD) ở phía decoder.
+\item Xây dựng khung huấn luyện ngoại tuyến kết hợp suy luận tương tác trực tuyến, cùng các định nghĩa toán học tường minh cho việc mã hóa prompt, cổng hóa ở encoder và điều kiện hóa ở decoder.
+\item Đánh giá phương pháp trên hai bộ dữ liệu BTXRD và FracAtlas dưới điều kiện prompt bao phủ và lệch tâm, so sánh với Attention U-Net tự động, hai biến thể Attention U-Net do chúng tôi tự bổ sung để xem một mạng quy ước sẽ ra sao khi cũng được cấp cùng một hộp prompt (một bản ghép prompt làm kênh đầu vào, một bản chỉ nhìn vùng crop theo prompt), và SAM-Med2D; dùng Dice và IoU cho độ chồng lấn vùng, CBL cho định vị theo tâm, HD95 cho khoảng cách biên, cùng Monte Carlo cross-validation và đo hiệu năng tính toán.
+\item Qua phân tích tổn thương nhỏ và một lát cắt độ khó do Attention U-Net định nghĩa, cho thấy lợi ích của việc xử lý có điều kiện theo prompt tập trung đúng ở nơi khâu định vị tự động thất bại và ở những tổn thương nhỏ nhất.
+\item Mô tả một điểm tự đánh giá không cần huấn luyện, dựa trên độ dứt khoát của mask và độ ổn định khi prompt bị nhiễu, cho phép xếp hạng độ tin cậy mà không cần nhãn thật, đồng thời có thể lọc ra một danh sách ngắn vùng nghi ngờ để bác sĩ xem lại.
 \end{itemize}
 
 \section{Công trình liên quan \enlabel{Related Work}}
-Phân đoạn tổn thương nhỏ trong ảnh y tế từ lâu bị ràng buộc bởi một thực tế đơn giản: trước khi phân đoạn tốt một mục tiêu rất nhỏ, mô hình phải thu hẹp được vùng cần nhìn. Trong hướng tự động hoàn toàn, việc thắt chặt này được học ngầm bên trong mạng. U-Net đặt nền cho kiến trúc encoder-decoder đa tỉ lệ kinh điển trong phân đoạn y sinh, còn Attention U-Net sau đó thêm cổng attention trên skip connection để phía decoder lọc bỏ phản hồi không gian không liên quan chọn lọc hơn. Các pipeline tự cấu hình như nnU-Net đẩy hướng này xa hơn bằng cách tự thích ứng tiền xử lý, hình dạng mạng, và lịch huấn luyện cho từng dataset. Các mô hình này nâng đáng kể chất lượng phân đoạn tự động, nhưng vẫn giả định mạng phải tự khu trú và vẽ mask chỉ từ ảnh đầu vào, không có gợi ý nào về vị trí tổn thương.
+Từ lâu, phân đoạn tổn thương nhỏ trong ảnh y tế luôn vấp phải một thực tế đơn giản: muốn phân đoạn tốt một mục tiêu rất nhỏ, mô hình trước hết phải thu hẹp được vùng cần nhìn. Ở hướng tự động hoàn toàn, việc thu hẹp này được học ngầm bên trong mạng. U-Net là kiến trúc encoder-decoder đa tỉ lệ đặt nền móng cho phân đoạn y sinh, còn Attention U-Net sau đó bổ sung cổng attention trên skip connection để phía decoder lọc bỏ những phản hồi không gian không liên quan một cách chọn lọc hơn. Các pipeline tự cấu hình như nnU-Net đi xa hơn nữa, tự động thích ứng khâu tiền xử lý, hình dạng mạng và lịch huấn luyện theo từng bộ dữ liệu. Những mô hình này giúp chất lượng phân đoạn tự động tăng lên đáng kể, nhưng vẫn dựa trên một giả định chung: mạng phải tự khu trú và vẽ mask chỉ từ ảnh đầu vào, không có bất kỳ gợi ý nào về vị trí tổn thương.
 
-Phân đoạn y tế tương tác phát triển song song, xuất phát từ quan sát rằng chỉ một phần hướng dẫn từ người dùng cũng đơn giản hóa đáng kể bài toán. Các phương pháp sớm dùng click, scribble, và geodesic cue; các nghiên cứu sau thêm bounding box như một prompt thô, nhanh. Các mô hình tương tác gần đây như ScribblePrompt xử lý nhiều loại prompt trong một khung và trên nhiều dataset y sinh. Về bản chất, các phương pháp này chuyển một phần gánh nặng khu trú từ mô hình sang người dùng. Với tổn thương X-quang rất nhỏ, sự chuyển giao đó đặc biệt có giá trị: bác sĩ thường chỉ ra được vùng nghi ngờ một cách thô ngay cả khi hệ thống tự động khó tìm ra nó đáng tin cậy trong toàn ảnh.
+Song song đó, phân đoạn y tế tương tác cũng phát triển, xuất phát từ quan sát rằng chỉ cần một chút hướng dẫn từ người dùng cũng đủ giúp bài toán đơn giản đi đáng kể. Các phương pháp đầu tiên dùng click, vẽ nguệch ngoạc (scribble), hoặc gợi ý theo đường trắc địa (geodesic); về sau, bounding box được bổ sung như một dạng prompt nhanh và thô. Gần đây hơn, các mô hình tương tác như ScribblePrompt có thể xử lý nhiều loại prompt trong cùng một khung, trên nhiều bộ dữ liệu y sinh. Nhìn chung, các phương pháp này chuyển bớt gánh nặng khu trú từ mô hình sang người dùng. Với tổn thương X-quang rất nhỏ, sự chuyển giao đó đặc biệt có giá trị, vì bác sĩ thường chỉ ra được vùng nghi ngờ một cách thô ngay cả khi hệ thống tự động khó tìm ra nó đáng tin cậy trong toàn ảnh.
 
-Các mô hình nền tảng nhận prompt đẩy ý này đi xa hơn. SAM làm phân đoạn theo prompt trở nên tổng quát, SAM-Med2D và MedSAM đưa nó vào y tế, và các biến thể adapter như EMedSAM và Med-SA giảm chi phí chuyên biệt hóa các mô hình đó cho dữ liệu y tế. Chúng linh hoạt, nhưng chủ yếu tiêu thụ prompt ở mask decoder, mang một backbone lớn, và không cái nào được tinh chỉnh cho một tác vụ X-quang cụ thể. Với tổn thương xương rất nhỏ, đó là một khoảng trống: prompt đánh dấu nơi đặt mask, nhưng không có gì giữ nó tiếp tục định hình việc trích xuất đặc trưng sau đó, đúng chỗ mà tín hiệu yếu có thể mất đi.
+Các mô hình nền tảng nhận prompt đưa ý tưởng này đi xa hơn nữa. SAM mở đầu bằng cách đưa phân đoạn theo prompt trở thành bài toán tổng quát; SAM-Med2D và MedSAM đưa nó vào lĩnh vực y tế; các biến thể dùng adapter như EMedSAM và Med-SA giúp giảm chi phí khi chuyên biệt hóa các mô hình này cho dữ liệu y tế. Những mô hình đó khá linh hoạt, nhưng lại tiêu thụ prompt chủ yếu ở mask decoder, mang theo một backbone rất lớn, và không mô hình nào được tinh chỉnh riêng cho một tác vụ X-quang cụ thể. Đối với tổn thương xương rất nhỏ, đây chính là khoảng trống: prompt chỉ đánh dấu nơi đặt mask, còn việc tiếp tục định hình quá trình trích xuất đặc trưng sau đó, đúng chỗ tín hiệu yếu dễ bị mất đi, thì chưa có cơ chế nào đảm nhận.
 
-Khoảng trống đó là nơi bài báo này bắt đầu. Trên ảnh X-quang xương thang xám, biết tổn thương nằm khoảng đâu chỉ giải quyết được một phần; phần khó hơn là giữ được bằng chứng mờ nhạt trong khi lọc bỏ nhiễu sau khi không gian tìm kiếm đã thu hẹp. Một CNN nhẹ có định hướng bằng prompt có thể tốt hơn nhờ giữ prompt luôn sống từ tầng encoder đầu tiên đến tầng decoder cuối. Chúng tôi nghiên cứu bối cảnh đó trực tiếp, với SAM-Med2D làm tham chiếu nhận prompt; một so sánh rộng hơn với các mô hình y tế nhận prompt mới hơn được để dành cho công việc sau.
+Bài báo này bắt đầu từ chính khoảng trống đó. Trên ảnh X-quang xương thang xám, biết được tổn thương nằm khoảng đâu mới chỉ giải quyết được một nửa vấn đề; phần khó hơn nằm ở việc giữ lại bằng chứng mờ nhạt trong khi vẫn lọc bỏ nhiễu, sau khi không gian tìm kiếm đã được thu hẹp. Chúng tôi cho rằng một mạng CNN nhẹ có định hướng bằng prompt có thể làm tốt việc này hơn, nếu giữ cho prompt luôn hoạt động liên tục từ tầng encoder đầu tiên cho đến tầng decoder cuối cùng. Trong bài báo, chúng tôi khảo sát trực tiếp bối cảnh đó, dùng SAM-Med2D làm mô hình tham chiếu nhận prompt; việc so sánh rộng hơn với các mô hình y tế nhận prompt mới hơn xin để dành cho những nghiên cứu tiếp theo.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Công trình tiêu biểu trước đây và khoảng trống còn lại mà bài báo này giải quyết.}
 \label{tab:relwork}
 \centering
@@ -119,13 +120,13 @@ EMedSAM / Med-SA & Tinh chỉnh adapter của SAM cho ảnh y tế & Adapter nh�
 \section{Phương pháp \enlabel{Method}}
 
 \subsection{Khung offline và online \enlabel{Offline and Online Framework}}
-Hệ thống có hai giai đoạn. Ở giai đoạn offline, mô hình được huấn luyện trên ảnh X-quang đi kèm đa giác tổn thương. Mỗi đa giác được chuyển thành một prompt huấn luyện bằng cách sinh một hộp giới hạn mô phỏng, rồi biến hộp đó thành bản đồ nhiệt cao nguyên làm mượt Gaussian. Mạng học ánh xạ cặp (ảnh, prompt) sang mask tổn thương nhị phân. Ở giai đoạn online, người dùng vẽ một hộp giới hạn thô quanh vùng nghi ngờ trên ảnh mới; cùng quy trình dựng prompt được áp dụng, và mô hình đã huấn luyện dự đoán mask cuối cùng.
+Hệ thống được vận hành qua hai giai đoạn. Ở giai đoạn ngoại tuyến (offline), mô hình được huấn luyện trên các ảnh X-quang có sẵn đa giác tổn thương. Mỗi đa giác được chuyển thành một prompt huấn luyện bằng cách sinh ra một hộp giới hạn mô phỏng, sau đó biến hộp này thành bản đồ nhiệt cao nguyên đã làm mượt bằng Gaussian. Mạng học cách ánh xạ cặp (ảnh, prompt) sang mask tổn thương nhị phân. Sang giai đoạn trực tuyến (online), người dùng chỉ cần vẽ một hộp giới hạn thô quanh vùng nghi ngờ trên ảnh mới; cùng quy trình dựng prompt đó được áp dụng lại, và mô hình đã huấn luyện sẽ đưa ra mask dự đoán cuối cùng.
 
 Điểm khác biệt là chỗ prompt sống: thay vì chỉ đi vào một lần ở lớp đầu tiên, nó được giữ lại như một prior không gian dày đặc, hoạt động xuyên suốt encoder và decoder, điều này nên giúp ích khi hộp thô, hơi lệch tâm, hoặc bọc quanh một tổn thương rất nhỏ.
 
 Một minh họa tương tác của giai đoạn online được cho ở Hình~\ref{fig:demo-seg}: người dùng vẽ một hộp trên ảnh X-quang, và mô hình trả về mask cùng với điểm dùng prompt của CAD và điểm tự đánh giá ở Mục III.F, cả hai đều không cần đáp án.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/demo/demo_segmentation_btxrd.png}
 \caption{Minh họa tương tác giai đoạn online trên một ca BTXRD. Bác sĩ vẽ một hộp trên canvas bên trái; panel bên phải phủ mask dự đoán, và panel bên dưới báo cáo các độ đo tham chiếu cùng điểm dùng prompt của CAD và điểm tự đánh giá $Q$, đều không cần đáp án. Một ca FracAtlas theo cùng bố cục ở phần bổ sung.}
@@ -139,13 +140,13 @@ Cho ảnh X-quang xám $\mathbf{I}\in\mathbb{R}^{H\times W}$ và hộp giới h�
 \end{equation}
 
 \subsection{Biểu diễn prompt \enlabel{Prompt Representation}}
-Prompt đầu vào không được mã hóa như một hình chữ nhật nhị phân cứng. Thay vào đó, phần bên trong hộp được rasterize thành bản đồ cao nguyên ở độ phân giải ảnh gốc, biên được làm mềm bằng kernel Gaussian $31\times31$ cố định, trước khi bản đồ nhiệt được resize và pad xuống độ phân giải vuông mục tiêu cùng với ảnh. Kernel không đổi theo độ phân giải mục tiêu ($256\times256$ hay $512\times512$): áp dụng một lần ở độ phân giải gốc, trước khi downsample, giữ độ mờ hiệu dụng nhất quán so với khung ảnh vuông mà mạng cuối cùng nhìn thấy. Cao nguyên chỉ phủ đúng vùng hộp (đã mở rộng nếu có), không có biên tối thiểu thêm vào; việc bao phủ vùng quan tâm do bước mở rộng hộp bên dưới đảm bảo, không phải do một bước biên riêng.
+Thay vì mã hóa prompt đầu vào như một hình chữ nhật nhị phân cứng, chúng tôi rasterize phần bên trong hộp thành một bản đồ cao nguyên ở độ phân giải ảnh gốc, làm mềm biên bằng kernel Gaussian $31\times31$ cố định, rồi mới resize và pad bản đồ nhiệt này xuống độ phân giải vuông mục tiêu cùng với ảnh. Kích thước kernel không thay đổi theo độ phân giải mục tiêu ($256\times256$ hay $512\times512$): việc áp dụng một lần duy nhất ở độ phân giải gốc, trước khi downsample, giúp giữ độ mờ hiệu dụng nhất quán bất kể khung ảnh vuông cuối cùng mà mạng nhìn thấy là gì. Cao nguyên chỉ phủ đúng phần diện tích của hộp (đã mở rộng nếu có), không cộng thêm biên tối thiểu nào; việc bao phủ vùng quan tâm đã được đảm bảo ngay từ bước mở rộng hộp, nên không cần thêm một bước biên riêng.
 
-Khi đánh giá, prompt được kiểm thử ở hai chế độ cố định. Prompt bao phủ (\texttt{center\_zoom}) phóng to hộp tổn thương bo sát từ chính tâm của nó theo hệ số cố định 3.0. Prompt lệch tâm (\texttt{center\_shift}) áp dụng cùng độ phóng to rồi dịch hộp theo một tỉ lệ của kích thước hộp bo sát, chặn trên bởi \texttt{shift\_ratio}=0.5, sau đó hộp được mở rộng lại nếu cần để vẫn chứa trọn tổn thương. Ở thời điểm test, độ dịch này là xác định theo từng tổn thương, gieo hạt từ chỉ số mẫu, nên mọi mô hình được đánh giá trên đúng cùng các hộp lệch tâm; khi huấn luyện, độ dịch được lấy ngẫu nhiên lại ở mỗi vòng lặp. Mỗi bộ dữ liệu và độ phân giải huấn luyện một mô hình bằng \texttt{center\_mixed}, chọn \texttt{center\_shift} với xác suất 0.8 và \texttt{center\_zoom} với xác suất 0.2, và hai điều kiện được chấm riêng lúc test. Phạm vi bài toán giả định người dùng đã xác định vùng nghi ngờ và cung cấp một hộp có chủ đích bao phủ tổn thương; hộp phủ một phần, hộp âm, và hộp sai vùng nằm ngoài protocol có kiểm soát này, cũng như câu hỏi riêng về việc bác sĩ có tự tìm đúng vùng hay không.
+Ở bước đánh giá, prompt được kiểm thử theo hai chế độ cố định. Chế độ bao phủ (\texttt{center\_zoom}) phóng to hộp tổn thương bo sát từ chính tâm của nó theo hệ số cố định 3.0. Chế độ lệch tâm (\texttt{center\_shift}) áp dụng cùng độ phóng to đó, sau đó dịch hộp đi một tỉ lệ của kích thước hộp bo sát (chặn trên bởi \texttt{shift\_ratio}=0.5), rồi mở rộng lại nếu cần để hộp vẫn chứa trọn tổn thương. Lúc test, độ dịch này được xác định cố định theo từng tổn thương (gieo hạt từ chỉ số mẫu), nên mọi mô hình đều được đánh giá trên đúng cùng một tập hộp lệch tâm; còn lúc huấn luyện, độ dịch được lấy ngẫu nhiên lại ở mỗi vòng lặp. Với mỗi bộ dữ liệu và độ phân giải, chúng tôi huấn luyện một mô hình duy nhất bằng \texttt{center\_mixed}: chọn \texttt{center\_shift} với xác suất 0.8 và \texttt{center\_zoom} với xác suất 0.2, còn khi test thì hai chế độ được chấm riêng. Phạm vi bài toán giả định người dùng đã xác định được vùng nghi ngờ và cố ý vẽ một hộp bao phủ tổn thương; hộp chỉ phủ một phần, hộp âm, hay hộp sai vùng đều nằm ngoài protocol có kiểm soát này, còn việc bác sĩ có tự tìm đúng vùng hay không lại là một câu hỏi khác, không thuộc phạm vi bài.
 
-Gọi $(x_1,y_1,x_2,y_2)$ là hộp tổn thương bo sát, $w=x_2-x_1$ và $h=y_2-y_1$. Hộp bao phủ mô phỏng dùng phép phóng to từ tâm cố định nêu trên trong cả huấn luyện và đánh giá. Hộp lệch tâm dùng cùng hộp đã phóng to và áp dụng quy tắc dịch xác định lúc test cài trong \texttt{dataset.py}, vẫn giữ bao phủ tổn thương. Hệ số phóng to, tỉ lệ dịch, và kích thước kernel Gaussian được chọn từ thí nghiệm sơ bộ trên dữ liệu train và validation rồi khóa lại; tập test không được dùng cho bất kỳ lựa chọn protocol hay siêu tham số nào. Chúng được trình bày là các giá trị protocol cố định, không phải cấu hình tối ưu toàn cục. Việc mô phỏng này không thay thế prompt do bác sĩ X-quang vẽ, nhưng cho một cách có kiểm soát để đo độ nhạy với sai lệch prompt đã định nghĩa.
+Ký hiệu $(x_1,y_1,x_2,y_2)$ là hộp tổn thương bo sát, với $w=x_2-x_1$ và $h=y_2-y_1$. Hộp bao phủ mô phỏng dùng đúng phép phóng to từ tâm cố định như trên, áp dụng cho cả huấn luyện lẫn đánh giá. Hộp lệch tâm dùng lại hộp đã phóng to đó, rồi áp dụng quy tắc dịch xác định lúc test được cài đặt trong \texttt{dataset.py}, vẫn đảm bảo bao phủ tổn thương. Hệ số phóng to, tỉ lệ dịch và kích thước kernel Gaussian đều được chọn từ thí nghiệm sơ bộ trên tập train và validation rồi khóa lại; tập test hoàn toàn không tham gia vào việc chọn protocol hay siêu tham số nào. Đây chỉ là các giá trị protocol cố định được dùng xuyên suốt bài, không phải một cấu hình tối ưu toàn cục. Việc mô phỏng này tất nhiên không thay thế được prompt do bác sĩ X-quang thật sự vẽ, nhưng cho một cách có kiểm soát để đo độ nhạy của mô hình với sai lệch prompt đã định nghĩa trước.
 
-Về thuật toán, dựng prompt gồm 3 bước: (1) suy ra hộp tổn thương từ đa giác gán nhãn hoặc input người dùng và mở rộng như trên, (2) rasterize vùng đã mở rộng thành mask cao nguyên ở độ phân giải ảnh gốc, (3) làm mượt biên cao nguyên bằng kernel Gaussian cố định trước khi resize xuống độ phân giải mục tiêu. Trình tự này tránh sự phụ thuộc vào biên cứng của một hộp nhị phân trong khi vẫn giữ một prior không gian rõ ràng.
+Tóm lại, việc dựng prompt gồm ba bước: (1) suy ra hộp tổn thương từ đa giác gán nhãn hoặc từ input của người dùng, rồi mở rộng như đã mô tả; (2) rasterize vùng đã mở rộng thành mask cao nguyên ở độ phân giải ảnh gốc; (3) làm mượt biên cao nguyên bằng kernel Gaussian cố định trước khi resize xuống độ phân giải mục tiêu. Cách làm này tránh được sự phụ thuộc vào biên cứng của một hộp nhị phân, trong khi vẫn giữ được một prior không gian rõ ràng.
 
 \subsection{Prompt Spatial Gate (PSG)}
 Gọi $\mathbf{x}^{l}$ là bản đồ đặc trưng encoder ở tầng $l$. PSG điều biến nó bằng bản đồ attention suy ra từ prompt $\mathbf{A}^{l}_{\mathrm{PSG}}$:
@@ -161,11 +162,11 @@ CAD mở rộng attention của decoder bằng cách điều kiện hóa cổng 
 \end{equation}
 với $c^{l}$ là hệ số dùng prompt suy ra từ decoder, $\alpha^{l}_{\mathrm{CAD}}$ học được, $w_{l}$ là hệ số độ sâu cố định. Nhờ vậy, cổng vẫn phản hồi với prompt ngay cả khi hộp không căn giữa hoàn hảo.
 
-Bộ mã hóa prompt trong CAD dùng hai tích chập $3\times3$ với instance normalization và ReLU. Hệ số dùng prompt $c^{l}$ được tạo bằng global average pooling, sau đó tích chập $1\times1$ và sigmoid. Nó được tính bên trong cổng từ mã hóa prompt và chỉ dùng để nhân với số hạng prompt ở tầng đó; nó không được xuất ra hay phân tích như một đầu ra riêng của mô hình trong bài này. Hệ số độ sâu decoder cố định $\{1.0,0.7,0.4,0.2\}$ từ sâu đến nông. Với feature scale 4, độ rộng kênh là $\{16,32,64,128,256\}$ từ tầng encoder nông nhất đến bottleneck, và mô hình đầy đủ có khoảng 2.95 triệu tham số. Các giá trị protocol này được chọn từ thí nghiệm sơ bộ trên dữ liệu train và validation và giữ cố định cho đánh giá chính, với tập test không tham gia bất kỳ việc tinh chỉnh nào; không có tuyên bố về tính tối ưu. Hệ số trộn CAD được tham số hóa qua sigmoid, khởi tạo gần 0.3.
+Bộ mã hóa prompt bên trong CAD gồm hai lớp tích chập $3\times3$ kèm instance normalization và ReLU. Hệ số dùng prompt $c^{l}$ được tạo ra bằng global average pooling, tiếp theo là một tích chập $1\times1$ và hàm sigmoid; hệ số này chỉ được tính bên trong cổng, dùng để nhân với số hạng prompt ở tầng đó, và không được xuất ra hay phân tích như một đầu ra riêng của mô hình trong bài. Các hệ số độ sâu của decoder được cố định ở $\{1.0,0.7,0.4,0.2\}$ theo thứ tự từ sâu đến nông. Với feature scale bằng 4, độ rộng kênh lần lượt là $\{16,32,64,128,256\}$ từ tầng encoder nông nhất đến bottleneck, và toàn bộ mô hình có khoảng 2.95 triệu tham số. Các giá trị protocol này đều được chọn từ thí nghiệm sơ bộ trên tập train và validation, giữ cố định trong suốt quá trình đánh giá chính, tập test không tham gia tinh chỉnh; chúng tôi không khẳng định đây là cấu hình tối ưu. Hệ số trộn của CAD được tham số hóa qua sigmoid và khởi tạo ở giá trị gần 0.3.
 
 Tóm lại, phương pháp gồm 4 bước: (1) tiền xử lý ảnh và prompt về cùng độ phân giải vuông, (2) mã hóa prior không gian liên quan đến prompt bằng PSG ở encoder, (3) lan truyền ngữ cảnh có điều kiện theo prompt qua CAD ở decoder, (4) dự đoán mask tổn thương nhị phân cuối cùng.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/architecture/architecture_pga_unet.png}
 \caption{Tổng quan PGA-UNet. Thông tin prompt suy ra từ hộp giới hạn được tiêm vào đặc trưng encoder qua PSG, và tái sử dụng ở skip-attention của decoder qua CAD.}
@@ -173,30 +174,30 @@ Tóm lại, phương pháp gồm 4 bước: (1) tiền xử lý ảnh và prompt
 \end{figure}
 
 \subsection{Điểm tự đánh giá không cần huấn luyện \enlabel{Training-Free Self-Assessment Score}}
-PGA-UNet cũng trả về một số vô hướng $Q$ ước lượng, không cần đáp án, một dự đoán đáng tin đến đâu. Không có gì trong $Q$ được học. Nó được đọc từ chính đầu ra của mô hình lúc suy luận, là trung bình của hai chỉ dấu.
+Bên cạnh mask dự đoán, PGA-UNet còn trả về một số vô hướng $Q$, ước lượng mức độ đáng tin của dự đoán mà không cần đến đáp án thật. $Q$ không phải một đại lượng được học; nó chỉ được tính từ chính đầu ra của mô hình lúc suy luận, là trung bình cộng của hai chỉ dấu.
 
 Chỉ dấu thứ nhất, $S_{\mathrm{sharp}}$, đo độ dứt khoát của mask dự đoán. Gọi $p$ là bản đồ xác suất sigmoid và $\Omega=\{p>0.5\}$ là vùng dương dự đoán. Khi đó
 \begin{equation}
 S_{\mathrm{sharp}} = \operatorname{clip}_{[0,1]}\!\left(\frac{1}{|\Omega|}\sum_{u\in\Omega}\bigl(2\,p(u)-1\bigr)\right).
 \end{equation}
-Một mask tự tin với xác suất gần một sẽ đạt gần một; một mask có nhiều pixel gần ngưỡng quyết định sẽ thấp hơn.
+Một mask có độ tự tin cao, tức xác suất gần 1, sẽ cho điểm gần 1; ngược lại, một mask có nhiều pixel nằm sát ngưỡng quyết định sẽ cho điểm thấp hơn.
 
-Chỉ dấu thứ hai, $S_{\mathrm{stab}}$, đo độ ổn định khi nhiễu loạn prompt. Hộp được nhích ngẫu nhiên $K$ lần với một độ dịch và co giãn nhỏ, mô hình chạy lại cho từng hộp nhích, và $S_{\mathrm{stab}}$ là IoU trung bình giữa mask nhị phân gốc $\hat{\mathbf{M}}$ và các mask nhích $\hat{\mathbf{M}}_k$:
+Chỉ dấu thứ hai, $S_{\mathrm{stab}}$, đo độ ổn định của dự đoán khi prompt bị nhiễu loạn nhẹ. Hộp được nhích ngẫu nhiên $K$ lần, mỗi lần với một độ dịch và co giãn nhỏ; mô hình được chạy lại cho từng hộp đã nhích, và $S_{\mathrm{stab}}$ chính là IoU trung bình giữa mask nhị phân gốc $\hat{\mathbf{M}}$ và các mask thu được từ những lần nhích đó, $\hat{\mathbf{M}}_k$:
 \begin{equation}
 S_{\mathrm{stab}} = \frac{1}{K}\sum_{k=1}^{K}\operatorname{IoU}\!\left(\hat{\mathbf{M}},\hat{\mathbf{M}}_k\right).
 \end{equation}
-Một dự đoán gần như không đổi khi hộp dịch nhẹ được coi là đáng tin hơn một dự đoán sập hoặc trôi.
+Một dự đoán gần như không đổi khi hộp bị dịch nhẹ được xem là đáng tin hơn một dự đoán bị sập hoặc trôi đi nơi khác.
 
-Điểm cuối là $Q=\tfrac{1}{2}\bigl(S_{\mathrm{sharp}}+S_{\mathrm{stab}}\bigr)$, với $K=6$, độ dịch tối đa $0.12$ cạnh hộp, và hệ số co giãn trong $\pm0.10$. $Q$ là một tín hiệu xếp hạng theo heuristic, không phải xác suất đã hiệu chuẩn: giá trị $0.7$ không có nghĩa xác suất $70\%$ mask đúng.
+Điểm cuối cùng là $Q=\tfrac{1}{2}\bigl(S_{\mathrm{sharp}}+S_{\mathrm{stab}}\bigr)$, với $K=6$, độ dịch tối đa bằng $0.12$ cạnh hộp, và hệ số co giãn trong khoảng $\pm0.10$. Cần nhấn mạnh $Q$ chỉ là một tín hiệu xếp hạng theo kiểu heuristic, không phải một xác suất đã hiệu chuẩn: giá trị $0.7$ không có nghĩa là xác suất $70\%$ mask đúng.
 
-Cùng điểm này được tái dùng để lọc ra một danh sách ngắn vùng nghi ngờ khi không có prompt. Một tập hộp được lấy mẫu với kích thước và vị trí thay đổi, mỗi hộp được chấm bằng $Q$, và vài hộp điểm cao nhất được trả về để bác sĩ chấp nhận, chỉnh, hoặc bỏ. Đây là công cụ hỗ trợ xem lại, không phải một bộ phát hiện tự động.
+Chúng tôi tái dùng chính điểm số này để lọc ra một danh sách ngắn các vùng nghi ngờ khi không có prompt: lấy mẫu một tập hộp với kích thước và vị trí thay đổi, chấm điểm từng hộp bằng $Q$, rồi trả về vài hộp có điểm cao nhất để bác sĩ chấp nhận, chỉnh sửa, hoặc bỏ qua. Đây chỉ là một công cụ hỗ trợ xem lại, không phải một bộ phát hiện tự động.
 
 \section{Thiết lập thực nghiệm \enlabel{Experimental Setup}}
 
 \subsection{Bộ dữ liệu \enlabel{Datasets}}
-Đánh giá trên hai bộ dữ liệu X-quang xương công khai. BTXRD là bộ dữ liệu u xương nguyên phát, có nhãn đa giác cho phân loại, định vị, phân đoạn. FracAtlas là bộ dữ liệu gãy xương cùng loại nhãn; chúng tôi làm sạch và chuẩn hóa đa giác trước khi dùng. Cả hai được chia ở mức ảnh, mọi đa giác của cùng một ảnh nằm cùng một tập (Bảng~\ref{tab:splits}).
+Chúng tôi tiến hành thực nghiệm trên hai bộ dữ liệu X-quang xương công khai. BTXRD là bộ dữ liệu về u xương nguyên phát, có nhãn đa giác phục vụ cho cả phân loại, định vị và phân đoạn. FracAtlas là bộ dữ liệu về gãy xương, cùng loại nhãn; chúng tôi làm sạch và chuẩn hóa lại các đa giác trước khi sử dụng. Cả hai bộ dữ liệu đều được chia ở mức ảnh, sao cho mọi đa giác thuộc cùng một ảnh luôn nằm chung một tập (Bảng~\ref{tab:splits}).
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Tập chia train / validation / test ở mức ảnh. Mỗi đa giác tổn thương là một mẫu có thể prompt.}
 \label{tab:splits}
 \centering
@@ -215,43 +216,45 @@ FracAtlas & 573 & 72 & 72 & 730 & 95 & 92 \\
 }
 \end{table}
 
-Metadata công khai không đủ để xác minh tách biệt nghiêm ngặt theo bệnh nhân, nên về nguyên tắc các ảnh của cùng một bệnh nhân có thể rơi vào các tập khác nhau; chúng tôi coi đây là một hạn chế của đánh giá. Khi đánh giá ở mức ảnh, nếu một ảnh có nhiều tổn thương, mô hình chạy riêng cho từng hộp, rồi hợp bản đồ xác suất bằng max theo từng pixel trước khi ngưỡng hóa ở 0.5, và mask ground-truth được hợp bằng union.
+Vì metadata công khai không đủ thông tin để xác minh việc tách biệt nghiêm ngặt theo từng bệnh nhân, nên về nguyên tắc ảnh của cùng một bệnh nhân vẫn có thể rơi vào các tập khác nhau; chúng tôi xem đây là một hạn chế của cách đánh giá này. Khi đánh giá ở mức ảnh, nếu một ảnh có nhiều tổn thương, mô hình sẽ chạy riêng cho từng hộp, sau đó hợp các bản đồ xác suất bằng phép lấy max theo từng pixel trước khi ngưỡng hóa ở mức 0.5; mask ground-truth cũng được hợp lại theo phép hợp (union).
 
-Ảnh đầu vào được resize đẳng hướng giữ tỉ lệ và pad về hình vuông $256\times256$ hoặc $512\times512$. Ảnh, mask, và bản đồ prompt đều qua cùng phép tiền xử lý hình học này.
+Ảnh đầu vào được resize đẳng hướng để giữ tỉ lệ khung hình, rồi pad về hình vuông kích thước $256\times256$ hoặc $512\times512$. Ảnh, mask và bản đồ prompt đều trải qua cùng một phép tiền xử lý hình học này.
 
 \subsection{Chi tiết huấn luyện \enlabel{Training Details}}
-Tất cả mô hình CNN cài đặt bằng PyTorch, huấn luyện trên GPU NVIDIA Tesla T4 16GB. PGA-UNet và Attention U-Net huấn luyện riêng cho từng bộ dữ liệu và từng độ phân giải. Nói cách khác, bài báo nghiên cứu một họ kiến trúc chung, cài đặt thành các mô hình riêng với bộ tham số riêng cho BTXRD và FracAtlas, chứ không phải một mô hình duy nhất huấn luyện chung trên cả hai. Optimizer AdamW, learning rate $10^{-4}$, weight decay $10^{-4}$. Loss là tổng của binary cross-entropy và Dice loss. Như một phép thử thăm dò xuất phát từ kích thước nhỏ của mục tiêu, PGA-UNet còn được huấn luyện thêm ở $512\times512$ với số hạng Dice thay bằng một size-conditioned Tversky loss và, trong một lần chạy riêng, bằng một Focal Dice loss, mọi cài đặt khác giữ nguyên; hai phép thay thế loại trừ lẫn nhau và chỉ được báo cáo sau như một đối chứng âm về hàm mục tiêu. Batch size 4, tối đa 150 epoch, early stopping với patience 15. Mọi thí nghiệm chính và ablation dùng seed huấn luyện cố định 22120196, gieo hạt cho Python, NumPy, và PyTorch trên cả CPU và CUDA. Tiêu chí chọn mô hình chính là Dice sau merge theo ảnh trên tập validation dưới điều kiện \texttt{center\_shift}.
+Toàn bộ các mô hình CNN được cài đặt bằng PyTorch và huấn luyện trên một GPU NVIDIA Tesla T4 16GB. PGA-UNet và Attention U-Net được huấn luyện riêng cho từng bộ dữ liệu và từng độ phân giải; nói cách khác, bài báo nghiên cứu một họ kiến trúc chung nhưng cài đặt thành các mô hình riêng biệt, với bộ tham số riêng cho BTXRD và FracAtlas, chứ không huấn luyện chung một mô hình duy nhất trên cả hai. Chúng tôi dùng optimizer AdamW với learning rate $10^{-4}$ và weight decay $10^{-4}$; hàm loss là tổng của binary cross-entropy và Dice loss. Do mục tiêu phân đoạn thường có kích thước nhỏ, chúng tôi thử nghiệm thêm: huấn luyện PGA-UNet ở $512\times512$ với số hạng Dice được thay bằng size-conditioned Tversky loss, và ở một lần chạy riêng khác, thay bằng Focal Dice loss, mọi cài đặt khác giữ nguyên. Hai phép thay thế này loại trừ lẫn nhau và chỉ được báo cáo sau như một đối chứng âm cho hàm mục tiêu. Batch size là 4, huấn luyện tối đa 150 epoch, dùng early stopping với patience bằng 15. Mọi thí nghiệm chính và ablation đều dùng chung một seed huấn luyện cố định là 22120196, gieo hạt cho Python, NumPy và PyTorch trên cả CPU lẫn CUDA. Tiêu chí chọn mô hình chính là Dice sau khi merge theo ảnh, đo trên tập validation dưới điều kiện \texttt{center\_shift}.
 
-Augmentation lúc huấn luyện gồm lật ngang và xoay ngẫu nhiên trong $\pm15^\circ$. Cài đặt còn áp dụng prompt dropout hoặc nhiễu prompt cho một phần các bước huấn luyện, để giảm phụ thuộc quá mức vào một prompt lý tưởng. PGA-UNet được huấn luyện bằng \texttt{center\_mixed}, chọn \texttt{center\_shift} với xác suất 0.8 và \texttt{center\_zoom} với xác suất 0.2. Các prompt được mô phỏng từ vùng tổn thương gán nhãn để cho một protocol phân đoạn có prompt có kiểm soát. Bài báo vì vậy nên được đọc như một nghiên cứu dưới hộp mô phỏng bao phủ quanh tổn thương do người dùng xác định, không phải một đánh giá phát hiện tổn thương tự do hay hộp do bác sĩ vẽ hoàn toàn thực tế. Với so sánh SAM-Med2D đã fine-tune, bộ mã hóa ảnh tiền huấn luyện được đóng băng trừ các lớp Adapter nhẹ, còn bộ mã hóa prompt và bộ giải mã mask được cập nhật đầy đủ trên từng bộ dữ liệu theo cùng giao thức chia tách. SAM-Med2D được fine-tune chỉ bằng hộp, dùng cùng protocol bao phủ và lệch tâm phóng từ tâm như PGA-UNet; nhánh point prompt và tinh chỉnh điểm lặp được tắt. Cách dựng hộp này khác với việc lấy mẫu nhiễu nhỏ ngẫu nhiên \texttt{get\_boxes\_from\_mask} của nhóm tác giả SAM-Med2D gốc, ở đây không dùng. Validation lúc fine-tune SAM-Med2D và tập test cuối cùng đều báo cáo riêng hai điều kiện prompt, batch size 4, tối đa 150 epoch, early stopping patience 30, learning rate $10^{-5}$. Giao thức khớp làm giảm khác biệt do phân phối prompt và độ phân giải, nhưng không loại bỏ khác biệt về quy mô mô hình, khởi tạo, hay tối ưu hóa. Thực nghiệm ổn định bổ sung dùng Monte Carlo cross-validation, tức chia tách ngẫu nhiên lặp lại ở mức ảnh, không phải k-fold không chồng lấn nghiêm ngặt. Các thực nghiệm Monte Carlo giữ seed huấn luyện cố định ở 22120196 và chỉ thay đổi seed chia tách qua 1, 2, 3, 4.
+Trong lúc huấn luyện, chúng tôi áp dụng augmentation gồm lật ngang và xoay ngẫu nhiên trong khoảng $\pm15^\circ$. PGA-UNet được huấn luyện bằng \texttt{center\_mixed}: chọn \texttt{center\_shift} với xác suất 0.8 và \texttt{center\_zoom} với xác suất 0.2. Vì các prompt đều được mô phỏng từ vùng tổn thương đã gán nhãn, đây là một protocol phân đoạn có prompt trong điều kiện có kiểm soát; bài báo nên được đọc theo đúng nghĩa đó, tức là nghiên cứu trên hộp mô phỏng bao phủ quanh tổn thương do người dùng xác định, chứ không phải một đánh giá phát hiện tổn thương tự do hay hộp do bác sĩ vẽ hoàn toàn ngoài đời thực.
 
-Các checkpoint huấn luyện cũng chứa một đầu hồi quy chất lượng phụ trợ nhỏ, được huấn luyện chung để dự đoán Dice của từng mẫu. Nó được detach khỏi nhánh phân đoạn và không ảnh hưởng đến mask dự đoán. Đầu ra của nó không được dùng trong bài này; thay vào đó dùng điểm tự đánh giá ở Mục III.F, và Mục V nói rõ lý do.
+Đối với so sánh SAM-Med2D đã fine-tune, bộ mã hóa ảnh tiền huấn luyện được đóng băng, chỉ các lớp Adapter nhẹ được huấn luyện thêm, trong khi bộ mã hóa prompt và bộ giải mã mask được cập nhật đầy đủ trên từng bộ dữ liệu, theo cùng giao thức chia tách. SAM-Med2D chỉ được fine-tune bằng hộp, dùng cùng protocol bao phủ và lệch tâm phóng từ tâm như PGA-UNet; nhánh point prompt và bước tinh chỉnh điểm lặp đều bị tắt. Cách dựng hộp này khác với cách lấy mẫu nhiễu ngẫu nhiên nhỏ \texttt{get\_boxes\_from\_mask} mà nhóm tác giả SAM-Med2D gốc dùng, chúng tôi không áp dụng cách đó ở đây. Cả khi validation lúc fine-tune SAM-Med2D lẫn khi đánh giá tập test cuối cùng, hai điều kiện prompt đều được báo cáo riêng; batch size là 4, tối đa 150 epoch, early stopping patience bằng 30, learning rate $10^{-5}$. Giao thức khớp này giúp giảm bớt khác biệt do phân phối prompt và độ phân giải gây ra, nhưng không thể loại bỏ hết khác biệt về quy mô mô hình, cách khởi tạo, hay quá trình tối ưu hóa.
 
-Hai chi tiết đánh giá quan trọng. Thứ nhất, bản thân việc dựng prompt không phụ thuộc độ phân giải: bản đồ cao nguyên được dựng và làm mượt bằng kernel Gaussian $31\times31$ cố định ở độ phân giải ảnh gốc, rồi mới resize và pad xuống $256\times256$ hoặc $512\times512$ cùng ảnh, nên cùng một độ mờ tuyệt đối bị nén khác nhau ở hai độ phân giải mục tiêu chứ không được tham số hóa riêng. Thứ hai, các thực nghiệm Monte Carlo là bằng chứng ổn định bổ sung, không thay thế cho tập chia train/validation/test cố định dùng trong các bảng chính.
+Chúng tôi còn thực hiện thêm thực nghiệm ổn định bằng Monte Carlo cross-validation, tức là chia tách ngẫu nhiên lặp lại ở mức ảnh, khác với k-fold không chồng lấn nghiêm ngặt. Các thực nghiệm này giữ nguyên seed huấn luyện ở 22120196, chỉ thay đổi seed chia tách qua các giá trị 1, 2, 3, 4.
+
+Có hai chi tiết đáng lưu ý khi đọc kết quả đánh giá. Thứ nhất, việc dựng prompt không phụ thuộc vào độ phân giải: bản đồ cao nguyên được dựng và làm mượt bằng kernel Gaussian $31\times31$ cố định, ngay ở độ phân giải ảnh gốc, rồi mới resize và pad xuống $256\times256$ hoặc $512\times512$ cùng với ảnh. Nói cách khác, cùng một độ mờ tuyệt đối sẽ bị nén khác nhau ở hai độ phân giải mục tiêu, chứ không được tham số hóa riêng cho từng độ phân giải. Thứ hai, các thực nghiệm Monte Carlo chỉ là bằng chứng ổn định bổ sung, không nhằm thay thế cho tập chia train/validation/test cố định vốn được dùng xuyên suốt các bảng kết quả chính.
 
 \subsection{Baseline và độ đo \enlabel{Baselines and Metrics}}
-PGA-UNet được so với Attention U-Net làm baseline tự động chính và với SAM-Med2D làm baseline có prompt chính. Attention U-Net huấn luyện không prompt, dùng để đặc trưng hóa bài toán khó đến mức nào khi khu trú phải hoàn toàn tự động. SAM-Med2D được đánh giá ở $256\times256$, dạng đã fine-tune, cùng tập chia và cùng hộp prompt như PGA-UNet, khiến nó là so sánh khớp prompt chính.
+Chúng tôi so sánh PGA-UNet với hai baseline chính: Attention U-Net đóng vai trò baseline tự động, và SAM-Med2D đóng vai trò baseline có prompt. Attention U-Net được huấn luyện không có prompt, dùng để cho thấy bài toán khó đến mức nào khi khâu định vị phải hoàn toàn tự động. SAM-Med2D được đánh giá ở $256\times256$, ở dạng đã fine-tune, dùng cùng tập chia và cùng hộp prompt như PGA-UNet, nên đây là so sánh khớp prompt chính của bài.
 
-Để tách bạch xem lợi thế của PGA-UNet đến từ kiến trúc hay chỉ từ việc có prompt hộp, chúng tôi bổ sung hai baseline quy ước khớp prompt, cùng khung Attention U-Net, nhận đúng hộp prompt mà PGA-UNet nhận, nhưng không có bản đồ nhiệt Gaussian, PSG, hay CAD của PGA-UNet. Attention U-Net + kênh prompt ghép bản đồ nhiệt prompt làm channel đầu vào thứ hai, dự đoán trên toàn ảnh qua một decoder skip-connection thuần. Attention U-Net trên vùng crop theo prompt thu hẹp trường nhìn của mạng: ảnh đầu vào được crop theo hộp prompt trước khi resize về độ phân giải đầu vào của mô hình, Attention U-Net thuần dự đoán mask chỉ trên vùng crop đó, rồi kết quả được dán lại vào khung ảnh đầy đủ để đánh giá. Cả hai baseline đều huấn luyện dưới cùng giao thức hộp bao phủ và lệch tâm như PGA-UNet, nên khoảng cách còn lại phản ánh kiến trúc chứ không phải một prompt không công bằng. So sánh chéo mô hình dùng các độ đo full-frame đã dán lại cho baseline prompt-crop, không phải các giá trị chẩn đoán trong khung crop.
+Để tách bạch xem lợi thế của PGA-UNet đến từ kiến trúc hay chỉ đơn thuần từ việc có prompt hộp, chúng tôi bổ sung thêm hai baseline quy ước khớp prompt, cùng dựa trên khung Attention U-Net, nhận đúng hộp prompt mà PGA-UNet nhận nhưng không có bản đồ nhiệt Gaussian, PSG hay CAD. Baseline thứ nhất, Attention U-Net kênh prompt, ghép bản đồ nhiệt prompt làm channel đầu vào thứ hai rồi dự đoán trên toàn ảnh qua một decoder skip-connection thuần. Baseline thứ hai, Attention U-Net trên vùng crop theo prompt, thu hẹp trường nhìn của mạng: ảnh đầu vào được crop theo hộp prompt trước khi resize về độ phân giải đầu vào của mô hình, Attention U-Net thuần dự đoán mask chỉ trên vùng crop đó, rồi kết quả được dán lại vào khung ảnh đầy đủ để đánh giá. Cả hai baseline đều được huấn luyện dưới cùng giao thức hộp bao phủ và lệch tâm như PGA-UNet, nên khoảng cách còn lại phản ánh sự khác biệt về kiến trúc, chứ không phải do một prompt không công bằng. Khi so sánh chéo giữa các mô hình, chúng tôi dùng độ đo full-frame đã dán lại cho baseline prompt-crop, chứ không dùng các giá trị chẩn đoán đo trong khung crop.
 
-Mọi bảng so sánh báo cáo Dice và IoU cho độ chồng lấn vùng, CBL cho định vị, và HD95 cho khoảng cách biên; Dice và IoU là hai độ đo chồng lấn tương quan mạnh, để cạnh nhau chỉ để người đọc đối chiếu. Trên các tập con tổn thương nhỏ, IoU thấp về giá trị tuyệt đối và nhạy với vài pixel biên, nên Dice là độ đo chồng lấn chính ở đó. Precision và recall nằm trong log công bố. Với tâm mask dự đoán $(x_p,y_p)$, tâm ground-truth $(x_g,y_g)$, và đường chéo $D_{\mathrm{GT}}$ của hộp ground-truth, CBL được định nghĩa:
+Mọi bảng so sánh trong bài đều báo cáo Dice và IoU cho độ chồng lấn vùng, CBL cho định vị, và HD95 cho khoảng cách biên. Dice và IoU là hai độ đo chồng lấn tương quan khá mạnh với nhau, chúng tôi đặt cạnh nhau chỉ để người đọc tiện đối chiếu. Riêng trên các tập con tổn thương nhỏ, IoU có giá trị tuyệt đối thấp và khá nhạy với vài pixel ở biên, nên Dice mới là độ đo chồng lấn chính được dùng ở đó. Precision và recall được lưu trong log công bố kèm theo bài. Gọi $(x_p,y_p)$ là tâm mask dự đoán, $(x_g,y_g)$ là tâm ground-truth, và $D_{\mathrm{GT}}$ là đường chéo của hộp ground-truth, CBL được định nghĩa như sau:
 \begin{equation}
 \mathrm{CBL}=\max\left(0,1-\frac{\sqrt{(x_p-x_g)^2+(y_p-y_g)^2}}{D_{\mathrm{GT}}}\right).
 \end{equation}
-HD95 tính từ khoảng cách biên hai chiều. Nếu cả hai mask đều rỗng, HD95 = 0. Nếu chỉ một mask rỗng, HD95 = độ dài cạnh ảnh $S$ (256 hoặc 512 pixel). Không loại bỏ mẫu nào. Với các so sánh xuyên độ phân giải, HD95 còn được báo cáo ở dạng chuẩn hóa $\mathrm{HD95}/(\sqrt{2}\,S)$, vì khoảng cách pixel thô không so sánh được qua các khung $128$, $256$, $512$. Một số so sánh nhóm phụ trộn mô hình huấn luyện ở $256\times256$ và $512\times512$ được chấm trong một khung $512\times512$ chung: dự đoán $256\times256$ được upsample trước khi chấm, nên mọi mô hình được đo trên đúng cùng mask ground-truth chứ không phải trong khung gốc của riêng nó.
+HD95 được tính từ khoảng cách biên hai chiều. Trường hợp cả hai mask đều rỗng, HD95 nhận giá trị 0; nếu chỉ một trong hai mask rỗng, HD95 được gán bằng độ dài cạnh ảnh $S$ (256 hoặc 512 pixel). Không có mẫu nào bị loại bỏ khỏi tính toán. Với các so sánh xuyên độ phân giải, chúng tôi báo cáo thêm HD95 ở dạng chuẩn hóa $\mathrm{HD95}/(\sqrt{2}\,S)$, vì khoảng cách tính bằng pixel thô không thể so sánh trực tiếp giữa các khung $128$, $256$ và $512$. Một số so sánh nhóm phụ có trộn mô hình huấn luyện ở $256\times256$ và $512\times512$; trong trường hợp đó, mọi thứ được chấm chung trong một khung $512\times512$, với dự đoán ở $256\times256$ được upsample trước khi chấm điểm, để mọi mô hình đều được đo trên đúng cùng một mask ground-truth, thay vì trong khung gốc riêng của nó.
 
-Với điểm tự đánh giá không cần huấn luyện, mỗi prompt tổn thương cho một điểm $Q$ và Dice thật đã ngưỡng hóa của chính mask dự đoán của nó; chúng tôi báo cáo tương quan Pearson và Spearman giữa hai đại lượng, riêng cho điều kiện bao phủ và lệch tâm. Với danh sách vùng ứng viên, mỗi ảnh test lấy 50 hộp với cạnh phân bố đều trong $[0.15,0.55]$ của khung, chấm mỗi hộp bằng $Q$, giữ ba và năm hộp điểm cao nhất, và chấm một hộp được giữ theo độ phủ, tỉ lệ pixel tổn thương ground-truth nằm trong nó; không có mask dự đoán nào tham gia vào độ đo độ phủ này.
+Đối với điểm tự đánh giá không cần huấn luyện, mỗi prompt tổn thương sẽ cho ra một điểm $Q$ cùng với Dice thật đã ngưỡng hóa của chính mask dự đoán tương ứng; chúng tôi báo cáo tương quan Pearson và Spearman giữa hai đại lượng này, tách riêng cho điều kiện bao phủ và lệch tâm. Với danh sách vùng ứng viên, mỗi ảnh test được lấy 50 hộp có cạnh phân bố đều trong khoảng $[0.15,0.55]$ so với khung ảnh, mỗi hộp được chấm bằng $Q$, giữ lại năm hộp có điểm cao nhất; mỗi hộp được giữ lại sau đó được chấm theo độ phủ, tức tỉ lệ pixel tổn thương ground-truth nằm trong hộp đó, và không có mask dự đoán nào tham gia vào phép đo độ phủ này.
 
 \subsection{Phạm vi phân tích \enlabel{Scope of Analysis}}
-Bài báo tập trung vào bản thân phân đoạn có định hướng prompt. Một tầng phân loại sàng lọc tổn thương đã được khảo sát riêng và không thuộc bài này. Điểm tự đánh giá và danh sách vùng ứng viên chỉ được xem là phân tích phụ trợ, đúng phạm vi hẹp đã nói ở Mục III.F, không mở rộng thêm gì ở đây. Để giữ bài gọn, chỉ giữ các phân tích nhóm phụ hỗ trợ trực tiếp nhất cho luận điểm chính: vai trò của khu trú theo prompt, độ nhạy với dịch prompt có kiểm soát đã định nghĩa, và hiệu quả trên tổn thương rất nhỏ. Tập con tổn thương nhỏ được định nghĩa cho mỗi bộ dữ liệu là 50 ảnh test có tổng diện tích tổn thương nhỏ nhất. Với so sánh ba độ phân giải trên tổn thương nhỏ, cùng tập stem ảnh này được giữ cố định và đánh giá ở $128$, $256$, $512$; dự đoán và ground-truth được merge ở mức ảnh tại mỗi độ phân giải, HD95 được báo cáo ở cả pixel native lẫn dạng chuẩn hóa trên, và mức tụt được báo cáo so với kết quả $512$. Cũng xin nhắc lại: hộp phủ một phần, hộp âm, hay hộp sai vùng không nằm trong phạm vi khảo sát này, nên các tuyên bố của bài không dựa vào chúng.
+Bài báo chỉ tập trung vào bản thân bài toán phân đoạn có định hướng bằng prompt. Một tầng phân loại dùng để sàng lọc tổn thương đã được khảo sát ở một nghiên cứu riêng, không thuộc phạm vi bài này. Điểm tự đánh giá và danh sách vùng ứng viên chỉ được xem là phân tích phụ trợ, đúng phạm vi hẹp đã nói ở Mục III.F, không mở rộng thêm gì ở đây. Để giữ bài gọn, chúng tôi chỉ giữ lại những phân tích nhóm phụ hỗ trợ trực tiếp nhất cho luận điểm chính: vai trò của khâu định vị theo prompt, độ nhạy khi prompt bị dịch có kiểm soát theo đúng định nghĩa ở trên, và hiệu quả trên các tổn thương rất nhỏ. Với mỗi bộ dữ liệu, tập con tổn thương nhỏ được định nghĩa là 50 ảnh test có tổng diện tích tổn thương nhỏ nhất. Trong so sánh ba độ phân giải trên tổn thương nhỏ, cùng một tập ảnh này được giữ cố định và đánh giá lần lượt ở $128$, $256$ và $512$; dự đoán cùng ground-truth được merge ở mức ảnh tại mỗi độ phân giải, HD95 được báo cáo ở cả dạng pixel gốc lẫn dạng chuẩn hóa, và mức tụt được tính so với kết quả ở độ phân giải $512$. Cũng xin nhắc lại: hộp phủ một phần, hộp âm, hay hộp sai vùng không nằm trong phạm vi khảo sát này, nên các tuyên bố của bài không dựa vào chúng.
 
 \section{Kết quả \enlabel{Results}}
 \label{sec:results}
-Trừ khi nói khác, mọi bảng báo cáo số theo protocol hiện tại: huấn luyện \texttt{center\_mixed} với 80\% \texttt{center\_shift} và 20\% \texttt{center\_zoom}, 150 epoch, chọn mô hình theo Dice validation merge ở mức ảnh dưới \texttt{center\_shift}, và đánh giá test merge ở mức ảnh. Hai điều kiện prompt test, bao phủ (\texttt{center\_zoom}) và lệch tâm (\texttt{center\_shift}), được báo cáo riêng ở mọi bảng có cả hai. Ablation ở Mục V.H là một tập chia; bản chạy lại nhiều seed đang tiến hành.
+Trừ khi có ghi chú khác, mọi con số trong các bảng dưới đây đều theo đúng protocol hiện tại: huấn luyện bằng \texttt{center\_mixed} với 80\% \texttt{center\_shift} và 20\% \texttt{center\_zoom}, 150 epoch, chọn mô hình theo Dice validation đã merge ở mức ảnh dưới điều kiện \texttt{center\_shift}, và đánh giá trên tập test cũng merge ở mức ảnh. Ở mọi bảng có cả hai điều kiện, prompt bao phủ (\texttt{center\_zoom}) và prompt lệch tâm (\texttt{center\_shift}) luôn được báo cáo riêng.
 
 \subsection{Kết quả chính giữa các bộ dữ liệu và độ phân giải}
-PGA-UNet được huấn luyện từ đầu ở $128\times128$, $256\times256$, và $512\times512$ trên từng bộ dữ liệu, cho sáu mô hình. Bảng~\ref{tab:resolution} liệt kê chúng dưới hai điều kiện prompt.
+PGA-UNet được huấn luyện từ đầu ở ba độ phân giải $128\times128$, $256\times256$ và $512\times512$ trên mỗi bộ dữ liệu, tổng cộng sáu mô hình. Bảng~\ref{tab:resolution} trình bày kết quả của chúng dưới cả hai điều kiện prompt.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{PGA-UNet qua các độ phân giải, merge ở mức ảnh. Dice, IoU, CBL và HD95 (pixel gốc và chuẩn hóa $\mathrm{HD95}/(\sqrt{2}\,S)$) cho ở dạng bao phủ / lệch tâm.}
 \label{tab:resolution}
 \centering
@@ -275,14 +278,14 @@ Bộ dữ liệu & Độ p.giải & Dice & IoU & HD95$_\mathrm{px}$ & HD95$_n$ &
 }
 \end{table}
 
-Độ phân giải cao hơn giúp ở mọi bước. Dice theo thứ tự $512>256>128$ trên cả hai bộ dữ liệu và cả hai điều kiện prompt, và FracAtlas được lợi nhiều hơn, phù hợp với các vết gãy mảnh mất tỉ lệ chi tiết lớn hơn khi ảnh thu nhỏ. HD95 pixel thô không so sánh được qua các khung, nên bảng cũng cho dạng chuẩn hóa: nó giữ gần $0.03$ qua các độ phân giải BTXRD và giảm trên FracAtlas khi khung lớn lên, nên sai số biên không xấu đi ở độ phân giải cao hơn. Mỗi mô hình chỉ được đánh giá trên chính bộ dữ liệu của nó; không có tuyên bố chuyển giao chéo dataset.
+Có thể thấy độ phân giải cao hơn giúp ích ở mọi bước: Dice luôn theo thứ tự $512>256>128$ trên cả hai bộ dữ liệu và cả hai điều kiện prompt, trong đó FracAtlas được lợi nhiều hơn, điều này khá hợp lý vì các vết gãy vốn mảnh sẽ mất tỉ lệ chi tiết lớn hơn khi ảnh bị thu nhỏ. Vì HD95 tính bằng pixel thô không so sánh được giữa các khung khác kích thước, chúng tôi cũng đưa ra dạng chuẩn hóa: giá trị này giữ ở mức gần $0.03$ qua các độ phân giải trên BTXRD, còn trên FracAtlas thì giảm dần khi khung ảnh lớn lên, cho thấy sai số biên không hề xấu đi ở độ phân giải cao hơn. Cần lưu ý mỗi mô hình chỉ được đánh giá trên chính bộ dữ liệu nó được huấn luyện; bài báo không đưa ra tuyên bố nào về khả năng chuyển giao chéo dataset.
 
 \subsection{So sánh với Attention U-Net tự động và khớp prompt}
-Bị bỏ mặc phải tự tìm tổn thương, Attention U-Net chỉ đạt Dice 0.517 trên BTXRD và 0.342 trên FracAtlas ở $512\times512$, với HD95 vượt 120 pixel trên cả hai (Bảng~\ref{tab:baseline}). Con số đó không phải một phán quyết về kiến trúc, vì mô hình này không hề thấy hộp; nó đo việc khu trú tự động khó đến đâu, đúng bước mà prompt loại bỏ.
+Khi phải tự tìm tổn thương mà không có bất kỳ hỗ trợ nào, Attention U-Net chỉ đạt Dice 0.517 trên BTXRD và 0.342 trên FracAtlas ở $512\times512$, với HD95 vượt quá 120 pixel trên cả hai bộ dữ liệu (Bảng~\ref{tab:baseline}). Con số này không nên hiểu là một đánh giá về kiến trúc, vì bản thân mô hình chưa từng được thấy hộp; nó chỉ cho thấy khâu định vị tự động khó đến mức nào, đúng phần việc mà prompt giúp loại bỏ.
 
-Đưa cùng một hộp cho một Attention U-Net thuần thì bức tranh đổi khác nhưng khoảng cách vẫn còn (Bảng~\ref{tab:baseline}, cột $\Delta$Dice). PGA-UNet dẫn trước cả hai biến thể khớp prompt trên cả hai bộ dữ liệu, biên nhỏ trên BTXRD và rộng hơn nhiều trên FracAtlas, với HD95 thấp hơn cả hai.
+Khi được cấp cùng một hộp, Attention U-Net thuần cho kết quả khá hơn hẳn, nhưng khoảng cách với PGA-UNet vẫn còn (Bảng~\ref{tab:baseline}, cột $\Delta$Dice). PGA-UNet vượt qua cả hai biến thể khớp prompt trên cả hai bộ dữ liệu, với biên cách biệt nhỏ trên BTXRD nhưng rộng hơn nhiều trên FracAtlas, đồng thời có HD95 thấp hơn cả hai.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{So sánh ở $512\times512$ dưới prompt bao phủ. Attention U-Net (không prompt) không nhận hộp; các dòng còn lại dùng đúng hộp PGA-UNet nhận. $\Delta$Dice là mỗi dòng trừ PGA-UNet.}
 \label{tab:baseline}
 \centering
@@ -308,12 +311,12 @@ Bộ dữ liệu & Mô hình & Dice & $\Delta$Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
-Vậy khu trú là một phần lớn của độ khó ở đây, nhưng có hộp chưa phải toàn bộ câu chuyện. Cách PGA-UNet tận dụng hộp đó tạo thêm một khoảng cách ổn định so với một mạng quy ước nhận cùng đầu vào.
+Như vậy, khâu định vị chiếm phần lớn độ khó của bài toán này, nhưng chỉ có hộp thôi vẫn chưa đủ để giải thích hết kết quả. Cách PGA-UNet khai thác hộp đó vẫn tạo ra thêm một khoảng cách ổn định so với một mạng quy ước nhận cùng đầu vào.
 
 \subsection{Nhóm Top-Dice và Bottom-Dice của Attention U-Net}
-Để xem biên đó đến từ đâu, chúng tôi xếp hạng các ảnh test theo Dice của Attention U-Net, giữ 50 ảnh cao nhất và 50 ảnh thấp nhất mỗi bộ dữ liệu, rồi chạy lại cả bốn mô hình trên đúng các stem đó (Bảng~\ref{tab:extreme}, prompt bao phủ). Ở nhóm top 50, các mô hình có prompt xúm lại gần nhau. Ở nhóm bottom 50, Attention U-Net sập, xuống 0.031 trên BTXRD và 0.169 trên FracAtlas, trong khi PGA-UNet vẫn giữ 0.712 và 0.687. Hai baseline prompt quy ước cũng hồi phục, nhưng kém hơn: ở nhóm bottom, PGA-UNet dẫn trước chúng 0.04 đến 0.07 Dice trên BTXRD và 0.10 đến 0.19 trên FracAtlas. Vậy có prompt là cần nhưng chưa đủ; lợi ích của xử lý có điều kiện theo prompt tập trung đúng nơi khu trú tự động đổ vỡ. Các nhóm này do Attention U-Net định nghĩa, không phải theo bất kỳ khái niệm độ khó khách quan nào.
+Để tìm hiểu khoảng cách đó đến từ đâu, chúng tôi xếp hạng các ảnh test theo Dice của Attention U-Net, giữ lại 50 ảnh có Dice cao nhất và 50 ảnh thấp nhất ở mỗi bộ dữ liệu, rồi chạy lại cả bốn mô hình trên đúng những ảnh đó (Bảng~\ref{tab:extreme}, prompt bao phủ). Ở nhóm top-50, các mô hình có prompt cho kết quả khá gần nhau. Ngược lại, ở nhóm bottom-50, Attention U-Net sụp hẳn, chỉ còn 0.031 trên BTXRD và 0.169 trên FracAtlas, trong khi PGA-UNet vẫn giữ được 0.712 và 0.687. Hai baseline prompt quy ước cũng hồi phục phần nào nhưng kém hơn: ở nhóm bottom, PGA-UNet vẫn dẫn trước chúng từ 0.04 đến 0.07 Dice trên BTXRD và từ 0.10 đến 0.19 trên FracAtlas. Điều này cho thấy có prompt là điều kiện cần nhưng chưa đủ; lợi ích của việc xử lý có điều kiện theo prompt tập trung đúng vào những nơi mà khâu định vị tự động thất bại. Cũng cần lưu ý, hai nhóm này được xác định hoàn toàn dựa trên Attention U-Net, chứ không theo một tiêu chí độ khó khách quan nào khác.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Nhóm Top-Dice và Bottom-Dice ở $512\times512$, 50 ảnh mỗi nhóm, prompt bao phủ. Nhóm do Attention U-Net thuần định nghĩa.}
 \label{tab:extreme}
 \centering
@@ -353,14 +356,14 @@ Bộ dữ liệu & Nhóm & Mô hình & Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/unet_extreme_groups_btxrd_top.png}
 \caption{Attention U-Net (không prompt) so với PGA-UNet trên BTXRD, ca nhóm Top-Dice của Attention U-Net (IMG001375). Cả hai mô hình đều tốt trên ca dễ.}
 \label{fig:extreme-top}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/unet_extreme_groups_btxrd_bottom.png}
 \caption{Attention U-Net (không prompt) so với PGA-UNet trên BTXRD, ca nhóm Bottom-Dice của Attention U-Net (IMG000791). Không có prompt, dự đoán của Attention U-Net lệch hẳn vị trí; PGA-UNet có điều kiện hóa theo prompt vẫn khôi phục được tổn thương.}
@@ -368,9 +371,9 @@ Bộ dữ liệu & Nhóm & Mô hình & Dice & IoU & HD95 & CBL \\
 \end{figure}
 
 \subsection{So sánh khớp với SAM-Med2D}
-Cả hai mô hình nhận cùng hộp ở $256\times256$ (Bảng~\ref{tab:sam}). Zero-shot, SAM-Med2D gần như không chạy được trên X-quang xương: 0.255 Dice trên BTXRD, 0.262 trên FracAtlas. Fine-tune trên cùng tập chia và protocol prompt nâng nó lên 0.630 và 0.563, nhưng PGA-UNet ở độ phân giải đó đạt 0.762 và 0.629 dưới prompt bao phủ, dẫn trước 0.132 và 0.066 Dice và một khoảng tương tự ở CBL. SAM-Med2D chỉ vượt lên ở một chỗ, khoảng cách biên trên FracAtlas, nơi HD95 đã fine-tune của nó là 8.0 pixel, thấp hơn 10.6 của PGA-UNet. Mức đổi từ bao phủ sang lệch tâm là một câu hỏi riêng; Mục V.F bàn nó.
+Cả hai mô hình đều nhận cùng một hộp ở $256\times256$ (Bảng~\ref{tab:sam}). Ở chế độ zero-shot, SAM-Med2D gần như không hoạt động được trên ảnh X-quang xương: chỉ đạt 0.255 Dice trên BTXRD và 0.262 trên FracAtlas. Sau khi fine-tune trên cùng tập chia và cùng protocol prompt, con số này được nâng lên 0.630 và 0.563; tuy nhiên PGA-UNet ở cùng độ phân giải đạt 0.762 và 0.629 dưới prompt bao phủ, tức dẫn trước 0.132 và 0.066 Dice, cùng một khoảng cách tương tự ở CBL. SAM-Med2D chỉ vượt lên ở đúng một chỗ: khoảng cách biên trên FracAtlas, nơi HD95 sau fine-tune của nó là 8.0 pixel, thấp hơn mức 10.6 của PGA-UNet. Việc thay đổi từ prompt bao phủ sang lệch tâm sẽ được bàn riêng ở Mục V.F.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{So sánh với SAM-Med2D ở $256\times256$, merge ở mức ảnh, prompt bao phủ.}
 \label{tab:sam}
 \centering
@@ -395,11 +398,11 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 \end{table}
 
 \subsection{Hiệu năng trên tổn thương nhỏ}
-Tập con tổn thương nhỏ là nơi việc giữ đặc trưng theo prompt sống nên có ý nghĩa nhất: đây là 50 ảnh test mỗi bộ dữ liệu có tổng diện tích tổn thương nhỏ nhất, 7 đến 433 pixel trên BTXRD và 145 đến 944 trên FracAtlas. Mọi số được chấm trong một khung $512\times512$ chung.
+Đây là nơi mà việc giữ đặc trưng theo prompt luôn hoạt động nên phát huy tác dụng rõ nhất: tập con tổn thương nhỏ gồm 50 ảnh test mỗi bộ dữ liệu có tổng diện tích tổn thương nhỏ nhất, dao động từ 7 đến 433 pixel trên BTXRD và từ 145 đến 944 pixel trên FracAtlas. Mọi con số ở đây đều được chấm trong một khung $512\times512$ chung.
 
-\textbf{So với SAM-Med2D ở cùng độ phân giải.} SAM-Med2D chật vật rõ ở kích thước này (Bảng~\ref{tab:small-sam}). Đã fine-tune ở $256$, nó chỉ đạt 0.256 Dice trên BTXRD và 0.371 trên FracAtlas, và zero-shot thì gần bằng không, trong khi PGA-UNet ở cùng $256$ giữ 0.705 và 0.648 với HD95 thấp hơn nhiều.
+\textbf{So với SAM-Med2D ở cùng độ phân giải.} SAM-Med2D gặp khó khăn rõ rệt ở kích thước tổn thương này (Bảng~\ref{tab:small-sam}). Ngay cả sau khi fine-tune ở $256$, nó cũng chỉ đạt 0.256 Dice trên BTXRD và 0.371 trên FracAtlas; còn ở chế độ zero-shot thì gần như bằng không. Trong khi đó, PGA-UNet ở cùng độ phân giải $256$ vẫn giữ được 0.705 và 0.648, với HD95 thấp hơn nhiều.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Tập con tổn thương nhỏ, PGA-UNet so với SAM-Med2D ở cùng độ phân giải $256\times256$. 50 ảnh mỗi bộ dữ liệu, prompt bao phủ, chấm trong khung $512\times512$ chung.}
 \label{tab:small-sam}
 \centering
@@ -423,16 +426,16 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/small_lesion_sam_pga256.png}
 \caption{Ca tổn thương nhỏ trên BTXRD (IMG000932): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, và PGA-UNet, cùng ở $256\times256$. Cả hai biến thể SAM-Med2D đều bỏ sót hoàn toàn tổn thương; PGA-UNet thì không.}
 \label{fig:small-sam}
 \end{figure}
 
-\textbf{So với Attention U-Net khớp prompt ở $512$.} Nhận cùng hộp ở $512$, hai baseline prompt quy ước kém PGA-UNet 0.04 trên BTXRD và 0.11 đến 0.16 trên FracAtlas, và Attention U-Net không prompt tụt xuống khoảng 0.28 (Bảng~\ref{tab:small-att}). Biến thể prompt-crop đạt HD95 thấp hơn trên BTXRD, nơi crop chật hợp với mục tiêu gọn, nhưng không trên FracAtlas.
+\textbf{So với Attention U-Net khớp prompt ở $512$.} Khi được cấp cùng một hộp ở $512$, hai baseline prompt quy ước kém PGA-UNet khoảng 0.04 trên BTXRD và từ 0.11 đến 0.16 trên FracAtlas, còn Attention U-Net không prompt thì tụt xuống chỉ còn khoảng 0.28 (Bảng~\ref{tab:small-att}). Biến thể prompt-crop đạt HD95 thấp hơn trên BTXRD, có lẽ vì crop chật vừa khớp với một mục tiêu nhỏ gọn, nhưng điều này không lặp lại trên FracAtlas.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Tập con tổn thương nhỏ ở $512\times512$, PGA-UNet so với các baseline Attention U-Net. 50 ảnh mỗi bộ dữ liệu, prompt bao phủ.}
 \label{tab:small-att}
 \centering
@@ -458,16 +461,16 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/small_lesion_pga_vs_attunet.png}
 \caption{Ca tổn thương nhỏ trên BTXRD (IMG000932): Attention U-Net (không prompt), Attention U-Net kênh prompt, Attention U-Net crop theo prompt, và PGA-UNet, cùng ở $512\times512$.}
 \label{fig:small-att}
 \end{figure}
 
-\textbf{Độ phân giải trên các stem tổn thương nhỏ.} Ở đây độ phân giải ảnh hưởng rõ nhất. Trên các stem tổn thương nhỏ cố định, Dice của PGA-UNet tụt từ 0.766 ở $512$ xuống 0.631 ở $128$ trên BTXRD và từ 0.720 xuống 0.609 trên FracAtlas, mức mất $512$ xuống $128$ là 0.135 và 0.111, lớn hơn trên toàn tập test (Bảng~\ref{tab:small-res}).
+\textbf{Độ phân giải trên các stem tổn thương nhỏ.} Chính ở nhóm ảnh này, độ phân giải cho thấy ảnh hưởng rõ rệt nhất. Trên tập stem tổn thương nhỏ cố định, Dice của PGA-UNet giảm từ 0.766 ở $512$ xuống còn 0.631 ở $128$ trên BTXRD, và từ 0.720 xuống 0.609 trên FracAtlas; mức mất khi đi từ $512$ xuống $128$ lần lượt là 0.135 và 0.111, lớn hơn hẳn so với mức mất trên toàn tập test (Bảng~\ref{tab:small-res}).
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{PGA-UNet trên tập con tổn thương nhỏ qua các độ phân giải, 50 stem cố định mỗi bộ dữ liệu. Dice, CBL và HD95 (pixel gốc / chuẩn hóa) ở dạng bao phủ / lệch tâm. $\Delta$ là mức mất Dice bao phủ so với $512$.}
 \label{tab:small-res}
 \centering
@@ -491,20 +494,20 @@ Bộ dữ liệu & Độ p.giải & Dice & IoU & CBL & HD95$_\mathrm{px}$\,/\,$_
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/small_lesion_pga_128_256_512.png}
 \caption{PGA-UNet trên cùng một ca tổn thương nhỏ trên BTXRD (IMG000932) ở $128\times128$, $256\times256$, và $512\times512$. Dự đoán khít dần quanh tổn thương khi độ phân giải tăng.}
 \label{fig:small-res}
 \end{figure}
 
-Trên các tổn thương nhỏ nhất này, cả điều kiện hóa prompt lẫn độ phân giải đầu vào đều ảnh hưởng nhiều hơn so với trên toàn tập test.
+Nhìn chung, trên chính những tổn thương nhỏ nhất này, cả việc điều kiện hóa theo prompt lẫn độ phân giải đầu vào đều có ảnh hưởng lớn hơn hẳn so với trên toàn tập test.
 
 \subsection{Độ nhạy với dịch prompt}
 \label{sec:robust}
-Bảng~\ref{tab:robust} dịch hộp lệch tâm theo một quy tắc cố định. PGA-UNet mất 0.008 Dice trên BTXRD và 0.014 trên FracAtlas, với CBL giảm 0.006 và 0.015; trên tập con tổn thương nhỏ, mức mất giữ dưới 0.01 trên cả hai. Các baseline prompt quy ước mất một lượng tương đương hoặc hơi lớn hơn, và SAM-Med2D đã fine-tune khoảng 0.03. Đây là độ nhạy với một quy tắc dịch đã cố định trước. Chúng tôi cũng chưa thử hộp phủ một phần hay hộp sai vùng, nên con số này không nói được gì về hộp do bác sĩ tự vẽ tùy ý ngoài đời.
+Bảng~\ref{tab:robust} trình bày kết quả khi hộp bị dịch lệch tâm theo một quy tắc cố định. PGA-UNet chỉ mất 0.008 Dice trên BTXRD và 0.014 trên FracAtlas, với CBL giảm tương ứng 0.006 và 0.015; riêng trên tập con tổn thương nhỏ, mức mất vẫn giữ dưới 0.01 ở cả hai bộ dữ liệu. Các baseline prompt quy ước mất một lượng tương đương hoặc nhỉnh hơn một chút, còn SAM-Med2D đã fine-tune mất khoảng 0.03. Đây chỉ là độ nhạy đối với một quy tắc dịch đã cố định từ trước. Chúng tôi cũng chưa thử hộp phủ một phần hay hộp sai vùng, nên con số này không nói được gì về hộp do bác sĩ tự vẽ tùy ý ngoài đời.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Độ nhạy với dịch prompt. Mọi mô hình dưới prompt bao phủ (z) và lệch tâm (s). Attention U-Net (không prompt) bất biến với prompt. Các dòng AttUNet và PGA-UNet ở $512\times512$; SAM-Med2D fine-tuned ở $256\times256$, merge ở mức ảnh.}
 \label{tab:robust}
 \centering
@@ -532,7 +535,7 @@ Bộ dữ liệu & Mô hình & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CB
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/prompt_robustness_examples.png}
 \caption{PGA-UNet trên cùng một ca BTXRD (IMG000020) dưới prompt bao phủ (trên) và prompt lệch tâm (dưới); Dice không đổi ở 0.942.}
@@ -540,9 +543,9 @@ Bộ dữ liệu & Mô hình & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CB
 \end{figure}
 
 \subsection{Monte Carlo cross-validation}
-Một tập chia cố định có thể vô tình có lợi hoặc có hại cho phương pháp, nên PGA-UNet ở $512\times512$ được huấn luyện lại trên bốn tập chia ngẫu nhiên mức ảnh mới, seed huấn luyện giữ ở 22120196 và chỉ đổi seed chia tách (Bảng~\ref{tab:mccv}). Dice biến động tối đa 0.011 qua các lần chia trên mỗi bộ dữ liệu và mỗi điều kiện prompt; CBL tối đa 0.013. Trung bình các lần chia lặp lại của FracAtlas, 0.733, nằm ngay trên kết quả tập chia cố định 0.727, nên nếu có thì tập chia được báo cáo hơi khó hơn mức điển hình. Đây là bằng chứng PGA-UNet ổn định qua các lần chia, không phải nó thắng baseline nào.
+Vì một tập chia cố định có thể vô tình làm lợi hoặc gây bất lợi cho phương pháp, chúng tôi huấn luyện lại PGA-UNet ở $512\times512$ trên bốn tập chia ngẫu nhiên mức ảnh khác nhau, giữ nguyên seed huấn luyện ở 22120196 và chỉ thay đổi seed chia tách (Bảng~\ref{tab:mccv}). Kết quả cho thấy Dice chỉ biến động tối đa 0.011 qua các lần chia, trên mỗi bộ dữ liệu và mỗi điều kiện prompt; CBL biến động tối đa 0.013. Đáng chú ý, trung bình các lần chia lặp lại trên FracAtlas là 0.733, cao hơn một chút so với kết quả 0.727 của tập chia cố định dùng trong bài, cho thấy nếu có khác biệt thì tập chia được chọn để báo cáo còn hơi khó hơn mức điển hình. Đây là bằng chứng cho thấy PGA-UNet ổn định qua các lần chia dữ liệu khác nhau, chứ không phải bằng chứng cho thấy nó vượt trội hơn baseline nào.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Monte Carlo cross-validation của PGA-UNet ở $512\times512$, bốn lần chia ngẫu nhiên mức ảnh lặp lại, trung bình $\pm$ độ lệch chuẩn.}
 \label{tab:mccv}
 \centering
@@ -566,10 +569,10 @@ Bộ dữ liệu & Prompt & Dice & IoU & HD95 & CBL \\
 
 \subsection{Nghiên cứu ablation}
 \label{sec:ablation}
-Ablation bỏ một yếu tố mỗi lần khỏi mô hình đầy đủ, prompt Gaussian với PSG và CAD, và riêng thay prompt Gaussian bằng một hộp nhị phân (Bảng~\ref{tab:ablation}). Mô hình đầy đủ có Dice tốt nhất ở ba trong bốn ô dataset và điều kiện prompt. Ngoại lệ là BTXRD dưới prompt bao phủ, nơi biến thể hộp nhị phân hơn 0.006 Dice, nằm trong khoảng nhiễu một tập chia, trong khi mô hình đầy đủ vẫn giữ HD95 thấp nhất và CBL cao nhất ở đó. Ưu thế của prompt Gaussian rõ nhất dưới prompt lệch tâm, nơi mô hình đầy đủ thắng cả hai bộ dữ liệu, và trên FracAtlas, nơi nó thắng mọi cấu hình ở mọi độ đo. Mục tiêu là kiểm tra tổ hợp như một hệ thống, không phải khẳng định một cơ chế nội tại duy nhất. Đây là số một tập chia; bản chạy lại nhiều seed đang tiến hành để xác nhận thứ tự.
+Thí nghiệm ablation lần lượt bỏ đi từng yếu tố khỏi mô hình đầy đủ (prompt Gaussian kết hợp PSG và CAD), đồng thời thử riêng việc thay prompt Gaussian bằng một hộp nhị phân (Bảng~\ref{tab:ablation}). Mô hình đầy đủ đạt Dice tốt nhất ở ba trong bốn tổ hợp dataset và điều kiện prompt. Ngoại lệ duy nhất là BTXRD dưới prompt bao phủ, nơi biến thể dùng hộp nhị phân nhỉnh hơn 0.006 Dice, một mức chênh nằm trong khoảng nhiễu của một tập chia; ở đúng cấu hình đó, mô hình đầy đủ vẫn giữ HD95 thấp nhất và CBL cao nhất. Ưu thế của prompt Gaussian thể hiện rõ nhất dưới prompt lệch tâm, nơi mô hình đầy đủ thắng trên cả hai bộ dữ liệu, và đặc biệt trên FracAtlas, nơi nó thắng ở mọi cấu hình và mọi độ đo. Mục tiêu của thí nghiệm này là kiểm tra cả tổ hợp như một hệ thống, không nhằm khẳng định một cơ chế nội tại duy nhất nào là quan trọng nhất. Đây mới là kết quả trên một tập chia.
 
-\begin{table}[h]
-\caption{Ablation ở $512\times512$, merge ở mức ảnh, một tập chia. Dice, IoU, HD95 và CBL ở dạng bao phủ / lệch tâm. Bản lặp nhiều seed đang chạy.}
+\begin{table}[H]
+\caption{Ablation ở $512\times512$, merge ở mức ảnh, một tập chia. Dice, IoU, HD95 và CBL ở dạng bao phủ / lệch tâm.}
 \label{tab:ablation}
 \centering
 \scriptsize
@@ -596,7 +599,7 @@ Bộ dữ liệu & Cấu hình & Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/ablation/ablation_gaussian_vs_binary_case.png}
 \caption{PGA-UNet đầy đủ trên cùng một ca BTXRD (IMG000054) với prompt Gaussian dạng cao nguyên so với prompt hộp nhị phân, cùng ở $512\times512$. Biến thể nhị phân mất khả năng định vị dù PSG và CAD không đổi.}
@@ -604,9 +607,9 @@ Bộ dữ liệu & Cấu hình & Dice & IoU & HD95 & CBL \\
 \end{figure}
 
 \subsection{Hiệu năng tính toán}
-PGA-UNet nhỏ, và cả 2.955M tham số đều là trainable (Bảng~\ref{tab:efficiency}). Ở độ phân giải khớp $256\times256$, nó nhẹ hơn SAM-Med2D đã fine-tune khoảng 92 lần về tham số, 12 lần về FLOPs, nhỏ hơn 215 lần trên đĩa, và nhanh hơn 6 lần trên GPU. Đây là chi phí đo được trên một cài đặt, một GPU, và hai độ phân giải, không hơn.
+PGA-UNet có kích thước rất nhỏ, toàn bộ 2.955 triệu tham số đều có thể huấn luyện được (Bảng~\ref{tab:efficiency}). Ở độ phân giải khớp $256\times256$, mô hình này nhẹ hơn SAM-Med2D đã fine-tune khoảng 92 lần về số tham số, 12 lần về FLOPs, nhỏ hơn 215 lần về dung lượng lưu trữ, và nhanh hơn 6 lần khi chạy trên GPU. Đây chỉ là các con số chi phí đo được trên một cách cài đặt cụ thể, một GPU cụ thể, và hai độ phân giải đã dùng, không nên suy rộng ra hơn thế.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Hiệu năng trong môi trường kiểm thử (NVIDIA Tesla T4, batch size 1).}
 \label{tab:efficiency}
 \centering
@@ -623,9 +626,9 @@ SAM-Med2D $256$ & 271.24M & 92.02 & 2443 MB & 50.1 & 1324 \\
 \end{table}
 
 \subsection{So sánh thăm dò các hàm loss phân đoạn}
-Vì mục tiêu nhỏ, chúng tôi cũng thử thay số hạng Dice bằng một size-conditioned Tversky loss, và riêng bằng một Focal Dice loss, mọi thứ khác giữ nguyên (Bảng~\ref{tab:loss}). Không cái nào giúp. Dice + BCE mặc định tốt nhất hoặc ngang bằng trên cả hai bộ dữ liệu và cả hai điều kiện prompt, và Focal Dice là một bước lùi rõ trên FracAtlas với HD95 vượt 100 pixel. Chúng tôi giữ đây như một đối chứng âm: dưới protocol hiện tại, hàm mục tiêu mặc định đã là một lựa chọn tốt, và không nhận biến thể nào.
+Vì các mục tiêu phân đoạn trong bài đều có kích thước nhỏ, chúng tôi thử thay số hạng Dice bằng một size-conditioned Tversky loss, và ở một lần thử khác, bằng Focal Dice loss, mọi cài đặt còn lại giữ nguyên (Bảng~\ref{tab:loss}). Kết quả là không phương án nào tốt hơn: hàm mặc định Dice + BCE luôn tốt nhất hoặc ngang bằng trên cả hai bộ dữ liệu và cả hai điều kiện prompt, còn Focal Dice thậm chí là một bước lùi rõ rệt trên FracAtlas, với HD95 vượt quá 100 pixel. Chúng tôi xem đây là một đối chứng âm: dưới protocol hiện tại, hàm mục tiêu mặc định vẫn là lựa chọn tốt, và không có biến thể nào trong hai biến thể trên được áp dụng.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{So sánh thăm dò hàm loss phân đoạn cho PGA-UNet ở $512\times512$, mọi thứ khác giữ nguyên. Dice, IoU, CBL ở dạng bao phủ / lệch tâm. Mặc định không đổi.}
 \label{tab:loss}
 \centering
@@ -650,9 +653,9 @@ Bộ dữ liệu & Loss & Dice & IoU & HD95 & CBL \\
 \end{table}
 
 \subsection{Các kiểu lỗi \enlabel{Failure Modes}}
-PGA-UNet vẫn lỗi, và các lỗi này lặp lại theo một khuôn mẫu nhất định chứ không ngẫu nhiên. Trong rà soát định tính, Dice thấp tụ vào các tổn thương dài hoặc phân nhánh, các tổn thương nằm ở giải phẫu rối rắm như vai hoặc xương đòn, hoặc các tổn thương gần như không nổi lên so với xương xung quanh. Một hộp bao phủ không sửa được một ca mà bản thân bằng chứng ảnh cục bộ đã kém.
+PGA-UNet vẫn còn mắc lỗi, và các lỗi này không xuất hiện ngẫu nhiên mà lặp lại theo một số khuôn mẫu nhất định. Khi rà soát định tính, chúng tôi nhận thấy Dice thấp thường tập trung ở các tổn thương có hình dạng dài hoặc phân nhánh, các tổn thương nằm ở vùng giải phẫu phức tạp như vai hay xương đòn, hoặc những tổn thương gần như không nổi bật so với phần xương xung quanh. Trong những trường hợp như vậy, một hộp bao phủ tốt cũng không giúp được gì nếu bản thân bằng chứng hình ảnh cục bộ đã quá yếu.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/failure/failure_case_overlap.png}
 \caption{Ca lỗi trên BTXRD (IMG000013, Dice 0.120): prompt phủ đúng tổn thương ở bờ ngực/sườn, nhưng dự đoán của PGA-UNet lại lệch ra chỗ khác. Một hộp bao phủ không sửa được ca mà bản thân bằng chứng ảnh cục bộ đã mơ hồ.}
@@ -660,9 +663,9 @@ PGA-UNet vẫn lỗi, và các lỗi này lặp lại theo một khuôn mẫu nh
 \end{figure}
 
 \subsection{Tự đánh giá không cần huấn luyện và gợi ý vùng}
-Không cần đáp án, điểm $Q$ ở Mục III.F vẫn bám theo Dice thật của từng prompt (Bảng~\ref{tab:selfassess}). Tương quan Spearman của nó với Dice thật là 0.70 (bao phủ) và 0.60 (lệch tâm) trên BTXRD, và 0.65 và 0.48 trên FracAtlas. Hai chỉ dấu đều có sức nặng: độ dứt khoát của mask một mình đạt Spearman gần 0.4, độ ổn định khi nhích gần 0.5 đến 0.6, và trung bình của chúng tốt ít nhất bằng từng cái. Chúng tôi cũng huấn luyện một đầu nhỏ để hồi quy Dice trực tiếp; nó sập về một đầu ra gần như hằng số, Spearman dưới 0.2 trên cả hai bộ dữ liệu, và không được dùng.
+Dù không cần đến đáp án thật, điểm $Q$ đã trình bày ở Mục III.F vẫn bám khá sát Dice thật của từng prompt (Bảng~\ref{tab:selfassess}). Tương quan Spearman giữa $Q$ và Dice thật đạt 0.70 (bao phủ) và 0.60 (lệch tâm) trên BTXRD, và 0.65 cùng 0.48 trên FracAtlas. Cả hai chỉ dấu thành phần đều đóng góp thực chất: riêng độ dứt khoát của mask đã đạt Spearman gần 0.4, độ ổn định khi nhích đạt khoảng 0.5 đến 0.6, và khi lấy trung bình hai chỉ dấu, kết quả luôn tốt ít nhất bằng từng chỉ dấu riêng lẻ. Để đối chứng, chúng tôi cũng thử huấn luyện một đầu nhỏ để hồi quy trực tiếp ra Dice; đầu này lại sập về một đầu ra gần như hằng số, Spearman dưới 0.2 trên cả hai bộ dữ liệu, nên không được sử dụng.
 
-\begin{table}[h]
+\begin{table}[H]
 \caption{Tương quan Spearman giữa mỗi chỉ dấu không cần huấn luyện và Dice thật của từng prompt. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
 \label{tab:selfassess}
 \centering
@@ -682,29 +685,26 @@ $Q$ & \best{0.70} & \best{0.60} & \best{0.65} & \best{0.48} \\
 }
 \end{table}
 
-Lật lại, $Q$ có thể xếp hạng 50 hộp ứng viên ngẫu nhiên và giữ vài hộp đầu (Bảng~\ref{tab:suggest}, Hình~\ref{fig:demo-suggest}). Ít nhất một trong năm hộp đầu phủ hơn một nửa tổn thương cho 67\% ảnh BTXRD và 82\% ảnh FracAtlas, và hộp tốt nhất trong năm phủ trung bình 0.84 và 0.90 diện tích tổn thương. Nói cho chắc: đây chỉ là công cụ hỗ trợ xem lại thôi, $Q$ không phải xác suất thật, và danh sách này không thay được việc bác sĩ tự kiểm tra lại.
+Đảo ngược lại cách dùng, $Q$ còn có thể xếp hạng 50 hộp ứng viên được lấy mẫu ngẫu nhiên và chỉ giữ lại vài hộp tốt nhất (Bảng~\ref{tab:suggest}, Hình~\ref{fig:demo-suggest}). Với ít nhất một trong năm hộp đầu, có 67\% ảnh BTXRD và 82\% ảnh FracAtlas mà hộp đó phủ hơn một nửa tổn thương, và hộp tốt nhất trong năm hộp phủ trung bình lần lượt 0.84 và 0.90 diện tích tổn thương. Nói cho chắc: đây chỉ là công cụ hỗ trợ xem lại thôi, $Q$ không phải xác suất thật, và danh sách này không thay được việc bác sĩ tự kiểm tra lại.
 
-\begin{table}[h]
-\caption{Danh sách ngắn vùng ứng viên xếp theo $Q$. 50 hộp không prompt mỗi ảnh được chấm và giữ $k$ hộp đầu. Độ phủ là tỉ lệ pixel tổn thương nằm trong một hộp; tỉ lệ phủ-đủ đếm các ảnh có hộp tốt nhất trong danh sách phủ hơn nửa tổn thương.}
+\begin{table}[H]
+\caption{Danh sách ngắn vùng ứng viên xếp theo $Q$, giữ 5 hộp điểm cao nhất trong số 50 hộp không prompt lấy mẫu mỗi ảnh. Độ phủ là tỉ lệ pixel tổn thương nằm trong một hộp; tỉ lệ phủ-đủ đếm các ảnh có hộp tốt nhất trong danh sách phủ hơn nửa tổn thương.}
 \label{tab:suggest}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{llccc}
+\begin{tabular}{lccc}
 \toprule
-Bộ dữ liệu & Danh sách & Phủ TB & Phủ tốt nhất & Tỉ lệ phủ-đủ \\
+Bộ dữ liệu & Phủ TB & Phủ tốt nhất & Tỉ lệ phủ-đủ \\
 \midrule
-\multirow{2}{*}{BTXRD} & top-3 & 0.55 & 0.77 & 57.8\% \\
-                       & top-5 & 0.52 & 0.84 & 66.8\% \\
-\midrule
-\multirow{2}{*}{FracAtlas} & top-3 & 0.68 & 0.87 & 77.8\% \\
-                           & top-5 & 0.62 & 0.90 & 81.9\% \\
+BTXRD & 0.52 & 0.84 & 66.8\% \\
+FracAtlas & 0.62 & 0.90 & 81.9\% \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/demo/demo_suggestion_btxrd.png}
 \caption{Danh sách ngắn vùng ứng viên trên một ca BTXRD. Năm mươi hộp được lấy mẫu không có prompt, chấm bằng điểm tự đánh giá $Q$, và năm hộp điểm cao nhất được hiển thị để bác sĩ chấp nhận, chỉnh, hoặc bỏ. Một ca FracAtlas ở phần bổ sung.}
@@ -712,16 +712,16 @@ Bộ dữ liệu & Danh sách & Phủ TB & Phủ tốt nhất & Tỉ lệ phủ-
 \end{figure}
 
 \section{Thảo luận \enlabel{Discussion}}
-Câu hỏi bài báo đặt ra chưa bao giờ là prompt có ích theo nghĩa trừu tượng hay không. Nó là liệu cách một mô hình xử lý prompt có còn quan trọng một khi một hộp thô đã thu hẹp việc tìm kiếm. Attention U-Net không hộp trả lời một câu hỏi khác, và Dice thấp của nó, gần 0.34 trên FracAtlas, đo phần bài toán chỉ là tìm tổn thương. Các so sánh thực sự kiểm tra thiết kế đưa cùng một hộp cho một Attention U-Net thuần và cho SAM-Med2D đã fine-tune. Ở cả hai, PGA-UNet giữ một biên: khiêm tốn trên BTXRD, rõ hơn trên FracAtlas, và lớn nhất ở nhóm Bottom-Dice của Attention U-Net và ở các tổn thương nhỏ nhất. Đó là khuôn ta trông đợi nếu PSG và CAD đang làm đúng việc của chúng, giữ prompt sống qua encoder và decoder để một tín hiệu mờ nhạt không bị mất vào downsampling. Ablation từng thành phần một tập chia (Bảng~\ref{tab:ablation}) nhất quán với điều này, với prompt Gaussian dẫn trước dưới prompt lệch tâm và trên FracAtlas; bản chạy lại nhiều seed để xác nhận thứ tự đang tiến hành.
+Câu hỏi bài báo đặt ra chưa bao giờ đơn thuần là prompt có ích hay không nói chung. Câu hỏi thật sự là: một khi hộp thô đã thu hẹp việc tìm kiếm, cách mô hình xử lý prompt đó có còn quan trọng hay không? Attention U-Net khi không có hộp trả lời một câu hỏi khác hẳn, và Dice thấp của nó, gần 0.34 trên FracAtlas, chỉ đo phần việc tìm ra tổn thương. Những so sánh thực sự kiểm chứng được thiết kế là khi cùng một hộp được đưa cho một Attention U-Net thuần và cho SAM-Med2D đã fine-tune. Ở cả hai trường hợp, PGA-UNet đều giữ được một khoảng cách: khiêm tốn trên BTXRD, rõ rệt hơn trên FracAtlas, và lớn nhất ở nhóm Bottom-Dice của Attention U-Net cũng như ở các tổn thương nhỏ nhất. Đây đúng là khuôn mẫu có thể kỳ vọng nếu PSG và CAD đang làm tốt vai trò của mình: giữ cho prompt luôn hoạt động xuyên suốt encoder và decoder, để một tín hiệu mờ nhạt không bị mất đi qua downsampling. Kết quả ablation từng thành phần trên một tập chia (Bảng~\ref{tab:ablation}) cũng nhất quán với nhận định này, khi prompt Gaussian luôn dẫn trước dưới prompt lệch tâm và trên FracAtlas.
 
-Hai kết quả bên lề đáng nói không cần vòng vo. So sánh loss là một âm tính sạch: một size-conditioned Tversky loss hay một Focal Dice loss không giúp, và Focal Dice trên FracAtlas làm mọi thứ tệ hơn, nên hàm mục tiêu Dice + BCE thuần được giữ. Điểm tự đánh giá là một dương tính vừa phải: $Q$ tương quan với Dice thật ở mức thứ hạng khoảng 0.5 đến 0.7 mà không cần nhãn nào, và nó làm được ở nơi một đầu hồi quy học nhỏ không làm được, vì đầu đó chỉ đơn giản dự đoán mức trung bình. $Q$ vẫn chỉ là một con số heuristic, chưa hiệu chuẩn, nên danh sách ứng viên dựng từ nó cũng chỉ nên dùng để gợi ý bác sĩ nhìn vào đâu trước, chứ không thay được việc tự phát hiện.
+Ngoài kết quả chính, nghiên cứu còn ghi nhận hai kết quả phụ. Thứ nhất, so sánh các hàm loss cho một kết quả âm tính khá rõ ràng: cả size-conditioned Tversky loss lẫn Focal Dice loss đều không giúp ích, thậm chí Focal Dice còn làm mọi thứ tệ hơn hẳn trên FracAtlas, nên chúng tôi vẫn giữ hàm mục tiêu mặc định Dice + BCE. Thứ hai, điểm tự đánh giá cho một kết quả dương tính ở mức vừa phải: $Q$ tương quan với Dice thật ở mức thứ hạng khoảng 0.5 đến 0.7 mà hoàn toàn không cần đến nhãn nào, và nó làm được điều mà một đầu hồi quy học nhỏ không làm được, vì đầu đó rốt cuộc chỉ dự đoán ra một giá trị trung bình. Dù vậy, $Q$ vẫn chỉ là một con số heuristic, chưa được hiệu chuẩn, nên danh sách ứng viên dựng từ nó chỉ nên dùng để gợi ý bác sĩ nên nhìn vào đâu trước, chứ không thể thay thế việc tự phát hiện.
 
-Giới hạn của nghiên cứu là cụ thể. Đầu vào được resize về một hình vuông cố định, và các kết quả độ phân giải cho thấy điều đó tốn độ chính xác thật trên các tổn thương nhỏ nhất. Prompt được vẽ từ nhãn, không phải bởi bác sĩ X-quang, và protocol giả định người dùng đã tìm ra vùng và vẽ một hộp phủ nó. Trường hợp hộp chỉ phủ một phần, hộp âm, hay hộp sai vùng thì bài này chưa chạm tới. BTXRD và FracAtlas được huấn luyện tách nhau, không có mô hình chung và không có test chéo dataset, và tách biệt mức bệnh nhân không xác nhận được từ metadata công khai. Các lần chạy Monte Carlo cho thấy ổn định qua các lần chia, không phải vượt trội. Ablation đang giữa quá trình chuyển từ một lần chia sang nhiều. Vòng này cũng để SAM-Med2D là tham chiếu mô hình nền tảng nhận prompt duy nhất; một so sánh với các mô hình y tế nhận prompt mới hơn để dành cho sau. Và các lợi ích khi nhiễu loạn prompt, dù nhất quán với ý đồ thiết kế, không được chứng thực bằng probing mức đặc trưng, nên ablation, một khi xong, sẽ nói về tính hữu ích của thiết kế như một tổng thể chứ không phải về cơ chế chính xác bên trong nó.
+Nghiên cứu này cũng có những giới hạn khá cụ thể. Ảnh đầu vào bị resize về một hình vuông cố định, và chính các kết quả theo độ phân giải cho thấy điều đó gây tốn độ chính xác thật sự trên các tổn thương nhỏ nhất. Prompt trong bài đều được vẽ từ nhãn có sẵn, không phải do bác sĩ X-quang trực tiếp vẽ, và protocol giả định người dùng đã tìm ra đúng vùng rồi mới vẽ một hộp phủ lên nó. Trường hợp hộp chỉ phủ một phần, hộp âm, hay hộp sai vùng thì bài này chưa chạm tới. BTXRD và FracAtlas được huấn luyện tách biệt hoàn toàn, không có mô hình chung và không có bước test chéo dataset nào, còn việc tách biệt theo từng bệnh nhân thì không thể xác nhận được từ metadata công khai. Các lần chạy Monte Carlo chỉ cho thấy sự ổn định qua các lần chia, chứ không chứng minh được tính vượt trội. Thí nghiệm ablation hiện vẫn đang trong giai đoạn chuyển từ một lần chia sang nhiều lần chia. Ở vòng này, SAM-Med2D vẫn là mô hình nền tảng nhận prompt duy nhất được dùng làm tham chiếu; việc so sánh với các mô hình y tế nhận prompt mới hơn xin để dành cho sau. Cuối cùng, dù các lợi ích quan sát được khi prompt bị nhiễu loạn khá nhất quán với ý đồ thiết kế ban đầu, chúng vẫn chưa được kiểm chứng bằng cách phân tích trực tiếp ở mức đặc trưng; vì vậy, một khi hoàn tất, thí nghiệm ablation sẽ chỉ nói lên được tính hữu ích của thiết kế như một tổng thể, chứ chưa thể khẳng định chính xác cơ chế nào bên trong nó đang đóng vai trò quyết định.
 
 \section{Kết luận \enlabel{Conclusion}}
-Bài báo trình bày PGA-UNet, một CNN nhẹ có định hướng bằng prompt cho phân đoạn tổn thương xương X-quang tương tác. Thiết kế biến một hộp bao phủ tổn thương do người dùng cung cấp thành một prior không gian dày đặc và tái sử dụng nó qua PSG phía encoder và CAD phía decoder. Trên BTXRD và FracAtlas, đánh giá dưới các prompt bao phủ và lệch tâm có kiểm soát, PGA-UNet luôn dẫn trước các baseline quy ước khớp prompt và SAM-Med2D đã fine-tune khi nhận cùng một hộp, với biên tập trung ở nơi khu trú tự động thất bại và ở nơi tổn thương nhỏ nhất, và làm được với khoảng 92 lần ít tham số hơn SAM-Med2D. Các thực nghiệm chia lặp lại cho thấy xu hướng ổn định, và một điểm tự đánh giá không cần huấn luyện cho một thứ hạng độ tin cậy không cần đáp án dùng được, dù chưa hiệu chuẩn.
+Bài báo này trình bày PGA-UNet, một mạng CNN nhẹ có định hướng bằng prompt, dùng cho phân đoạn tương tác tổn thương xương trên ảnh X-quang. Thiết kế của mô hình biến một hộp bao phủ tổn thương do người dùng cung cấp thành một prior không gian dày đặc, rồi tái sử dụng prior này qua PSG ở phía encoder và CAD ở phía decoder. Trên hai bộ dữ liệu BTXRD và FracAtlas, đánh giá dưới cả prompt bao phủ lẫn lệch tâm có kiểm soát, PGA-UNet luôn vượt qua các baseline quy ước khớp prompt cũng như SAM-Med2D đã fine-tune khi nhận cùng một hộp; khoảng cách này tập trung rõ nhất ở những nơi khâu định vị tự động thất bại và ở những tổn thương nhỏ nhất, trong khi số tham số của mô hình chỉ bằng khoảng 1/92 so với SAM-Med2D. Các thực nghiệm chia lặp lại cho thấy xu hướng này khá ổn định, và một điểm tự đánh giá không cần huấn luyện cũng cho ra một cách xếp hạng độ tin cậy tuy chưa hiệu chuẩn nhưng vẫn dùng được, ngay cả khi không có nhãn thật.
 
-Kết luận này chỉ đúng trong phạm vi protocol đã dùng: hộp mô phỏng quanh tổn thương có nhãn, chứ chưa phải phát hiện tự do, hộp sai vùng hay phủ một phần, prompt tự tay bác sĩ vẽ, độ tin cậy đã hiệu chuẩn, khả năng tổng quát theo bệnh nhân, hay việc chuyển sang dataset khác. Công việc sau nên hoàn tất ablation nhiều seed, thêm một so sánh rộng hơn với các mô hình y tế nhận prompt gần đây, thay hộp mô phỏng bằng các protocol prompt lỏng và thực tế hơn, và biến điểm tự đánh giá thành một tín hiệu đã hiệu chuẩn để rồi dùng cho gợi ý vùng nghi ngờ trong một vòng xem lại lâm sàng.
+Kết luận này chỉ đúng trong phạm vi protocol đã dùng: hộp mô phỏng quanh tổn thương có nhãn. Nó chưa nói được gì về: phát hiện tự do, hộp sai vùng hay phủ một phần, prompt tự tay bác sĩ vẽ, độ tin cậy đã hiệu chuẩn, khả năng tổng quát theo bệnh nhân, hay việc chuyển sang dataset khác. Trước mắt, chúng tôi sẽ hoàn tất thí nghiệm ablation với nhiều seed, mở rộng đánh giá sang nhiều bộ dữ liệu hơn và hướng tới một mô hình dùng chung thay vì huấn luyện riêng cho từng bộ dữ liệu như hiện tại, đồng thời so sánh thêm với các mô hình y tế nhận prompt gần đây hơn. Về lâu dài, chúng tôi muốn đưa phương pháp gần hơn với điều kiện thực tế: thay các hộp mô phỏng bằng những protocol prompt lỏng và thực tế hơn, bỏ bước resize ảnh về kích thước cố định, và tận dụng thêm thông tin lâm sàng đi kèm để cải thiện cả kết quả phân đoạn lẫn chất lượng vùng gợi ý. Cuối cùng, để giảm chi phí gán nhãn và tiến gần hơn tới một công cụ dùng được trong lâm sàng, hướng đi tiếp theo là học bán giám sát, tận dụng việc vẽ một hộp giới hạn thô nhanh hơn nhiều so với vẽ mask chuẩn theo từng pixel. Chúng tôi muốn khai thác phần lớn dữ liệu chỉ có nhãn hộp rẻ này, kết hợp với một lượng nhỏ mask chuẩn, thay vì đòi hỏi mask chi tiết cho mọi mẫu như hiện tại, cùng với việc biến điểm tự đánh giá thành một tín hiệu đã hiệu chuẩn để dùng cho việc gợi ý vùng nghi ngờ trong một quy trình xem lại lâm sàng thực sự.
 
 \section*{Các mục còn lại}
 
@@ -735,23 +735,25 @@ BTXRD và FracAtlas là bộ dữ liệu công khai được trích dẫn trong 
 Nghiên cứu dùng bộ dữ liệu X-quang công khai đã ẩn danh, không thu thập dữ liệu tiền cứu, không tiếp xúc bệnh nhân, không can thiệp.
 
 \subsection*{Lời cảm ơn \enlabel{Acknowledgment}}
+Nghiên cứu này được tài trợ bởi Đại học Quốc gia Thành phố Hồ Chí Minh (VNU-HCM) theo Đề tài số A2025-18-03.
+
 {\color{BrickRed}[AUTHOR ACTION: cập nhật phần công bố việc dùng AI cho khớp quy trình cuối cùng và chính sách hiện hành của IEEE.]}
 
 \subsection*{Tài liệu tham khảo \enlabel{References, giữ nguyên, không dịch tên bài/tạp chí}}
 \begin{enumerate}[leftmargin=1.6em]
-\item Kirillov \textit{et al.}, ``Segment Anything,'' ICCV 2023.
-\item Cheng \textit{et al.}, ``SAM-Med2D,'' arXiv:2308.16184, 2023.
-\item Ronneberger, Fischer, Brox, ``U-Net: Convolutional Networks for Biomedical Image Segmentation,'' MICCAI 2015.
-\item Oktay \textit{et al.}, ``Attention U-Net: Learning Where to Look for the Pancreas,'' MIDL 2018.
-\item Xu, Price, Cohen, Yang, Huang, ``Deep Interactive Object Selection,'' CVPR 2016.
-\item Wang \textit{et al.}, ``DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation,'' IEEE TPAMI 2019.
-\item Yao \textit{et al.}, ``A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors,'' Scientific Data 2025.
-\item Abedeen \textit{et al.}, ``FracAtlas: A Dataset for Fracture Classification, Localization and Segmentation of Musculoskeletal Radiographs,'' Scientific Data 2023.
-\item Ma \textit{et al.}, ``Segment Anything in Medical Images,'' Nature Communications 2024.
-\item Isensee \textit{et al.}, ``nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation,'' Nature Methods 2021.
-\item Wong, Rakic, Guttag, Dalca, ``ScribblePrompt: Fast and Flexible Interactive Segmentation for Any Biomedical Image,'' ECCV 2024.
-\item Dong \textit{et al.}, ``An efficient segment anything model for the segmentation of medical images,'' Scientific Reports 2024.
-\item Wu \textit{et al.}, ``Medical SAM adapter: Adapting segment anything model for medical image segmentation,'' Medical Image Analysis 2025.
+\item Kirillov \textit{et al.}, \href{https://arxiv.org/abs/2304.02643}{``Segment Anything,''} ICCV 2023.
+\item Cheng \textit{et al.}, \href{https://arxiv.org/abs/2308.16184}{``SAM-Med2D,''} arXiv:2308.16184, 2023.
+\item Ronneberger, Fischer, Brox, \href{https://arxiv.org/abs/1505.04597}{``U-Net: Convolutional Networks for Biomedical Image Segmentation,''} MICCAI 2015.
+\item Oktay \textit{et al.}, \href{https://arxiv.org/abs/1804.03999}{``Attention U-Net: Learning Where to Look for the Pancreas,''} MIDL 2018.
+\item Xu, Price, Cohen, Yang, Huang, \href{https://arxiv.org/abs/1603.04042}{``Deep Interactive Object Selection,''} CVPR 2016.
+\item Wang \textit{et al.}, \href{https://doi.org/10.1109/TPAMI.2018.2840695}{``DeepIGeoS: A Deep Interactive Geodesic Framework for Medical Image Segmentation,''} IEEE TPAMI 2019.
+\item Yao \textit{et al.}, \href{https://www.nature.com/articles/s41597-024-04311-y}{``A Radiograph Dataset for the Classification, Localization, and Segmentation of Primary Bone Tumors,''} Scientific Data 2025.
+\item Abedeen \textit{et al.}, \href{https://www.nature.com/articles/s41597-023-02432-4}{``FracAtlas: A Dataset for Fracture Classification, Localization and Segmentation of Musculoskeletal Radiographs,''} Scientific Data 2023.
+\item Ma \textit{et al.}, \href{https://www.nature.com/articles/s41467-024-44824-z}{``Segment Anything in Medical Images,''} Nature Communications 2024.
+\item Isensee \textit{et al.}, \href{https://www.nature.com/articles/s41592-020-01008-z}{``nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation,''} Nature Methods 2021.
+\item Wong, Rakic, Guttag, Dalca, \href{https://arxiv.org/abs/2312.07381}{``ScribblePrompt: Fast and Flexible Interactive Segmentation for Any Biomedical Image,''} ECCV 2024.
+\item Dong \textit{et al.}, \href{https://www.nature.com/articles/s41598-024-70288-8}{``An efficient segment anything model for the segmentation of medical images,''} Scientific Reports 2024.
+\item Wu \textit{et al.}, \href{https://doi.org/10.1016/j.media.2025.103547}{``Medical SAM adapter: Adapting segment anything model for medical image segmentation,''} Medical Image Analysis 2025.
 \end{enumerate}
 
 \subsection*{Tiểu sử tác giả \enlabel{Biography}}
