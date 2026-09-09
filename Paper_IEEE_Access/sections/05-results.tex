@@ -124,29 +124,37 @@ Dataset & Group & Model & Dice & IoU & HD95 & CBL \\
 \label{fig:extreme-btxrd-bottom}
 \end{figure}
 
-\subsection{Matched Comparison Against SAM-Med2D}
+\subsection{Comparison Against Promptable Baselines}
 \label{sec:sam}
-Both models receive the same box at $256\times256$ (Table~\ref{tab:sam}). In zero-shot mode, SAM-Med2D barely works on bone X-ray images: only 0.255 Dice on BTXRD and 0.262 on FracAtlas. After fine-tuning on the same split and the same prompt protocol, this rises to 0.630 and 0.563; however, PGA-UNet at the same resolution reaches 0.762 and 0.629 under covering prompts, ahead by 0.132 and 0.066 Dice, with a similar gap in CBL. SAM-Med2D pulls ahead in exactly one place: boundary distance on FracAtlas, where its fine-tuned HD95 of 8.0 pixels beats PGA-UNet's 10.6. The change from covering to off-center prompts is discussed separately in Section~\ref{sec:robust}.
+Three promptable foundation models receive the same box: SAM-Med2D (brought into medicine by broad fine-tuning), MedSAM (medical fine-tuning, box-only), and ScribblePrompt-UNet (a lightweight UNet, not a SAM-style architecture). In zero-shot mode, all three are close to unusable on bone X-ray images: 0.25 to 0.43 Dice, with very low precision (0.16 to 0.34) because the mask spills outside the lesion. Fine-tuning on the same split and the same prompt protocol adds 0.24 to 0.42 Dice (Table~\ref{tab:sam}). After fine-tuning, on BTXRD PGA-UNet at $512$ (0.782) leads all three (MedSAM 0.724, ScribblePrompt 0.653, SAM-Med2D 0.630). On FracAtlas under covering prompts, fine-tuned MedSAM (0.729) matches PGA-UNet-512 (0.727); but under off-center prompts PGA-UNet (0.713) pulls well ahead of MedSAM (0.666), and PGA-UNet leads on CBL in every cell and on HD95 in most, while using about $1/90$ of MedSAM's parameters and a smaller input. ScribblePrompt-UNet, despite a parameter count close to PGA-UNet's, trails by 0.05 to 0.13 Dice and has the largest covering-to-off-center drop in the group. Each foundation model is evaluated at its own fixed input resolution, so this comparison is not perfectly resolution-matched. The change from covering to off-center prompts is discussed separately in Section~\ref{sec:robust}.
 
 \begin{table}[t]
-\caption{Comparison with SAM-Med2D at $256\times256$, image-level merged, covering prompts.}
+\caption{Comparison against promptable baselines, image-level merged, covering prompts. Each foundation model runs at its own fixed input resolution; PGA-UNet is shown at $512$.}
 \label{tab:sam}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{llcccc}
+\begin{tabular}{llccccc}
 \toprule
-Dataset & Model & Dice & IoU & HD95 & CBL \\
+Dataset & Model & Res. & Dice & IoU & HD95 & CBL \\
 \midrule
-\multirow{3}{*}{BTXRD}
-& SAM-Med2D zero-shot & 0.255 & 0.156 & 41.2 & 0.734 \\
-& SAM-Med2D fine-tuned & 0.630 & 0.497 & 17.3 & 0.836 \\
-& PGA-UNet & \textbf{0.762} & \textbf{0.633} & \textbf{10.9} & \textbf{0.902} \\
+\multirow{7}{*}{BTXRD}
+& PGA-UNet             & 512  & \textbf{0.782} & \textbf{0.661} & \textbf{22.8} & \textbf{0.918} \\
+& MedSAM zero-shot     & 1024 & 0.304 & 0.185 & 242.4 & 0.832 \\
+& MedSAM fine-tuned    & 1024 & 0.724 & 0.590 & 79.9  & 0.883 \\
+& ScribblePrompt zero-shot  & 128 & 0.411 & 0.285 & 232.2 & 0.774 \\
+& ScribblePrompt fine-tuned & 128 & 0.653 & 0.514 & 122.7 & 0.853 \\
+& SAM-Med2D zero-shot  & 256 & 0.255 & 0.156 & 41.2  & 0.734 \\
+& SAM-Med2D fine-tuned & 256 & 0.630 & 0.497 & 17.3  & 0.836 \\
 \midrule
-\multirow{3}{*}{FracAtlas}
-& SAM-Med2D zero-shot & 0.262 & 0.156 & 21.3 & 0.752 \\
-& SAM-Med2D fine-tuned & 0.563 & 0.417 & \textbf{8.0} & 0.846 \\
-& PGA-UNet & \textbf{0.629} & \textbf{0.470} & 10.6 & \textbf{0.895} \\
+\multirow{7}{*}{FracAtlas}
+& PGA-UNet             & 512  & 0.727 & \textbf{0.585} & 10.5 & \textbf{0.913} \\
+& MedSAM zero-shot     & 1024 & 0.319 & 0.193 & 60.1 & 0.843 \\
+& MedSAM fine-tuned    & 1024 & \textbf{0.729} & 0.583 & 16.2 & 0.900 \\
+& ScribblePrompt zero-shot  & 128 & 0.432 & 0.290 & 34.2 & 0.832 \\
+& ScribblePrompt fine-tuned & 128 & 0.679 & 0.527 & 17.9 & 0.891 \\
+& SAM-Med2D zero-shot  & 256 & 0.262 & 0.156 & 21.3 & 0.752 \\
+& SAM-Med2D fine-tuned & 256 & 0.563 & 0.417 & \textbf{8.0} & 0.846 \\
 \bottomrule
 \end{tabular}
 }
@@ -264,10 +272,10 @@ Overall, on precisely these smallest lesions, both prompt conditioning and input
 
 \subsection{Sensitivity to Prompt Displacement}
 \label{sec:robust}
-Table~\ref{tab:robust} shows what happens when the box is shifted off-center under one fixed rule. PGA-UNet loses only 0.008 Dice on BTXRD and 0.014 on FracAtlas, with CBL dropping by 0.006 and 0.015 respectively; on the small-lesion subset the loss stays under 0.01 for both datasets. The conventional prompt baselines lose a comparable amount or slightly more, and fine-tuned SAM-Med2D loses about 0.03. This is only sensitivity to one displacement rule fixed in advance. We have not yet tested partial-coverage boxes or off-target boxes, so this number says nothing about boxes a clinician might freely draw in practice.
+Table~\ref{tab:robust} shows what happens when the box is shifted off-center under one fixed rule. PGA-UNet loses only 0.008 Dice on BTXRD and 0.014 on FracAtlas, with CBL dropping by 0.006 and 0.015 respectively; on the small-lesion subset the loss stays under 0.01 for both datasets. The conventional prompt baselines lose a comparable amount or slightly more, and the three fine-tuned promptable foundation models lose 0.03 to 0.08 Dice, ScribblePrompt-UNet the most. This is only sensitivity to one displacement rule fixed in advance. We have not yet tested partial-coverage boxes or off-target boxes, so this number says nothing about boxes a clinician might freely draw in practice.
 
 \begin{table}[t]
-\caption{Sensitivity to prompt displacement. Every model under covering (z) and off-center (s) prompts. Attention U-Net (no prompt) is prompt-invariant. AttUNet rows and PGA-UNet at $512\times512$; SAM-Med2D fine-tuned at $256\times256$, image-level merged.}
+\caption{Sensitivity to prompt displacement. Every model under covering (z) and off-center (s) prompts. Attention U-Net (no prompt) is prompt-invariant. AttUNet rows and PGA-UNet at $512\times512$; the promptable foundation models at their own native resolutions (SAM-Med2D $256$, MedSAM $1024$, ScribblePrompt $128$), image-level merged.}
 \label{tab:robust}
 \centering
 \scriptsize
@@ -276,18 +284,22 @@ Table~\ref{tab:robust} shows what happens when the box is shifted off-center und
 \toprule
 Dataset & Model & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
 \midrule
-\multirow{5}{*}{BTXRD}
+\multirow{7}{*}{BTXRD}
 & Attention U-Net (no prompt) & 0.517 / 0.517 & $0.000$ & 0.418 / 0.418 & 120.4 / 120.4 & 0.620 / 0.620 \\
 & Attention U-Net + prompt channel & 0.760 / 0.748 & $-0.012$ & 0.635 / 0.626 & 33.0 / 32.6 & 0.895 / 0.890 \\
 & Attention U-Net + prompt crop & 0.741 / 0.733 & $-0.008$ & 0.615 / 0.607 & 24.7 / 26.4 & 0.912 / 0.896 \\
 & SAM-Med2D fine-tuned & 0.630 / 0.601 & $-0.029$ & 0.497 / 0.471 & 17.3 / 17.5 & 0.836 / 0.813 \\
+& MedSAM fine-tuned & 0.724 / 0.691 & $-0.033$ & 0.590 / 0.559 & 79.9 / 66.8 & 0.883 / 0.870 \\
+& ScribblePrompt fine-tuned & 0.653 / 0.573 & $-0.080$ & 0.514 / 0.435 & 122.7 / 110.5 & 0.853 / 0.815 \\
 & PGA-UNet & \textbf{0.782 / 0.774} & $\mathbf{-0.008}$ & \textbf{0.661 / 0.652} & 22.8 / 24.5 & \textbf{0.918 / 0.912} \\
 \midrule
-\multirow{5}{*}{FracAtlas}
+\multirow{7}{*}{FracAtlas}
 & Attention U-Net (no prompt) & 0.342 / 0.342 & $0.000$ & 0.253 / 0.253 & 139.9 / 139.9 & 0.478 / 0.478 \\
 & Attention U-Net + prompt channel & 0.593 / 0.588 & $\mathbf{-0.005}$ & 0.434 / 0.428 & 22.9 / 24.0 & 0.887 / 0.860 \\
 & Attention U-Net + prompt crop & 0.590 / 0.563 & $-0.027$ & 0.451 / 0.428 & 22.0 / 23.8 & 0.865 / 0.833 \\
 & SAM-Med2D fine-tuned & 0.563 / 0.532 & $-0.031$ & 0.417 / 0.389 & 8.0 / 8.4 & 0.846 / 0.816 \\
+& MedSAM fine-tuned & 0.729 / 0.666 & $-0.063$ & 0.583 / 0.518 & 16.2 / 17.7 & 0.900 / 0.861 \\
+& ScribblePrompt fine-tuned & 0.679 / 0.598 & $-0.081$ & 0.527 / 0.440 & 17.9 / 24.2 & 0.891 / 0.833 \\
 & PGA-UNet & \textbf{0.727 / 0.713} & $-0.014$ & \textbf{0.585 / 0.570} & \textbf{10.5 / 10.4} & \textbf{0.913 / 0.897} \\
 \bottomrule
 \end{tabular}
