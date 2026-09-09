@@ -429,7 +429,7 @@ PGA-UNet still makes mistakes, and these mistakes are not random but recur in a 
 
 \subsection{Training-Free Self-Assessment and Candidate Suggestion}
 \label{sec:selfassess-results}
-Even without any ground truth, the score $Q$ presented in Section~\ref{sec:selfassess} still tracks the true Dice of each prompt fairly closely (Table~\ref{tab:selfassess}). The Spearman correlation between $Q$ and the true Dice reaches 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas. Both component cues contribute meaningfully: mask decisiveness alone already reaches a Spearman of nearly 0.4, jitter stability reaches about 0.5 to 0.6, and averaging the two cues is always at least as good as either alone. As a control, we also tried training a small head to directly regress the Dice; it collapsed to a near-constant output, with Spearman under 0.2 on both datasets, so it is not used.
+The two support signals below are computed directly from the trained model's output and are reported as preliminary. Even without any ground truth, the score $Q$ from Section~\ref{sec:selfassess} still tracks the true Dice of each prompt fairly closely on lesion-bearing images (Table~\ref{tab:selfassess}). The Spearman correlation between $Q$ and the true Dice reaches 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas. Both component cues contribute meaningfully: mask decisiveness alone already reaches a Spearman of nearly 0.4, jitter stability reaches about 0.5 to 0.6, and averaging the two cues is always at least as good as either alone. As a control, we also tried training a small head to directly regress the Dice; it collapsed to a near-constant output, with Spearman under 0.2 on both datasets, so it is not used.
 
 \begin{table}[t]
 \caption{Spearman correlation between each training-free cue and the true per-prompt Dice. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
@@ -451,7 +451,7 @@ $Q$ & \textbf{0.70} & \textbf{0.60} & \textbf{0.65} & \textbf{0.48} \\
 }
 \end{table}
 
-Turned the other way around, $Q$ can also rank 50 randomly sampled candidate boxes and keep only the best few (Table~\ref{tab:suggest}, Figure~\ref{fig:demo-suggest}). For at least one of the top five boxes, 67\% of BTXRD images and 82\% of FracAtlas images have that box covering more than half the lesion, and the best of the five boxes covers 0.84 and 0.90 of the lesion area on average, respectively. To be clear, this is only a review-support tool: $Q$ is not a true probability, and this shortlist does not replace the clinician's own review.
+Turned the other way around, $Q$ can also rank 50 randomly sampled candidate boxes and keep only the best few (Table~\ref{tab:suggest}, Figure~\ref{fig:demo-suggest}). For at least one of the top five boxes, 67\% of BTXRD images and 82\% of FracAtlas images have that box covering more than half the lesion, and the best of the five boxes covers 0.84 and 0.90 of the lesion area on average, respectively. This is only a scaffold for a small suggestion feature: $Q$ is not a true probability, the shortlist does not replace the clinician's own review, and as the next paragraph shows, it is only meaningful when a lesion is actually present.
 
 \begin{table}[t]
 \caption{Candidate-region shortlist ranked by $Q$, keeping the 5 highest-scoring boxes out of 50 prompt-free boxes sampled per image. Coverage is the fraction of lesion pixels inside a box; full-coverage counts images whose best shortlisted box covers more than half the lesion.}
@@ -465,6 +465,25 @@ Dataset & Mean cov. & Best-of-list cov. & Full-cov. rate \\
 \midrule
 BTXRD & 0.52 & 0.84 & 66.8\% \\
 FracAtlas & 0.62 & 0.90 & 81.9\% \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+$Q$ presupposes that a lesion lies inside the box. To probe this assumption, we ran the same 50-box sampling on the lesion-free images of each dataset (1879 tumor-free BTXRD images, 3366 fracture-free FracAtlas images), where no coverage is defined (Table~\ref{tab:boxquality-normal}). $Q$ does not stay reliably low: the median collapses toward zero, but about 28\% of boxes on BTXRD and 42\% on FracAtlas still exceed $Q = 0.5$, and almost every lesion-free image has some box placement that scores high (the per-image maximum $Q$ averages 0.85 and 0.90). This follows from the model's weights being learned only on lesion-bearing images, with no negative class: given any box, the model still produces a decisive, jitter-stable segmentation of whatever structure lies inside, and $Q$ rewards exactly that. $Q$ should therefore be read as a conditional quality signal: it ranks how good a mask is once a lesion has been located, and does not by itself flag lesion absence. Adding lesion-free images to training is a direction we plan to develop.
+
+\begin{table}[t]
+\caption{Distribution of the self-assessment score $Q$ on lesion-free images, with 50 random boxes sampled per image. With no lesion present, coverage is undefined; only the distribution of $Q$ is reported.}
+\label{tab:boxquality-normal}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+Dataset & Lesion-free img. & Median $Q$ & p90 $Q$ & Boxes $Q\!\ge\!0.5$ & $\overline{Q_{\max}/\text{img}}$ \\
+\midrule
+BTXRD & 1879 & 0.00 & 0.75 & 28\% & 0.85 \\
+FracAtlas & 3366 & 0.07 & 0.82 & 42\% & 0.90 \\
 \bottomrule
 \end{tabular}
 }

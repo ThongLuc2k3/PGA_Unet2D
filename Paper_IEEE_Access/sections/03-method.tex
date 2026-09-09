@@ -58,7 +58,7 @@ In summary, the method consists of four steps: (1) preprocess the image and prom
 
 \subsection{Training-Free Self-Assessment Score}
 \label{sec:selfassess}
-Besides the predicted mask, PGA-UNet also returns a scalar $Q$, estimating how trustworthy a prediction is without needing the true answer. $Q$ is not a learned quantity; it is computed only from the model's own output at inference time, as the average of two cues.
+Besides the predicted mask, PGA-UNet also returns a scalar $Q$, estimating how trustworthy a prediction is without needing the true answer. $Q$ is not a learned quantity; it is computed only from the model's own output at inference time, as the average of two cues. $Q$ is used as a support signal, letting the user look more critically at a given mask, not as a core component of the method.
 
 The first cue, $S_{\mathrm{sharp}}$, measures how decisive the predicted mask is. Let $p$ be the sigmoid probability map and $\Omega=\{p>0.5\}$ the predicted positive region. Then
 \begin{equation}
@@ -72,6 +72,6 @@ S_{\mathrm{stab}} = \frac{1}{K}\sum_{k=1}^{K}\operatorname{IoU}\!\left(\hat{\mat
 \end{equation}
 A prediction that stays nearly unchanged when the box is nudged slightly is considered more trustworthy than one that collapses or drifts elsewhere.
 
-The final score is $Q=\tfrac{1}{2}\bigl(S_{\mathrm{sharp}}+S_{\mathrm{stab}}\bigr)$, with $K=6$, a maximum shift of $0.12$ of the box side, and a scale factor within $\pm0.10$. It should be emphasized that $Q$ is only a heuristic ranking signal, not a calibrated probability: a value of $0.7$ does not mean a $70\%$ probability that the mask is correct.
+The final score is $Q=\tfrac{1}{2}\bigl(S_{\mathrm{sharp}}+S_{\mathrm{stab}}\bigr)$, with $K=6$, a maximum shift of $0.12$ of the box side, and a scale factor within $\pm0.10$. It should be emphasized that $Q$ is only a heuristic ranking signal, not a calibrated probability: a value of $0.7$ does not mean a $70\%$ probability that the mask is correct. $Q$ also presupposes that a lesion lies inside the box: it measures mask quality, not lesion presence.
 
-We reuse this same score to shortlist candidate regions when no prompt is given: a set of boxes with varying size and position is sampled, each box is scored with $Q$, and the highest-scoring few are returned for the clinician to accept, adjust, or discard. This is only a review-support tool, not an automatic detector.
+We reuse this same score to shortlist candidate regions when no prompt is given: a set of boxes with varying size and position is sampled, each box is scored with $Q$, and the highest-scoring few are returned for the clinician to accept, adjust, or discard. This is only a scaffold for a small suggestion feature we are working toward, not an automatic detector.
