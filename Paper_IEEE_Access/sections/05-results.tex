@@ -126,10 +126,14 @@ Dataset & Group & Model & Dice & IoU & HD95 & CBL \\
 
 \subsection{Comparison Against Promptable Baselines}
 \label{sec:sam}
-Three promptable foundation models receive the same box: SAM-Med2D (brought into medicine by broad fine-tuning), MedSAM (medical fine-tuning, box-only), and ScribblePrompt-UNet (a lightweight UNet, not a SAM-style architecture). In zero-shot mode, all three are close to unusable on bone X-ray images: 0.25 to 0.43 Dice, with very low precision (0.16 to 0.34) because the mask spills outside the lesion. Fine-tuning on the same split and the same prompt protocol adds 0.24 to 0.42 Dice (Table~\ref{tab:sam}). After fine-tuning, on BTXRD PGA-UNet at $512$ (0.782) leads all three (MedSAM 0.724, ScribblePrompt 0.653, SAM-Med2D 0.630). On FracAtlas under covering prompts, fine-tuned MedSAM (0.729) matches PGA-UNet-512 (0.727); but under off-center prompts PGA-UNet (0.713) pulls well ahead of MedSAM (0.666), and PGA-UNet leads on CBL in every cell and on HD95 in most, while using about $1/90$ of MedSAM's parameters and a smaller input. ScribblePrompt-UNet, despite a parameter count close to PGA-UNet's, trails by 0.05 to 0.13 Dice and has the largest covering-to-off-center drop in the group. Each foundation model is evaluated at its own fixed input resolution, so this comparison is not perfectly resolution-matched. The change from covering to off-center prompts is discussed separately in Section~\ref{sec:robust}.
+Three promptable foundation models receive the same box: SAM-Med2D (brought into medicine by broad fine-tuning), MedSAM (medical fine-tuning, box-only), and ScribblePrompt-UNet (a lightweight UNet, not a SAM-style architecture). In zero-shot mode, all three are close to unusable on bone X-ray images: 0.25 to 0.43 Dice, with very low precision (0.16 to 0.34) because the mask spills outside the lesion. Fine-tuning on the same split and the same prompt protocol adds 0.24 to 0.42 Dice (Table~\ref{tab:sam}).
+
+At the resolution-matched setting, PGA-UNet at $256$ leads fine-tuned SAM-Med2D at $256$ by 0.132 Dice on BTXRD (0.762 vs 0.630) and by 0.066 on FracAtlas (0.629 vs 0.563), with CBL also higher (0.902 vs 0.836; 0.895 vs 0.846).
+
+MedSAM and ScribblePrompt-UNet run at their native $1024$ and $128$, so we compare the frame-invariant metrics. PGA-UNet at its best $512$ configuration (0.782 on BTXRD) leads both fine-tuned MedSAM (0.724) and ScribblePrompt-UNet (0.653). On FracAtlas under covering prompts, fine-tuned MedSAM reaches 0.729, level with PGA-UNet-512 (0.727), but only while running at a $1024$ input, about four times the pixel area and 32 times the parameters; under off-center prompts PGA-UNet (0.713) pulls ahead of MedSAM (0.666) and leads on CBL in every cell. ScribblePrompt-UNet, at a parameter count close to PGA-UNet's (4.0 M vs 3.0 M), trails by 0.05 to 0.13 Dice and has the largest covering-to-off-center drop in the group. The change from covering to off-center prompts is discussed separately in Section~\ref{sec:robust}.
 
 \begin{table}[t]
-\caption{Comparison against promptable baselines, image-level merged, covering prompts. Each foundation model runs at its own fixed input resolution; PGA-UNet is shown at $512$.}
+\caption{Comparison against promptable baselines, image-level merged, covering prompts. PGA-UNet is shown at $256$ (resolution-matched to SAM-Med2D) and at $512$ (its best configuration); MedSAM and ScribblePrompt-UNet run at their native $1024$ and $128$. Raw HD95 is scored in each model's own frame, so it is not comparable across rows and is left unbolded; Dice, IoU and CBL are frame-invariant.}
 \label{tab:sam}
 \centering
 \scriptsize
@@ -138,8 +142,9 @@ Three promptable foundation models receive the same box: SAM-Med2D (brought into
 \toprule
 Dataset & Model & Res. & Dice & IoU & HD95 & CBL \\
 \midrule
-\multirow{7}{*}{BTXRD}
-& PGA-UNet             & 512  & \textbf{0.782} & \textbf{0.661} & \textbf{22.8} & \textbf{0.918} \\
+\multirow{8}{*}{BTXRD}
+& PGA-UNet             & 512  & \textbf{0.782} & \textbf{0.661} & 22.8 & \textbf{0.918} \\
+& PGA-UNet             & 256  & 0.762 & 0.633 & 10.9 & 0.902 \\
 & MedSAM zero-shot     & 1024 & 0.304 & 0.185 & 242.4 & 0.832 \\
 & MedSAM fine-tuned    & 1024 & 0.724 & 0.590 & 79.9  & 0.883 \\
 & ScribblePrompt zero-shot  & 128 & 0.411 & 0.285 & 232.2 & 0.774 \\
@@ -147,14 +152,15 @@ Dataset & Model & Res. & Dice & IoU & HD95 & CBL \\
 & SAM-Med2D zero-shot  & 256 & 0.255 & 0.156 & 41.2  & 0.734 \\
 & SAM-Med2D fine-tuned & 256 & 0.630 & 0.497 & 17.3  & 0.836 \\
 \midrule
-\multirow{7}{*}{FracAtlas}
+\multirow{8}{*}{FracAtlas}
 & PGA-UNet             & 512  & 0.727 & \textbf{0.585} & 10.5 & \textbf{0.913} \\
+& PGA-UNet             & 256  & 0.629 & 0.470 & 10.6 & 0.895 \\
 & MedSAM zero-shot     & 1024 & 0.319 & 0.193 & 60.1 & 0.843 \\
 & MedSAM fine-tuned    & 1024 & \textbf{0.729} & 0.583 & 16.2 & 0.900 \\
 & ScribblePrompt zero-shot  & 128 & 0.432 & 0.290 & 34.2 & 0.832 \\
 & ScribblePrompt fine-tuned & 128 & 0.679 & 0.527 & 17.9 & 0.891 \\
 & SAM-Med2D zero-shot  & 256 & 0.262 & 0.156 & 21.3 & 0.752 \\
-& SAM-Med2D fine-tuned & 256 & 0.563 & 0.417 & \textbf{8.0} & 0.846 \\
+& SAM-Med2D fine-tuned & 256 & 0.563 & 0.417 & 8.0 & 0.846 \\
 \bottomrule
 \end{tabular}
 }
@@ -275,7 +281,7 @@ Overall, on precisely these smallest lesions, both prompt conditioning and input
 Table~\ref{tab:robust} shows what happens when the box is shifted off-center under one fixed rule. PGA-UNet loses only 0.008 Dice on BTXRD and 0.014 on FracAtlas, with CBL dropping by 0.006 and 0.015 respectively; on the small-lesion subset the loss stays under 0.01 for both datasets. The conventional prompt baselines lose a comparable amount or slightly more, and the three fine-tuned promptable foundation models lose 0.03 to 0.08 Dice, ScribblePrompt-UNet the most. This is only sensitivity to one displacement rule fixed in advance. We have not yet tested partial-coverage boxes or off-target boxes, so this number says nothing about boxes a clinician might freely draw in practice.
 
 \begin{table}[t]
-\caption{Sensitivity to prompt displacement. Every model under covering (z) and off-center (s) prompts. Attention U-Net (no prompt) is prompt-invariant. AttUNet rows and PGA-UNet at $512\times512$; the promptable foundation models at their own native resolutions (SAM-Med2D $256$, MedSAM $1024$, ScribblePrompt $128$), image-level merged.}
+\caption{Sensitivity to prompt displacement. Every model under covering (z) and off-center (s) prompts. Attention U-Net (no prompt) is prompt-invariant. AttUNet rows and PGA-UNet at $512\times512$; the promptable foundation models at their own native resolutions (SAM-Med2D $256$, MedSAM $1024$, ScribblePrompt $128$), image-level merged. Raw HD95 spans these native frames and is not comparable across model families, so it is left unbolded; Dice, $\Delta$Dice, IoU and CBL are frame-invariant.}
 \label{tab:robust}
 \centering
 \scriptsize
@@ -300,7 +306,7 @@ Dataset & Model & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
 & SAM-Med2D fine-tuned & 0.563 / 0.532 & $-0.031$ & 0.417 / 0.389 & 8.0 / 8.4 & 0.846 / 0.816 \\
 & MedSAM fine-tuned & 0.729 / 0.666 & $-0.063$ & 0.583 / 0.518 & 16.2 / 17.7 & 0.900 / 0.861 \\
 & ScribblePrompt fine-tuned & 0.679 / 0.598 & $-0.081$ & 0.527 / 0.440 & 17.9 / 24.2 & 0.891 / 0.833 \\
-& PGA-UNet & \textbf{0.727 / 0.713} & $-0.014$ & \textbf{0.585 / 0.570} & \textbf{10.5 / 10.4} & \textbf{0.913 / 0.897} \\
+& PGA-UNet & \textbf{0.727 / 0.713} & $-0.014$ & \textbf{0.585 / 0.570} & 10.5 / 10.4 & \textbf{0.913 / 0.897} \\
 \bottomrule
 \end{tabular}
 }
@@ -315,7 +321,7 @@ Dataset & Model & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
 
 \subsection{Ablation Study}
 \label{sec:ablation}
-The ablation drops one factor at a time from the full model (Gaussian prompt combined with PSG and CAD), and separately tests replacing the Gaussian prompt with a binary box (Table~\ref{tab:ablation}). The full model achieves the best Dice in three of the four dataset-and-prompt-condition combinations. The only exception is BTXRD under covering prompts, where the binary-box variant is 0.006 Dice higher, a margin within the noise of a single split; in that same configuration, the full model still keeps the lowest HD95 and the highest CBL. The Gaussian prompt's advantage is clearest under off-center prompts, where the full model wins on both datasets, and especially on FracAtlas, where it wins every configuration on every metric. The goal of this experiment is to test the combination as a system, not to claim that any single internal mechanism is the most important. These are single-split results.
+The ablation drops one factor at a time from the full model (Gaussian prompt combined with PSG and CAD), and separately tests replacing the Gaussian prompt with a binary box (Table~\ref{tab:ablation}). We do not read it as a search for the single peak configuration but for the one that stays near the top on both datasets. The full model is first or second in all four dataset-and-prompt combinations; each ablated variant is top-two in exactly one. Every setting that matches or beats it on BTXRD gives most of that back on FracAtlas: the binary-box variant leads BTXRD covering by 0.006 Dice but trails by 0.059 on FracAtlas, and PSG-only is close on BTXRD yet falls 0.092 Dice below the full model on FracAtlas. The full configuration also has the smallest BTXRD-to-FracAtlas Dice gap of any setting (0.055 vs 0.075 to 0.144 for the others). These are single-split results.
 
 \begin{table}[t]
 \caption{Ablation at $512\times512$, image-level merged, single split. Dice, IoU, HD95 and CBL as covering / off-center.}
@@ -344,6 +350,29 @@ Dataset & Configuration & Dice & IoU & HD95 & CBL \\
 \end{tabular}
 }
 \end{table}
+
+\begin{table}[t]
+\caption{Paired comparison of the full model against each ablated variant, per-image Dice on the single split. $\Delta$ is the mean per-image Dice difference (full minus variant), tested with a two-sided paired sign-flip randomization test ($20{,}000$ permutations). $^{**}$ marks entries that stay significant ($p<0.05$) after Holm correction over the full family of ablation tests (four metrics $\times$ two datasets $\times$ two prompt conditions); $^{*}$ marks raw $p<0.05$ that does not survive correction.}
+\label{tab:ablation-sig}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+$\Delta$Dice, full vs variant & \multicolumn{2}{c}{BTXRD} & \multicolumn{2}{c}{FracAtlas} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & covering & off-center & covering & off-center \\
+\midrule
+CAD only (no PSG)            & $+0.010$ & $+0.015^{*}$ & $+0.031^{*}$  & $+0.028^{*}$ \\
+PSG only (no CAD)            & $+0.002$ & $+0.003$     & $+0.092^{**}$ & $+0.102^{**}$ \\
+PSG + vanilla attention gate & $+0.012$ & $+0.017^{*}$ & $+0.038^{*}$  & $+0.022$ \\
+Full + binary box prompt     & $-0.006$ & $+0.004$     & $+0.059^{**}$ & $+0.056^{**}$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+These single-split ablation gaps line up with the rest of the study. The Gaussian prompt and the CAD path cost the most to remove on FracAtlas, the harder and smaller dataset, where both drops survive Holm correction over the full family of ablation tests (Table~\ref{tab:ablation-sig}); the CAD-removed variant loses 0.09 to 0.10 Dice. On BTXRD, where every configuration already sits near 0.78, nothing reaches significance, including the 0.006 Dice binary-box lead (bootstrap $95\%$ CI $[-0.017, +0.004]$). This is the same direction seen under prompt displacement (Section~\ref{sec:robust}) and on the Attention U-Net bottom-Dice group (Table~\ref{tab:extreme}): the conditioning helps where the localization signal is weak and matters little where it is already strong. We therefore read the ablation as one line of converging evidence, not a component-by-component proof, which a single split could not give in any case.
 
 \begin{figure}[t]
 \centering
@@ -441,7 +470,7 @@ PGA-UNet still makes mistakes, and these mistakes are not random but recur in a 
 
 \subsection{Training-Free Self-Assessment and Candidate Suggestion}
 \label{sec:selfassess-results}
-The two support signals below are computed directly from the trained model's output and are reported as preliminary. Even without any ground truth, the score $Q$ from Section~\ref{sec:selfassess} still tracks the true Dice of each prompt fairly closely on lesion-bearing images (Table~\ref{tab:selfassess}). The Spearman correlation between $Q$ and the true Dice reaches 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas. Both component cues contribute meaningfully: mask decisiveness alone already reaches a Spearman of nearly 0.4, jitter stability reaches about 0.5 to 0.6, and averaging the two cues is always at least as good as either alone. As a control, we also tried training a small head to directly regress the Dice; it collapsed to a near-constant output, with Spearman under 0.2 on both datasets, so it is not used.
+The two support signals below are computed directly from the trained model's output and are reported as preliminary. Even without any ground truth, the score $Q$ from Section~\ref{sec:selfassess} still tracks the true Dice of each prompt fairly closely on lesion-bearing images (Table~\ref{tab:selfassess}). The Spearman correlation between $Q$ and the true Dice reaches 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas; all four are significantly different from zero (permutation test, $p<0.001$), with bootstrap $95\%$ intervals ranging from $[0.61,0.77]$ on BTXRD covering to $[0.29,0.63]$ on FracAtlas off-center. Both component cues contribute meaningfully: mask decisiveness alone already reaches a Spearman of nearly 0.4, jitter stability reaches about 0.5 to 0.6, and averaging the two cues is always at least as good as either alone. As a control, we also tried training a small head to directly regress the Dice; it collapsed to a near-constant output, with Spearman under 0.2 on both datasets, so it is not used.
 
 \begin{table}[t]
 \caption{Spearman correlation between each training-free cue and the true per-prompt Dice. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}

@@ -151,9 +151,7 @@ Mới: "... to a plain Attention U-Net and to fine-tuned promptable foundation m
 ### 6. `06-discussion` dòng 7 EN (câu "sole promptable foundation-model reference")
 Cũ: "In this round, SAM-Med2D remains the sole promptable foundation-model reference;
 comparison with newer promptable medical models is left for later."
-Mới: XÓA câu này (giờ đã có 3 baseline; SAM2 để future work có thể thêm 1 câu ngắn
-riêng: "SAM2 is not included; its image encoder is impractical to fine-tune at this
-scale and the fine-tuned SAM family is already covered.").
+Mới: XÓA câu này (giờ đã có 3 baseline).
 
 ### 7. `07-conclusion` dòng 2 EN (VN ~742)
 Cũ: "... as well as fine-tuned SAM-Med2D given the same box ... only about 1/92 that
