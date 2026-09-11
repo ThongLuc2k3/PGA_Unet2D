@@ -237,7 +237,7 @@ Chúng tôi so sánh PGA-UNet với một baseline tự động là Attention U-
 
 Để tách bạch xem lợi thế của PGA-UNet đến từ kiến trúc hay chỉ đơn thuần từ việc có prompt hộp, chúng tôi bổ sung thêm hai baseline quy ước khớp prompt, cùng dựa trên khung Attention U-Net, nhận đúng hộp prompt mà PGA-UNet nhận nhưng không có bản đồ nhiệt Gaussian, PSG hay CAD. Baseline thứ nhất, Attention U-Net kênh prompt, ghép bản đồ nhiệt prompt làm channel đầu vào thứ hai rồi dự đoán trên toàn ảnh qua một decoder skip-connection thuần. Baseline thứ hai, Attention U-Net trên vùng crop theo prompt, thu hẹp trường nhìn của mạng: ảnh đầu vào được crop theo hộp prompt trước khi resize về độ phân giải đầu vào của mô hình, Attention U-Net thuần dự đoán mask chỉ trên vùng crop đó, rồi kết quả được dán lại vào khung ảnh đầy đủ để đánh giá. Cả hai baseline đều được huấn luyện dưới cùng giao thức hộp bao phủ và lệch tâm như PGA-UNet, nên khoảng cách còn lại phản ánh sự khác biệt về kiến trúc, chứ không phải do một prompt không công bằng. Khi so sánh chéo giữa các mô hình, chúng tôi dùng độ đo full-frame đã dán lại cho baseline prompt-crop, chứ không dùng các giá trị chẩn đoán đo trong khung crop.
 
-Mọi bảng so sánh trong bài đều báo cáo Dice và IoU cho độ chồng lấn vùng, CBL cho định vị, và HD95 cho khoảng cách biên. Dice và IoU là hai độ đo chồng lấn tương quan khá mạnh với nhau, chúng tôi đặt cạnh nhau chỉ để người đọc tiện đối chiếu. Riêng trên các tập con tổn thương nhỏ, IoU có giá trị tuyệt đối thấp và khá nhạy với vài pixel ở biên, nên Dice mới là độ đo chồng lấn chính được dùng ở đó. Precision và recall được lưu trong log công bố kèm theo bài. Gọi $(x_p,y_p)$ là tâm mask dự đoán, $(x_g,y_g)$ là tâm ground-truth, và $D_{\mathrm{GT}}$ là đường chéo của hộp ground-truth, CBL được định nghĩa như sau:
+Mọi bảng so sánh trong bài đều báo cáo Dice và IoU cho độ chồng lấn vùng, CBL cho định vị, và HD95 cho khoảng cách biên. Dice và IoU là hai độ đo chồng lấn tương quan khá mạnh với nhau, chúng tôi đặt cạnh nhau chỉ để người đọc tiện đối chiếu. Riêng trên các tập con tổn thương nhỏ, IoU có giá trị tuyệt đối thấp và khá nhạy với vài pixel ở biên, nên Dice mới là độ đo chồng lấn chính được dùng ở đó. Gọi $(x_p,y_p)$ là tâm mask dự đoán, $(x_g,y_g)$ là tâm ground-truth, và $D_{\mathrm{GT}}$ là đường chéo của hộp ground-truth, CBL được định nghĩa như sau:
 \begin{equation}
 \mathrm{CBL}=\max\left(0,1-\frac{\sqrt{(x_p-x_g)^2+(y_p-y_g)^2}}{D_{\mathrm{GT}}}\right).
 \end{equation}
@@ -379,10 +379,10 @@ Ba mô hình nền tảng nhận prompt được thử với cùng một hộp: 
 
 Ở thiết lập khớp độ phân giải, PGA-UNet ở $256$ dẫn trước SAM-Med2D fine-tune ở $256$ đúng 0.132 Dice trên BTXRD (0.762 so với 0.630) và 0.066 trên FracAtlas (0.629 so với 0.563), với CBL cũng cao hơn (0.902 so với 0.836; 0.895 so với 0.846).
 
-MedSAM và ScribblePrompt-UNet chạy ở $1024$ và $128$ gốc nên chúng tôi so các độ đo bất biến theo khung. PGA-UNet ở cấu hình tốt nhất $512$ (0.782 trên BTXRD) dẫn trước cả MedSAM fine-tune (0.724) lẫn ScribblePrompt-UNet (0.653). Trên FracAtlas với prompt bao phủ, MedSAM fine-tune đạt 0.729, ngang PGA-UNet-512 (0.727), nhưng phải chạy ở đầu vào $1024$, gấp khoảng bốn lần diện tích pixel và 32 lần số tham số; khi prompt lệch tâm, PGA-UNet (0.713) vượt MedSAM (0.666) và dẫn về CBL ở mọi ô. ScribblePrompt-UNet, với số tham số xấp xỉ PGA-UNet (4,0 triệu so với 3,0 triệu), vẫn kém hơn từ 0.05 đến 0.13 Dice và có khoảng cách bao-phủ-so-với-lệch-tâm lớn nhất trong nhóm. Sự thay đổi từ prompt bao phủ sang lệch tâm được bàn riêng ở Mục V.F.
+MedSAM và ScribblePrompt-UNet chạy ở $1024$ và $128$ gốc nên chúng tôi so các độ đo bất biến theo khung. PGA-UNet ở cấu hình tốt nhất $512$ (0.782 trên BTXRD) dẫn trước cả MedSAM fine-tune (0.724) lẫn ScribblePrompt-UNet (0.653). Trên FracAtlas với prompt bao phủ, MedSAM fine-tune đạt 0.729, ngang PGA-UNet-512 (0.727), nhưng phải chạy ở đầu vào $1024$, gấp khoảng bốn lần diện tích pixel và 32 lần số tham số; khi prompt lệch tâm, PGA-UNet (0.713) vượt MedSAM (0.666) và dẫn về CBL ở mọi ô. ScribblePrompt-UNet, với số tham số xấp xỉ PGA-UNet (4,0 triệu so với 3,0 triệu), vẫn kém PGA-UNet-512 từ 0.05 đến 0.13 Dice và có khoảng cách bao-phủ-so-với-lệch-tâm lớn nhất trong nhóm. Tuy nhiên, ở độ phân giải khớp $128$, PGA-UNet (0.714 trên BTXRD, 0.596 trên FracAtlas) không thắng đều: PGA-UNet dẫn rõ trên BTXRD và về HD95 ở cả hai bộ dữ liệu (5.8 so với 122.7; 8.1 so với 17.9), nhưng ScribblePrompt-UNet lại dẫn trên FracAtlas ở Dice, IoU và CBL (0.679 so với 0.596; 0.527 so với 0.445; 0.891 so với 0.849). Khoảng cách của PGA-UNet với ScribblePrompt-UNet ở $512$ vì vậy phản ánh độ phân giải vận hành cao hơn không kém gì kiến trúc, giống hệt cách MedSAM hòa được PGA-UNet ở trên nhờ lợi thế độ phân giải và tham số theo chiều ngược lại. Sự thay đổi từ prompt bao phủ sang lệch tâm được bàn riêng ở Mục V.F.
 
 \begin{table}[H]
-\caption{So sánh với các baseline nhận prompt, merge ở mức ảnh, prompt bao phủ. PGA-UNet trình bày ở $256$ (khớp độ phân giải với SAM-Med2D) và ở $512$ (cấu hình tốt nhất); MedSAM và ScribblePrompt-UNet chạy ở $1024$ và $128$ gốc. HD95 thô chấm trong khung riêng của từng mô hình nên không so được giữa các dòng và không in đậm; Dice, IoU và CBL bất biến theo khung.}
+\caption{So sánh với các baseline nhận prompt, merge ở mức ảnh, prompt bao phủ. PGA-UNet trình bày ở $512$ (cấu hình tốt nhất), $256$ (khớp độ phân giải với SAM-Med2D), và $128$ (khớp độ phân giải với ScribblePrompt-UNet); MedSAM chạy ở $1024$ gốc. HD95 thô chấm trong khung riêng của từng mô hình nên không so được giữa các dòng và không in đậm; Dice, IoU và CBL bất biến theo khung.}
 \label{tab:sam}
 \centering
 \scriptsize
@@ -391,9 +391,10 @@ MedSAM và ScribblePrompt-UNet chạy ở $1024$ và $128$ gốc nên chúng tô
 \toprule
 Bộ dữ liệu & Mô hình & Res. & Dice & IoU & HD95 & CBL \\
 \midrule
-\multirow{8}{*}{BTXRD}
+\multirow{9}{*}{BTXRD}
 & PGA-UNet             & 512  & \best{0.782} & \best{0.661} & 22.8 & \best{0.918} \\
 & PGA-UNet             & 256  & 0.762 & 0.633 & 10.9 & 0.902 \\
+& PGA-UNet             & 128  & 0.714 & 0.572 & 5.8 & 0.859 \\
 & MedSAM zero-shot     & 1024 & 0.304 & 0.185 & 242.4 & 0.832 \\
 & MedSAM fine-tuned    & 1024 & 0.724 & 0.590 & 79.9  & 0.883 \\
 & ScribblePrompt zero-shot  & 128 & 0.411 & 0.285 & 232.2 & 0.774 \\
@@ -401,9 +402,10 @@ Bộ dữ liệu & Mô hình & Res. & Dice & IoU & HD95 & CBL \\
 & SAM-Med2D zero-shot  & 256 & 0.255 & 0.156 & 41.2  & 0.734 \\
 & SAM-Med2D fine-tuned & 256 & 0.630 & 0.497 & 17.3  & 0.836 \\
 \midrule
-\multirow{8}{*}{FracAtlas}
+\multirow{9}{*}{FracAtlas}
 & PGA-UNet             & 512  & 0.727 & \best{0.585} & 10.5 & \best{0.913} \\
 & PGA-UNet             & 256  & 0.629 & 0.470 & 10.6 & 0.895 \\
+& PGA-UNet             & 128  & 0.596 & 0.445 & 8.1 & 0.849 \\
 & MedSAM zero-shot     & 1024 & 0.319 & 0.193 & 60.1 & 0.843 \\
 & MedSAM fine-tuned    & 1024 & \best{0.729} & 0.583 & 16.2 & 0.900 \\
 & ScribblePrompt zero-shot  & 128 & 0.432 & 0.290 & 34.2 & 0.832 \\
@@ -447,7 +449,7 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/small_lesion_sam_pga256.png}
-\caption{Ca tổn thương nhỏ trên BTXRD (IMG000932): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, và PGA-UNet, cùng ở $256\times256$. Cả hai biến thể SAM-Med2D đều bỏ sót hoàn toàn tổn thương; PGA-UNet thì không.}
+\caption{Ca tổn thương nhỏ trên BTXRD (IMG000868, 2 đa giác GT): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, và PGA-UNet, cùng ở $256\times256$. Cả hai biến thể SAM-Med2D đều gần như bỏ sót hoàn toàn tổn thương (Dice 0.000 và 0.055); PGA-UNet đạt 0.630.}
 \label{fig:small-sam}
 \end{figure}
 
@@ -482,7 +484,7 @@ Bộ dữ liệu & Mô hình & Dice & IoU & HD95 & CBL \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../images/results/small_lesion_pga_vs_attunet.png}
-\caption{Ca tổn thương nhỏ trên BTXRD (IMG000932): Attention U-Net (không prompt), Attention U-Net kênh prompt, Attention U-Net crop theo prompt, và PGA-UNet, cùng ở $512\times512$.}
+\caption{Ca tổn thương nhỏ trên BTXRD (IMG000868, 2 đa giác GT), Attention U-Net (không prompt) so với PGA-UNet, cùng ở $512\times512$. Không có prompt, baseline tự động gần như bỏ sót cả hai tổn thương (Dice 0.085); với cùng hộp, PGA-UNet khôi phục được chúng (Dice 0.720). Hai baseline Attention U-Net khớp prompt còn lại đã có số liệu ở Bảng~\ref{tab:small-att}, không lặp lại ở hình để dễ đọc.}
 \label{fig:small-att}
 \end{figure}
 
@@ -792,7 +794,7 @@ Kết luận này chỉ đúng trong phạm vi protocol đã dùng: hộp mô ph
 \section*{Các mục còn lại}
 
 \subsection*{Tính sẵn có của dữ liệu \enlabel{Data Availability}}
-BTXRD và FracAtlas là bộ dữ liệu công khai được trích dẫn trong bài. Bản thảo báo cáo thực nghiệm trên các tập chia train/validation/test ở mức ảnh, suy ra từ hai bộ dữ liệu đó. Mã nguồn và chi tiết cách chia sẽ được công bố cùng gói tái lập kết quả cuối cùng.
+BTXRD và FracAtlas là bộ dữ liệu công khai được trích dẫn trong bài. Bản thảo báo cáo thực nghiệm trên các tập chia train/validation/test ở mức ảnh, suy ra từ hai bộ dữ liệu đó. Mã nguồn và chi tiết cách chia được công bố tại \url{https://github.com/ThongLuc2k3/PGA_Unet2D}.
 
 \subsection*{Đóng góp của tác giả \enlabel{Author Contributions}}
 \textbf{Thông Lúc:} ý tưởng, phương pháp luận, phần mềm, khảo sát, phân tích chính thức, trực quan hóa, viết bản thảo gốc. \textbf{Nguyễn Hữu Bình:} hỗ trợ phần mềm, chuẩn bị dữ liệu, kiểm chứng thực nghiệm, rà soát và biên tập. \textbf{Lý Quốc Ngọc:} hướng dẫn, thẩm định, rà soát và biên tập.

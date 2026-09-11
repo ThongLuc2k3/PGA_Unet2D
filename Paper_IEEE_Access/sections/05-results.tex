@@ -64,7 +64,7 @@ Dataset & Model & Dice & $\Delta$Dice & IoU & HD95 & CBL \\
 }
 \end{table}
 
-So localization accounts for most of the difficulty here, but the box alone does not fully explain the results. The way PGA-UNet exploits that box still produces an additional, consistent margin over a conventional network given the same input.
+Localization therefore accounts for most of the difficulty here, but the box alone does not fully explain the results. The way PGA-UNet exploits that box still produces an additional, consistent margin over a conventional network given the same input.
 
 \subsection{Attention U-Net Top-Dice and Bottom-Dice Subsets}
 \label{sec:extreme}
@@ -130,10 +130,10 @@ Three promptable foundation models receive the same box: SAM-Med2D (brought into
 
 At the resolution-matched setting, PGA-UNet at $256$ leads fine-tuned SAM-Med2D at $256$ by 0.132 Dice on BTXRD (0.762 vs 0.630) and by 0.066 on FracAtlas (0.629 vs 0.563), with CBL also higher (0.902 vs 0.836; 0.895 vs 0.846).
 
-MedSAM and ScribblePrompt-UNet run at their native $1024$ and $128$, so we compare the frame-invariant metrics. PGA-UNet at its best $512$ configuration (0.782 on BTXRD) leads both fine-tuned MedSAM (0.724) and ScribblePrompt-UNet (0.653). On FracAtlas under covering prompts, fine-tuned MedSAM reaches 0.729, level with PGA-UNet-512 (0.727), but only while running at a $1024$ input, about four times the pixel area and 32 times the parameters; under off-center prompts PGA-UNet (0.713) pulls ahead of MedSAM (0.666) and leads on CBL in every cell. ScribblePrompt-UNet, at a parameter count close to PGA-UNet's (4.0 M vs 3.0 M), trails by 0.05 to 0.13 Dice and has the largest covering-to-off-center drop in the group. The change from covering to off-center prompts is discussed separately in Section~\ref{sec:robust}.
+MedSAM and ScribblePrompt-UNet run at their native $1024$ and $128$, so we compare the frame-invariant metrics. PGA-UNet at its best $512$ configuration (0.782 on BTXRD) leads both fine-tuned MedSAM (0.724) and ScribblePrompt-UNet (0.653). On FracAtlas under covering prompts, fine-tuned MedSAM reaches 0.729, level with PGA-UNet-512 (0.727), but only while running at a $1024$ input, about four times the pixel area and 32 times the parameters; under off-center prompts PGA-UNet (0.713) pulls ahead of MedSAM (0.666) and leads on CBL in every cell. ScribblePrompt-UNet, at a parameter count close to PGA-UNet's (4.0 M vs 3.0 M), trails PGA-UNet-512 by 0.05 to 0.13 Dice and has the largest covering-to-off-center drop in the group. At matched $128$ resolution, though, PGA-UNet (0.714 on BTXRD, 0.596 on FracAtlas) does not uniformly lead it: PGA-UNet is clearly ahead on BTXRD and on HD95 on both datasets (5.8 vs 122.7; 8.1 vs 17.9), but ScribblePrompt-UNet is ahead on FracAtlas Dice, IoU, and CBL (0.679 vs 0.596; 0.527 vs 0.445; 0.891 vs 0.849). PGA-UNet's margin over ScribblePrompt-UNet at $512$ therefore reflects its higher operating resolution as much as its architecture, the same way MedSAM's parity with PGA-UNet above reflects a resolution and parameter advantage running the other way. The change from covering to off-center prompts is discussed separately in Section~\ref{sec:robust}.
 
 \begin{table}[t]
-\caption{Comparison against promptable baselines, image-level merged, covering prompts. PGA-UNet is shown at $256$ (resolution-matched to SAM-Med2D) and at $512$ (its best configuration); MedSAM and ScribblePrompt-UNet run at their native $1024$ and $128$. Raw HD95 is scored in each model's own frame, so it is not comparable across rows and is left unbolded; Dice, IoU and CBL are frame-invariant.}
+\caption{Comparison against promptable baselines, image-level merged, covering prompts. PGA-UNet is shown at $512$ (its best configuration), $256$ (resolution-matched to SAM-Med2D), and $128$ (resolution-matched to ScribblePrompt-UNet); MedSAM runs at its native $1024$. Raw HD95 is scored in each model's own frame, so it is not comparable across rows and is left unbolded; Dice, IoU and CBL are frame-invariant.}
 \label{tab:sam}
 \centering
 \scriptsize
@@ -142,9 +142,10 @@ MedSAM and ScribblePrompt-UNet run at their native $1024$ and $128$, so we compa
 \toprule
 Dataset & Model & Res. & Dice & IoU & HD95 & CBL \\
 \midrule
-\multirow{8}{*}{BTXRD}
+\multirow{9}{*}{BTXRD}
 & PGA-UNet             & 512  & \textbf{0.782} & \textbf{0.661} & 22.8 & \textbf{0.918} \\
 & PGA-UNet             & 256  & 0.762 & 0.633 & 10.9 & 0.902 \\
+& PGA-UNet             & 128  & 0.714 & 0.572 & 5.8 & 0.859 \\
 & MedSAM zero-shot     & 1024 & 0.304 & 0.185 & 242.4 & 0.832 \\
 & MedSAM fine-tuned    & 1024 & 0.724 & 0.590 & 79.9  & 0.883 \\
 & ScribblePrompt zero-shot  & 128 & 0.411 & 0.285 & 232.2 & 0.774 \\
@@ -152,9 +153,10 @@ Dataset & Model & Res. & Dice & IoU & HD95 & CBL \\
 & SAM-Med2D zero-shot  & 256 & 0.255 & 0.156 & 41.2  & 0.734 \\
 & SAM-Med2D fine-tuned & 256 & 0.630 & 0.497 & 17.3  & 0.836 \\
 \midrule
-\multirow{8}{*}{FracAtlas}
+\multirow{9}{*}{FracAtlas}
 & PGA-UNet             & 512  & 0.727 & \textbf{0.585} & 10.5 & \textbf{0.913} \\
 & PGA-UNet             & 256  & 0.629 & 0.470 & 10.6 & 0.895 \\
+& PGA-UNet             & 128  & 0.596 & 0.445 & 8.1 & 0.849 \\
 & MedSAM zero-shot     & 1024 & 0.319 & 0.193 & 60.1 & 0.843 \\
 & MedSAM fine-tuned    & 1024 & \textbf{0.729} & 0.583 & 16.2 & 0.900 \\
 & ScribblePrompt zero-shot  & 128 & 0.432 & 0.290 & 34.2 & 0.832 \\
@@ -168,7 +170,7 @@ Dataset & Model & Res. & Dice & IoU & HD95 & CBL \\
 
 \subsection{Performance on Small Lesions}
 \label{sec:small}
-This is exactly where keeping the prompt's features active throughout the network should matter most: the small-lesion subset consists of the 50 test images per dataset with the smallest total lesion area, ranging from 7 to 433 pixels on BTXRD and 145 to 944 pixels on FracAtlas. All scores here are computed in a shared $512\times512$ frame.
+Keeping the prompt's features active throughout the network should matter most exactly here: the small-lesion subset consists of the 50 test images per dataset with the smallest total lesion area, ranging from 7 to 433 pixels on BTXRD and 145 to 944 pixels on FracAtlas. All scores here are computed in a shared $512\times512$ frame.
 
 \paragraph{Against SAM-Med2D at the matched resolution}
 SAM-Med2D struggles clearly at this lesion size (Table~\ref{tab:small-sam}). Even after fine-tuning at $256$, it reaches only 0.256 Dice on BTXRD and 0.371 on FracAtlas; in zero-shot mode it is close to nothing. PGA-UNet at the same $256$ resolution still holds 0.705 and 0.648, with far lower HD95.
@@ -200,7 +202,7 @@ Dataset & Model & Dice & IoU & HD95 & CBL \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/results/small_lesion_sam_pga256.png}
-\caption{Small-lesion case on BTXRD (IMG000932): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, and PGA-UNet, all at $256\times256$. Both SAM-Med2D variants miss the lesion entirely; PGA-UNet does not.}
+\caption{Small-lesion case on BTXRD (IMG000868, two GT polygons): SAM-Med2D zero-shot, SAM-Med2D fine-tuned, and PGA-UNet, all at $256\times256$. Both SAM-Med2D variants miss the lesions almost entirely (Dice 0.000, 0.055); PGA-UNet reaches 0.630.}
 \label{fig:small-sam}
 \end{figure}
 
@@ -236,7 +238,7 @@ Dataset & Model & Dice & IoU & HD95 & CBL \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{images/results/small_lesion_pga_vs_attunet.png}
-\caption{Small-lesion case on BTXRD (IMG000932): Attention U-Net (no prompt), Attention U-Net with prompt channel, Attention U-Net with prompt crop, and PGA-UNet, all at $512\times512$.}
+\caption{Small-lesion case on BTXRD (IMG000868, two GT polygons), Attention U-Net (no prompt) vs PGA-UNet, both at $512\times512$. Without a prompt, the automatic baseline all but misses both lesions (Dice 0.085); given the same box, PGA-UNet recovers them (Dice 0.720). The two prompt-matched Attention U-Net baselines are quantified in Table~\ref{tab:small-att} but omitted here for readability.}
 \label{fig:small-att}
 \end{figure}
 
@@ -492,7 +494,7 @@ $Q$ & \textbf{0.70} & \textbf{0.60} & \textbf{0.65} & \textbf{0.48} \\
 }
 \end{table}
 
-Turned the other way around, $Q$ can also rank 50 randomly sampled candidate boxes and keep only the best few (Table~\ref{tab:suggest}, Figure~\ref{fig:demo-suggest}). For at least one of the top five boxes, 67\% of BTXRD images and 82\% of FracAtlas images have that box covering more than half the lesion, and the best of the five boxes covers 0.84 and 0.90 of the lesion area on average, respectively. This is only a scaffold for a small suggestion feature: $Q$ is not a true probability, the shortlist does not replace the clinician's own review, and as the next paragraph shows, it is only meaningful when a lesion is actually present.
+Used in the reverse direction, $Q$ can also rank 50 randomly sampled candidate boxes and keep only the best few (Table~\ref{tab:suggest}, Figure~\ref{fig:demo-suggest}). For at least one of the top five boxes, 67\% of BTXRD images and 82\% of FracAtlas images have that box covering more than half the lesion, and the best of the five boxes covers 0.84 and 0.90 of the lesion area on average, respectively. This is only a scaffold for a small suggestion feature: $Q$ is not a true probability, the shortlist does not replace the clinician's own review, and as the next paragraph shows, it is only meaningful when a lesion is actually present.
 
 \begin{table}[t]
 \caption{Candidate-region shortlist ranked by $Q$, keeping the 5 highest-scoring boxes out of 50 prompt-free boxes sampled per image. Coverage is the fraction of lesion pixels inside a box; full-coverage counts images whose best shortlisted box covers more than half the lesion.}
