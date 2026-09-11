@@ -3,35 +3,37 @@ For a long time, small-lesion segmentation in medical imaging has run into a sim
 
 In parallel, interactive medical segmentation has also developed, starting from the observation that even a small amount of user guidance can substantially simplify the problem. Early methods used clicks, scribbles, or geodesic cues \cite{b5,b6}; later, bounding boxes were added as a fast, coarse form of prompt. More recently, interactive models such as ScribblePrompt can handle several prompt types within a single framework, across many biomedical datasets \cite{b11}. Broadly, these methods shift part of the localization burden from the model to the user. For very small X-ray lesions, that shift is especially valuable, since a clinician can usually point out the suspicious region coarsely even when an automatic system struggles to find it reliably in the whole image.
 
-Promptable foundation models push this idea further. SAM pioneered turning prompt-driven segmentation into a general-purpose task \cite{b1}; SAM-Med2D and MedSAM brought it into medicine \cite{b2,b9}; adapter-based variants such as EMedSAM and Med-SA reduce the cost of specializing these models to medical data \cite{b12,b13}. These models are quite flexible, but they consume the prompt mainly at the mask decoder, carry a very large backbone, and none is tuned specifically for a single radiograph task. For very small bone lesions, this is exactly the gap: the prompt only marks where the mask goes, while no mechanism continues to shape feature extraction afterward, exactly where a weak signal is easily lost.
+Promptable foundation models push this idea further. SAM pioneered turning prompt-driven segmentation into a general-purpose task \cite{b1}; SAM-Med2D and MedSAM brought it into medicine \cite{b2,b9}; adapter-based variants such as EMedSAM and Med-SA reduce the cost of specializing these models to medical data \cite{b12,b13}. These models are quite flexible, but they consume the prompt mainly at the mask decoder, and carry a very large backbone relative to the compact CNN studied here.
 
-This article starts from that very gap. On grayscale bone radiographs, knowing roughly where the lesion is only solves half the problem; the harder part is holding on to faint evidence while still filtering out noise, after the search space has been narrowed. We argue that a lightweight prompt-guided CNN can do this better if the prompt is kept continuously active from the first encoder stage to the last decoder stage. In this article we study that setting directly, using SAM-Med2D, MedSAM, and ScribblePrompt as the promptable reference models.
+Our focus is a compact CNN with explicit box conditioning at encoder and decoder stages. The evaluated reference models differ in backbone, pretraining, prompt representation, and operating resolution. We therefore distinguish comparisons with a shared scoring frame from configuration-specific reference results and limit conclusions to the settings actually evaluated. In this article we study PGA-UNet directly against fine-tuned SAM-Med2D, MedSAM, and ScribblePrompt-UNet under this evaluation protocol.
 
 \begin{table}[t]
-\caption{Representative prior work and the remaining gap addressed in this article.}
+\caption{Representative prior work, by prompt interface and architectural approach.}
 \label{tab:related}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{L{1.9cm}L{2.2cm}L{2.7cm}L{2.7cm}L{2.1cm}L{2.1cm}}
+\begin{tabular}{L{2.3cm}L{2.6cm}L{3.6cm}}
 \toprule
-Work & Principle & Method & Performance Evidence & Pros & Cons \\
+Work & Prompt interface & Architectural approach \\
 \midrule
-U-Net \cite{b3} & Fully convolutional encoder-decoder & Multi-scale skip-connected segmentation network & Widely used as a canonical biomedical segmentation baseline & Simple, efficient, strong reference model & No prompt guidance; all localization must be automatic \\
+U-Net \cite{b3} & None & Multi-scale skip-connected encoder-decoder \\
 \midrule
-Attention U-Net \cite{b4} & Skip-feature filtering by attention gates & U-Net with gated skip connections & Medical segmentation tasks reported with overlap metrics such as Dice and IoU & Stronger automatic baseline than plain U-Net & Attention is still learned without explicit prompt conditioning \\
+Attention U-Net \cite{b4} & None & Skip-connection attention gates, learned without prompt input \\
 \midrule
-nnU-Net \cite{b10} & Self-configuring automatic pipeline & Dataset-adaptive preprocessing, architecture, and training & Strong automatic results across many medical benchmarks & Robust automatic pipeline with little manual tuning & No prompt mechanism; localization remains fully automatic \\
+nnU-Net \cite{b10} & None & Self-configuring, dataset-adaptive automatic pipeline \\
 \midrule
-DeepIGeoS and related interactive methods \cite{b6} & User guidance reduces search space & Geodesic or interaction-aware segmentation & Interactive medical segmentation under user input & Better reflects clinical interaction & Interaction mechanism can be task-specific or costly to maintain \\
+DeepIGeoS and related \cite{b6} & Clicks, scribbles, geodesic cues & Interaction-aware segmentation network \\
 \midrule
-ScribblePrompt \cite{b11} & General interactive biomedical segmentation & One model for scribbles, clicks, and boxes across datasets & Multi-dataset interactive evaluation with several prompt types & Flexible, realistic interaction types & General-purpose, not a lightweight radiograph-specific prompt prior \\
+ScribblePrompt \cite{b11} & Scribbles, clicks, boxes & Single lightweight UNet trained across many biomedical datasets and prompt types \\
 \midrule
-SAM-Med2D / MedSAM \cite{b2,b9} & Promptable foundation segmentation & Large pretrained model with prompt-driven mask decoding & Multi-dataset medical evaluation with prompt-based metrics & Flexible and broadly applicable & Heavy; prompt influence is not designed as a lightweight end-to-end radiograph-specific prior \\
+SAM-Med2D \cite{b2} & Boxes, points, or masks & Large pretrained transformer backbone; prompt consumed mainly at the mask decoder \\
 \midrule
-EMedSAM / Med-SA \cite{b12,b13} & Adapter tuning of SAM for medical images & Lightweight adapters on a frozen SAM backbone & Medical segmentation with reduced adaptation cost & Cheaper specialization of a foundation model & Still a large SAM backbone; prompt acts mainly at the mask decoder \\
+MedSAM \cite{b9} & Boxes (box-only by design) & Large pretrained transformer backbone; prompt consumed mainly at the mask decoder \\
 \midrule
-This work & Prompt as a dense spatial prior throughout the network & Gaussian plateau prompt + PSG + CAD in a lightweight CNN & BTXRD and FracAtlas; Dice, CBL, HD95, efficiency, and small-lesion analysis & Lightweight, prompt-aware from encoder to decoder, evaluated under controlled prompt displacement & Still requires supervised masks and fixed-resolution preprocessing \\
+EMedSAM / Med-SA \cite{b12,b13} & Same as SAM & Lightweight adapters on a frozen SAM backbone \\
+\midrule
+This work & Box & Compact CNN; Gaussian plateau prompt injected at encoder (PSG) and decoder (CAD) \\
 \bottomrule
 \end{tabular}
 }
