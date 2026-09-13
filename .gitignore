@@ -18,3 +18,4 @@ Paper_IEEE_Access/**/*.fls
 Paper_IEEE_Access/**/*.fdb_latexmk
 Paper_IEEE_Access/**/*.synctex.gz
 Paper_IEEE_Access/**/*.out
+Paper_IEEE_Access/**/*.xdv
