@@ -325,7 +325,31 @@ Dataset & Model & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
 \end{tabular}
 \end{table*}
 
-For reference, the no-prompt Attention U-Net is by construction unaffected by this box displacement (0.517 on BTXRD, 0.342 on FracAtlas under both conditions), and the three fine-tuned promptable reference models, each scored in its own native frame, lose 0.03 to 0.08 Dice under the same off-center construction (SAM-Med2D: $-0.029$ BTXRD / $-0.031$ FracAtlas; MedSAM: $-0.033$ / $-0.063$; ScribblePrompt-UNet: $-0.080$ / $-0.081$); these three are not included in Table~\ref{tab:robust} because their scoring frames differ from the shared $512\times512$ frame used there.
+For reference, the no-prompt Attention U-Net is by construction unaffected by this box displacement (0.517 on BTXRD, 0.342 on FracAtlas under both conditions), and the three fine-tuned promptable reference models, each scored in its own native frame, lose 0.03 to 0.08 Dice under the same off-center construction (Table~\ref{tab:robust-refs}); these three are not included in Table~\ref{tab:robust} because their scoring frames differ from the shared $512\times512$ frame used there.
+
+\begin{table}[t]
+\caption{Observed sensitivity of the three fine-tuned promptable reference models to the same off-center construction as Table~\ref{tab:robust}, each scored in its own native frame (z: covering, s: off-center). Not included in Table~\ref{tab:robust} because these frames differ from the shared $512\times512$ frame used there.}
+\label{tab:robust-refs}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccc}
+\toprule
+Dataset & Model & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
+\midrule
+\multirow{3}{*}{BTXRD}
+& SAM-Med2D fine-tuned & 0.630 / 0.601 & $-0.029$ & 0.497 / 0.471 & 17.3 / 17.5 & 0.836 / 0.813 \\
+& MedSAM fine-tuned & 0.724 / 0.691 & $-0.033$ & 0.590 / 0.559 & 79.9 / 66.8 & 0.883 / 0.870 \\
+& ScribblePrompt fine-tuned & 0.653 / 0.573 & $-0.080$ & 0.514 / 0.435 & 122.7 / 110.5 & 0.853 / 0.815 \\
+\midrule
+\multirow{3}{*}{FracAtlas}
+& SAM-Med2D fine-tuned & 0.563 / 0.532 & $-0.031$ & 0.417 / 0.389 & 8.0 / 8.4 & 0.846 / 0.816 \\
+& MedSAM fine-tuned & 0.729 / 0.666 & $-0.063$ & 0.583 / 0.518 & 16.2 / 17.7 & 0.900 / 0.861 \\
+& ScribblePrompt fine-tuned & 0.679 / 0.598 & $-0.081$ & 0.527 / 0.440 & 17.9 / 24.2 & 0.891 / 0.833 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \begin{figure}[t]
 \centering
@@ -445,7 +469,33 @@ Dataset & Prompt & Dice & IoU & Precision & Recall & HD95 & CBL \\
 \end{tabular}
 \end{table*}
 
-Training-seed variability was dataset- and metric-dependent: overlap-metric variability was larger on BTXRD but comparable to or slightly smaller on FracAtlas, whereas HD95 showed the opposite pattern. Dice's standard deviation across the four training seeds is 0.009 to 0.010 on BTXRD and 0.006 to 0.010 on FracAtlas, versus a split-seed spread of 0.004 to 0.005 on BTXRD and 0.007 to 0.011 on FracAtlas already reported for Monte Carlo cross-validation (Table~\ref{tab:mccv}). IoU and CBL vary by a similar magnitude to Dice under both sources of variation. HD95 breaks this pattern: on BTXRD its standard deviation (0.7 to 0.8 pixels) is markedly smaller than the Monte Carlo split-seed spread (2.0 to 2.5 pixels), but on FracAtlas it is markedly larger (5.0 to 8.5 pixels here versus 2.7 to 3.9 pixels there). The FracAtlas HD95 spread is driven by a single seed, 05052004, which reaches 28.07 pixels covering and 21.24 pixels off-center while its Dice, IoU, and CBL all sit within the range of the other three seeds, whose HD95 stays between 10.4 and 12.2 pixels under both conditions; no BTXRD seed shows a comparably isolated outlier on any metric. This indicates that, at least for FracAtlas, a boundary-distance metric can vary far more across training seeds than the overlap-based metrics do, even holding the split and training protocol fixed. As throughout this article, no baseline has been retrained across multiple training seeds, so this analysis characterizes PGA-UNet's own variation only and does not establish comparative stability against any baseline.
+Training-seed variability was dataset- and metric-dependent: overlap-metric variability was larger on BTXRD but comparable to or slightly smaller on FracAtlas, whereas HD95 showed the opposite pattern. Dice's standard deviation across the four training seeds is 0.009 to 0.010 on BTXRD and 0.006 to 0.010 on FracAtlas, versus a split-seed spread of 0.004 to 0.005 on BTXRD and 0.007 to 0.011 on FracAtlas already reported for Monte Carlo cross-validation (Table~\ref{tab:mccv}). IoU and CBL vary by a similar magnitude to Dice under both sources of variation. HD95 breaks this pattern: on BTXRD its standard deviation (0.7 to 0.8 pixels) is markedly smaller than the Monte Carlo split-seed spread (2.0 to 2.5 pixels), but on FracAtlas it is markedly larger (5.0 to 8.5 pixels here versus 2.7 to 3.9 pixels there). The FracAtlas HD95 spread is driven by a single outlier seed whose Dice, IoU, and CBL remain unremarkable (Table~\ref{tab:seedstability-perseed}); no BTXRD seed shows a comparably isolated outlier on any metric. This indicates that, at least for FracAtlas, a boundary-distance metric can vary far more across training seeds than the overlap-based metrics do, even holding the split and training protocol fixed. As throughout this article, no baseline has been retrained across multiple training seeds, so this analysis characterizes PGA-UNet's own variation only and does not establish comparative stability against any baseline.
+
+\begin{table}[t]
+\caption{Per-seed results underlying Table~\ref{tab:seedstability}'s mean $\pm$ SD, at $512\times512$ on the original fixed split, four training seeds (z: covering, s: off-center).}
+\label{tab:seedstability-perseed}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Dataset & Seed & Dice z/s & IoU z/s & HD95 z/s & CBL z/s \\
+\midrule
+\multirow{4}{*}{BTXRD}
+& 22120196 & 0.782 / 0.774 & 0.661 / 0.652 & 22.77 / 24.50 & 0.918 / 0.912 \\
+& 19122003 & 0.760 / 0.750 & 0.629 / 0.622 & 24.51 / 25.15 & 0.911 / 0.902 \\
+& 22120031 & 0.767 / 0.760 & 0.642 / 0.638 & 23.63 / 25.76 & 0.913 / 0.906 \\
+& 05052004 & 0.773 / 0.766 & 0.650 / 0.643 & 23.87 / 23.79 & 0.917 / 0.910 \\
+\midrule
+\multirow{4}{*}{FracAtlas}
+& 22120196 & 0.727 / 0.713 & 0.585 / 0.570 & 10.49 / 10.41 & 0.913 / 0.897 \\
+& 19122003 & 0.728 / 0.712 & 0.587 / 0.571 & 10.67 / 11.55 & 0.905 / 0.900 \\
+& 22120031 & 0.720 / 0.692 & 0.577 / 0.551 & 12.07 / 12.16 & 0.921 / 0.888 \\
+& 05052004 & 0.716 / 0.708 & 0.578 / 0.568 & \textbf{28.07} / \textbf{21.24} & 0.882 / 0.881 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \subsection{Efficiency}
 \label{sec:efficiency}
@@ -512,10 +562,10 @@ PGA-UNet still makes mistakes, and these mistakes are not random but recur in a 
 
 \subsection{Training-Free Self-Assessment and Candidate Suggestion}
 \label{sec:selfassess-results}
-The two support signals below are computed directly from the trained model's output and are reported as preliminary. $Q$ (Section~\ref{sec:selfassess}) is computed without ground-truth masks at inference; on the annotated lesion-bearing test images, its association with per-prompt Dice is quantified by the correlations below (Table~\ref{tab:selfassess}). Each lesion polygon (one prompt) is treated as an independent unit in this correlation, permutation, and bootstrap analysis, at the sample sizes in Table~\ref{tab:splits} (e.g. 232 BTXRD test polygons); images with more than one lesion contribute one unit per polygon rather than one unit per image, and we have not adjusted the analysis for this within-image dependence. The Spearman correlation between $Q$ and the true Dice reaches 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas; all four are significantly different from zero (permutation test, $p<0.001$), with bootstrap $95\%$ intervals ranging from $[0.61,0.77]$ on BTXRD covering to $[0.29,0.63]$ on FracAtlas off-center. Pearson correlation follows the same pattern (0.82 and 0.76 on BTXRD, 0.59 and 0.44 on FracAtlas); we report Spearman as the primary statistic since it does not assume a linear $Q$-Dice relationship. Both component cues contribute meaningfully: mask decisiveness alone already reaches a Spearman of nearly 0.4, jitter stability reaches about 0.5 to 0.6, and averaging the two cues is always at least as good as either alone. As a control, we also tried training a small head to directly regress the Dice; in this specific experiment it collapsed to a near-constant output, with Spearman under 0.2 on both datasets, so we did not adopt it here. This single comparison does not establish that a learned confidence head cannot work in general, only that this particular configuration did not.
+The two support signals below are computed directly from the trained model's output and are reported as preliminary. $Q$ (Section~\ref{sec:selfassess}) is computed without ground-truth masks at inference; on the annotated lesion-bearing test images, its association with per-prompt Dice is quantified by the correlations below (Table~\ref{tab:selfassess}). Each lesion polygon (one prompt) is treated as an independent unit in this correlation, permutation, and bootstrap analysis, at the sample sizes in Table~\ref{tab:splits} (e.g. 232 BTXRD test polygons); images with more than one lesion contribute one unit per polygon rather than one unit per image, and we have not adjusted the analysis for this within-image dependence. The Spearman correlation between $Q$ and the true Dice reaches 0.70 (covering) and 0.60 (off-center) on BTXRD, and 0.65 and 0.48 on FracAtlas; all four are significantly different from zero (permutation test, $p<0.001$), with bootstrap $95\%$ intervals ranging from $[0.61,0.77]$ on BTXRD covering to $[0.29,0.63]$ on FracAtlas off-center. Pearson correlation follows the same pattern (Table~\ref{tab:selfassess}); we report Spearman as the primary statistic since it does not assume a linear $Q$-Dice relationship. Both component cues contribute meaningfully: mask decisiveness alone already reaches a Spearman of nearly 0.4, jitter stability reaches about 0.5 to 0.6, and averaging the two cues is always at least as good as either alone. As a control, we also tried training a small head to directly regress the Dice; in this specific experiment it collapsed to a near-constant output, with Spearman under 0.2 on both datasets, so we did not adopt it here. This single comparison does not establish that a learned confidence head cannot work in general, only that this particular configuration did not.
 
 \begin{table}[t]
-\caption{Spearman correlation between each training-free cue and the true per-prompt Dice. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
+\caption{Spearman correlation between each training-free cue and the true per-prompt Dice, plus $Q$'s Pearson correlation for comparison. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
 \label{tab:selfassess}
 \centering
 \scriptsize
@@ -528,7 +578,8 @@ Cue & cover & off-center & cover & off-center \\
 \midrule
 $S_\mathrm{sharp}$ (mask decisiveness) & 0.42 & 0.39 & 0.47 & 0.43 \\
 $S_\mathrm{stab}$ (jitter stability) & 0.64 & 0.56 & 0.63 & 0.45 \\
-$Q$ & \textbf{0.70} & \textbf{0.60} & \textbf{0.65} & \textbf{0.48} \\
+$Q$ (Spearman) & \textbf{0.70} & \textbf{0.60} & \textbf{0.65} & \textbf{0.48} \\
+$Q$ (Pearson) & 0.82 & 0.76 & 0.59 & 0.44 \\
 \bottomrule
 \end{tabular}
 }
@@ -582,21 +633,21 @@ FracAtlas & 3366 & 0.07 & 0.82 & 42\% & 0.90 \\
 \paragraph{Exploratory post-hoc gate with MedSigLIP}
 We tested whether a separate, off-the-shelf vision-language model could suppress PGA-UNet false-positive boxes on lesion-free images, as one exploratory response to the finding above. This check uses BTXRD only, not FracAtlas, and reuses the same trained PGA-UNet $512\times512$ checkpoint as the rest of this article. We scored 50 sampled boxes per image with MedSigLIP \cite{b18}, a medical image-text encoder, used zero-shot as a post-hoc gate applied after PGA-UNet's prediction, not as part of the architecture and not fine-tuned. A fixed ensemble of positive and negative text prompts yields a cosine-margin score. The cutoff was selected from the positive validation boxes to retain at least 95\% of them; the 410 lesion-free validation images were used only for diagnostic evaluation, not for threshold selection, and the held-out test images play no part in choosing this threshold either. This calibration cohort (239 positive validation boxes) is drawn with the same polygon loader used throughout this article and matches the 239 BTXRD validation polygons reported in Table~\ref{tab:splits}. The held-out test split is the remaining 1{,}469 of the same 1{,}879 lesion-free BTXRD images used above, giving 73{,}450 sampled boxes.
 
-Gating with MedSigLIP lowers the box-level false-positive rate on these held-out boxes from 61.96\% to 44.62\%, an absolute reduction of 17.33 points (paired cluster-bootstrap $95\%$ CI $[16.68, 17.98]$; Table~\ref{tab:medsiglip-gate}). On the article's own BTXRD test-split lesion boxes (232 boxes from 187 images, built with the same covering-box construction used throughout this article), the gate retains 96.12\% of positive boxes (cluster-bootstrap $95\%$ CI $[93.42, 98.30]$). Image-level false-positive rate, the fraction of lesion-free images with at least one surviving false-positive box among the 50 sampled, barely moves, from 100\% to 99.93\%: nearly every lesion-free image still has at least one box that fools the gated system. We do not report a post-gate Dice or other segmentation-quality measure here. This result is exploratory and supplementary, not a core contribution of this article: an external post-hoc gate can reduce box-level false responses while keeping most positive boxes, without solving image-level false-positive detection; developing a purpose-built, better-calibrated lightweight gate is future work (Section~\ref{sec:discussion}).
+Gating with MedSigLIP lowers the box-level false-positive rate on these held-out boxes from 61.96\% to 44.62\%, an absolute reduction of 17.33 points, and retains 96.12\% of positive boxes on the article's own BTXRD test-split lesion boxes (232 boxes from 187 images, built with the same covering-box construction used throughout this article); both changes have cluster-bootstrap $95\%$ confidence intervals reported in Table~\ref{tab:medsiglip-gate}. Image-level false-positive rate, the fraction of lesion-free images with at least one surviving false-positive box among the 50 sampled, barely moves, from 100\% to 99.93\%: nearly every lesion-free image still has at least one box that fools the gated system. We do not report a post-gate Dice or other segmentation-quality measure here. This result is exploratory and supplementary, not a core contribution of this article: an external post-hoc gate can reduce box-level false responses while keeping most positive boxes, without solving image-level false-positive detection; developing a purpose-built, better-calibrated lightweight gate is future work (Section~\ref{sec:discussion}).
 
 \begin{table}[t]
-\caption{MedSigLIP zero-shot post-hoc gate on BTXRD lesion-free images (held-out test split, 1{,}469 images, 50 boxes/image, 73{,}450 boxes). Positive-box retention is measured separately on the article's own BTXRD test-split lesion boxes (232 boxes, 187 images). Exploratory, not a core contribution; no post-gate Dice is reported.}
+\caption{MedSigLIP zero-shot post-hoc gate on BTXRD lesion-free images (held-out test split, 1{,}469 images, 50 boxes/image, 73{,}450 boxes). Positive-box retention is measured separately on the article's own BTXRD test-split lesion boxes (232 boxes, 187 images). The CI column reports the cluster-bootstrap $95\%$ interval for the box-FPR reduction and for the retained-positive-box rate, where computed. Exploratory, not a core contribution; no post-gate Dice is reported.}
 \label{tab:medsiglip-gate}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-Quantity & Before gate & After gate \\
+Quantity & Before gate & After gate & $95\%$ CI \\
 \midrule
-Box FPR (73{,}450 boxes) & 61.96\% & 44.62\% \\
-Image FPR (1{,}469 images) & 100\% & 99.93\% \\
-Positive-box retention (232 boxes) & 100.00\% & 96.12\% \\
+Box FPR (73{,}450 boxes) & 61.96\% & 44.62\% & $[16.68, 17.98]$ pt reduction \\
+Image FPR (1{,}469 images) & 100\% & 99.93\% & --- \\
+Positive-box retention (232 boxes) & 100.00\% & 96.12\% & $[93.42, 98.30]$ \\
 \bottomrule
 \end{tabular}
 }

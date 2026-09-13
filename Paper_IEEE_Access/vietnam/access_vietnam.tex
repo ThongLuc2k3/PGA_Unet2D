@@ -587,7 +587,31 @@ Bộ dữ liệu & Mô hình & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CB
 }
 \end{table}
 
-Để tham khảo, Attention U-Net không prompt về nguyên tắc không đổi với việc dịch hộp này (0.517 trên BTXRD, 0.342 trên FracAtlas ở cả hai điều kiện), còn ba mô hình tham chiếu nhận prompt đã fine-tune, mỗi mô hình chấm trong khung gốc riêng, mất từ 0.03 đến 0.08 Dice dưới cùng cấu trúc lệch tâm (SAM-Med2D: $-0.029$ BTXRD / $-0.031$ FracAtlas; MedSAM: $-0.033$ / $-0.063$; ScribblePrompt-UNet: $-0.080$ / $-0.081$); ba mô hình này không đưa vào Bảng~\ref{tab:robust} vì khung chấm điểm của chúng khác khung $512\times512$ chung dùng ở đó.
+Để tham khảo, Attention U-Net không prompt về nguyên tắc không đổi với việc dịch hộp này (0.517 trên BTXRD, 0.342 trên FracAtlas ở cả hai điều kiện), còn ba mô hình tham chiếu nhận prompt đã fine-tune, mỗi mô hình chấm trong khung gốc riêng, mất từ 0.03 đến 0.08 Dice dưới cùng cấu trúc lệch tâm (Bảng~\ref{tab:robust-refs}); ba mô hình này không đưa vào Bảng~\ref{tab:robust} vì khung chấm điểm của chúng khác khung $512\times512$ chung dùng ở đó.
+
+\begin{table}[H]
+\caption{Độ nhạy quan sát được của ba mô hình tham chiếu nhận prompt đã fine-tune với cùng cấu trúc lệch tâm ở Bảng~\ref{tab:robust}, mỗi mô hình chấm trong khung gốc riêng (z: bao phủ, s: lệch tâm). Không đưa vào Bảng~\ref{tab:robust} vì các khung này khác khung $512\times512$ chung dùng ở đó.}
+\label{tab:robust-refs}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccc}
+\toprule
+Bộ dữ liệu & Mô hình & Dice z/s & $\Delta$Dice & IoU z/s & HD95 z/s & CBL z/s \\
+\midrule
+\multirow{3}{*}{BTXRD}
+& SAM-Med2D fine-tuned & 0.630 / 0.601 & $-0.029$ & 0.497 / 0.471 & 17.3 / 17.5 & 0.836 / 0.813 \\
+& MedSAM fine-tuned & 0.724 / 0.691 & $-0.033$ & 0.590 / 0.559 & 79.9 / 66.8 & 0.883 / 0.870 \\
+& ScribblePrompt fine-tuned & 0.653 / 0.573 & $-0.080$ & 0.514 / 0.435 & 122.7 / 110.5 & 0.853 / 0.815 \\
+\midrule
+\multirow{3}{*}{FracAtlas}
+& SAM-Med2D fine-tuned & 0.563 / 0.532 & $-0.031$ & 0.417 / 0.389 & 8.0 / 8.4 & 0.846 / 0.816 \\
+& MedSAM fine-tuned & 0.729 / 0.666 & $-0.063$ & 0.583 / 0.518 & 16.2 / 17.7 & 0.900 / 0.861 \\
+& ScribblePrompt fine-tuned & 0.679 / 0.598 & $-0.081$ & 0.527 / 0.440 & 17.9 / 24.2 & 0.891 / 0.833 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \begin{figure}[H]
 \centering
@@ -648,7 +672,33 @@ Bộ dữ liệu & Prompt & Dice & IoU & Precision & Recall & HD95 & CBL \\
 \end{tabular}
 \end{table*}
 
-Độ biến thiên theo seed huấn luyện phụ thuộc vào bộ dữ liệu và độ đo: độ biến thiên ở các độ đo chồng lấn lớn hơn trên BTXRD nhưng tương đương hoặc hơi nhỏ hơn trên FracAtlas, còn HD95 lại theo chiều ngược lại. Độ lệch chuẩn của Dice qua bốn seed huấn luyện là 0,009 đến 0,010 trên BTXRD và 0,006 đến 0,010 trên FracAtlas, so với độ biến thiên theo tập chia đã báo cáo ở Monte Carlo cross-validation (Bảng~\ref{tab:mccv}) là 0,004 đến 0,005 trên BTXRD và 0,007 đến 0,011 trên FracAtlas. IoU và CBL biến động ở mức tương đương Dice dưới cả hai nguồn biến thiên này. HD95 phá vỡ khuôn mẫu đó: trên BTXRD, độ lệch chuẩn của nó (0,7 đến 0,8 pixel) nhỏ hơn rõ rệt so với độ biến thiên theo tập chia Monte Carlo (2,0 đến 2,5 pixel), nhưng trên FracAtlas nó lại lớn hơn rõ rệt (5,0 đến 8,5 pixel ở đây so với 2,7 đến 3,9 pixel ở đó). Độ biến thiên HD95 trên FracAtlas do một seed duy nhất gây ra, seed 05052004, đạt 28,07 pixel ở điều kiện bao phủ và 21,24 pixel ở điều kiện lệch tâm, trong khi Dice, IoU và CBL của chính seed này đều nằm trong khoảng của ba seed còn lại, vốn có HD95 nằm giữa 10,4 và 12,2 pixel ở cả hai điều kiện; không seed nào trên BTXRD cho thấy một giá trị ngoại lệ tách biệt tương tự ở bất kỳ độ đo nào. Điều này cho thấy, ít nhất với FracAtlas, một độ đo khoảng cách biên có thể biến động qua các seed huấn luyện nhiều hơn hẳn so với các độ đo dựa trên chồng lấn, ngay cả khi tập chia và protocol huấn luyện được giữ cố định. Như xuyên suốt bài báo, không baseline nào được huấn luyện lại qua nhiều seed huấn luyện, nên phân tích này chỉ mô tả độ biến thiên của riêng PGA-UNet và không xác lập được độ ổn định so sánh với bất kỳ baseline nào.
+Độ biến thiên theo seed huấn luyện phụ thuộc vào bộ dữ liệu và độ đo: độ biến thiên ở các độ đo chồng lấn lớn hơn trên BTXRD nhưng tương đương hoặc hơi nhỏ hơn trên FracAtlas, còn HD95 lại theo chiều ngược lại. Độ lệch chuẩn của Dice qua bốn seed huấn luyện là 0,009 đến 0,010 trên BTXRD và 0,006 đến 0,010 trên FracAtlas, so với độ biến thiên theo tập chia đã báo cáo ở Monte Carlo cross-validation (Bảng~\ref{tab:mccv}) là 0,004 đến 0,005 trên BTXRD và 0,007 đến 0,011 trên FracAtlas. IoU và CBL biến động ở mức tương đương Dice dưới cả hai nguồn biến thiên này. HD95 phá vỡ khuôn mẫu đó: trên BTXRD, độ lệch chuẩn của nó (0,7 đến 0,8 pixel) nhỏ hơn rõ rệt so với độ biến thiên theo tập chia Monte Carlo (2,0 đến 2,5 pixel), nhưng trên FracAtlas nó lại lớn hơn rõ rệt (5,0 đến 8,5 pixel ở đây so với 2,7 đến 3,9 pixel ở đó). Độ biến thiên HD95 trên FracAtlas do một seed ngoại lệ duy nhất gây ra, trong khi Dice, IoU và CBL của chính seed này vẫn bình thường (Bảng~\ref{tab:seedstability-perseed}); không seed nào trên BTXRD cho thấy một giá trị ngoại lệ tách biệt tương tự ở bất kỳ độ đo nào. Điều này cho thấy, ít nhất với FracAtlas, một độ đo khoảng cách biên có thể biến động qua các seed huấn luyện nhiều hơn hẳn so với các độ đo dựa trên chồng lấn, ngay cả khi tập chia và protocol huấn luyện được giữ cố định. Như xuyên suốt bài báo, không baseline nào được huấn luyện lại qua nhiều seed huấn luyện, nên phân tích này chỉ mô tả độ biến thiên của riêng PGA-UNet và không xác lập được độ ổn định so sánh với bất kỳ baseline nào.
+
+\begin{table}[H]
+\caption{Số liệu từng seed làm nền cho trung bình $\pm$ độ lệch chuẩn ở Bảng~\ref{tab:seedstability}, ở $512\times512$ trên tập chia cố định gốc, bốn seed huấn luyện (z: bao phủ, s: lệch tâm).}
+\label{tab:seedstability-perseed}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Bộ dữ liệu & Seed & Dice z/s & IoU z/s & HD95 z/s & CBL z/s \\
+\midrule
+\multirow{4}{*}{BTXRD}
+& 22120196 & 0.782 / 0.774 & 0.661 / 0.652 & 22.77 / 24.50 & 0.918 / 0.912 \\
+& 19122003 & 0.760 / 0.750 & 0.629 / 0.622 & 24.51 / 25.15 & 0.911 / 0.902 \\
+& 22120031 & 0.767 / 0.760 & 0.642 / 0.638 & 23.63 / 25.76 & 0.913 / 0.906 \\
+& 05052004 & 0.773 / 0.766 & 0.650 / 0.643 & 23.87 / 23.79 & 0.917 / 0.910 \\
+\midrule
+\multirow{4}{*}{FracAtlas}
+& 22120196 & 0.727 / 0.713 & 0.585 / 0.570 & 10.49 / 10.41 & 0.913 / 0.897 \\
+& 19122003 & 0.728 / 0.712 & 0.587 / 0.571 & 10.67 / 11.55 & 0.905 / 0.900 \\
+& 22120031 & 0.720 / 0.692 & 0.577 / 0.551 & 12.07 / 12.16 & 0.921 / 0.888 \\
+& 05052004 & 0.716 / 0.708 & 0.578 / 0.568 & \textbf{28.07} / \textbf{21.24} & 0.882 / 0.881 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \subsection{Nghiên cứu ablation}
 \label{sec:ablation}
@@ -772,10 +822,10 @@ PGA-UNet vẫn còn mắc lỗi, và các lỗi này không xuất hiện ngẫu
 
 \subsection{Tự đánh giá không cần huấn luyện và gợi ý vùng}
 \label{sec:selfassess-results}
-Hai tín hiệu hỗ trợ dưới đây tính trực tiếp từ đầu ra của mô hình đã huấn luyện và được trình bày ở mức thăm dò. $Q$ (Mục~\ref{sec:selfassess}) được tính mà không cần mask ground-truth lúc suy luận; trên các ảnh test có tổn thương đã gán nhãn, mối liên hệ của nó với Dice từng prompt được định lượng bằng các tương quan dưới đây (Bảng~\ref{tab:selfassess}). Mỗi đa giác tổn thương (một prompt) được xem là một đơn vị độc lập trong phép tính tương quan, hoán vị và bootstrap này, với cỡ mẫu đúng như ở Bảng~\ref{tab:splits} (ví dụ 232 đa giác test của BTXRD); ảnh có nhiều hơn một tổn thương đóng góp một đơn vị cho mỗi đa giác chứ không phải một đơn vị cho mỗi ảnh, và chúng tôi chưa điều chỉnh phân tích này cho sự phụ thuộc trong cùng một ảnh đó. Tương quan Spearman giữa $Q$ và Dice thật đạt 0.70 (bao phủ) và 0.60 (lệch tâm) trên BTXRD, và 0.65 cùng 0.48 trên FracAtlas; cả bốn hệ số đều khác 0 có ý nghĩa (kiểm định hoán vị, $p<0{,}001$), với khoảng tin cậy bootstrap $95\%$ từ $[0{,}61; 0{,}77]$ ở BTXRD bao phủ đến $[0{,}29; 0{,}63]$ ở FracAtlas lệch tâm. Tương quan Pearson cho cùng chiều hướng (0,82 và 0,76 trên BTXRD, 0,59 và 0,44 trên FracAtlas); chúng tôi báo cáo Spearman làm số liệu chính vì nó không giả định quan hệ $Q$-Dice là tuyến tính. Cả hai chỉ dấu thành phần đều đóng góp thực chất: riêng độ dứt khoát của mask đã đạt Spearman gần 0.4, độ ổn định khi nhích đạt khoảng 0.5 đến 0.6, và khi lấy trung bình hai chỉ dấu, kết quả luôn tốt ít nhất bằng từng chỉ dấu riêng lẻ. Để đối chứng, chúng tôi cũng thử huấn luyện một đầu nhỏ để hồi quy trực tiếp ra Dice; trong đúng thử nghiệm này, nó sập về một đầu ra gần như hằng số, Spearman dưới 0,2 trên cả hai bộ dữ liệu, nên chúng tôi không dùng nó ở đây. Riêng phép so sánh này không xác lập được rằng một đầu tự tin đã học không thể hoạt động nói chung, chỉ cho thấy đúng cấu hình cụ thể này không hoạt động.
+Hai tín hiệu hỗ trợ dưới đây tính trực tiếp từ đầu ra của mô hình đã huấn luyện và được trình bày ở mức thăm dò. $Q$ (Mục~\ref{sec:selfassess}) được tính mà không cần mask ground-truth lúc suy luận; trên các ảnh test có tổn thương đã gán nhãn, mối liên hệ của nó với Dice từng prompt được định lượng bằng các tương quan dưới đây (Bảng~\ref{tab:selfassess}). Mỗi đa giác tổn thương (một prompt) được xem là một đơn vị độc lập trong phép tính tương quan, hoán vị và bootstrap này, với cỡ mẫu đúng như ở Bảng~\ref{tab:splits} (ví dụ 232 đa giác test của BTXRD); ảnh có nhiều hơn một tổn thương đóng góp một đơn vị cho mỗi đa giác chứ không phải một đơn vị cho mỗi ảnh, và chúng tôi chưa điều chỉnh phân tích này cho sự phụ thuộc trong cùng một ảnh đó. Tương quan Spearman giữa $Q$ và Dice thật đạt 0.70 (bao phủ) và 0.60 (lệch tâm) trên BTXRD, và 0.65 cùng 0.48 trên FracAtlas; cả bốn hệ số đều khác 0 có ý nghĩa (kiểm định hoán vị, $p<0{,}001$), với khoảng tin cậy bootstrap $95\%$ từ $[0{,}61; 0{,}77]$ ở BTXRD bao phủ đến $[0{,}29; 0{,}63]$ ở FracAtlas lệch tâm. Tương quan Pearson cho cùng chiều hướng (Bảng~\ref{tab:selfassess}); chúng tôi báo cáo Spearman làm số liệu chính vì nó không giả định quan hệ $Q$-Dice là tuyến tính. Cả hai chỉ dấu thành phần đều đóng góp thực chất: riêng độ dứt khoát của mask đã đạt Spearman gần 0.4, độ ổn định khi nhích đạt khoảng 0.5 đến 0.6, và khi lấy trung bình hai chỉ dấu, kết quả luôn tốt ít nhất bằng từng chỉ dấu riêng lẻ. Để đối chứng, chúng tôi cũng thử huấn luyện một đầu nhỏ để hồi quy trực tiếp ra Dice; trong đúng thử nghiệm này, nó sập về một đầu ra gần như hằng số, Spearman dưới 0,2 trên cả hai bộ dữ liệu, nên chúng tôi không dùng nó ở đây. Riêng phép so sánh này không xác lập được rằng một đầu tự tin đã học không thể hoạt động nói chung, chỉ cho thấy đúng cấu hình cụ thể này không hoạt động.
 
 \begin{table}[H]
-\caption{Tương quan Spearman giữa mỗi chỉ dấu không cần huấn luyện và Dice thật của từng prompt. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
+\caption{Tương quan Spearman giữa mỗi chỉ dấu không cần huấn luyện và Dice thật của từng prompt, kèm tương quan Pearson của $Q$ để đối chiếu. $Q = \mathrm{mean}(S_\mathrm{sharp}, S_\mathrm{stab})$.}
 \label{tab:selfassess}
 \centering
 \scriptsize
@@ -788,7 +838,8 @@ Chỉ dấu & bao phủ & lệch tâm & bao phủ & lệch tâm \\
 \midrule
 $S_\mathrm{sharp}$ (độ dứt khoát mask) & 0.42 & 0.39 & 0.47 & 0.43 \\
 $S_\mathrm{stab}$ (độ ổn định khi nhích) & 0.64 & 0.56 & 0.63 & 0.45 \\
-$Q$ & \best{0.70} & \best{0.60} & \best{0.65} & \best{0.48} \\
+$Q$ (Spearman) & \best{0.70} & \best{0.60} & \best{0.65} & \best{0.48} \\
+$Q$ (Pearson) & 0.82 & 0.76 & 0.59 & 0.44 \\
 \bottomrule
 \end{tabular}
 }
@@ -841,21 +892,21 @@ FracAtlas & 3366 & 0.07 & 0.82 & 42\% & 0.90 \\
 
 \textbf{Bộ lọc hậu kiểm thăm dò cùng MedSigLIP.} Chúng tôi thử xem một mô hình thị giác-ngôn ngữ có sẵn, riêng biệt, có ngăn được các hộp dương giả của PGA-UNet trên ảnh lành hay không, như một hướng thăm dò khác cho đúng phát hiện ở trên. Kiểm tra này chỉ dùng BTXRD, không dùng FracAtlas, và dùng lại đúng checkpoint PGA-UNet $512\times512$ đã huấn luyện như phần còn lại của bài. Chúng tôi chấm 50 hộp lấy mẫu mỗi ảnh bằng MedSigLIP, một bộ mã hóa ảnh-văn bản y khoa, dùng ở chế độ zero-shot như một bộ lọc hậu kiểm áp sau dự đoán của PGA-UNet, không phải một phần kiến trúc và không được fine-tune. Một tập hợp cố định các câu prompt dương/âm cho ra điểm cosine-margin. Ngưỡng cắt được chọn từ các hộp dương của tập validation để giữ lại ít nhất 95\% số đó; 410 ảnh lành của tập validation chỉ được dùng để đánh giá chẩn đoán, không dùng để chọn ngưỡng, và các ảnh test giữ lại (held-out) cũng không tham gia vào việc chọn ngưỡng này. Cohort hiệu chỉnh này (239 hộp dương của tập validation) lấy bằng cùng bộ tải polygon dùng xuyên suốt bài và khớp với 239 polygon validation của BTXRD ghi ở Bảng~\ref{tab:splits}. Tập test giữ lại là 1.469 ảnh còn lại trong cùng 1.879 ảnh lành BTXRD đã dùng ở trên, cho ra 73.450 hộp lấy mẫu.
 
-Lọc bằng MedSigLIP hạ tỉ lệ dương giả cấp hộp trên các hộp giữ lại này từ 61,96\% xuống 44,62\%, mức giảm tuyệt đối 17,33 điểm phần trăm (khoảng tin cậy bootstrap theo cụm bắt cặp $95\%$ $[16,68; 17,98]$; Bảng~\ref{tab:medsiglip-gate}). Trên chính các hộp tổn thương thuộc tập test BTXRD của bài (232 hộp từ 187 ảnh, dựng theo đúng quy tắc hộp bao phủ dùng xuyên suốt bài), bộ lọc giữ lại 96,12\% số hộp dương (khoảng tin cậy bootstrap theo cụm $95\%$ $[93,42; 98,30]$). Tỉ lệ dương giả cấp ảnh, tức tỉ lệ ảnh lành còn ít nhất một hộp dương giả sống sót trong 50 hộp lấy mẫu, gần như không đổi, từ 100\% xuống 99,93\%: gần như mọi ảnh lành vẫn còn ít nhất một hộp qua mặt được hệ thống đã lọc. Chúng tôi không báo cáo Dice hậu-lọc hay độ đo chất lượng phân đoạn nào khác ở đây. Kết quả này mang tính thăm dò và bổ sung, không phải đóng góp cốt lõi của bài: một bộ lọc hậu kiểm ngoài có thể giảm phản hồi dương giả cấp hộp trong khi vẫn giữ được phần lớn hộp dương, nhưng chưa giải quyết được việc phát hiện dương giả cấp ảnh; phát triển một bộ lọc nhẹ, chuyên dụng, được hiệu chỉnh (calibration) tốt hơn là hướng phát triển tiếp theo (Mục~\ref{sec:discussion}).
+Lọc bằng MedSigLIP hạ tỉ lệ dương giả cấp hộp trên các hộp giữ lại này từ 61,96\% xuống 44,62\%, mức giảm tuyệt đối 17,33 điểm phần trăm, và giữ lại 96,12\% số hộp dương trên chính các hộp tổn thương thuộc tập test BTXRD của bài (232 hộp từ 187 ảnh, dựng theo đúng quy tắc hộp bao phủ dùng xuyên suốt bài); cả hai thay đổi đều có khoảng tin cậy bootstrap theo cụm $95\%$ được báo cáo ở Bảng~\ref{tab:medsiglip-gate}. Tỉ lệ dương giả cấp ảnh, tức tỉ lệ ảnh lành còn ít nhất một hộp dương giả sống sót trong 50 hộp lấy mẫu, gần như không đổi, từ 100\% xuống 99,93\%: gần như mọi ảnh lành vẫn còn ít nhất một hộp qua mặt được hệ thống đã lọc. Chúng tôi không báo cáo Dice hậu-lọc hay độ đo chất lượng phân đoạn nào khác ở đây. Kết quả này mang tính thăm dò và bổ sung, không phải đóng góp cốt lõi của bài: một bộ lọc hậu kiểm ngoài có thể giảm phản hồi dương giả cấp hộp trong khi vẫn giữ được phần lớn hộp dương, nhưng chưa giải quyết được việc phát hiện dương giả cấp ảnh; phát triển một bộ lọc nhẹ, chuyên dụng, được hiệu chỉnh (calibration) tốt hơn là hướng phát triển tiếp theo (Mục~\ref{sec:discussion}).
 
 \begin{table}[H]
-\caption{Bộ lọc hậu kiểm zero-shot MedSigLIP trên ảnh lành BTXRD (tập test giữ lại, 1.469 ảnh, 50 hộp/ảnh, 73.450 hộp). Tỉ lệ giữ lại hộp dương được đo riêng trên các hộp tổn thương thuộc tập test BTXRD của bài (232 hộp, 187 ảnh). Mang tính thăm dò, không phải đóng góp cốt lõi; không có Dice hậu-lọc.}
+\caption{Bộ lọc hậu kiểm zero-shot MedSigLIP trên ảnh lành BTXRD (tập test giữ lại, 1.469 ảnh, 50 hộp/ảnh, 73.450 hộp). Tỉ lệ giữ lại hộp dương được đo riêng trên các hộp tổn thương thuộc tập test BTXRD của bài (232 hộp, 187 ảnh). Cột CI là khoảng tin cậy bootstrap theo cụm $95\%$ cho mức giảm FPR cấp hộp và cho tỉ lệ giữ lại hộp dương, ở những hàng có báo cáo. Mang tính thăm dò, không phải đóng góp cốt lõi; không có Dice hậu-lọc.}
 \label{tab:medsiglip-gate}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-Đại lượng & Trước lọc & Sau lọc \\
+Đại lượng & Trước lọc & Sau lọc & CI $95\%$ \\
 \midrule
-FPR cấp hộp (73.450 hộp) & 61,96\% & 44,62\% \\
-FPR cấp ảnh (1.469 ảnh) & 100\% & 99,93\% \\
-Tỉ lệ giữ lại hộp dương (232 hộp) & 100,00\% & 96,12\% \\
+FPR cấp hộp (73.450 hộp) & 61,96\% & 44,62\% & $[16,68; 17,98]$ điểm giảm \\
+FPR cấp ảnh (1.469 ảnh) & 100\% & 99,93\% & --- \\
+Tỉ lệ giữ lại hộp dương (232 hộp) & 100,00\% & 96,12\% & $[93,42; 98,30]$ \\
 \bottomrule
 \end{tabular}
 }
