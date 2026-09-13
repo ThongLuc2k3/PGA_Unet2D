@@ -14,7 +14,7 @@ The contributions of this work are as follows.
 \begin{itemize}
 \item We introduce PGA-UNet, a compact convolutional architecture that incorporates a Gaussian-smoothed box representation into encoder features through a Prompt Spatial Gate and into decoder skip attention through a Conditional Attention Decoder.
 \item We evaluate the architecture on BTXRD and FracAtlas using simulated lesion-covering boxes, conventional prompt baselines, and a comparison with SAM-Med2D at matched input resolution and scoring frame.
-\item We characterize the effects of the conditioning components, the observed response to a predefined prompt displacement, variability across four additional image-level splits for PGA-UNet, and computational cost in the tested environment.
+\item We characterize the effects of the conditioning components, the observed response to a predefined prompt displacement, variability across four repeated image-level splits and four training seeds for PGA-UNet, and computational cost in the tested environment.
 \end{itemize}
 
 Beyond these contributions, the system also exposes two support signals, computed directly from the trained model's output without ground-truth masks at inference: a self-assessment ranking heuristic, and a short candidate-region shortlist. Both are presented as preliminary and exploratory, and are not central contributions of this article.
