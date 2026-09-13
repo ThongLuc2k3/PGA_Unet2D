@@ -1,3 +1,7 @@
+# Internal-only working docs: editing notes, reviewer redline files, claim
+# tracking, drafts. Not part of the public deliverable, never pushed.
+/internal/
+
 # JSON annotation gốc của dataset (tải riêng, không cần commit)
 /dataset_json/
 /Source/Report

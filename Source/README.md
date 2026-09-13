@@ -50,7 +50,7 @@ Both baselines train in their own dedicated notebook above, but are tested insid
 
 Both use the same center-scaled protocol (`scale_factor=3.0`, `shift_ratio=0.5`) as PGA-UNet.
 
-> **Pending retrain:** the current protocol still needs fresh checkpoints for PGA-UNet and the affected prompt-guided baselines. Keep old numeric tables as reference only until retraining is complete. Training checkpoint selection now uses image-level merged validation metrics, matching the reported test aggregation.
+Training checkpoint selection uses image-level merged validation metrics, matching the reported test aggregation. Results under the current protocol are reported in `Paper_IEEE_Access/access.tex`.
 
 ## Dataset-Specific Notebook Folders
 
@@ -99,8 +99,9 @@ The active comparison story is:
 
 The current main baselines are:
 
-- `Attention U-Net` as the automatic baseline
-- `SAM-Med2D` as the prompt-based foundation baseline
+- `Attention U-Net` as the automatic (no-prompt) baseline
+- `SAM-Med2D` as the resolution-matched, fine-tuned promptable foundation baseline (`File_Train/{btxrd,fracatlas}/Finetune_SAMMed2D_test_robust.ipynb`)
+- `MedSAM` and `ScribblePrompt-UNet` as additional fine-tuned promptable reference models, each reported at their own native resolution (`File_Train/{btxrd,fracatlas}/test-medsam-zeroshot-finetune-{btxrd,fracatlas}.ipynb`, `test-scribbleprompt-zeroshot-finetune-{btxrd,fracatlas}.ipynb`)
 
 Two additional prompt-matched conventional baselines give a plain Attention U-Net the same box prompt PGA-UNet gets, without PGA-UNet's Gaussian-prior/PSG/CAD machinery, for a fairer box-matched comparison:
 
@@ -124,5 +125,4 @@ All main and ablation training runs use the fixed training seed `22120196`. The 
 - Dataset links have already been separated by folder for `BTXRD` and `FracAtlas`.
 - The paper narrative now uses `Attention U-Net`, `SAM-Med2D`, `small-lesion subset`, and the full `Gaussian prompt + PSG + CAD` ablation story.
 - All notebooks were audited for syntax errors, missing local-module imports, and cross-dataset ID mix-ups (see `AGENTS.md` at the repo root for the conventions this branch follows).
-- Several test notebooks still contain `TODO_CHECKPOINT_ID_...` placeholders and are not fully runnable end to end until retraining/upload is complete. The pending IDs cover `pga512`, `pga256`, `sam256`, `fold1`-`fold4`, `attunet_concat_prompt`, `crop_attunet512`, and one ID per remaining ablation variant (`cad_only`, `psg_only`, `psg_attention`, `full_binary_prompt`, `full_pga_heatmap_reference`).
-- Executed notebooks and image-level merged CSVs will be added to a new `Results/` tree only after the affected models have been retrained under the current protocol.
+- Executed notebooks and image-level merged CSVs live under `Result/` (gitignored, large; not part of the pushed repository). `Source/` holds the canonical, re-runnable notebook source.

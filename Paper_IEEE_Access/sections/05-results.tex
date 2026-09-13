@@ -190,7 +190,7 @@ Dataset & Model & Input / frame & Dice & IoU & HD95 & CBL \\
 
 \subsection{Descriptive Analysis of Images with Lower Total Lesion Area}
 \label{sec:small}
-The lower-area subset contains the 50 test images per dataset with the smallest total merged lesion-mask area in the common reference frame, ranging from 7 to 433 pixels on BTXRD and 145 to 944 pixels on FracAtlas. This image-level definition covers 26.7\% of BTXRD's test images and 69.4\% of FracAtlas's (Table~\ref{tab:splits}) and does not measure per-lesion sensitivity or represent matched area quantiles across the two datasets. Combined with the Attention U-Net top- and bottom-Dice subsets of Section~\ref{sec:extreme}, which are defined by that baseline's own predictions rather than an external difficulty criterion, these analyses describe the selected images and are not independent evidence that the proposed method preferentially benefits small lesions or intrinsically difficult cases in general.
+The lower-lesion-area image subset contains the 50 test images per dataset with the smallest total merged lesion-mask area in the common reference frame, ranging from 7 to 433 pixels on BTXRD and 145 to 944 pixels on FracAtlas. This image-level definition covers 26.7\% of BTXRD's test images and 69.4\% of FracAtlas's (Table~\ref{tab:splits}) and does not measure per-lesion sensitivity or represent matched area quantiles across the two datasets. Combined with the Attention U-Net top- and bottom-Dice subsets of Section~\ref{sec:extreme}, which are defined by that baseline's own predictions rather than an external difficulty criterion, these analyses describe the selected images and are not independent evidence that the proposed method preferentially benefits small lesions or intrinsically difficult cases in general.
 
 Tables~\ref{tab:small-sam} and \ref{tab:small-att} use a shared $512\times512$ scoring frame, whereas Table~\ref{tab:small-res} reports results scored in each configuration's own frame. The $256$-input results in Table~\ref{tab:small-sam} therefore differ from the corresponding $256$-frame results in Table~\ref{tab:small-res}, even though both use the same 50-image subset. This is a separate distinction from the fact that Table~\ref{tab:resolution} additionally evaluates a different image set, the full test split rather than this 50-image subset, so its numbers are not compared here as though frame were the only difference.
 
@@ -268,7 +268,7 @@ Dataset & Model & Dice & IoU & HD95 & CBL \\
 This same fixed set of 50 images per dataset is held constant and evaluated in turn at $128$, $256$, and $512$; predictions and ground truth are merged at image level at each resolution, HD95 is reported both in native pixels and in normalized form, and the degradation is measured relative to the $512$ result. On these images, PGA-UNet's Dice falls from 0.766 at $512$ to 0.631 at $128$ on BTXRD, and from 0.720 to 0.609 on FracAtlas; the loss from $512$ to $128$ is 0.135 and 0.111 respectively (Table~\ref{tab:small-res}). On BTXRD this loss is larger than the 0.068 lost over the same resolution range on the full test set (Table~\ref{tab:resolution}); on FracAtlas the full-test loss is itself large (0.131), so the loss on this subgroup is comparable rather than larger there. As with the full-resolution comparison above, each configuration is scored in its own frame, so this combines resolution and mask-sampling effects rather than isolating either.
 
 \begin{table}[t]
-\caption{PGA-UNet on the fixed 50-image lower-area subset of each dataset across resolutions. Dice, IoU, and CBL are reported as covering / off-center; each configuration is scored in its own frame. The HD95 pair denotes native pixels / normalized distance under the covering condition. The Delta Dice column is the covering-prompt difference relative to the $512$ configuration.}
+\caption{PGA-UNet on the fixed 50-image lower-lesion-area image subset of each dataset across resolutions. Dice, IoU, and CBL are reported as covering / off-center; each configuration is scored in its own frame. The HD95 pair denotes native pixels / normalized distance under the covering condition. The Delta Dice column is the covering-prompt difference relative to the $512$ configuration.}
 \label{tab:small-res}
 \centering
 \scriptsize
@@ -298,11 +298,11 @@ Dataset & Res. & Dice & IoU & CBL & HD95$_\mathrm{px}$\,/\,$_n$ & $\Delta$Dice \
 \label{fig:small-res}
 \end{figure}
 
-On this lower-area subset, PGA-UNet's margin over the no-prompt baseline remains large on both datasets, and the resolution effect is larger than on the full test set on BTXRD; on FracAtlas the full test set already loses this much to resolution, so the subgroup does not show a further resolution penalty there. As noted above, this subset is a descriptive selection of images and does not by itself establish that the method preferentially benefits small lesions in general.
+On this lower-lesion-area image subset, PGA-UNet's margin over the no-prompt baseline remains large on both datasets, and the resolution effect is larger than on the full test set on BTXRD; on FracAtlas the full test set already loses this much to resolution, so the subgroup does not show a further resolution penalty there. As noted above, this subset is a descriptive selection of images and does not by itself establish that the method preferentially benefits small lesions in general.
 
 \subsection{Sensitivity to Prompt Displacement}
 \label{sec:robust}
-Under the predefined off-center construction, PGA-UNet's Dice decreases by 0.008 on BTXRD and 0.014 on FracAtlas (Table~\ref{tab:robust}); on the 50-image lower-area subset of Section~\ref{sec:small} the decrease stays under 0.01 for both datasets. The binary channel baseline has a smaller decrease on FracAtlas (0.005), so the results do not establish that PGA-UNet is uniformly the least sensitive model to this construction; the crop baseline decreases more on FracAtlas (0.027) and about as much on BTXRD (0.008). PGA-UNet retains the highest observed Dice among the three configurations in this table under both prompt conditions on both datasets. These observations apply to the evaluated lesion-covering box construction and do not characterize arbitrary user-drawn, partial-coverage, or off-target prompts.
+Under the predefined off-center construction, PGA-UNet's Dice decreases by 0.008 on BTXRD and 0.014 on FracAtlas (Table~\ref{tab:robust}); on the 50-image lower-lesion-area image subset of Section~\ref{sec:small} the decrease stays under 0.01 for both datasets. The binary channel baseline has a smaller decrease on FracAtlas (0.005), so the results do not establish that PGA-UNet is uniformly the least sensitive model to this construction; the crop baseline decreases more on FracAtlas (0.027) and about as much on BTXRD (0.008). PGA-UNet retains the highest observed Dice among the three configurations in this table under both prompt conditions on both datasets. These observations apply to the evaluated lesion-covering box construction and do not characterize arbitrary user-drawn, partial-coverage, or off-target prompts.
 
 \begin{table*}[t]
 \caption{Observed sensitivity to the predefined off-center box construction (z: covering, s: off-center). All configurations use a $512\times512$ input and scoring frame; crop predictions are mapped back to the full frame. The Delta Dice column is off-center minus covering Dice. Boxes preserve full lesion coverage, and the off-center construction may change box extent when needed to retain coverage. Results are descriptive point estimates on the fixed test splits.}
@@ -418,6 +418,34 @@ Dataset & Prompt & Dice & IoU & HD95 & CBL \\
 \end{tabular}
 }
 \end{table}
+
+\subsection{Training-Seed Stability Analysis}
+\label{sec:seedstability}
+The Monte Carlo cross-validation above varies the image-level split while keeping the training seed fixed at 22120196. To characterize the complementary source of variability, training-run randomness itself, we are separately retraining PGA-UNet at $512\times512$ on the original fixed split (Table~\ref{tab:splits}) using three additional training seeds, with every other setting from Section~\ref{sec:training} held fixed. All four runs use the same fixed train/validation/test partition; only the seed governing weight initialization, data shuffling, and other stochastic training behavior changes between them.
+
+This analysis is restricted to PGA-UNet. None of the evaluated baselines, the two conventional prompt baselines or the three promptable foundation models, has been retrained across multiple seeds, so no comparison in this article claims stable superiority over those baselines across training seeds. Of the three additional seeds, one (19122003) has completed on both datasets at the time of this draft; the other two are still training. Table~\ref{tab:seedstability} therefore reports an interim mean $\pm$ sample standard deviation over the $n=2$ completed seeds (22120196 and 19122003), not the full four; the sample size is stated in the caption, and the table will be extended with the remaining two seeds, not recomputed from scratch, once they complete (see \texttt{PENDING\_MULTISEED.md}).
+
+\begin{table*}[t]
+\caption{Training-seed stability of PGA-UNet at $512\times512$ on the original fixed split (Table~\ref{tab:splits}). Interim results from $n=2$ completed training seeds (22120196 and 19122003) of the four planned; mean $\pm$ sample standard deviation ($\mathrm{ddof}=1$). Two additional seeds are still training and are not included here. Precision and recall are the standard pixel-level values for the image-level merged mask, reported only in this table; they are not a lesion-level detection recall, which this article does not measure. See \texttt{PENDING\_MULTISEED.md}.}
+\label{tab:seedstability}
+\centering
+\scriptsize
+\begin{tabular}{llcccccc}
+\toprule
+Dataset & Prompt & Dice & IoU & Precision & Recall & HD95 & CBL \\
+\midrule
+\multirow{2}{*}{BTXRD}
+& Covering (\texttt{center\_zoom}) & $0.771\pm0.016$ & $0.645\pm0.022$ & $0.745\pm0.024$ & $0.831\pm0.000$ & $23.6\pm1.2$ & $0.914\pm0.005$ \\
+& Off-center (\texttt{center\_shift}) & $0.762\pm0.017$ & $0.637\pm0.021$ & $0.747\pm0.024$ & $0.819\pm0.002$ & $24.8\pm0.5$ & $0.907\pm0.007$ \\
+\midrule
+\multirow{2}{*}{FracAtlas}
+& Covering (\texttt{center\_zoom}) & $0.728\pm0.001$ & $0.586\pm0.002$ & $0.678\pm0.008$ & $0.835\pm0.011$ & $10.6\pm0.1$ & $0.908\pm0.006$ \\
+& Off-center (\texttt{center\_shift}) & $0.713\pm0.001$ & $0.570\pm0.000$ & $0.674\pm0.007$ & $0.806\pm0.004$ & $11.0\pm0.8$ & $0.899\pm0.002$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+With only two completed seeds, these standard deviations are not yet informative about the true seed-to-seed spread and should not be read as a stable estimate; they describe only the two runs observed so far. Read as a two-point comparison, not a distribution: the newly completed seed's Dice is about 0.02 lower than the original seed's on BTXRD under both prompt conditions, while on FracAtlas the two seeds are within 0.002 Dice of each other. Precision differs by 0.024 to 0.034 between the two BTXRD seeds, more than the 0.000 to 0.002 difference in Recall there, and more than either metric's spread on FracAtlas (0.007 to 0.011). HD95 differs by about 1 to 2 pixels on BTXRD covering and by about 1 pixel on FracAtlas off-center, and by under 1 pixel on the other two rows. Whether this pattern, larger BTXRD sensitivity, holds up is exactly what the two remaining seeds will show; nothing here yet supports a general claim about which dataset or metric is more sensitive to the training seed.
 
 \subsection{Efficiency}
 \label{sec:efficiency}
@@ -546,6 +574,29 @@ Dataset & Lesion-free img. & Median $Q$ & p90 $Q$ & Boxes $Q\!\ge\!0.5$ & $\over
 \midrule
 BTXRD & 1879 & 0.00 & 0.75 & 28\% & 0.85 \\
 FracAtlas & 3366 & 0.07 & 0.82 & 42\% & 0.90 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Exploratory post-hoc gate: MedSigLIP}
+As one exploratory response to the finding above, we tested whether a separate, off-the-shelf vision-language model could catch some of the false-positive boxes that $Q$ misses on lesion-free images. This check uses BTXRD only, not FracAtlas, and reuses the same trained PGA-UNet $512\times512$ checkpoint as the rest of this article. We scored 50 sampled boxes per image with MedSigLIP \cite{b18}, a medical image-text encoder, used zero-shot as a post-hoc gate applied after PGA-UNet's prediction, not as part of the architecture and not fine-tuned. A fixed ensemble of positive and negative text prompts yields a cosine-margin score, thresholded at a cutoff chosen only on a validation split of 410 lesion-free images to retain 95\% of positive validation boxes; the held-out test images play no part in choosing this threshold. The held-out test split is the remaining 1{,}469 of the same 1{,}879 lesion-free BTXRD images used above, giving 73{,}450 sampled boxes.
+
+Gating with MedSigLIP lowers the box-level false-positive rate on these held-out boxes from 61.96\% to 44.62\%, an absolute reduction of 17.33 points (paired cluster-bootstrap $95\%$ CI $[16.68, 17.98]$; Table~\ref{tab:medsiglip-gate}). On the article's own BTXRD test-split lesion boxes (232 boxes from 187 images, built with the same covering-box construction used throughout this article), the gate retains 96.12\% of positive boxes (cluster-bootstrap $95\%$ CI $[93.42, 98.30]$). Image-level false-positive rate, the fraction of lesion-free images with at least one surviving false-positive box among the 50 sampled, barely moves, from 100\% to 99.93\%: nearly every lesion-free image still has at least one box that fools the gated system. We do not report a post-gate Dice or other segmentation-quality measure here. This result is exploratory and supplementary, not a core contribution of this article: a lightweight external gate can reduce box-level false responses while keeping most positive boxes, without solving image-level false-positive detection; developing a purpose-built, better-calibrated lightweight gate is future work (Section~\ref{sec:discussion}).
+
+\begin{table}[t]
+\caption{MedSigLIP zero-shot post-hoc gate on BTXRD lesion-free images (held-out test split, 1{,}469 images, 50 boxes/image, 73{,}450 boxes). Positive-box retention is measured separately on the article's own BTXRD test-split lesion boxes (232 boxes, 187 images). Exploratory, not a core contribution; no post-gate Dice is reported.}
+\label{tab:medsiglip-gate}
+\centering
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcc}
+\toprule
+Quantity & Before gate & After gate \\
+\midrule
+Box FPR (73{,}450 boxes) & 61.96\% & 44.62\% \\
+Image FPR (1{,}469 images) & 100\% & 99.93\% \\
+Positive-box retention (232 boxes) & \multicolumn{2}{c}{96.12\%} \\
 \bottomrule
 \end{tabular}
 }

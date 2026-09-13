@@ -72,7 +72,7 @@ S_{\mathrm{sharp}} = \operatorname{clip}_{[0,1]}\!\left(\frac{1}{|\Omega|}\sum_{
 \end{equation}
 A mask with high confidence, i.e., probabilities close to 1, scores close to 1; conversely, a mask with many pixels sitting near the decision threshold scores lower. If $\Omega=\emptyset$ (the model predicts no positive pixel at all), $S_{\mathrm{sharp}}$ is defined as $0$ rather than left undefined.
 
-The second cue, $S_{\mathrm{stab}}$, measures how stable the prediction is under mild prompt perturbation. The box is randomly nudged $K$ times, each time with a small shift and scale change; the model is rerun for each nudged box, and $S_{\mathrm{stab}}$ is exactly the average IoU between the original binary mask $\hat{\mathbf{M}}$ and the masks obtained from those nudges, $\hat{\mathbf{M}}_k$:
+The second cue, $S_{\mathrm{stab}}$, measures how stable the prediction is under mild prompt perturbation. The box is randomly nudged $K$ times, each time with a small shift and scale change; the model is rerun for each nudged box, and $S_{\mathrm{stab}}$ is exactly the average intersection-over-union (IoU) between the original binary mask $\hat{\mathbf{M}}$ and the masks obtained from those nudges, $\hat{\mathbf{M}}_k$:
 \begin{equation}
 S_{\mathrm{stab}} = \frac{1}{K}\sum_{k=1}^{K}\operatorname{IoU}\!\left(\hat{\mathbf{M}},\hat{\mathbf{M}}_k\right).
 \end{equation}

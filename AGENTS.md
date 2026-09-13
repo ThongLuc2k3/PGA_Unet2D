@@ -4,7 +4,8 @@
 
 - `main` contains the English IEEE Access submission and current experiments.
 - `graduation-project` contains the submitted Vietnamese thesis. Do not mix files, results, checkpoints, or claims between branches.
-- Read `README.md`, `Source/README.md`, `Source/Prompt-Guided-XRay-Segmentation/README.md`, and `Paper_IEEE_Access/claims_to_validate.md` before making assumptions about the current protocol or experiment status.
+- Read `README.md`, `Source/README.md`, `Source/Prompt-Guided-XRay-Segmentation/README.md`, and `internal/editing-notes/claims_to_validate.md` (if present) before making assumptions about the current protocol or experiment status.
+- `internal/` is a gitignored, local-only folder for editing-process notes, claim tracking, and reviewer redline files. It is never pushed and may not exist in a fresh clone.
 
 ## File Language
 
@@ -65,6 +66,6 @@
 ## Persistent Project Notes
 
 - Current layout, protocol, baselines, and pending retraining: `Source/README.md`.
-- Claim-to-evidence mapping: `Paper_IEEE_Access/claims_to_validate.md`.
+- Claim-to-evidence mapping: `internal/editing-notes/claims_to_validate.md` (gitignored, local-only).
 - Shared package usage: `Source/Prompt-Guided-XRay-Segmentation/README.md`.
 - Manuscript entry point: `Paper_IEEE_Access/access.tex`.
